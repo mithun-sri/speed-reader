@@ -8,6 +8,7 @@ authors = ["Taeho <taehokimbusines@gmail.com>"]
 python = "^3.10"
 fastapi = "^0.109.0"
 uvicorn = "^0.25.0"
+google-cloud-firestore = "^2.14.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
