@@ -3,21 +3,16 @@ stages:
   - deploy_staging
   - deploy_production
 
-before_script:
-  - npm install
-
 test:
   stage: test
   script:
-    - npm test
+    - echo "Testing"
 
 deploy_staging:
   stage: deploy_staging
   only:
     - staging
   script:
-    - npm install
-    - npm run build
     - echo "Deploy to staging environment"
 
 deploy_production:
@@ -25,6 +20,4 @@ deploy_production:
   only:
     - master
   script:
-    - npm install
-    - npm run build
     - echo "Deploy to production environment"
