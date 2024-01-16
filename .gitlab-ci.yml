@@ -17,7 +17,7 @@ deploy_staging:
     - echo "Deploy to staging environment"
     - cd frontend
     - npm install
-    - yarn start & 
+    - yarn start > /dev/null 2>&1 &
 
 deploy_production:
   stage: deploy_production
