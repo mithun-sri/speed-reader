@@ -83,7 +83,15 @@ const CountdownComponent: React.FC<{
           height: "400px", // 40% of the viewport height
         }}
       >
-        <Typography variant="h1" color={"#D1D0C5"}>
+        <Typography
+          variant="h1"
+          color={"#D1D0C5"}
+          sx={{
+            fontSize: fontSize,
+            fontFamily: "JetBrains Mono, monospace",
+            fontWeight: "bolder",
+          }}
+        >
           {count}
         </Typography>
       </Box>
