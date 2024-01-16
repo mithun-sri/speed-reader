@@ -1,27 +1,42 @@
 stages:
   - test
-  - deploy_staging
-  - deploy_production
+  - deploy
 
 test:
   stage: test
+  tags:
+    - private
   script:
     - echo "Testing"
 
 deploy_staging:
-  stage: deploy_staging
+  stage: deploy
+  tags:
+    - private
   only:
     - staging
     - 9-deploy-stage-of-ci-cd
+  image: dokku/ci-docker-image
+  variables:
+    GIT_PUSH_FLAGS: -f
+    GIT_REMOTE_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22/speed-reader
   script:
-    - echo "Deploy to staging environment"
-    - cd frontend
-    - npm install
-    - yarn start > /dev/null 2>&1 &
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
 
-deploy_production:
-  stage: deploy_production
+deploy_prod:
+  stage: deploy
+  tags:
+    - private
   only:
     - master
+    - 9-deploy-stage-of-ci-cd
+  image: dokku/ci-docker-image
+  variables:
+    GIT_PUSH_FLAGS: -f
+    GIT_REMOTE_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22/speed-reader
   script:
-    - echo "Deploy to production environment"
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
