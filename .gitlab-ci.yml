@@ -12,8 +12,12 @@ deploy_staging:
   stage: deploy_staging
   only:
     - staging
+    - 9-deploy-stage-of-ci-cd
   script:
     - echo "Deploy to staging environment"
+    - cd frontend
+    - npm install
+    - yarn start & 
 
 deploy_production:
   stage: deploy_production
