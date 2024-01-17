@@ -3,19 +3,28 @@ import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 
 import Typography from "@mui/material/Typography";
+import { STANDARD_MODE_1 } from "../../common/constants";
 
 const CountdownComponent: React.FC<{
   duration: number;
   mode?: string;
-}> = ({ duration, mode }) => {
+  onCountdownFinish?: () => void;
+}> = ({ duration, mode, onCountdownFinish }) => {
   const [count, setCount] = useState(duration);
   const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  // Change instruction text according to the mode
+  let instruction: string = "read as many words as you can.";
+  if (mode === STANDARD_MODE_1) {
+    instruction = "get ready."
+  }
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {
       if (count === 0) {
         clearInterval(countdownInterval);
         // Add your game initialization logic here
+        if (onCountdownFinish) onCountdownFinish();
       } else {
         setCount((prevCount) => prevCount - 1);
       }
@@ -24,7 +33,7 @@ const CountdownComponent: React.FC<{
     return () => {
       clearInterval(countdownInterval); // Cleanup on component unmount
     };
-  }, [count]);
+  }, [count, onCountdownFinish]);
 
   useEffect(() => {
     function handleResize() {
@@ -75,7 +84,7 @@ const CountdownComponent: React.FC<{
           fontWeight: "bolder",
         }}
       >
-        read as many words as you can.
+        {instruction}
       </Box>
       <Box
         sx={{
