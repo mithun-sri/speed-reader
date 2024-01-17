@@ -4,24 +4,35 @@ import CountdownComponent from "../../components/Counter/Counter";
 import { STANDARD_MODE_1 } from "../../common/constants";
 import "./StandardMode.css";
 
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
 
 function StandardModeGame() {
-  // const navigate = useNavigate();
+  const [showGameScreen, setShowGameScreen] = useState(false);
 
   const startStandardModeGame = () => {
-    // TODO: Need routing path from mode selection page
-    // navigate(/path-to-standard-game)
+    setShowGameScreen(true);
   };
 
-  return (
-    <div>
-      <Header />
+  let countdownComp = (
+    <>
       <CountdownComponent
         duration={3} 
         mode={STANDARD_MODE_1}
         onCountdownFinish={startStandardModeGame}
-        />
+      />
+    </>
+  );
+
+  let standardGameComp = (
+    <>
+      <div>TODO: IMPLEMENT STANDARD GAME SCREEN HERE. </div>
+    </>
+  );
+
+  return (
+    <div>
+      <Header />
+      { showGameScreen ? standardGameComp : countdownComp }
       <Footer />
     </div>
   );
