@@ -55,9 +55,8 @@ const PrettoSlider = styled(Slider)(({ theme }) => ({
 }));
 
 const SpeedSlider: React.FC<{
-  initialValue: number;
   updateValue: (n: number) => void;
-}> = ({ initialValue, updateValue }) => {
+}> = ({ updateValue }) => {
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const onSliderChange = (

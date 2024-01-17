@@ -13,7 +13,7 @@ const PreGameView = () => {
       <Header />
       <header className="PreGame-header">
         <CountdownComponent duration={3} />
-        <SpeedSlider initialValue={wpm} updateValue={setWPM}/>
+        <SpeedSlider updateValue={setWPM}/>
         <Footer />
       </header>
     </div>
