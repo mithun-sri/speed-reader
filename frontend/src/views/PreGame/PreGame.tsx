@@ -12,7 +12,6 @@ const PreGameView = () => {
     <div className="PreGame">
       <Header />
       <header className="PreGame-header">
-        <CountdownComponent duration={3} />
         <SpeedSlider updateValue={setWPM}/>
         <Footer />
       </header>
