@@ -1,0 +1,23 @@
+stages:
+  - test
+  - deploy_staging
+  - deploy_production
+
+test:
+  stage: test
+  script:
+    - echo "Testing"
+
+deploy_staging:
+  stage: deploy_staging
+  only:
+    - staging
+  script:
+    - echo "Deploy to staging environment"
+
+deploy_production:
+  stage: deploy_production
+  only:
+    - master
+  script:
+    - echo "Deploy to production environment"
