@@ -16,7 +16,7 @@ const CountdownComponent: React.FC<{
   // Change instruction text according to the mode
   let instruction: string = "read as many words as you can.";
   if (mode === STANDARD_MODE_1) {
-    instruction = "get ready."
+    instruction = "get ready.";
   }
 
   useEffect(() => {

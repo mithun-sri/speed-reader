@@ -16,7 +16,7 @@ function StandardModeGame() {
   let countdownComp = (
     <>
       <CountdownComponent
-        duration={3} 
+        duration={3}
         mode={STANDARD_MODE_1}
         onCountdownFinish={startStandardModeGame}
       />
@@ -32,7 +32,7 @@ function StandardModeGame() {
   return (
     <div>
       <Header />
-      { showGameScreen ? standardGameComp : countdownComp }
+      {showGameScreen ? standardGameComp : countdownComp}
       <Footer />
     </div>
   );
