@@ -13,12 +13,10 @@ python-multipart = "^0.0.6"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 black = "^23.12.1"
+pydantic-settings = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
-
-[tool.poetry.scripts]
-black = "black"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.12.1"
