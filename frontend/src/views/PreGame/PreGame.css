@@ -1,20 +1,20 @@
-.App {
+.PreGame {
   text-align: center;
   min-height: 100vh;
 }
 
-.App-logo {
+.PreGame-logo {
   height: 40vmin;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+  .PreGame-logo {
+    animation: PreGame-logo-spin infinite 20s linear;
   }
 }
 
-.App-header {
+.PreGame-header {
   background-color: #2C2E31;
   /* min-height: 180vh; */
   display: flex;
@@ -25,11 +25,11 @@
   color: white;
 }
 
-.App-link {
+.PreGame-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
+@keyframes PreGame-logo-spin {
   from {
     transform: rotate(0deg);
   }
