@@ -19,7 +19,7 @@ deploy_staging:
   image: dokku/ci-docker-image
   variables:
     GIT_PUSH_FLAGS: -f
-    GIT_REMOTE_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:speed-reader
+    GIT_REMOTE_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22/speed-reader
   script:
     - dokku-deploy
   after_script:
@@ -35,7 +35,7 @@ deploy_prod:
   image: dokku/ci-docker-image
   variables:
     GIT_PUSH_FLAGS: -f
-    GIT_REMOTE_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:speed-reader
+    GIT_REMOTE_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22/speed-reader
   script:
     - dokku-deploy
   after_script:
