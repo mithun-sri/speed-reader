@@ -54,8 +54,19 @@ const PrettoSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-export default function SpeedSlider() {
+const SpeedSlider: React.FC<{
+  initialValue: number;
+  updateValue: (n: number) => void;
+}> = ({ initialValue, updateValue }) => {
   const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  const onSliderChange = (
+    event: Event,
+    newValue: number | number[],
+    activeThumb: number
+  ) => {
+    updateValue(newValue as number);
+  };
 
   useEffect(() => {
     function handleResize() {
@@ -98,6 +109,7 @@ export default function SpeedSlider() {
         valueLabelDisplay="auto"
         step={1}
         defaultValue={2}
+        onChange={onSliderChange}
         marks={false}
         min={0}
         max={4}
@@ -112,3 +124,5 @@ export default function SpeedSlider() {
     </Box>
   );
 }
+
+export default SpeedSlider;
