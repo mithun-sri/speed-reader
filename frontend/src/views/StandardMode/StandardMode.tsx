@@ -6,7 +6,15 @@ import "./StandardMode.css";
 
 import { useState } from "react";
 
-function StandardModeGame() {
+const StandardModeGameComponent = () => {
+  return (
+    <>
+      <div>TODO: IMPLEMENT STANDARD GAME SCREEN HERE. </div>
+    </>
+  );
+};
+
+function StandardModeGameView() {
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   const startStandardModeGame = () => {
@@ -23,19 +31,13 @@ function StandardModeGame() {
     </>
   );
 
-  let standardGameComp = (
-    <>
-      <div>TODO: IMPLEMENT STANDARD GAME SCREEN HERE. </div>
-    </>
-  );
-
   return (
     <div>
       <Header />
-      {showGameScreen ? standardGameComp : countdownComp}
+      {showGameScreen ? <StandardModeGameComponent /> : countdownComp}
       <Footer />
     </div>
   );
 }
 
-export default StandardModeGame;
+export default StandardModeGameView;
