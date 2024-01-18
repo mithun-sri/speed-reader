@@ -8,7 +8,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* <Route path="/" element={<ModeSelectView />} /> */}
-          <Route path="/mode-1-game" element={<StandardModeGameView />} />
+          <Route
+            path="/mode-1-game"
+            element={<StandardModeGameView wpm={200} />}
+          />
           <Route path="/mode-2-game" />
           <Route path="/mode-3-game" />
         </Routes>
