@@ -24,6 +24,10 @@ deploy_staging_frontend:
   only:
     - staging
     - 9-deploy-stage-of-ci-cd
+  dependencies:
+    # Need to make sure backend app is deployed
+    # otherwise network alias speed-reader-backend.web cannot be resolved.
+    - deploy_staging_backend
   image: dokku/ci-docker-image
   variables:
     BRANCH: 9-deploy-stage-of-ci-cd
@@ -58,6 +62,8 @@ deploy_prod_frontend:
   only:
     - master
     - 9-deploy-stage-of-ci-cd
+  dependencies:
+    - deploy_prod_backend
   image: dokku/ci-docker-image
   variables:
     BRANCH: 9-deploy-stage-of-ci-cd
