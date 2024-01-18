@@ -8,14 +8,18 @@ const JetBrainsMonoText: React.FC<{
   color: string;
 }> = ({ text, size, color }) => {
   return (
-    <Box
-      sx={{
-        fontFamily: "JetBrains Mono, monospace",
-        fontSize: size || "30vhca",
-        color: color || "#000",
-      }}
-    >
-      <Typography variant="body1">{text}</Typography>
+    <Box>
+      <Typography
+        variant="body1"
+        color={color}
+        sx={{
+          fontSize: size,
+          fontFamily: "JetBrains Mono, monospace",
+          fontWeight: "bolder",
+        }}
+      >
+        {text}
+      </Typography>
     </Box>
   );
 };
