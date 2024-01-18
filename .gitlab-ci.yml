@@ -24,7 +24,7 @@ deploy_staging_frontend:
   image: dokku/ci-docker-image
   variables:
     GIT_PUSH_FLAGS: -f
-    GIT_REMOTE_URL: $STAGING_URL/speed-reader
+    GIT_REMOTE_URL: $STAGING_URL/speed-reader-frontend
   script:
     - dokku-deploy
   after_script:
@@ -40,7 +40,7 @@ deploy_staging_backend:
   image: dokku/ci-docker-image
   variables:
     GIT_PUSH_FLAGS: -f
-    GIT_REMOTE_URL: $STAGING_URL/speed-reader-api
+    GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
   script:
     - dokku-deploy
   after_script:
@@ -56,7 +56,7 @@ deploy_prod_frontend:
   image: dokku/ci-docker-image
   variables:
     GIT_PUSH_FLAGS: -f
-    GIT_REMOTE_URL: $PROD_URL/speed-reader
+    GIT_REMOTE_URL: $PROD_URL/speed-reader-frontend
   script:
     - dokku-deploy
   after_script:
@@ -72,7 +72,7 @@ deploy_prod_backend:
   image: dokku/ci-docker-image
   variables:
     GIT_PUSH_FLAGS: -f
-    GIT_REMOTE_URL: $PROD_URL/speed-reader-api
+    GIT_REMOTE_URL: $PROD_URL/speed-reader-backend
   script:
     - dokku-deploy
   after_script:
