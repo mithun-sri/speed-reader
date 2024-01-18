@@ -1,6 +1,7 @@
 stages:
   - test
-  - deploy
+  - deploy_staging
+  - deploy_prod
 
 test:
   stage: test
@@ -10,7 +11,7 @@ test:
     - echo "Testing"
 
 deploy_staging:
-  stage: deploy
+  stage: deploy_staging
   tags:
     - private
   only:
@@ -26,7 +27,7 @@ deploy_staging:
     - dokku-unlock
 
 deploy_prod:
-  stage: deploy
+  stage: deploy_prod
   tags:
     - private
   only:
