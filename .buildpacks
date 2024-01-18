@@ -1,2 +1,1 @@
-https://github.com/heroku/heroku-buildpack-nodejs.git#v234
-https://github.com/heroku/heroku-buildpack-python.git#v242
+https://github.com/lstoll/heroku-buildpack-monorepo.git
