@@ -23,10 +23,9 @@ deploy_staging_frontend:
     - private
   only:
     - staging
-    - 9-deploy-stage-of-ci-cd
   image: dokku/ci-docker-image
   variables:
-    BRANCH: 9-deploy-stage-of-ci-cd
+    BRANCH: staging
     GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-frontend
   script:
@@ -40,10 +39,9 @@ deploy_staging_backend:
     - private
   only:
     - staging
-    - 9-deploy-stage-of-ci-cd
   image: dokku/ci-docker-image
   variables:
-    BRANCH: 9-deploy-stage-of-ci-cd
+    BRANCH: staging
     GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
   script:
@@ -57,10 +55,9 @@ deploy_prod_frontend:
     - private
   only:
     - master
-    - 9-deploy-stage-of-ci-cd
   image: dokku/ci-docker-image
   variables:
-    BRANCH: 9-deploy-stage-of-ci-cd
+    BRANCH: master
     GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $PROD_URL/speed-reader-frontend
   script:
@@ -74,10 +71,9 @@ deploy_prod_backend:
     - private
   only:
     - master
-    - 9-deploy-stage-of-ci-cd
   image: dokku/ci-docker-image
   variables:
-    BRANCH: 9-deploy-stage-of-ci-cd
+    BRANCH: master
     GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $PROD_URL/speed-reader-backend
   script:
