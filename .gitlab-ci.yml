@@ -3,6 +3,10 @@ stages:
   - deploy_staging
   - deploy_prod
 
+variables:
+  STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
+  PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
+
 test:
   stage: test
   tags:
@@ -10,7 +14,7 @@ test:
   script:
     - echo "Testing"
 
-deploy_staging:
+deploy_staging_frontend:
   stage: deploy_staging
   tags:
     - private
@@ -19,14 +23,32 @@ deploy_staging:
     - 9-deploy-stage-of-ci-cd
   image: dokku/ci-docker-image
   variables:
+    APP_BASE: frontend
     GIT_PUSH_FLAGS: -f
-    GIT_REMOTE_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22/speed-reader
+    GIT_REMOTE_URL: $STAGING_URL/speed-reader
   script:
     - dokku-deploy
   after_script:
     - dokku-unlock
 
-deploy_prod:
+deploy_staging_backend:
+  stage: deploy_staging
+  tags:
+    - private
+  only:
+    - staging
+    - 9-deploy-stage-of-ci-cd
+  image: dokku/ci-docker-image
+  variables:
+    APP_BASE: backend
+    GIT_PUSH_FLAGS: -f
+    GIT_REMOTE_URL: $STAGING_URL/speed-reader-api
+  script:
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
+
+deploy_prod_frontend:
   stage: deploy_prod
   tags:
     - private
@@ -35,8 +57,26 @@ deploy_prod:
     - 9-deploy-stage-of-ci-cd
   image: dokku/ci-docker-image
   variables:
+    APP_BASE: frontend
     GIT_PUSH_FLAGS: -f
-    GIT_REMOTE_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22/speed-reader
+    GIT_REMOTE_URL: $PROD_URL/speed-reader
+  script:
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
+
+deploy_prod_backend:
+  stage: deploy_prod
+  tags:
+    - private
+  only:
+    - master
+    - 9-deploy-stage-of-ci-cd
+  image: dokku/ci-docker-image
+  variables:
+    APP_BASE: backend
+    GIT_PUSH_FLAGS: -f
+    GIT_REMOTE_URL: $PROD_URL/speed-reader-api
   script:
     - dokku-deploy
   after_script:
