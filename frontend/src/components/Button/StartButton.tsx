@@ -1,5 +1,6 @@
 import { Box, Icon, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 
 const StartButton = () => {
@@ -41,7 +42,14 @@ const StartButton = () => {
                fontWeight: "bolder",
                fontSize: fontSize * 1.1
            }}>
-               <Box>Start.</Box>
+              <Link to="/mode-1-game" 
+                style={{
+                  textDecoration: 'none',
+                  color: 'white'
+                }}
+              >
+                <Box>Start.</Box>
+              </Link>
            </Box>
        </IconButton>
    );
