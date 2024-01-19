@@ -9,9 +9,11 @@ import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 
 const StandardModeGameView: React.FC<{
-  wpm: number;
+  wpm?: number;
 }> = ({ wpm }) => {
-  // TODO: Logic to fetch text here.
+  // TODO: Logic to fetch text here. @Mithun
+  let text: string = "The quick brown fox jumped over the lazy dog";
+
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   const startStandardModeGame = () => {
@@ -29,7 +31,11 @@ const StandardModeGameView: React.FC<{
   return (
     <Box>
       <Header />
-      {showGameScreen ? <StandardModeGameComponent wpm={wpm} /> : countdownComp}
+      {showGameScreen ? (
+        <StandardModeGameComponent wpm={wpm || 200} text={text} />
+      ) : (
+        countdownComp
+      )}
       <Footer />
     </Box>
   );
@@ -37,7 +43,8 @@ const StandardModeGameView: React.FC<{
 
 const StandardModeGameComponent: React.FC<{
   wpm: number;
-}> = ({ wpm }) => {
+  text: string;
+}> = ({ wpm, text }) => {
   return (
     <Box
       sx={{
@@ -47,10 +54,7 @@ const StandardModeGameComponent: React.FC<{
         alignItems: "center",
       }}
     >
-      <ReadingTextDisplay
-        text="The quick brown fox jumped over the lazy dog"
-        wpm={wpm}
-      />
+      <ReadingTextDisplay text={text} wpm={wpm} />
       <Box
         sx={{
           padding: "10px",
