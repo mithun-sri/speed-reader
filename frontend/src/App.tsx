@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-import PreGameView from "./views/PreGame/PreGame";
-
-function App() {
-  return (<PreGameView />);
-=======
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import StandardModeGameView from "./views/StandardMode/StandardMode";
@@ -22,7 +16,6 @@ function App() {
     </div>
   );
   // TODO: Add more Route as more pages are created.
->>>>>>> origin/staging
 }
 
 export default App;
