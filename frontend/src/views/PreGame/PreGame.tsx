@@ -6,7 +6,7 @@ import SpeedSlider from "../../components/Slider/Slider";
 import StartButton from "../../components/Button/StartButton";
 
 const PreGameView = () => {
-  const [wpm, setWPM] = useState<number>(2);
+  const [wpm, setWPM] = useState<number>(300);
 
   return (
     <div className="PreGame">

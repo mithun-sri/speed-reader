@@ -106,12 +106,12 @@ const SpeedSlider: React.FC<{
       </Box>
       <PrettoSlider
         valueLabelDisplay="auto"
-        step={1}
-        defaultValue={2}
+        step={100}
+        defaultValue={300}
         onChange={onSliderChange}
         marks={false}
-        min={0}
-        max={4}
+        min={100}
+        max={500}
       />
       <VerticalLinesBox>
         <Line height="7vh" />
