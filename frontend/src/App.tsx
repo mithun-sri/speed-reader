@@ -1,10 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import StandardModeGameView from "./views/StandardMode/StandardMode";
+import Context from "./Context";
 
 function App() {
+  const context = {
+    wpm: 300,
+  };
+
   return (
-    <div className="App">
+    <Context.Provider value={context}>
       <BrowserRouter>
         <Routes>
           {/* <Route path="/" element={<ModeSelectView />} /> */}
@@ -13,7 +18,7 @@ function App() {
           <Route path="/mode-3-game" />
         </Routes>
       </BrowserRouter>
-    </div>
+    </Context.Provider>
   );
   // TODO: Add more Route as more pages are created.
 }
