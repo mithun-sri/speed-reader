@@ -43,12 +43,14 @@ deploy_staging_backend:
     - private
   only:
     - staging
+    - 12-task-develop-api-endpoint-that-serves-text-from-database
   image: dokku/ci-docker-image
   variables:
     BRANCH: staging
     GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
   script:
+    - dokku config:set speed-reader-backennd DATABASE_URL=$DATABASE_URL
     - dokku-deploy
   after_script:
     - dokku-unlock
