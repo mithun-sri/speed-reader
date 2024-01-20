@@ -1,23 +1,88 @@
 stages:
   - test
   - deploy_staging
-  - deploy_production
+  - deploy_prod
+
+variables:
+  # Disable shallow clone which is not supported by Dokku.
+  # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
+  GIT_DEPTH: 0
+  STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
+  PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
 
 test:
   stage: test
+  tags:
+    - private
   script:
     - echo "Testing"
 
-deploy_staging:
+deploy_staging_frontend:
   stage: deploy_staging
+  tags:
+    - private
   only:
     - staging
+  needs:
+    # Need to make sure backend app is deployed.
+    # otherwise network alias speed-reader-backend.web cannot be resolved.
+    - deploy_staging_backend
+  image: dokku/ci-docker-image
+  variables:
+    BRANCH: staging
+    GIT_PUSH_FLAGS: -f
+    GIT_REMOTE_URL: $STAGING_URL/speed-reader-frontend
   script:
-    - echo "Deploy to staging environment"
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
 
-deploy_production:
-  stage: deploy_production
+deploy_staging_backend:
+  stage: deploy_staging
+  tags:
+    - private
+  only:
+    - staging
+  image: dokku/ci-docker-image
+  variables:
+    BRANCH: staging
+    GIT_PUSH_FLAGS: -f
+    GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
+  script:
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
+
+deploy_prod_frontend:
+  stage: deploy_prod
+  tags:
+    - private
   only:
     - master
+  needs:
+    - deploy_prod_backend
+  image: dokku/ci-docker-image
+  variables:
+    BRANCH: master
+    GIT_PUSH_FLAGS: -f
+    GIT_REMOTE_URL: $PROD_URL/speed-reader-frontend
   script:
-    - echo "Deploy to production environment"
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
+
+deploy_prod_backend:
+  stage: deploy_prod
+  tags:
+    - private
+  only:
+    - master
+  image: dokku/ci-docker-image
+  variables:
+    BRANCH: master
+    GIT_PUSH_FLAGS: -f
+    GIT_REMOTE_URL: $PROD_URL/speed-reader-backend
+  script:
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
