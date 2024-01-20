@@ -1,9 +1,10 @@
 import { createContext } from 'react';
 
 interface ContextType {
-  wpm: number
+  wpm: number;
+  setWPM: (wpm: number) => void;
 }
 
-const Context = createContext<ContextType>({ wpm: 300 });
+const Context = createContext<ContextType>({ wpm: 0, setWPM: (_) => {} });
 
 export default Context;

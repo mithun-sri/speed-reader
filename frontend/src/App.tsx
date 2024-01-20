@@ -2,14 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import StandardModeGameView from "./views/StandardMode/StandardMode";
 import PreGameView from "./views/PreGame/PreGame";
 import Context from "./Context";
+import { useState } from "react";
 
 function App() {
-  const context = {
-    wpm: 300,
-  };
+  const [wpm, setWPM] = useState<number>(300);
 
   return (
-    <Context.Provider value={context}>
+    <Context.Provider value={{ wpm, setWPM }}>
       <BrowserRouter>
         <Routes>
           {/* <Route path="/" element={<ModeSelectView />} /> */}

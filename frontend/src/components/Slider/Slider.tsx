@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import Context from "../../Context";
 
 const calculateFontSize = () => {
   const windowWidth = window.innerWidth;
@@ -54,9 +55,8 @@ const PrettoSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-const SpeedSlider: React.FC<{
-  updateValue: (n: number) => void;
-}> = ({ updateValue }) => {
+function SpeedSlider() {
+  const context = useContext(Context);
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const onSliderChange = (
@@ -64,7 +64,7 @@ const SpeedSlider: React.FC<{
     newValue: number | number[],
     activeThumb: number
   ) => {
-    updateValue(newValue as number);
+    context.setWPM(newValue as number);
   };
 
   useEffect(() => {
