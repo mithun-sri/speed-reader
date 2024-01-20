@@ -1,15 +1,18 @@
-from fastapi import status, APIRouter, Depends
-from fastapi.security import OAuth2PasswordRequestForm
-from typing import Annotated
+from fastapi import APIRouter
 
-from ..schema.user import RegistrationUserRepsonse
-from ..services.auth import login_user, register_user
+router = APIRouter(
+    prefix='/user',
+    tags=['user']
+)
 
-router = APIRouter(prefix="/user", tags=["user"])
+@router.post('/signup')
+def user_signup():
+    pass
 
-user_db = {}
+@router.post('/login')
+def user_login():
+    pass
 
-
-@router.get("/summary")
+@router.get('/summary')
 def get_user_summary():
     pass
