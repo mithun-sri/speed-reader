@@ -1,4 +1,6 @@
+from .database.database import engine
 from fastapi import FastAPI
+from sqlalchemy.orm import Session
 
 from .routers.admin import router as admin_router
 from .routers.auth import router as auth_router
@@ -11,3 +13,13 @@ app.include_router(router=admin_router)
 app.include_router(router=auth_router)
 app.include_router(router=user_router)
 app.include_router(router=game_router)
+
+@app.on_event("startup")
+async def startup():
+    engine.connect()
+
+@app.on_event("shutdown")
+async def shutdown():
+    await engine.disconnect()
+
+
