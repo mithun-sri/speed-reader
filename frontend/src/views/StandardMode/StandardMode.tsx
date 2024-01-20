@@ -4,6 +4,7 @@ import CountdownComponent from "../../components/Counter/Counter";
 import { STANDARD_MODE_1 } from "../../common/constants";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./StandardMode.css";
+import axios from "axios";
 
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
@@ -11,8 +12,17 @@ import Box from "@mui/material/Box";
 const StandardModeGameView: React.FC<{
   wpm?: number;
 }> = ({ wpm }) => {
-  // TODO: Logic to fetch text here. @Mithun
-  let text: string = "The quick brown fox jumped over the lazy dog";
+  const [text, setText] = useState("The quick brown fox jumped over the lazy dog");
+
+  useEffect(() => {
+    const backendHost = process.env.API_URL;
+    const apiEndpoint = `${backendHost}/api/v1/game/texts`;
+    axios
+      .get(apiEndpoint)
+      .then((res) => {
+        setText(res.data.text);
+      });
+  }, []);
 
   const [showGameScreen, setShowGameScreen] = useState(false);
 
