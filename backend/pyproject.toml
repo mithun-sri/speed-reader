@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "src"
-version = "0.2.0"
+version = "0.1.0"
 description = "Python API for Speed Runner"
 authors = ["Taeho <taehokimbusines@gmail.com>"]
 
@@ -15,6 +15,7 @@ python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 black = "^23.12.1"
 pydantic-settings = "^2.1.0"
 sqlalchemy = "^2.0.25"
+psycopg2 = "^2.9.9"
 
 
 [tool.poetry.dev-dependencies]

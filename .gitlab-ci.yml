@@ -22,14 +22,14 @@ deploy_staging_frontend:
   tags:
     - private
   only:
-    - staging
+    - 12-task-develop-api-endpoint-that-serves-text-from-database
   needs:
-    # Need to make sure backend app is deployed
+    # Need to make sure backend app is deployed.
     # otherwise network alias speed-reader-backend.web cannot be resolved.
     - deploy_staging_backend
   image: dokku/ci-docker-image
   variables:
-    BRANCH: staging
+    BRANCH: 12-task-develop-api-endpoint-that-serves-text-from-database
     GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-frontend
   script:
@@ -42,11 +42,10 @@ deploy_staging_backend:
   tags:
     - private
   only:
-    - staging
     - 12-task-develop-api-endpoint-that-serves-text-from-database
   image: dokku/ci-docker-image
   variables:
-    BRANCH: staging
+    BRANCH: 12-task-develop-api-endpoint-that-serves-text-from-database
     GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
   script:
