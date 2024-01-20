@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from contextlib import closing
 import os
 
-DATABASE_URL = "postgresql://postgres:dfef07d5f299649990b0602eb709f942@dokku-postgres-speed-reader-database:5432/speed_reader_database/"
+DATABASE_URL = "postgresql://postgres:dfef07d5f299649990b0602eb709f942@dokku-postgres-speed-reader-database:5432/speed_reader_database"
 try:
     engine = create_engine(DATABASE_URL, pool_pre_ping=True)
     with engine.connect() as connection:
