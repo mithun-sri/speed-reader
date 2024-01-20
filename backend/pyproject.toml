@@ -14,7 +14,7 @@ passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 black = "^23.12.1"
 pydantic-settings = "^2.1.0"
-sqlalchemy = "^1.4.23"
+sqlalchemy = "^2.0.25"
 
 
 [tool.poetry.dev-dependencies]
