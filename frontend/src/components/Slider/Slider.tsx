@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import Context from "../../Context";
 
 const calculateFontSize = () => {
   const windowWidth = window.innerWidth;
@@ -54,8 +55,17 @@ const PrettoSlider = styled(Slider)(({ theme }) => ({
   },
 }));
 
-export default function SpeedSlider() {
+function SpeedSlider() {
+  const context = useContext(Context);
   const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  const onSliderChange = (
+    event: Event,
+    newValue: number | number[],
+    activeThumb: number
+  ) => {
+    context.setWPM(newValue as number);
+  };
 
   useEffect(() => {
     function handleResize() {
@@ -96,11 +106,12 @@ export default function SpeedSlider() {
       </Box>
       <PrettoSlider
         valueLabelDisplay="auto"
-        step={1}
-        defaultValue={2}
+        step={100}
+        defaultValue={300}
+        onChange={onSliderChange}
         marks={false}
-        min={0}
-        max={4}
+        min={100}
+        max={500}
       />
       <VerticalLinesBox>
         <Line height="7vh" />
@@ -112,3 +123,5 @@ export default function SpeedSlider() {
     </Box>
   );
 }
+
+export default SpeedSlider;
