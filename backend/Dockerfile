@@ -3,7 +3,7 @@ FROM python:3.12
 WORKDIR /app
 
 COPY poetry.lock pyproject.toml ./
-RUN pip install poetry==1.6.1 uvicorn[standard] gunicorn && \
+RUN pip install poetry==1.6.1 uvicorn[standard] gunicorn SQLAlchemy && \
     poetry config virtualenvs.create false && \
     poetry install --no-root --no-dev
 

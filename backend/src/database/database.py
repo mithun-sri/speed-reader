@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine, Column, Integer, String, Text, TIMESTAMP, func, MetaData, Table
 from sqlalchemy.orm import Session
 from contextlib import closing
+import os
 
-DATABASE_URL = "postgresql://postgres:3715f905f274304093b0e4f9b0beee8f@cloud-vm-42-173.doc.ic.ac.uk:5432/speed_reader_db"
-print("Database URL:", DATABASE_URL)
+DATABASE_URL = os.getenv("DATABASE_URL")
 try:
     engine = create_engine(DATABASE_URL, pool_pre_ping=True)
     with engine.connect() as connection:
@@ -30,4 +30,4 @@ def get_db():
         with closing(Session(bind=engine)) as db:
             yield db
     finally:
-        pass  # The session will be closed by the closing context manager
+        pass
