@@ -6,6 +6,7 @@ import logging
 
 router = APIRouter(prefix="/game", tags=["game"])
 
+# Collects a random text from the database
 @router.get("/texts")
 async def get_texts(db: Session = Depends(get_db)):
     try:
@@ -18,7 +19,7 @@ async def get_texts(db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
-
+# Collects a text from the database by id
 @router.get("/texts/{id}")
 async def get_text(id: int, db: Session = Depends(get_db)):
     try:
