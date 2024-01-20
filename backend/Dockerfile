@@ -1,5 +1,7 @@
 FROM python:3.12
 
+RUN pip install --upgrade pip
+
 WORKDIR /app
 
 COPY poetry.lock pyproject.toml requirements.txt ./
@@ -9,6 +11,8 @@ RUN pip install poetry==1.6.1 && \
     poetry install --no-root --no-dev
 
 RUN pip install -r requirements.txt
+
+RUN pip list
 
 COPY --chown=app:app . .
 
