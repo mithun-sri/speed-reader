@@ -2,10 +2,13 @@ FROM python:3.12
 
 WORKDIR /app
 
-COPY poetry.lock pyproject.toml ./
-RUN pip install poetry==1.6.1 uvicorn[standard] gunicorn SQLAlchemy && \
+COPY poetry.lock pyproject.toml requirements.txt ./
+
+RUN pip install poetry==1.6.1 && \
     poetry config virtualenvs.create false && \
     poetry install --no-root --no-dev
+
+RUN pip install -r requirements.txt
 
 COPY --chown=app:app . .
 
