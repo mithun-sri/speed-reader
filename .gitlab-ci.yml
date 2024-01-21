@@ -1,7 +1,9 @@
 stages:
+  - check
+  - lint
+  - format
   - test
-  - deploy_staging
-  - deploy_prod
+  - deploy
 
 variables:
   # Disable shallow clone which is not supported by Dokku.
@@ -10,79 +12,112 @@ variables:
   STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
   PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
 
-test:
+.frontend:
+  tags: [private]
+  image: node:21
+  before_script:
+    - cd frontend
+    - yarn install
+
+.backend:
+  tags: [private]
+  image: python:3.12
+  before_script:
+    - cd backend
+    - pip install poetry==1.6.1
+    - poetry install
+
+.deploy:
+  tags: [private]
+  image: dokku/ci-docker-image
+  stage: deploy
+  script:
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
+
+check_frontend:
+  extends: .frontend
+  stage: check
+  script:
+    - echo "Checking"
+    # - yarn tsc --noEmit
+
+check_backend:
+  extends: .backend
+  stage: check
+  script:
+    - echo "Checking"
+    # - poetry run mypy src
+
+lint_frontend:
+  extends: .frontend
+  stage: lint
+  script:
+    - echo "Linting"
+    # - yarn eslint "src/**/*.ts" "src/**/*.tsx"
+
+lint_backend:
+  extends: .backend
+  stage: lint
+  script:
+    - echo "Linting"
+    # - poetry run pylint src
+
+format_frontend:
+  extends: .frontend
+  stage: format
+  script:
+    - echo "Formatting"
+    # - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
+
+format_backend:
+  extends: .backend
+  stage: format
+  script:
+    - echo "Formatting"
+    # - poetry run isort --profile black --check src
+    # - poetry run black --check src
+
+unit_test_backend:
+  extends: .backend
   stage: test
-  tags:
-    - private
   script:
     - echo "Testing"
+    # - poetry run pytest --verbose tests
 
 deploy_staging_frontend:
-  stage: deploy_staging
-  tags:
-    - private
-  only:
-    - staging
-  needs:
-    # Need to make sure backend app is deployed.
-    # otherwise network alias speed-reader-backend.web cannot be resolved.
-    - deploy_staging_backend
-  image: dokku/ci-docker-image
+  extends: .deploy
+  # Need to make sure backend app is deployed
+  # otherwise network alias speed-reader-backend.web cannot be resolved.
+  needs: [deploy_staging_backend]
+  only: [staging]
   variables:
     BRANCH: staging
-    GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-frontend
-  script:
-    - dokku-deploy
-  after_script:
-    - dokku-unlock
+    GIT_PUSH_FLAGS: -f
 
 deploy_staging_backend:
-  stage: deploy_staging
-  tags:
-    - private
-  only:
-    - staging
-  image: dokku/ci-docker-image
+  extends: .deploy
+  only: [staging]
   variables:
     BRANCH: staging
-    GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
-  script:
-    - dokku-deploy
-  after_script:
-    - dokku-unlock
+    GIT_PUSH_FLAGS: -f
 
 deploy_prod_frontend:
-  stage: deploy_prod
-  tags:
-    - private
-  only:
-    - master
-  needs:
-    - deploy_prod_backend
-  image: dokku/ci-docker-image
+  extends: .deploy
+  needs: [deploy_prod_backend]
+  only: [master]
   variables:
     BRANCH: master
-    GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $PROD_URL/speed-reader-frontend
-  script:
-    - dokku-deploy
-  after_script:
-    - dokku-unlock
+    GIT_PUSH_FLAGS: -f
 
 deploy_prod_backend:
-  stage: deploy_prod
-  tags:
-    - private
-  only:
-    - master
-  image: dokku/ci-docker-image
+  extends: .deploy
+  only: [master]
   variables:
     BRANCH: master
-    GIT_PUSH_FLAGS: -f
     GIT_REMOTE_URL: $PROD_URL/speed-reader-backend
-  script:
-    - dokku-deploy
-  after_script:
-    - dokku-unlock
+    GIT_PUSH_FLAGS: -f
