@@ -65,13 +65,13 @@ format_frontend:
   extends: .frontend
   stage: format
   script:
-    - yarn run prettier --check "src/**/*.tsx" "src/**/*.ts"
+    - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
 format_backend:
   extends: .backend
   stage: format
   script:
-    - poetry run isort --check src
+    - poetry run isort --profile black --check src
     - poetry run black --check src
 
 unit_test_backend:

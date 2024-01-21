@@ -1,0 +1,11 @@
+[FORMAT]
+max-line-length = 88
+
+[MESSAGES CONTROL]
+disable = 
+    missing-docstring,
+    too-few-public-methods,
+    # Ignore TODO and FIXME comments.
+    fixme,
+    # Handled by black.
+    format,
