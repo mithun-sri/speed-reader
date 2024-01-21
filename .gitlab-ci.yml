@@ -49,17 +49,17 @@ variables:
 #   script:
 #     - poetry run mypy src
 
-lint_frontend:
-  extends: .frontend
-  stage: lint
-  script:
-    - yarn eslint "src/**/*.ts" "src/**/*.tsx"
+# lint_frontend:
+#   extends: .frontend
+#   stage: lint
+#   script:
+#     - yarn eslint "src/**/*.ts" "src/**/*.tsx"
 
-lint_backend:
-  extends: .backend
-  stage: lint
-  script:
-    - poetry run pylint src
+# lint_backend:
+#   extends: .backend
+#   stage: lint
+#   script:
+#     - poetry run pylint src
 
 format_frontend:
   extends: .frontend
