@@ -4,7 +4,7 @@ import CountdownComponent from "../../components/Counter/Counter";
 import { STANDARD_MODE_1 } from "../../common/constants";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./StandardMode.css";
-import axios from "axios";
+import axios from 'axios';
 
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
@@ -15,14 +15,23 @@ const StandardModeGameView: React.FC<{
   const [text, setText] = useState("The quick brown fox jumped over the lazy dog");
 
   useEffect(() => {
-    const backendHost = process.env.API_URL;
-    const apiEndpoint = `${backendHost}/api/v1/game/texts`;
-    axios
-      .get(apiEndpoint)
-      .then((res) => {
-        setText(res.data.text);
-      });
-  }, []);
+    let config = {
+      method: 'get',
+      maxBodyLength: Infinity,
+      url: `${process.env.API_HOSTNAME}/api/v1/game/texts`,
+      headers: { }
+    };
+
+    axios.request(config)
+    .then((response: any) => {
+      console.log(JSON.stringify(response.data));
+      setText(response.data.text);
+    })
+    .catch((error: any) => {
+      console.log(error);
+    });
+  }
+  , []);
 
   const [showGameScreen, setShowGameScreen] = useState(false);
 
