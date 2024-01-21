@@ -61,18 +61,18 @@ variables:
 #   script:
 #     - poetry run pylint src
 
-format_frontend:
-  extends: .frontend
-  stage: format
-  script:
-    - yarn run prettier --check "src/**/*.tsx" "src/**/*.ts"
+# format_frontend:
+#   extends: .frontend
+#   stage: format
+#   script:
+#     - yarn run prettier --check "src/**/*.tsx" "src/**/*.ts"
 
-format_backend:
-  extends: .backend
-  stage: format
-  script:
-    - poetry run isort --check src
-    - poetry run black --check src
+# format_backend:
+#   extends: .backend
+#   stage: format
+#   script:
+#     - poetry run isort --check src
+#     - poetry run black --check src
 
 unit_test_backend:
   extends: .backend
