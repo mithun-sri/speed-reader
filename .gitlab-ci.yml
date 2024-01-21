@@ -43,29 +43,29 @@ check_frontend:
   script:
     - yarn tsc --noEmit
 
-lint_frontend:
-  extends: .frontend
-  stage: lint
-  script:
-    - yarn eslint "src/**/*.ts" "src/**/*.tsx"
-
-format_frontend:
-  extends: .frontend
-  stage: format
-  script:
-    - yarn run prettier --check "src/**/*.tsx" "src/**/*.ts"
-
 check_backend:
   extends: .backend
   stage: check
   script:
     - poetry run mypy src
 
+lint_frontend:
+  extends: .frontend
+  stage: lint
+  script:
+    - yarn eslint "src/**/*.ts" "src/**/*.tsx"
+
 lint_backend:
   extends: .backend
   stage: lint
   script:
     - poetry run pylint src
+
+format_frontend:
+  extends: .frontend
+  stage: format
+  script:
+    - yarn run prettier --check "src/**/*.tsx" "src/**/*.ts"
 
 format_backend:
   extends: .backend
