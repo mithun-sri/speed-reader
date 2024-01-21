@@ -1,8 +1,9 @@
 [tool.poetry]
-name = "src"
+name = "backend"
 version = "0.1.0"
-description = "Python API for Speed Runner"
-authors = ["Taeho <taehokimbusines@gmail.com>"]
+description = ""
+authors = []
+packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -12,13 +13,10 @@ google-cloud-firestore = "^2.14.0"
 python-multipart = "^0.0.6"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
-black = "^23.12.1"
 pydantic-settings = "^2.1.0"
 
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-
 [tool.poetry.group.dev.dependencies]
+pytest = "^5.2"
 black = "^23.12.1"
 
 [build-system]
