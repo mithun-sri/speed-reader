@@ -59,8 +59,6 @@ check_backend:
   extends: .backend
   stage: check
   script:
-    # Need to run mypy before installing missing types.
-    - poetry run mypy src && poetry run mypy --install-types
     - poetry run mypy src
 
 lint_backend:
