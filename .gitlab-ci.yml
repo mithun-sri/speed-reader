@@ -24,7 +24,7 @@ deploy_staging_frontend:
   only:
     - staging
   needs:
-    # Need to make sure backend app is deployed.
+    # Need to make sure backend app is deployed
     # otherwise network alias speed-reader-backend.web cannot be resolved.
     - deploy_staging_backend
   image: dokku/ci-docker-image
