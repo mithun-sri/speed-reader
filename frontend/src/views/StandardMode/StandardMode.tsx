@@ -1,7 +1,7 @@
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
-import CountdownComponent from "../../components/Counter/Counter";
 import { STANDARD_MODE_1 } from "../../common/constants";
+import CountdownComponent from "../../components/Counter/Counter";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
 import "./StandardMode.css";
 
 import { useState } from "react";
@@ -21,7 +21,7 @@ function StandardModeGameView() {
     setShowGameScreen(true);
   };
 
-  let countdownComp = (
+  const countdownComp = (
     <>
       <CountdownComponent
         duration={3}

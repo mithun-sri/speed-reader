@@ -9,5 +9,5 @@ async def get_texts():
 
 
 @router.get("/texts/{id}")
-async def get_text(id: int):
+async def get_text(_id: int):
     pass

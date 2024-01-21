@@ -27,7 +27,7 @@ const Line = styled("div")<{ height: string }>`
   border-radius: 2.5px;
 `;
 
-const PrettoSlider = styled(Slider)(({ theme }) => ({
+const PrettoSlider = styled(Slider)(({ theme: _theme }) => ({
   color: "#E2B714",
   height: 26,
   width: "100%",
