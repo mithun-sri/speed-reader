@@ -36,48 +36,49 @@ variables:
   after_script:
     - dokku-unlock
 
-# check_frontend:
-#   extends: .frontend
-#   stage: check
-#   script:
-#     - yarn tsc --noEmit
 
-# check_backend:
-#   extends: .backend
-#   stage: check
-#   script:
-#     - poetry run mypy src
+check_frontend:
+  extends: .frontend
+  stage: check
+  script:
+    - yarn tsc --noEmit
 
-# lint_frontend:
-#   extends: .frontend
-#   stage: lint
-#   script:
-#     - yarn eslint "src/**/*.ts" "src/**/*.tsx"
+check_backend:
+  extends: .backend
+  stage: check
+  script:
+    - poetry run mypy src
 
-# lint_backend:
-#   extends: .backend
-#   stage: lint
-#   script:
-#     - poetry run pylint src
+lint_frontend:
+  extends: .frontend
+  stage: lint
+  script:
+    - yarn eslint "src/**/*.ts" "src/**/*.tsx"
 
-# format_frontend:
-#   extends: .frontend
-#   stage: format
-#   script:
-#     - yarn run prettier --check "src/**/*.tsx" "src/**/*.ts"
+lint_backend:
+  extends: .backend
+  stage: lint
+  script:
+    - poetry run pylint src
 
-# format_backend:
-#   extends: .backend
-#   stage: format
-#   script:
-#     - poetry run isort --check src
-#     - poetry run black --check src
+format_frontend:
+  extends: .frontend
+  stage: format
+  script:
+    - yarn run prettier --check "src/**/*.tsx" "src/**/*.ts"
 
-# unit_test_backend:
-#   extends: .backend
-#   stage: test
-#   script:
-#     - poetry run pytest --verbose tests
+format_backend:
+  extends: .backend
+  stage: format
+  script:
+    - poetry run isort --check src
+    - poetry run black --check src
+
+unit_test_backend:
+  extends: .backend
+  stage: test
+  script:
+    - poetry run pytest --verbose tests
 
 deploy_staging_frontend:
   extends: .deploy
