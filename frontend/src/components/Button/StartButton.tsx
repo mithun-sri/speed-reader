@@ -1,51 +1,51 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, Icon, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 
+
 const StartButton = () => {
-  const [fontSize, setFontSize] = useState(calculateFontSize());
+   const [fontSize, setFontSize] = useState(calculateFontSize());
 
-  useEffect(() => {
-    function handleResize() {
-      setFontSize(calculateFontSize());
-    }
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
-  function calculateFontSize() {
-    const windowWidth = window.innerWidth;
-    const minSize = 12;
-    const maxSize = 36;
-    const calculatedSize = Math.min(
-      maxSize,
-      Math.max(minSize, windowWidth / 15),
-    );
-    return calculatedSize;
-  }
+   useEffect(() => {
+     function handleResize() {
+       setFontSize(calculateFontSize());
+     }
+      window.addEventListener("resize", handleResize);
+      return () => {
+       window.removeEventListener("resize", handleResize);
+     };
+   }, []);
+  
+   function calculateFontSize() {
+     const windowWidth = window.innerWidth;
+     const minSize = 12;
+     const maxSize = 36;
+      const calculatedSize = Math.min(
+       maxSize,
+       Math.max(minSize, windowWidth / 15)
+     );
+      return calculatedSize;
+   }
 
-  return (
-    <IconButton
-      sx={{
-        fontFamily: "JetBrains Mono, monospace",
-        color: "#FFFFFF",
-      }}
-    >
-      <Box
-        sx={{
-          border: "10px solid #646669",
-          borderRadius: "30px",
-          background: "#E2B714",
-          padding: "10px 60px 10px 60px",
-          fontWeight: "bolder",
-          fontSize: fontSize * 1.1,
-        }}
-      >
-        <Box>Start.</Box>
-      </Box>
-    </IconButton>
-  );
-};
+
+   return (
+       <IconButton sx={{
+           fontFamily: "JetBrains Mono, monospace",
+           color: "#FFFFFF"
+       }}>
+           <Box sx={{
+               border: '10px solid #646669',
+               borderRadius: "30px",
+               background: "#E2B714",
+               padding: "10px 60px 10px 60px",
+               fontWeight: "bolder",
+               fontSize: fontSize * 1.1
+           }}>
+               <Box>Start.</Box>
+           </Box>
+       </IconButton>
+   );
+}
+
 
 export default StartButton;
