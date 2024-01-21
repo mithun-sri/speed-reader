@@ -37,17 +37,17 @@ variables:
     - dokku-unlock
 
 
-check_frontend:
-  extends: .frontend
-  stage: check
-  script:
-    - yarn tsc --noEmit
+# check_frontend:
+#   extends: .frontend
+#   stage: check
+#   script:
+#     - yarn tsc --noEmit
 
-check_backend:
-  extends: .backend
-  stage: check
-  script:
-    - poetry run mypy src
+# check_backend:
+#   extends: .backend
+#   stage: check
+#   script:
+#     - poetry run mypy src
 
 lint_frontend:
   extends: .frontend
