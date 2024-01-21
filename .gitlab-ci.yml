@@ -1,4 +1,7 @@
 stages:
+  - check
+  - lint
+  - format
   - test
   - deploy_staging
   - deploy_prod
@@ -10,12 +13,70 @@ variables:
   STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
   PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
 
-test:
+check_frontend:
+  stage: check
+  tags:
+    - private
+  script:
+    - cd frontend
+    - yarn install
+    - yarn tsc --noEmit
+
+lint_frontend:
+  stage: lint
+  tags:
+    - private
+  script:
+    - cd frontend
+    - yarn install
+    - yarn eslint "src/**/*.ts" "src/**/*.tsx"
+
+format_frontend:
+  stage: format
+  tags:
+    - private
+  script:
+    - cd frontend
+    - yarn install
+    - yarn run prettier --check "src/**/*.tsx" "src/**/*.ts"
+
+check_backend:
+  stage: check
+  tags:
+    - private
+  script:
+    - cd backend
+    - poetry install
+    - poetry run mypy --install-types
+    - poetry run mypy src
+
+lint_backend:
+  stage: lint
+  tags:
+    - private
+  script:
+    - cd backend
+    - poetry install
+    - poetry run pylint src
+
+format_backend:
+  stage: format
+  tags:
+    - private
+  script:
+    - cd backend
+    - poetry install
+    - poetry run isort --check src
+    - poetry run black --check src
+
+unit_test_backend:
   stage: test
   tags:
     - private
   script:
-    - echo "Testing"
+    - cd backend
+    - poetry install
+    - poetry run pytest --verbose tests
 
 deploy_staging_frontend:
   stage: deploy_staging
