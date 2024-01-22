@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import { useContext, useEffect, useState } from "react";
 import Context from "../../Context";
 import SliderLevelText from "./SliderLevelText";
+import SliderRateText from "./SliderRateText";
 
 const calculateFontSize = () => {
   const windowWidth = window.innerWidth;
@@ -18,7 +19,7 @@ const calculateFontSize = () => {
 const VerticalLinesBox = styled(Box)`
   display: flex;
   justify-content: space-between;
-  height: 60px; /* Adjust the height of the box */
+  height: 70px; /* Adjust the height of the box */
   align-items: start; /* Align lines vertically at the center */
   padding-top: 1%;
 `;
@@ -127,6 +128,7 @@ function SpeedSlider() {
         </VerticalLinesBox>
       </Box>
       <SliderLevelText fontSize={fontSize} />
+      <SliderRateText fontSize={fontSize} />
     </Box>
   );
 }
