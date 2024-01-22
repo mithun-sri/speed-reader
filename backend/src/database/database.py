@@ -1,7 +1,18 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, TIMESTAMP, func, MetaData, Table
-from sqlalchemy.orm import Session
-from contextlib import closing
 import os
+from contextlib import closing
+
+from sqlalchemy import (
+    TIMESTAMP,
+    Column,
+    Integer,
+    MetaData,
+    String,
+    Table,
+    Text,
+    create_engine,
+    func,
+)
+from sqlalchemy.orm import Session
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -9,9 +20,10 @@ try:
     engine = create_engine(DATABASE_URL, pool_pre_ping=True)
     with engine.connect():
         print("Database connection established")
-except Exception as e:
+except Exception as exception:
     print("Database connection failed")
-    print(e)
+    print(exception)
+    raise ValueError("Database connection failed") from exception
 
 metadata = MetaData()
 
@@ -26,10 +38,11 @@ text_table = Table(
     Column("created_at", TIMESTAMP, server_default=func.now()),
 )
 
+
 def get_db():
-    db = None
+    database = None
     try:
-        with closing(Session(bind=engine)) as db:
-            yield db
+        with closing(Session(bind=engine)) as database:
+            yield database
     finally:
         pass
