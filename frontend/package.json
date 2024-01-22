@@ -6,6 +6,7 @@
     "node": ">=21.0.0 <22.0.0",
     "yarn": ">=1.22.0 <2.0.0"
   },
+  "proxy": "http://backend:8000",
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
