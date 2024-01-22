@@ -1,8 +1,11 @@
+import { faRocket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 import { useContext, useEffect, useState } from "react";
 import Context from "../../Context";
+import SliderLevelText from "./SliderLevelText";
 
 const calculateFontSize = () => {
   const windowWidth = window.innerWidth;
@@ -15,7 +18,7 @@ const calculateFontSize = () => {
 const VerticalLinesBox = styled(Box)`
   display: flex;
   justify-content: space-between;
-  height: 200px; /* Adjust the height of the box */
+  height: 60px; /* Adjust the height of the box */
   align-items: start; /* Align lines vertically at the center */
   padding-top: 1%;
 `;
@@ -80,46 +83,50 @@ function SpeedSlider() {
   }, []); // Run effect only once on mount
 
   return (
-    <Box sx={{ width: "55%", margin: "0 auto" }}>
-      <Box
-        sx={{
-          paddingBottom: "5px",
-          fontSize: fontSize * 1.1,
-          color: "#D1D0C5",
-          fontFamily: "JetBrains Mono, monospace",
-          margin: "20px",
-          fontWeight: "bolder",
-        }}
-      >
-        Standard Mode.
+    <Box>
+      <Box sx={{ width: "55%", margin: "0 auto" }}>
+        <Box
+          sx={{
+            paddingBottom: "5px",
+            fontSize: fontSize * 1.1,
+            color: "#D1D0C5",
+            fontFamily: "JetBrains Mono, monospace",
+            margin: "20px",
+            fontWeight: "bolder",
+          }}
+        >
+          Standard Mode.
+        </Box>
+        <Box
+          sx={{
+            margin: "20px",
+            fontSize: fontSize / 1.4,
+            color: "#fff",
+            fontFamily: "JetBrains Mono, monospace",
+            fontWeight: "bolder",
+          }}
+        >
+          Choose your reading speed.
+        </Box>
+        <PrettoSlider
+          valueLabelDisplay="auto"
+          step={100}
+          defaultValue={300}
+          onChange={onSliderChange}
+          marks={false}
+          min={100}
+          max={500}
+          sx={{ marginBottom: "10px"}}
+        />
+        <VerticalLinesBox>
+          <Line height="7vh" />
+          <Line height="5vh" />
+          <Line height="7vh" />
+          <Line height="5vh" />
+          <Line height="7vh" />
+        </VerticalLinesBox>
       </Box>
-      <Box
-        sx={{
-          margin: "20px",
-          fontSize: fontSize / 1.4,
-          color: "#fff",
-          fontFamily: "JetBrains Mono, monospace",
-          fontWeight: "bolder",
-        }}
-      >
-        Choose your reading speed.
-      </Box>
-      <PrettoSlider
-        valueLabelDisplay="auto"
-        step={100}
-        defaultValue={300}
-        onChange={onSliderChange}
-        marks={false}
-        min={100}
-        max={500}
-      />
-      <VerticalLinesBox>
-        <Line height="7vh" />
-        <Line height="5vh" />
-        <Line height="7vh" />
-        <Line height="5vh" />
-        <Line height="7vh" />
-      </VerticalLinesBox>
+      <SliderLevelText fontSize={fontSize} />
     </Box>
   );
 }
