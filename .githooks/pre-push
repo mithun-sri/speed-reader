@@ -1,8 +1,9 @@
 #!/bin/bash
 
 # ANSI color codes
-RED='\033[1;31m'
 BRIGHT_BLUE='\033[1;34m'
+RED='\033[1;31m'
+YELLOW='\033[0;33m'
 GREEN='\033[1;32m'
 NO_COLOR='\033[0m'
 
@@ -12,6 +13,10 @@ function print_info() {
 
 function print_error() {
     printf "\n$RED%s$NO_COLOR\n" "$1"
+}
+
+function print_warning() {
+    printf "\n$YELLOW%s$NO_COLOR\n" "$1"
 }
 
 function print_success() {
@@ -54,7 +59,7 @@ fi
 print_info "[5/8] Running frontend formatting checks..."
 if ! (cd frontend && yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"); then
     print_error "Frontend checks failed. Please fix the issue before pushing."
-    echo "${NC}Run ${YELLOW}cd frontend && yarn run prettier --write \"src/**/*.ts\" \"src/**/*.tsx\"${NC} to fix the problem.${NC}"
+    print_warning "Run 'cd frontend && yarn run prettier --write \"src/**/*.ts\" \"src/**/*.tsx\"' to fix the problem."
     exit 1
 else
     print_success "Frontend formatting tests passed!"
@@ -63,7 +68,7 @@ fi
 print_info "[6/8] Running backend formatting checks..."
 if ! (cd backend && poetry run isort --profile black --check src && poetry run black --check src); then
     print_error "Backend formatting checks failed. Please fix the issue before pushing."
-    echo "${NC}Run ${YELLOW}cd backend && poetry run isort --profile black src && poetry run black src${NC} to fix the problem.${NC}"
+    print_warning "Run 'cd backend && poetry run isort --profile black src && poetry run black src' to fix the problem."
     exit 1
 else
     print_success "Backend formatting tests passed!"
