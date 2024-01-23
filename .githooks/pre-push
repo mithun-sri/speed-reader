@@ -36,7 +36,7 @@ else
 fi
 
 print_info "[3/6] Running frontend linting checks..."
-if ! ./tests/lint_check_frontend.sh; then
+if ! ./tests/check_lint_frontend.sh; then
     print_error "Frontend linting checks failed. Please fix the issue before pushing."
     exit 1
 else
@@ -44,7 +44,7 @@ else
 fi
 
 print_info "[4/6] Running backend linting checks..."
-if ! ./tests/lint_check_backend.sh; then
+if ! ./tests/check_lint_backend.sh; then
     print_error "Backend linting checks failed. Please fix the issue before pushing."
     exit 1
 else
@@ -52,7 +52,7 @@ else
 fi
 
 print_info "[5/6] Running frontend formatting checks..."
-if ! ./tests/prettier.sh; then
+if ! ./tests/check_format_frontend.sh; then
     print_error "Frontend checks failed. Please fix the issue before pushing."
     exit 1
 else
@@ -60,7 +60,7 @@ else
 fi
 
 print_info "[6/6] Running backend formatting checks..."
-if ! ./tests/formatting_check_backend.sh; then
+if ! ./tests/check_format_backend.sh; then
     print_error "Backend formatting checks failed. Please fix the issue before pushing."
     exit 1
 else
