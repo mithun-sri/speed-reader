@@ -111,6 +111,7 @@ StandardModeGameComponent.propTypes = {
   mode: PropTypes.oneOf([StandardMode.Word, StandardMode.Justified]).isRequired,
 };
 
+// eslint-disable-next-line
 const nonHighlightedWord: React.FC<{
   word: string;
 }> = ({ word }) => {
@@ -143,7 +144,7 @@ const WordTextDisplay: React.FC<{
   text: string;
   wpm: number;
   size?: number;
-}> = ({ text, wpm, size }) => {
+}> = ({ text, wpm }) => {
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
@@ -211,7 +212,7 @@ const JustifiedTextDisplay: React.FC<{
   text: string;
   wpm: number;
   size?: number;
-}> = ({ text, wpm, size }) => {
+}> = ({ text, wpm }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
 
