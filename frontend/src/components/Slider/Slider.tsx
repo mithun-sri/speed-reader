@@ -131,8 +131,38 @@ function SpeedSlider() {
           <Line height="7vh" />
         </VerticalLinesBox>
       </Box>
+<<<<<<< HEAD
       <SliderLevelText fontSize={fontSize} />
       <SliderRateText fontSize={fontSize} />
+=======
+      <Box
+        sx={{
+          margin: "20px",
+          fontSize: fontSize / 1.4,
+          color: "#fff",
+          fontFamily: "JetBrains Mono, monospace",
+          fontWeight: "bolder",
+        }}
+      >
+        Choose your reading speed.
+      </Box>
+      <PrettoSlider
+        valueLabelDisplay="auto"
+        step={1}
+        defaultValue={Math.floor((SPEED_RANGES.length - 1) / 2)}
+        onChange={onSliderChange}
+        marks={false}
+        min={0}
+        max={SPEED_RANGES.length - 2}
+      />
+      <VerticalLinesBox>
+        <Line height="7vh" />
+        <Line height="5vh" />
+        <Line height="7vh" />
+        <Line height="5vh" />
+        <Line height="7vh" />
+      </VerticalLinesBox>
+>>>>>>> 24560b0782fa5e1b255d6a0b6794280cd7d4ed7d
     </Box>
   );
 }
