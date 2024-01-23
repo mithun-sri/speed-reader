@@ -3,11 +3,16 @@ import Footer from "../../components/Footer/Footer";
 import CountdownComponent from "../../components/Counter/Counter";
 import { STANDARD_MODE_1 } from "../../common/constants";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
+import PropTypes from 'prop-types';
 import "./StandardMode.css";
-import axios from 'axios';
+import axios, { AxiosResponse, AxiosError } from 'axios';
 
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
+
+interface TextsApiResponse {
+  text: string;
+}
 
 const StandardModeGameView: React.FC<{
   wpm?: number;
@@ -23,13 +28,13 @@ const StandardModeGameView: React.FC<{
     };
 
     axios.request(config)
-    .then((response: any) => {
-      console.log(JSON.stringify(response.data));
-      setText(response.data.text);
-    })
-    .catch((error: any) => {
-      console.log(error);
-    });
+      .then((response: AxiosResponse<TextsApiResponse>) => {
+        console.log(JSON.stringify(response.data));
+        setText(response.data.text);
+      })
+      .catch((error: AxiosError) => {
+        console.log(error);
+      });
   }
   , []);
 
@@ -58,6 +63,10 @@ const StandardModeGameView: React.FC<{
       <Footer />
     </Box>
   );
+};
+
+StandardModeGameView.propTypes = {
+  wpm: PropTypes.number,
 };
 
 const StandardModeGameComponent: React.FC<{
@@ -97,6 +106,11 @@ const StandardModeGameComponent: React.FC<{
       </Box>
     </Box>
   );
+};
+
+StandardModeGameComponent.propTypes = {
+  wpm: PropTypes.number.isRequired,
+  text: PropTypes.string.isRequired,
 };
 
 const nonHighlightedWord: React.FC<{
@@ -179,6 +193,12 @@ const ReadingTextDisplay: React.FC<{
       {highlightedWord({ word: words[wordIndex] })}
     </Box>
   );
+};
+
+ReadingTextDisplay.propTypes = {
+  text: PropTypes.string.isRequired,
+  wpm: PropTypes.number.isRequired,
+  size: PropTypes.number,
 };
 
 export default StandardModeGameView;
