@@ -1,7 +1,7 @@
 # ANSI color codes
 YELLOW='\033[0;33m'
 RED='\033[1;31m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 BRIGHT_BLUE='\033[1;34m'
 GREEN='\033[1;32m'
 
@@ -10,7 +10,7 @@ echo "\n${BRIGHT_BLUE}[1/6] Running type checks on frontend...${NC}\n"
 
 if [[ $? -ne 0 ]]; then
     echo "\n\b${RED}Frontend type checks failed. Please fix the issue before pushing.${NC}\n"
-    # exit 1
+    exit 1
 else
     echo "\n${GREEN}Frontend type check tests passed!${NC}\n"
 fi
@@ -20,7 +20,7 @@ echo "${BRIGHT_BLUE}[2/6] Running type checks on backend...${NC}"
 
 if [[ $? -ne 0 ]]; then
     echo "\n\b${RED}Backend type checks failed. Please fix the issue before pushing.${NC}\n"
-    # exit 1
+    exit 1
 else
     echo "\n${GREEN}Backend unit tests passed!${NC}\n"
 fi
@@ -30,7 +30,7 @@ echo "${BRIGHT_BLUE}[3/6] Running lint tests on frontend...${NC}\n"
 
 if [[ $? -ne 0 ]]; then
     echo "\n\b${RED}Frontend lint checks failed. Please fix the issue before pushing.${NC}\n"
-    # exit 1
+    exit 1
 else
     echo "\n${GREEN}Frontend lint tests passed!${NC}\n"
 fi
@@ -40,18 +40,17 @@ echo "${BRIGHT_BLUE}[4/6] Running lint check on backend...${NC}"
 
 if [[ $? -ne 0 ]]; then
     echo "${RED}Backend lint checks failed. Please fix the issue before pushing.${NC}\n"
-    # exit 1
+    exit 1
 else
     echo "\n${GREEN}Backend lint tests passed!${NC}\n"
 fi
 
-# RUNNING PRETTIER CHECKS
 echo "\n${BRIGHT_BLUE}[5/6] Running formatting checks on frontend...${NC}\n"
 .githooks/tests/prettier.sh
 
 if [[ $? -ne 0 ]]; then
     echo "\n\b${RED}Prettier checks failed. Please fix the issue before pushing.${NC}\n"
-    # exit 1
+    exit 1
 else
     echo "\n${GREEN}Frontend formatting tests passed!${NC}\n"
 fi
@@ -61,10 +60,10 @@ echo ${BRIGHT_BLUE}"[6/6] Running formatting checks on backend...${NC}"
 
 if [[ $? -ne 0 ]]; then
     echo "\n\b${RED}Formatting checks failed. Please fix the issue before pushing.${NC}\n"
-    # exit 1
+    exit 1
 else
     echo "\n${GREEN}Backend formatting tests passed!${NC}\n"
 fi
 
-echo "${GREEN}All tests passed!${NC}"
+echo "${GREEN}All tests passed! Pushing changes...${NC}"
 exit 0

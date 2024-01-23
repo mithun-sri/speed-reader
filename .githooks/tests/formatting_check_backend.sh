@@ -1,11 +1,12 @@
 RED='\033[1;31m'
 YELLOW='\033[0;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 GREEN='\033[1;32m'
 
 cd backend || exit 1
 poetry run isort --profile black --check src
 
+# Check isort results
 if [[ $? -ne 0 ]]; then
     echo "${RED}Import sort and formatting check failed for backend.${NC}"
     echo "${RED}Run ${NC}\"${YELLOW}poetry run isort --profile black src${NC}\" ${RED}in ./backend/ to fix the problem.${NC}"
@@ -13,6 +14,8 @@ if [[ $? -ne 0 ]]; then
 fi
 
 poetry run black --check src
+
+# Check black results
 if [[ $? -ne 0 ]]; then
     echo "${RED}Formatting failed for backend${NC}"
     echo "${RED}Run ${NC}\"${YELLOW}poetry run black src/${NC}\" ${RED}in ./backend/ to fix the problem.${NC}"

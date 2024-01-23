@@ -1,13 +1,11 @@
-# ANSI color codes
 RED='\033[1;31m'
 YELLOW='\033[0;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 BRIGHT_GREEN='\033[1;32m'
 
-# Change into the 'frontend' directory (adjust as needed)
+# Change into the 'frontend' directory
 cd frontend || exit 1
 
-# Run Prettier check
 yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
 # Check Prettier results
