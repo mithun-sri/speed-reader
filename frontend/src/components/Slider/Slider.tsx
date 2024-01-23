@@ -56,6 +56,7 @@ const PrettoSlider = styled(Slider)(({ theme }) => ({
 }));
 
 function SpeedSlider() {
+  const SPEED_RANGES = [100, 150, 200, 300, 600, 2000];
   const context = useContext(Context);
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
@@ -64,7 +65,10 @@ function SpeedSlider() {
     newValue: number | number[],
     activeThumb: number
   ) => {
-    context.setWPM(newValue as number);
+    const newNumber = newValue as number;
+    const min = SPEED_RANGES[newNumber];
+    const max = SPEED_RANGES[newNumber + 1];
+    context.setWPM(Math.floor(Math.random() * (max - min + 1)) + min);
   };
 
   useEffect(() => {
@@ -106,12 +110,12 @@ function SpeedSlider() {
       </Box>
       <PrettoSlider
         valueLabelDisplay="auto"
-        step={100}
-        defaultValue={300}
+        step={1}
+        defaultValue={Math.floor((SPEED_RANGES.length - 1) / 2)}
         onChange={onSliderChange}
         marks={false}
-        min={100}
-        max={500}
+        min={0}
+        max={SPEED_RANGES.length - 2}
       />
       <VerticalLinesBox>
         <Line height="7vh" />
