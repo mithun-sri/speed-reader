@@ -3,6 +3,7 @@ import StandardModeGameView from "./views/StandardMode/StandardMode";
 import PreGameView from "./views/PreGame/PreGame";
 import Context from "./Context";
 import { useState } from "react";
+import ModeSelectView from "./views/ModeSelect/ModeSelect";
 
 function App() {
   const [wpm, setWPM] = useState<number>(300);
@@ -11,7 +12,7 @@ function App() {
     <Context.Provider value={{ wpm, setWPM }}>
       <BrowserRouter>
         <Routes>
-          {/* <Route path="/" element={<ModeSelectView />} /> */}
+          <Route path="/" element={<ModeSelectView />} />
           <Route path="/pre-game" element={<PreGameView />} />
           <Route path="/mode-1-game" element={<StandardModeGameView />} />
           <Route path="/mode-2-game" />
