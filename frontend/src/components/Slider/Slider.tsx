@@ -60,6 +60,7 @@ const PrettoSlider = styled(Slider)(({ theme }) => ({
 }));
 
 function SpeedSlider() {
+  const SPEED_RANGES = [100, 150, 200, 300, 600, 2000];
   const context = useContext(Context);
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
@@ -68,7 +69,10 @@ function SpeedSlider() {
     newValue: number | number[],
     activeThumb: number
   ) => {
-    context.setWPM(newValue as number);
+    const newNumber = newValue as number;
+    const min = SPEED_RANGES[newNumber];
+    const max = SPEED_RANGES[newNumber + 1];
+    context.setWPM(Math.floor(Math.random() * (max - min + 1)) + min);
   };
 
   useEffect(() => {
@@ -127,8 +131,38 @@ function SpeedSlider() {
           <Line height="7vh" />
         </VerticalLinesBox>
       </Box>
+<<<<<<< HEAD
       <SliderLevelText fontSize={fontSize} />
       <SliderRateText fontSize={fontSize} />
+=======
+      <Box
+        sx={{
+          margin: "20px",
+          fontSize: fontSize / 1.4,
+          color: "#fff",
+          fontFamily: "JetBrains Mono, monospace",
+          fontWeight: "bolder",
+        }}
+      >
+        Choose your reading speed.
+      </Box>
+      <PrettoSlider
+        valueLabelDisplay="auto"
+        step={1}
+        defaultValue={Math.floor((SPEED_RANGES.length - 1) / 2)}
+        onChange={onSliderChange}
+        marks={false}
+        min={0}
+        max={SPEED_RANGES.length - 2}
+      />
+      <VerticalLinesBox>
+        <Line height="7vh" />
+        <Line height="5vh" />
+        <Line height="7vh" />
+        <Line height="5vh" />
+        <Line height="7vh" />
+      </VerticalLinesBox>
+>>>>>>> 24560b0782fa5e1b255d6a0b6794280cd7d4ed7d
     </Box>
   );
 }
