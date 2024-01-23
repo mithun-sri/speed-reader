@@ -149,23 +149,13 @@ const WordTextDisplay: React.FC<{
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
 
-  const handleKeyDown = (event: KeyboardEvent): void => {
-    if (event.code === "ArrowUp") {
-      console.log("ArrowUp");
-      setWpm(curr_wpm + 5);
-      console.log(curr_wpm);
-    }
-    if (event.code === "ArrowDown") {
-      console.log("ArrowDown");
-      setWpm(Math.max(curr_wpm - 5, 1));
-      console.log(curr_wpm);
-    }
-  };
   // updates WPM based on keyboard event
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
+    const keyDownHandler = (event: KeyboardEvent) =>
+      wpmAdjuster(event, curr_wpm, setWpm);
+    window.addEventListener("keydown", keyDownHandler);
 
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", keyDownHandler);
   }, [curr_wpm]);
 
   // updates which word to be shown
@@ -216,23 +206,13 @@ const JustifiedTextDisplay: React.FC<{
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
 
-  const handleKeyDown = (event: KeyboardEvent): void => {
-    if (event.code === "ArrowUp") {
-      console.log("ArrowUp");
-      setWpm(curr_wpm + 5);
-      console.log(curr_wpm);
-    }
-    if (event.code === "ArrowDown") {
-      console.log("ArrowDown");
-      setWpm(Math.max(curr_wpm - 5, 1));
-      console.log(curr_wpm);
-    }
-  };
   // updates WPM based on keyboard event
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
+    const keyDownHandler = (event: KeyboardEvent) =>
+      wpmAdjuster(event, curr_wpm, setWpm);
+    window.addEventListener("keydown", keyDownHandler);
 
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", keyDownHandler);
   }, [curr_wpm]);
 
   // updates which word to be highlighted
@@ -285,6 +265,24 @@ JustifiedTextDisplay.propTypes = {
   text: PropTypes.string.isRequired,
   wpm: PropTypes.number.isRequired,
   size: PropTypes.number,
+};
+
+// Handles keyboard events for adjusting words per minute (WPM).
+const wpmAdjuster = (
+  event: KeyboardEvent,
+  curr_wpm: number,
+  setWpm: React.Dispatch<React.SetStateAction<number>>,
+): void => {
+  if (event.code === "ArrowUp") {
+    console.log("ArrowUp");
+    setWpm(curr_wpm + 5);
+    console.log(curr_wpm);
+  }
+  if (event.code === "ArrowDown") {
+    console.log("ArrowDown");
+    setWpm(Math.max(curr_wpm - 5, 1));
+    console.log(curr_wpm);
+  }
 };
 
 export default StandardModeGameView;
