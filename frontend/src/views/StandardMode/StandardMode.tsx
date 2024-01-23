@@ -15,7 +15,7 @@ const StandardModeGameView: React.FC<{
   const [text, setText] = useState("The quick brown fox jumped over the lazy dog");
 
   useEffect(() => {
-    let config = {
+    const config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: `${process.env.API_HOSTNAME}/api/v1/game/texts`,
@@ -39,7 +39,7 @@ const StandardModeGameView: React.FC<{
     setShowGameScreen(true);
   };
 
-  let countdownComp = (
+  const countdownComp = (
     <CountdownComponent
       duration={3}
       mode={STANDARD_MODE_1}
@@ -130,19 +130,40 @@ const ReadingTextDisplay: React.FC<{
 }> = ({ text, wpm, size }) => {
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
+  const [curr_wpm, setWpm] = useState(wpm);
 
+  const handleKeyDown = (event: KeyboardEvent): void => {
+    if (event.code === "ArrowUp") {
+      console.log("ArrowUp");
+      setWpm(curr_wpm + 5);
+      console.log(curr_wpm);
+    }
+    if (event.code === "ArrowDown") {
+      console.log("ArrowDown");
+      setWpm(curr_wpm - 5);
+      console.log(curr_wpm);
+    }
+  };
+  // updates WPM based on keyboard event
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [curr_wpm]);
+
+  // updates which word to be shown
   useEffect(() => {
     const wordsArray: string[] = text.split(" ");
     setWords(wordsArray);
 
     const interval = setInterval(() => {
       setWordIndex((prevIndex) => prevIndex + 1);
-    }, 60000 / wpm); // Word change every (60000 / wpm) milliseconds
+    }, 60000 / curr_wpm); // Word change every (60000 / wpm) milliseconds
 
     return () => {
       clearInterval(interval);
     };
-  }, [text, wpm]);
+  }, [text, curr_wpm]);
 
   return (
     <Box
