@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import StandardModeGameView from "./views/StandardMode/StandardMode";
+import StandardModeGameView, {StandardMode} from "./views/StandardMode/StandardMode";
 import PreGameView from "./views/PreGame/PreGame";
 import Context from "./Context";
 import { useState } from "react";
@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<ModeSelectView />} />
           <Route path="/pre-game" element={<PreGameView />} />
-          <Route path="/mode-1-game" element={<StandardModeGameView />} />
+          <Route path="/mode-1-game" element={<StandardModeGameView mode={StandardMode.Justified} />} />
           <Route path="/mode-2-game" />
           <Route path="/mode-3-game" />
         </Routes>
