@@ -32,7 +32,7 @@ const Footer = () => {
     // Calculate the size based on window dimensions or any other logic
     const calculatedSize = Math.min(
       maxSize,
-      Math.max(minSize, windowWidth / 15),
+      Math.max(minSize, windowWidth / 15)
     );
 
     return calculatedSize;

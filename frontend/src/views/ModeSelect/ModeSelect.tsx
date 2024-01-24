@@ -1,7 +1,7 @@
-import "./ModeSelect.css";
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
-import Carousel from "../../components/Carousel/Carousel";
+import './ModeSelect.css';
+import Header from '../../components/Header/Header';
+import Footer from '../../components/Footer/Footer';
+import Carousel from '../../components/Carousel/Carousel';
 
 const ModeSelectView = () => {
   return (
@@ -13,6 +13,6 @@ const ModeSelectView = () => {
       </header>
     </div>
   );
-};
+}
 
 export default ModeSelectView;

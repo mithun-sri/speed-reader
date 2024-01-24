@@ -13,6 +13,6 @@ const PreGameView = () => {
       <Footer />
     </div>
   );
-};
+}
 
 export default PreGameView;

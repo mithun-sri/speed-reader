@@ -1,7 +1,8 @@
+from .database.database import engine
 from fastapi import FastAPI
+from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 
-from .database.database import engine
 from .routers.admin import router as admin_router
 from .routers.auth import router as auth_router
 from .routers.game import router as game_router
@@ -22,12 +23,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 @app.on_event("startup")
 async def startup():
     engine.connect()
 
-
 @app.on_event("shutdown")
 async def shutdown():
     await engine.disconnect()
+
+

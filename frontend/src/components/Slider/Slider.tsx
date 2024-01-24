@@ -62,7 +62,7 @@ function SpeedSlider() {
   const onSliderChange = (
     event: Event,
     newValue: number | number[],
-    activeThumb: number,
+    activeThumb: number
   ) => {
     context.setWPM(newValue as number);
   };
