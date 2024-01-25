@@ -72,7 +72,7 @@ const Carousel = () => {
           Adaptive <br />Mode
         </Box>
         <Box sx={boxStyle}>
-          Summarized Adaptive Mode
+          Summarised Adaptive Mode
         </Box>
       </Box>
       <Box
