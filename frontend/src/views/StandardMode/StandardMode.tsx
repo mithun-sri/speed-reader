@@ -23,7 +23,8 @@ const StandardModeGameView: React.FC<{
   mode?: StandardMode;
 }> = ({ wpm, mode }) => {
   const [text, setText] = useState(
-    "The quick brown fox jumped over the lazy dog",
+    // "The quick brown fox jumped over the lazy dog",
+    "Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider.",
   );
 
   useEffect(() => {
@@ -219,6 +220,7 @@ const JustifiedTextDisplay: React.FC<{
 }> = ({ text, wpm }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
+  const wordsPerLine = 8;
 
   // updates WPM based on keyboard event
   useEffect(() => {
@@ -245,10 +247,20 @@ const JustifiedTextDisplay: React.FC<{
     };
   }, [text, curr_wpm]);
 
+  // calculates which words should be shown on the screen (a line at a time)
+  const currentLineIndex = Math.floor(highlightedIndex / wordsPerLine);
+  const visibleText = text
+    .split(" ")
+    .slice(
+      currentLineIndex * wordsPerLine,
+      (currentLineIndex + 1) * wordsPerLine,
+    )
+    .join(" ");
+
   return (
     <Box
       sx={{
-        width: "500px",
+        width: "50vw",
         padding: "25px",
         display: "flex",
         justifyContent: "center",
@@ -256,18 +268,20 @@ const JustifiedTextDisplay: React.FC<{
         flexWrap: "wrap",
       }}
     >
-      {text.split(" ").map((word, index) => (
+      {visibleText.split(" ").map((word, index) => (
         <Box
           component="span"
           key={index}
           sx={{
-            marginRight: "8px",
+            margin: "0.4em",
           }}
         >
           <JetBrainsMonoText
             text={word}
             size={25}
-            color={index <= highlightedIndex ? "#E2B714" : "#646669"}
+            color={
+              index <= (highlightedIndex % wordsPerLine) ? "#E2B714" : "#646669"
+            }
           ></JetBrainsMonoText>
         </Box>
       ))}
