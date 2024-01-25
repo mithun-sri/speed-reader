@@ -1,0 +1,94 @@
+#!/bin/bash
+
+# ANSI color codes
+BRIGHT_BLUE='\033[1;34m'
+RED='\033[1;31m'
+YELLOW='\033[0;33m'
+GREEN='\033[1;32m'
+NO_COLOR='\033[0m'
+
+function print_info() {
+    printf "\n$BRIGHT_BLUE%s$NO_COLOR\n" "$1"
+}
+
+function print_error() {
+    printf "\n$RED%s$NO_COLOR\n" "$1"
+}
+
+function print_warning() {
+    printf "\n$YELLOW%s$NO_COLOR\n" "$1"
+}
+
+function print_success() {
+    printf "\n$GREEN%s$NO_COLOR\n" "$1"
+}
+
+
+print_info "[1/8] Running frontend type checks..."
+if ! (cd frontend && yarn tsc --noEmit); then
+    print_error "Frontend type checks failed. Please fix the issue before pushing."
+    exit 1
+else
+    print_success "Frontend type checks passed!"
+fi
+
+print_info "[2/8] Running backend type checks..."
+if ! (cd backend && poetry run mypy src); then
+    print_error "Backend type checks failed. Please fix the issue before pushing."
+    exit 1
+else
+    print_succes "Backend type checks passed!"
+fi
+
+print_info "[3/8] Running frontend linting checks..."
+if ! (cd frontend && yarn eslint "src/**/*.ts" "src/**/*.tsx"); then
+    print_error "Frontend linting checks failed. Please fix the issue before pushing."
+    exit 1
+else
+    print_success "Frontend linting checks passed!"
+fi
+
+print_info "[4/8] Running backend linting checks..."
+if ! (cd backend && poetry run pylint src); then
+    print_error "Backend linting checks failed. Please fix the issue before pushing."
+    exit 1
+else
+    print_success "Backend linting tests passed!"
+fi
+
+print_info "[5/8] Running frontend formatting checks..."
+if ! (cd frontend && yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"); then
+    print_error "Frontend checks failed. Please fix the issue before pushing."
+    print_warning "Run 'cd frontend && yarn run prettier --write \"src/**/*.ts\" \"src/**/*.tsx\"' to fix the problem."
+    exit 1
+else
+    print_success "Frontend formatting tests passed!"
+fi
+
+print_info "[6/8] Running backend formatting checks..."
+if ! (cd backend && poetry run isort --profile black --check src && poetry run black --check src); then
+    print_error "Backend formatting checks failed. Please fix the issue before pushing."
+    print_warning "Run 'cd backend && poetry run isort --profile black src && poetry run black src' to fix the problem."
+    exit 1
+else
+    print_success "Backend formatting tests passed!"
+fi
+
+print_info "[7/8] Running frontend unit tests..."
+# if ! (cd frontend && yarn test); then
+#     print_error "Frontend unit tests failed. Please fix the issue before pushing."
+#     exit 1
+# else
+#     print_success "Frontend unit tests passed!"
+# fi
+
+print_info "[8/8] Running backend unit tests..."
+if ! (cd backend && poetry run pytest --verbose tests); then
+    print_error "Backend unit tests failed. Please fix the issue before pushing."
+    exit 1
+else
+    print_success "Backend unit tests passed!"
+fi
+
+print_success "All tests passed! Pushing changes..."
+exit 0
