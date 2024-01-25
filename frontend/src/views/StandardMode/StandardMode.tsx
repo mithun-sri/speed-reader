@@ -1,5 +1,4 @@
 import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
 import CountdownComponent from "../../components/Counter/Counter";
 import { STANDARD_MODE_1 } from "../../common/constants";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
@@ -72,7 +71,6 @@ const StandardModeGameView: React.FC<{
       ) : (
         countdownComp
       )}
-      <Footer />
     </Box>
   );
 };
