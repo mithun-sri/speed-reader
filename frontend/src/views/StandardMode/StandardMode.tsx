@@ -1,13 +1,13 @@
-import Header from "../../components/Header/Header";
-import CountdownComponent from "../../components/Counter/Counter";
-import { STANDARD_MODE_1 } from "../../common/constants";
-import JetBrainsMonoText from "../../components/Text/TextComponent";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import PropTypes from "prop-types";
+import { STANDARD_MODE_1 } from "../../common/constants";
+import CountdownComponent from "../../components/Counter/Counter";
+import Header from "../../components/Header/Header";
+import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./StandardMode.css";
-import axios, { AxiosResponse, AxiosError } from "axios";
 
-import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
+import { useEffect, useState } from "react";
 
 export enum StandardMode {
   Word = 0,
@@ -60,17 +60,33 @@ const StandardModeGameView: React.FC<{
   );
 
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+      }}
+    >
       <Header />
-      {showGameScreen ? (
-        <StandardModeGameComponent
-          wpm={wpm || 200}
-          text={text}
-          mode={mode || StandardMode.Word}
-        />
-      ) : (
-        countdownComp
-      )}
+      <Box
+        sx={{
+          display: "flex",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "flex-start",
+          marginTop: "20vh",
+        }}
+      >
+        {showGameScreen ? (
+          <StandardModeGameComponent
+            wpm={wpm || 200}
+            text={text}
+            mode={mode || StandardMode.Word}
+          />
+        ) : (
+          countdownComp
+        )}
+      </Box>
     </Box>
   );
 };
