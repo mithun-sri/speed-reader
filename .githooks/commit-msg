@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# ANSI color codes
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+NO_COLOR='\033[0m'
+
+function print_error() {
+    printf "\n$RED%s$NO_COLOR\n" "$1"
+}
+
+function print_success() {
+    printf "\n$GREEN%s$NO_COLOR\n" "$1"
+}
+
+msg="$(cat "$1")"
+
+if [[ ! "$msg" =~ ^\[[a-z0-9]+\/#[0-9]+\] ]]; then
+    print_error "Commit message must start with [shortcode/#issue_no]. Please fix the issue before commiting."
+    exit 1
+else
+    print_success "Commit message starts with [shortcode/#issue_no]!"
+    exit 0
+fi
