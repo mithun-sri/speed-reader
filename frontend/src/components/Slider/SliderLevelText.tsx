@@ -22,7 +22,7 @@ const SliderLevelText: React.FC<{
       height: "90px"
     }}>
       <Box sx={{ width: "20%" }}>Very Slow</Box>
-      <Box sx={{ width: "50%" }}>Normal</Box>
+      <Box sx={{ width: "50%" }}>Average</Box>
       <Box sx={{ width: "20%", marginTop: "12px" }}>
         <FontAwesomeIcon fontSize={fontSize*1.3} icon={faRocket} />
       </Box>
