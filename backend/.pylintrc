@@ -5,6 +5,11 @@ max-line-length = 88
 disable = 
     missing-docstring,
     too-few-public-methods,
+    redefined-builtin,
+    broad-exception-caught,
+    broad-exception-raised,
+    raise-missing-from,
+    not-callable,
     # Ignore TODO and FIXME comments.
     fixme,
     # Handled by black.
