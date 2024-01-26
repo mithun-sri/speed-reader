@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
-from ..database.database import text_table, get_db
-import logging
+
+from ..database.database import get_db, text_table
 
 router = APIRouter(prefix="/game", tags=["game"])
+
 
 # Collects a random text from the database
 @router.get("/texts")
@@ -16,8 +17,9 @@ async def get_texts(db: Session = Depends(get_db)):
             raise HTTPException(status_code=404, detail="No texts found")
 
         return {"text": result.content}
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
 
 # Collects a text from the database by id
 @router.get("/texts/{id}")
@@ -29,5 +31,5 @@ async def get_text(id: int, db: Session = Depends(get_db)):
             raise HTTPException(status_code=404, detail="Text not found")
 
         return {"text": text.content}
-    except Exception as e:
+    except Exception:
         raise HTTPException(status_code=500, detail="Internal Server Error")
