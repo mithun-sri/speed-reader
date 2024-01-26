@@ -41,7 +41,7 @@ else
 fi
 
 print_info "[3/8] Running frontend linting checks..."
-if ! (cd frontend && yarn eslint "src/**/*.ts" "src/**/*.tsx"); then
+if ! (cd frontend && yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"); then
     print_error "Frontend linting checks failed. Please fix the issue before pushing."
     exit 1
 else
