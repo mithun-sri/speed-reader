@@ -1,14 +1,14 @@
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer";
-import CountdownComponent from "../../components/Counter/Counter";
-import { STANDARD_MODE_1 } from "../../common/constants";
-import JetBrainsMonoText from "../../components/Text/TextComponent";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import PropTypes from "prop-types";
+import { STANDARD_MODE_1 } from "../../common/constants";
+import CountdownComponent from "../../components/Counter/Counter";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
+import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./StandardMode.css";
-import axios, { AxiosResponse, AxiosError } from "axios";
 
-import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
+import { useEffect, useState } from "react";
 
 export enum StandardMode {
   Word = 0,
