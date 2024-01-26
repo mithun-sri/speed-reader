@@ -91,7 +91,7 @@ unit_test_backend:
   stage: test
   script:
     - echo "Testing"
-    # - poetry run pytest --verbose tests
+    - poetry run pytest --verbose tests
 
 deploy_staging_frontend:
   extends: .deploy
