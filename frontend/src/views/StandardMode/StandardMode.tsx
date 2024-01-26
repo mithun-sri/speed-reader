@@ -24,7 +24,7 @@ const StandardModeGameView: React.FC<{
 }> = ({ wpm, mode }) => {
   const [text, setText] = useState(
     // "The quick brown fox jumped over the lazy dog",
-    "Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider.",
+    "Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider.",
   );
 
   useEffect(() => {
@@ -74,8 +74,8 @@ const StandardModeGameView: React.FC<{
           display: "flex",
           flex: 1,
           justifyContent: "center",
-          alignItems: "flex-start",
-          marginTop: "20vh",
+          alignItems: "center",
+          marginTop: "-20vh",
         }}
       >
         {showGameScreen ? (
@@ -220,7 +220,7 @@ const JustifiedTextDisplay: React.FC<{
 }> = ({ text, wpm }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
-  const wordsPerLine = 8;
+  const wordsPerFrame = 30;
 
   // updates WPM based on keyboard event
   useEffect(() => {
@@ -247,13 +247,13 @@ const JustifiedTextDisplay: React.FC<{
     };
   }, [text, curr_wpm]);
 
-  // calculates which words should be shown on the screen (a line at a time)
-  const currentLineIndex = Math.floor(highlightedIndex / wordsPerLine);
+  // calculates which words should be shown on the screen (in the current frame)
+  const currentFrameIndex = Math.floor(highlightedIndex / wordsPerFrame);
   const visibleText = text
     .split(" ")
     .slice(
-      currentLineIndex * wordsPerLine,
-      (currentLineIndex + 1) * wordsPerLine,
+      currentFrameIndex * wordsPerFrame,
+      (currentFrameIndex + 1) * wordsPerFrame,
     )
     .join(" ");
 
@@ -263,7 +263,7 @@ const JustifiedTextDisplay: React.FC<{
         width: "50vw",
         padding: "25px",
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
         flexWrap: "wrap",
       }}
@@ -280,7 +280,7 @@ const JustifiedTextDisplay: React.FC<{
             text={word}
             size={25}
             color={
-              index <= (highlightedIndex % wordsPerLine) ? "#E2B714" : "#646669"
+              index <= highlightedIndex % wordsPerFrame ? "#E2B714" : "#646669"
             }
           ></JetBrainsMonoText>
         </Box>
