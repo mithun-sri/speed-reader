@@ -55,7 +55,7 @@ check_lint_frontend:
   stage: lint
   script:
     - echo "Linting"
-    # - yarn eslint "src/**/*.ts" "src/**/*.tsx"
+    # - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
 
 check_lint_backend:
   extends: .backend
