@@ -23,6 +23,12 @@ function print_success() {
     printf "\n$GREEN%s$NO_COLOR\n" "$1"
 }
 
+# Skip checks if deleting a remote branch.
+STDIN=$(cat -)
+if [[ "$STDIN" =~ ^\(delete\) ]]; then
+    print_info "Delete remote branch detected. Skipping checks..."
+    exit 0
+fi
 
 print_info "[1/8] Running frontend type checks..."
 if ! (cd frontend && yarn tsc --noEmit); then
