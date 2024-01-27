@@ -1,8 +1,10 @@
+import random
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from ..database.database import get_db, text_table
+from ..database.database import get_db, question_table, text_table
 
 router = APIRouter(prefix="/game", tags=["game"])
 
@@ -33,6 +35,7 @@ async def get_text(id: int, db: Session = Depends(get_db)):
         return {"text": text.content}
     except Exception:
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
 
 # Collects three questions at random from the database
 @router.get("/texts/questions/{id}")
