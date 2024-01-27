@@ -33,3 +33,38 @@ async def get_text(id: int, db: Session = Depends(get_db)):
         return {"text": text.content}
     except Exception:
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
+# Collects three questions at random from the database
+@router.get("/texts/questions/{id}")
+async def get_question(id: int, db: Session = Depends(get_db)):
+    try:
+        n = 3
+        all_questions = db.query(question_table).filter_by(text_id=id).all()
+
+        if all_questions is None:
+            raise HTTPException(status_code=404, detail="Text or questions not found")
+
+        # Check if there are enough questions in the database
+        if len(all_questions) < n:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Not enough questions available. Found {len(all_questions)}, requested {n}.",
+            )
+
+        selected_questions = random.sample(all_questions, n)
+
+        result = []
+        for question in selected_questions:
+            result.append(
+                {
+                    "question_id": question.question_id,
+                    "question_text": question.question_text,
+                    "option_a": question.option_a,
+                    "option_b": question.option_b,
+                    "option_c": question.option_c,
+                    "correct_option": question.correct_option,
+                }
+            )
+        return {"questions": result}
+    except Exception:
+        raise HTTPException(status_code=500, detail="Internal Server Error")
