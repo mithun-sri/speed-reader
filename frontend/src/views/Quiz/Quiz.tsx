@@ -23,26 +23,27 @@ const QuizView = () => {
 
   useEffect(() => {
     const config = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: '/api/v1/game/texts/questions/1',
-        headers: { }
-      };
-      
-      axios.request(config)
+      method: "get",
+      maxBodyLength: Infinity,
+      url: "/api/v1/game/texts/questions/1",
+      headers: {},
+    };
+
+    axios
+      .request(config)
       .then((response) => {
         for (let i = 0; i < response.data.questions.length; i++) {
-            const question: Question = {
-                text: response.data.questions[i].question_text,
-                options: [
-                    response.data.questions[i].option_a,
-                    response.data.questions[i].option_b,
-                    response.data.questions[i].option_c
-                ],
-                correctIndex: response.data.questions[i].correct_option,
-            };
-            setQuestions(questions => [...questions, question]);
-            setSelectedOptions(selectedOptions => [...selectedOptions, null]);
+          const question: Question = {
+            text: response.data.questions[i].question_text,
+            options: [
+              response.data.questions[i].option_a,
+              response.data.questions[i].option_b,
+              response.data.questions[i].option_c,
+            ],
+            correctIndex: response.data.questions[i].correct_option,
+          };
+          setQuestions((questions) => [...questions, question]);
+          setSelectedOptions((selectedOptions) => [...selectedOptions, null]);
         }
       })
       .catch((error) => {
