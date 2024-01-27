@@ -1,5 +1,3 @@
-import { faRocket } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
@@ -32,7 +30,7 @@ const Line = styled("div")<{ height: string }>`
   border-radius: 2.5px;
 `;
 
-const PrettoSlider = styled(Slider)(({ theme }) => ({
+const PrettoSlider = styled(Slider)(() => ({
   color: "#E2B714",
   height: 26,
   width: "100%",
@@ -65,9 +63,9 @@ function SpeedSlider() {
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const onSliderChange = (
-    event: Event,
+    _event: Event,
     newValue: number | number[],
-    activeThumb: number
+    _activeThumb: number,
   ) => {
     const newNumber = newValue as number;
     const min = SPEED_RANGES[newNumber];
@@ -121,7 +119,7 @@ function SpeedSlider() {
           marks={false}
           min={100}
           max={500}
-          sx={{ marginBottom: "10px"}}
+          sx={{ marginBottom: "10px" }}
         />
         <VerticalLinesBox>
           <Line height="7vh" />
