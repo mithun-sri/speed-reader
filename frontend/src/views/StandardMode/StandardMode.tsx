@@ -2,7 +2,6 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import PropTypes from "prop-types";
 import { STANDARD_MODE_1 } from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
-import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./StandardMode.css";
@@ -24,7 +23,8 @@ const StandardModeGameView: React.FC<{
   mode?: StandardMode;
 }> = ({ wpm, mode }) => {
   const [text, setText] = useState(
-    "The quick brown fox jumped over the lazy dog",
+    // "The quick brown fox jumped over the lazy dog",
+    "Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider.",
   );
 
   useEffect(() => {
@@ -61,18 +61,33 @@ const StandardModeGameView: React.FC<{
   );
 
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
+      }}
+    >
       <Header />
-      {showGameScreen ? (
-        <StandardModeGameComponent
-          wpm={wpm || 200}
-          text={text}
-          mode={mode || StandardMode.Word}
-        />
-      ) : (
-        countdownComp
-      )}
-      <Footer />
+      <Box
+        sx={{
+          display: "flex",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: "-20vh",
+        }}
+      >
+        {showGameScreen ? (
+          <StandardModeGameComponent
+            wpm={wpm || 200}
+            text={text}
+            mode={mode || StandardMode.Word}
+          />
+        ) : (
+          countdownComp
+        )}
+      </Box>
     </Box>
   );
 };
@@ -205,6 +220,7 @@ const JustifiedTextDisplay: React.FC<{
 }> = ({ text, wpm }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
+  const wordsPerFrame = 30;
 
   // updates WPM based on keyboard event
   useEffect(() => {
@@ -231,29 +247,41 @@ const JustifiedTextDisplay: React.FC<{
     };
   }, [text, curr_wpm]);
 
+  // calculates which words should be shown on the screen (in the current frame)
+  const currentFrameIndex = Math.floor(highlightedIndex / wordsPerFrame);
+  const visibleText = text
+    .split(" ")
+    .slice(
+      currentFrameIndex * wordsPerFrame,
+      (currentFrameIndex + 1) * wordsPerFrame,
+    )
+    .join(" ");
+
   return (
     <Box
       sx={{
-        width: "500px",
+        width: "50vw",
         padding: "25px",
         display: "flex",
-        justifyContent: "center",
+        justifyContent: "space-between",
         alignItems: "center",
         flexWrap: "wrap",
       }}
     >
-      {text.split(" ").map((word, index) => (
+      {visibleText.split(" ").map((word, index) => (
         <Box
           component="span"
           key={index}
           sx={{
-            marginRight: "8px",
+            margin: "0.4em",
           }}
         >
           <JetBrainsMonoText
             text={word}
             size={25}
-            color={index <= highlightedIndex ? "#E2B714" : "#646669"}
+            color={
+              index <= highlightedIndex % wordsPerFrame ? "#E2B714" : "#646669"
+            }
           ></JetBrainsMonoText>
         </Box>
       ))}
