@@ -56,7 +56,7 @@ const CountdownComponent: React.FC<{
     // Calculate the font size based on window dimensions or any other logic
     const calculatedFontSize = Math.min(
       maxFontSize,
-      Math.max(minFontSize, windowWidth / 4)
+      Math.max(minFontSize, windowWidth / 4),
     );
 
     return calculatedFontSize;

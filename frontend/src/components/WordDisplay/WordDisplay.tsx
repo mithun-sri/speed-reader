@@ -3,9 +3,9 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 
 const WordDisplay = () => {
-  const [words, setWords] = useState<string[]>([]);
-  const [currentWord, setCurrentWord] = useState("");
-  const [fontSize, setFontSize] = useState(24);
+  const [words, _setWords] = useState<string[]>([]);
+  const [currentWord, _setCurrentWord] = useState("");
+  const [fontSize, _setFontSize] = useState(24);
 
   return (
     <Box
