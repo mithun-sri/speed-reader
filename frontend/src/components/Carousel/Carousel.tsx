@@ -29,7 +29,7 @@ const Carousel = () => {
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const boxStyle = {
-    width: fontSize * 1.3, // Set the desired fixed width for each mode box
+    width: fontSize * 1, // Set the desired fixed width for each mode box
     marginLeft: fontSize / 20,
     marginRight: fontSize / 20,
     color: "#646669",
