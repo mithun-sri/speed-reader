@@ -40,42 +40,36 @@ typecheck_frontend:
   extends: .frontend
   stage: check
   script:
-    - echo "Checking"
     - yarn tsc --noEmit
 
 typecheck_backend:
   extends: .backend
   stage: check
   script:
-    - echo "Checking"
     - poetry run mypy src
 
 check_lint_frontend:
   extends: .frontend
   stage: lint
   script:
-    - echo "Linting"
     - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
 
 check_lint_backend:
   extends: .backend
   stage: lint
   script:
-    - echo "Linting"
     - poetry run pylint src
 
 format_frontend:
   extends: .frontend
   stage: format
   script:
-    - echo "Formatting"
     - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
 format_backend:
   extends: .backend
   stage: format
   script:
-    - echo "Formatting"
     - poetry run isort --profile black --check src
     - poetry run black --check src
 
@@ -90,7 +84,6 @@ unit_test_backend:
   extends: .backend
   stage: test
   script:
-    - echo "Testing"
     - poetry run pytest --verbose tests
 
 deploy_staging_frontend:
