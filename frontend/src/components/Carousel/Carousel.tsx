@@ -89,10 +89,12 @@ const Carousel = () => {
   ];
 
   return (
-    <Box sx={{
-      marginBottom: 10,
-      marginTop: "32px"
-    }}>
+    <Box
+      sx={{
+        marginBottom: 10,
+        marginTop: "32px",
+      }}
+    >
       <Box
         sx={{
           fontFamily: "JetBrains Mono, monospace",
