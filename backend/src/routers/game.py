@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from ..database.database import get_db, text_table, question_table
+from ..database.database import get_db, question_table, text_table
 
 router = APIRouter(prefix="/game", tags=["game"])
 
