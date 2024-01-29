@@ -15,7 +15,12 @@ export enum StandardMode {
 }
 
 interface TextsApiResponse {
-  text: string;
+  word_count: number;
+  title: string;
+  content: string;
+  text_id: number;
+  difficulty_level: string;
+  created_at: string;
 }
 
 const StandardModeGameView: React.FC<{
@@ -38,7 +43,7 @@ const StandardModeGameView: React.FC<{
       .request(config)
       .then((response: AxiosResponse<TextsApiResponse>) => {
         console.log(JSON.stringify(response.data));
-        setText(response.data.text);
+        setText(response.data.content);
       })
       .catch((error: AxiosError) => {
         console.log(error);

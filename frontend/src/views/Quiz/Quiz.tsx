@@ -32,15 +32,11 @@ const QuizView = () => {
     axios
       .request(config)
       .then((response) => {
-        for (let i = 0; i < response.data.questions.length; i++) {
+        for (let i = 0; i < response.data.length; i++) {
           const question: Question = {
-            text: response.data.questions[i].question_text,
-            options: [
-              response.data.questions[i].option_a,
-              response.data.questions[i].option_b,
-              response.data.questions[i].option_c,
-            ],
-            correctIndex: response.data.questions[i].correct_option,
+            text: response.data[i].question_text,
+            options: response.data[i].options,
+            correctIndex: response.data[i].correct_option,
           };
           setQuestions((questions) => [...questions, question]);
           setSelectedOptions((selectedOptions) => [...selectedOptions, null]);

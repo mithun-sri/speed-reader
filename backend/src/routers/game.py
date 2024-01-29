@@ -1,10 +1,11 @@
 import random
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from ..database.database import get_db, question_table, text_table
+from ..database.database import get_db
+from ..database.schema import Question, Text
 
 router = APIRouter(prefix="/game", tags=["game"])
 
@@ -13,12 +14,13 @@ router = APIRouter(prefix="/game", tags=["game"])
 @router.get("/texts")
 async def get_texts(db: Session = Depends(get_db)):
     try:
-        result = db.execute(text_table.select().order_by(func.random())).first()
+        # result = db.execute(text_table.select().order_by(func.random())).first()
+        result = db.scalar(select(Text).order_by(func.random()).limit(1))
 
         if result is None:
             raise HTTPException(status_code=404, detail="No texts found")
 
-        return {"text": result.content}
+        return result
     except Exception:
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
@@ -27,12 +29,13 @@ async def get_texts(db: Session = Depends(get_db)):
 @router.get("/texts/{id}")
 async def get_text(id: int, db: Session = Depends(get_db)):
     try:
-        text = db.query(text_table).filter_by(text_id=id).first()
+        # text = db.query(text_table).filter_by(text_id=id).first()
+        text = db.scalar(select(Text).filter_by(text_id=id))
 
         if text is None:
             raise HTTPException(status_code=404, detail="Text not found")
 
-        return {"text": text.content}
+        return text
     except Exception:
         raise HTTPException(status_code=500, detail="Internal Server Error")
 
@@ -42,7 +45,8 @@ async def get_text(id: int, db: Session = Depends(get_db)):
 async def get_question(id: int, db: Session = Depends(get_db)):
     try:
         n = 3
-        all_questions = db.query(question_table).filter_by(text_id=id).all()
+        # all_questions = db.query(question_table).filter_by(text_id=id).all()
+        all_questions = db.scalars(select(Question).filter_by(text_id=id)).all()
 
         if all_questions is None:
             raise HTTPException(status_code=404, detail="Text or questions not found")
@@ -62,12 +66,10 @@ async def get_question(id: int, db: Session = Depends(get_db)):
                 {
                     "question_id": question.question_id,
                     "question_text": question.question_text,
-                    "option_a": question.option_a,
-                    "option_b": question.option_b,
-                    "option_c": question.option_c,
+                    "options": question.options,
                     "correct_option": question.correct_option,
                 }
             )
-        return {"questions": result}
+        return result
     except Exception:
         raise HTTPException(status_code=500, detail="Internal Server Error")
