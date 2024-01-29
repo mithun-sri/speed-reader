@@ -39,6 +39,18 @@ text_table = Table(
     Column("created_at", TIMESTAMP, server_default=func.now()),
 )
 
+question_table = Table(
+    "questions",
+    metadata,
+    Column("question_id", Integer, primary_key=True, autoincrement=True),
+    Column("text_id", Integer),
+    Column("question_text", Text),
+    Column("option_a", Text),
+    Column("option_b", Text),
+    Column("option_c", Text),
+    Column("correct_option", Integer),
+)
+
 
 def get_db():
     db = None

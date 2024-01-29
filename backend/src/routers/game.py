@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from ..database.database import get_db, text_table
+from ..database.database import get_db, question_table, text_table
 
 router = APIRouter(prefix="/game", tags=["game"])
 
@@ -33,3 +34,33 @@ async def get_text(id: int, db: Session = Depends(get_db)):
         return {"text": text.content}
     except Exception:
         raise HTTPException(status_code=500, detail="Internal Server Error")
+
+
+class QuizAnswers(BaseModel):
+    answers: dict[str, int]
+
+
+# Calculates quiz results
+@router.post("/results")
+async def post_results(quiz_answers: QuizAnswers, db: Session = Depends(get_db)):
+    results = {}
+    for question_id, choice in quiz_answers.answers.items():
+        if not (
+            query_result := db.query(question_table)
+            .filter_by(question_id=question_id)
+            .first()
+        ):
+            raise HTTPException(
+                status_code=404, detail=f"Question {question_id} not found"
+            )
+
+        results[question_id] = {
+            "correct": choice == query_result.correct_option,
+            "correct_option_text": (
+                query_result.option_a,
+                query_result.option_b,
+                query_result.option_c,
+            )[query_result.correct_option],
+        }
+
+    return results
