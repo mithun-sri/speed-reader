@@ -1,22 +1,12 @@
 from typing import List
 
-from sqlalchemy import (
-    TIMESTAMP,
-    Integer,
-    func,
-    String,
-    ARRAY,
-    ForeignKey
-)
+from sqlalchemy import ARRAY, TIMESTAMP, ForeignKey, String, func
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from sqlalchemy.orm import (
-    DeclarativeBase,
-    Mapped,
-    mapped_column
-)
 
 class Base(DeclarativeBase):
     pass
+
 
 class Text(Base):
     __tablename__ = "text"
@@ -27,6 +17,7 @@ class Text(Base):
     difficulty_level: Mapped[str]
     word_count: Mapped[int]
     created_at: Mapped[str] = mapped_column(TIMESTAMP, server_default=func.now())
+
 
 class Question(Base):
     __tablename__ = "questions"

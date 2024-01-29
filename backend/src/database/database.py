@@ -1,13 +1,7 @@
 import os
-from contextlib import closing
 
-from sqlalchemy import (
-    MetaData,
-    create_engine,
-)
-from sqlalchemy.orm import (
-    Session
-)
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy.orm import Session
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if not DATABASE_URL:
@@ -22,6 +16,7 @@ except Exception as e:
     print(e)
 
 metadata = MetaData()
+
 
 def get_db():
     db = None
