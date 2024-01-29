@@ -51,6 +51,7 @@ question_table = Table(
     Column("correct_option", Integer),
 )
 
+
 def get_db():
     db = None
     try:
