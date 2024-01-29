@@ -43,27 +43,24 @@ class QuizAnswers(BaseModel):
 # Calculates quiz results
 @router.post("/results")
 async def post_results(quiz_answers: QuizAnswers, db: Session = Depends(get_db)):
-    try:
-        results = {}
-        for question_id, choice in quiz_answers.answers.items():
-            if not (
-                query_result := db.query(question_table)
-                .filter_by(question_id=question_id)
-                .first()
-            ):
-                raise HTTPException(
-                    status_code=404, detail=f"Question {question_id} not found"
-                )
+    results = {}
+    for question_id, choice in quiz_answers.answers.items():
+        if not (
+            query_result := db.query(question_table)
+            .filter_by(question_id=question_id)
+            .first()
+        ):
+            raise HTTPException(
+                status_code=404, detail=f"Question {question_id} not found"
+            )
 
-            results[question_id] = {
-                "correct": choice == query_result.correct_option,
-                "correct_option_text": (
-                    query_result.option_a,
-                    query_result.option_b,
-                    query_result.option_c,
-                )[query_result.correct_option],
-            }
+        results[question_id] = {
+            "correct": choice == query_result.correct_option,
+            "correct_option_text": (
+                query_result.option_a,
+                query_result.option_b,
+                query_result.option_c,
+            )[query_result.correct_option],
+        }
 
-        return results
-    except Exception:
-        raise HTTPException(status_code=500, detail="Internal Server Error")
+    return results
