@@ -42,9 +42,9 @@ const Footer = () => {
     <Box
       sx={{
         textAlign: "center",
-        padding: "10px",
-        marginTop: "25px", // Add margin top
-        marginBottom: "50px", // Add margin bottom
+        padding: "4px",
+        marginTop: "7px", // Add margin top
+        marginBottom: "40px", // Add margin bottom
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
