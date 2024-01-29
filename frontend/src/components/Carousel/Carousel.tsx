@@ -89,12 +89,16 @@ const Carousel = () => {
   ];
 
   return (
-    <Box>
+    <Box sx={{
+      marginBottom: 10,
+      marginTop: "32px"
+    }}>
       <Box
         sx={{
           fontFamily: "JetBrains Mono, monospace",
           fontWeight: "bolder",
-          fontSize: fontSize / 6,
+          paddingTop: "20px",
+          fontSize: fontSize / 6.3,
         }}
       >
         choose game mode.
@@ -132,7 +136,7 @@ const Carousel = () => {
       </Box>
       <Box
         sx={{
-          marginTop: fontSize / 40,
+          marginTop: fontSize / 50,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
