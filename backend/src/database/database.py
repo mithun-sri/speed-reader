@@ -18,10 +18,10 @@ except Exception as e:
 metadata = MetaData()
 
 
-def get_db():
-    db = None
+def get_session():
+    session = None
     try:
-        with Session(bind=engine) as db:
-            yield db
+        with Session(bind=engine) as session:
+            yield session
     finally:
         pass
