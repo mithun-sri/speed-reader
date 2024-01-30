@@ -52,7 +52,7 @@ class LoggerRoute(APIRoute):
             record["request_time"] = str(request_time)
             record["status"] = response.status_code
             record["response_body"] = response.body.decode("utf-8")
-            record["response_headers"] = {key: value for key, value in response.headers.items()}
+            record["response_headers"] = response.headers.items()
 
             logger.info(json.dumps(record))
 
