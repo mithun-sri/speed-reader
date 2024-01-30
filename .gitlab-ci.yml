@@ -1,4 +1,5 @@
 stages:
+  - init
   - check
   - lint
   - format
@@ -11,6 +12,15 @@ variables:
   GIT_DEPTH: 0
   STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
   PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
+
+# Dummy job that always passes
+# so that MRs without any pipeline runs can be merged.
+# https://stackoverflow.com/questions/69799364/in-gitlab-how-to-set-pipelines-must-succeed-only-for-specific-branches-but-no
+merge_request:
+  stage: init
+  only: [merge_requests]
+  script: 
+    - echo "$CI_MERGE_REQUEST_ID" 
 
 .frontend:
   tags: [private]
