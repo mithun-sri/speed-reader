@@ -1,23 +1,140 @@
 stages:
+  - check
+  - lint
+  - format
   - test
-  - deploy_staging
-  - deploy_production
+  - deploy
 
-test:
+variables:
+  # Disable shallow clone which is not supported by Dokku.
+  # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
+  GIT_DEPTH: 0
+  STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
+  PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
+
+.frontend:
+  tags: [private]
+  image: node:21
+  cache:
+    - key:
+        files:
+          - frontend/yarn.lock
+      paths:
+        - frontend/node_modules
+  before_script:
+    - cd frontend
+    - yarn install
+
+.backend:
+  tags: [private]
+  image: python:3.12
+  cache:
+    - key:
+        files:
+          - backend/poetry.lock
+      paths:
+        - backend/.venv
+  before_script:
+    - cd backend
+    - pip install poetry==1.6.1
+    - poetry config virtualenvs.in-project true
+    - poetry install
+
+.deploy:
+  tags: [private]
+  image: dokku/ci-docker-image
+  stage: deploy
+  script:
+    - dokku-deploy
+  after_script:
+    - dokku-unlock
+
+typecheck_frontend:
+  extends: .frontend
+  stage: check
+  script:
+    - yarn tsc --noEmit
+
+typecheck_backend:
+  extends: .backend
+  stage: check
+  script:
+    - poetry run mypy src
+
+check_lint_frontend:
+  extends: .frontend
+  stage: lint
+  script:
+    - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
+
+check_lint_backend:
+  extends: .backend
+  stage: lint
+  script:
+    - poetry run pylint src
+
+format_frontend:
+  extends: .frontend
+  stage: format
+  script:
+    - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
+
+format_backend:
+  extends: .backend
+  stage: format
+  script:
+    - poetry run isort --profile black --check src
+    - poetry run black --check src
+
+unit_test_frontend:
+  extends: .frontend
   stage: test
   script:
     - echo "Testing"
+    # - yarn test
 
-deploy_staging:
-  stage: deploy_staging
-  only:
-    - staging
+unit_test_backend:
+  extends: .backend
+  stage: test
   script:
-    - echo "Deploy to staging environment"
+    - poetry run pytest --verbose tests
 
-deploy_production:
-  stage: deploy_production
-  only:
-    - master
-  script:
-    - echo "Deploy to production environment"
+deploy_staging_frontend:
+  extends: .deploy
+  # Need to make sure backend app is deployed
+  # otherwise network alias speed-reader-backend.web cannot be resolved.
+  needs: [deploy_staging_backend]
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
+  variables:
+    BRANCH: staging
+    GIT_REMOTE_URL: $STAGING_URL/speed-reader-frontend
+    GIT_PUSH_FLAGS: -f
+
+deploy_staging_backend:
+  extends: .deploy
+  rules:
+    - if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH
+  variables:
+    BRANCH: staging
+    GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
+    GIT_PUSH_FLAGS: -f
+
+deploy_prod_frontend:
+  extends: .deploy
+  needs: [deploy_prod_backend]
+  rules:
+    - if:  $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG
+  variables:
+    BRANCH: master
+    GIT_REMOTE_URL: $PROD_URL/speed-reader-frontend
+    GIT_PUSH_FLAGS: -f
+
+deploy_prod_backend:
+  extends: .deploy
+  rules:
+    - if:  $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $CI_DEFAULT_BRANCH && $CI_COMMIT_TAG
+  variables:
+    BRANCH: master
+    GIT_REMOTE_URL: $PROD_URL/speed-reader-backend
+    GIT_PUSH_FLAGS: -f

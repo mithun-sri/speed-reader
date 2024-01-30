@@ -1,18 +1,12 @@
+from typing import Any
+
 from fastapi import APIRouter
 
-router = APIRouter(
-    prefix='/user',
-    tags=['user']
-)
+router = APIRouter(prefix="/user", tags=["user"])
 
-@router.post('/signup')
-def user_signup():
-    pass
+user_db: dict[str, Any] = {}
 
-@router.post('/login')
-def user_login():
-    pass
 
-@router.get('/summary')
+@router.get("/summary")
 def get_user_summary():
     pass
