@@ -3,9 +3,10 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Header, status
 from fastapi.security import OAuth2PasswordRequestForm
 
+from ..logger import LoggerRoute
 from ..services.auth import get_refresh_token, get_token
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["auth"], route_class=LoggerRoute)
 
 db = {
     "dwdw@gmail.com": {
