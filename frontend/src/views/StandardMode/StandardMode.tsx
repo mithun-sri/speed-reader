@@ -8,6 +8,7 @@ import "./StandardMode.css";
 
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
+import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 
 export enum StandardMode {
   Word = 0,
@@ -57,11 +58,17 @@ const StandardModeGameView: React.FC<{
   };
 
   const countdownComp = (
-    <CountdownComponent
-      duration={3}
-      mode={STANDARD_MODE_1}
-      onCountdownFinish={startStandardModeGame}
-    />
+    <Box
+      sx={{
+        marginTop: "100px",
+      }}
+    >
+      <CountdownComponent
+        duration={3}
+        mode={STANDARD_MODE_1}
+        onCountdownFinish={startStandardModeGame}
+      />
+    </Box>
   );
 
   return (
@@ -110,9 +117,6 @@ const StandardModeGameComponent: React.FC<{
     <Box
       sx={{
         padding: "25px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
       }}
     >
       {mode == StandardMode.Word ? (
@@ -146,12 +150,41 @@ const nonHighlightedWord: React.FC<{
 const highlightedWord: React.FC<{
   word: string;
 }> = ({ word }) => {
+  const calculateFontSize = () => {
+    const windowWidth = window.innerWidth;
+    const minFontSize = 16;
+    const maxFontSize = 48;
+
+    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 15));
+  };
+
+  const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  useEffect(() => {
+    function handleResize() {
+      setFontSize(calculateFontSize());
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <JetBrainsMonoText
-      text={word}
-      size={30}
-      color="#E2B714"
-    ></JetBrainsMonoText>
+    <Box
+      sx={{
+        fontFamily: "JetBrains Mono, monospace",
+        fontSize: fontSize,
+        color: "#E2B714",
+        fontWeight: "bolder",
+        textAlign: "center",
+        marginTop: "200px",
+      }}
+    >
+      {word}
+    </Box>
   );
 };
 
@@ -192,17 +225,24 @@ const WordTextDisplay: React.FC<{
   }, [text, curr_wpm]);
 
   return (
-    <Box
-      sx={{
-        width: "80%",
-        padding: "25px",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {highlightedWord({ word: words[wordIndex] })}
+    <Box>
+      <Box
+        sx={{
+          padding: "25px",
+        }}
+      >
+        {highlightedWord({ word: words[wordIndex] })}
+      </Box>
+      <Box
+        sx={{
+          width: window.innerWidth / 2,
+          paddingTop: "200px",
+        }}
+      >
+        <GameProgressBar
+          gameProgress={(wordIndex / (words.length - 1)) * 100}
+        />
+      </Box>
     </Box>
   );
 };
@@ -223,9 +263,10 @@ const JustifiedTextDisplay: React.FC<{
   size?: number;
 }> = ({ text, wpm }) => {
   const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
   const wordsPerFrame = 30;
-
+  const wordsArray = text.split(" ");
   // updates WPM based on keyboard event
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) =>
@@ -237,11 +278,10 @@ const JustifiedTextDisplay: React.FC<{
 
   // updates which word to be highlighted
   useEffect(() => {
-    const wordsArray = text.split(" ");
-
     const interval = setInterval(() => {
       setHighlightedIndex((prevIndex) => {
         const newIndex = prevIndex + 1;
+        setWordIndex(newIndex);
         return newIndex < wordsArray.length ? newIndex : prevIndex;
       });
     }, 60000 / curr_wpm);
@@ -262,33 +302,48 @@ const JustifiedTextDisplay: React.FC<{
     .join(" ");
 
   return (
-    <Box
-      sx={{
-        width: "50vw",
-        padding: "25px",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexWrap: "wrap",
-      }}
-    >
-      {visibleText.split(" ").map((word, index) => (
-        <Box
-          component="span"
-          key={index}
-          sx={{
-            margin: "0.4em",
-          }}
-        >
-          <JetBrainsMonoText
-            text={word}
-            size={25}
-            color={
-              index <= highlightedIndex % wordsPerFrame ? "#E2B714" : "#646669"
-            }
-          ></JetBrainsMonoText>
-        </Box>
-      ))}
+    <Box>
+      <Box
+        sx={{
+          marginTop: "160px",
+          width: "50vw",
+          padding: "10px",
+          display: "flex",
+          height: "200px",
+          flexWrap: "wrap",
+          // marginBottom: "0px"
+        }}
+      >
+        {visibleText.split(" ").map((word, index) => (
+          <Box
+            component="span"
+            key={index}
+            sx={{
+              margin: "0.4em",
+            }}
+          >
+            <JetBrainsMonoText
+              text={word}
+              size={window.innerWidth / 60}
+              color={
+                index <= highlightedIndex % wordsPerFrame
+                  ? "#E2B714"
+                  : "#646669"
+              }
+            ></JetBrainsMonoText>
+          </Box>
+        ))}
+      </Box>
+      <Box
+        sx={{
+          width: window.innerWidth / 2,
+          paddingTop: "200px",
+        }}
+      >
+        <GameProgressBar
+          gameProgress={(wordIndex / (wordsArray.length - 1)) * 100}
+        />
+      </Box>
     </Box>
   );
 };

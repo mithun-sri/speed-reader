@@ -1,6 +1,7 @@
 import { Box, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { PATH_STANDARD_MODE_1 } from "../../common/constants";
 
 const StartButton = () => {
   const [fontSize, setFontSize] = useState(calculateFontSize());
@@ -44,7 +45,7 @@ const StartButton = () => {
         }}
       >
         <Link
-          to="/mode-1-game"
+          to={PATH_STANDARD_MODE_1}
           style={{
             textDecoration: "none",
             color: "white",

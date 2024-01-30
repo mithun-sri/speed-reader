@@ -14,7 +14,6 @@ const GameProgressBar: React.FC<{
   return (
     <Box
       sx={{
-        width: "70%",
         alignContent: "center",
       }}
     >

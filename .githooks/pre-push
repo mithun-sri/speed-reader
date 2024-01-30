@@ -43,7 +43,7 @@ if ! (cd backend && poetry run mypy src); then
     print_error "Backend type checks failed. Please fix the issue before pushing."
     exit 1
 else
-    print_succes "Backend type checks passed!"
+    print_success "Backend type checks passed!"
 fi
 
 print_info "[3/8] Running frontend linting checks..."
