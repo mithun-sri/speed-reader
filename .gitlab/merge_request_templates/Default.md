@@ -1,5 +1,3 @@
-Closes #0
-
 # What?
 
 - [ ] Task 1
