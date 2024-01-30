@@ -15,6 +15,9 @@ variables:
 .frontend:
   tags: [private]
   image: node:21
+  only:
+    changes:
+      - frontend/**/*
   cache:
     - key:
         files:
@@ -28,6 +31,9 @@ variables:
 .backend:
   tags: [private]
   image: python:3.12
+  only:
+    changes:
+      - backend/**/*
   cache:
     - key:
         files:
