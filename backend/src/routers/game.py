@@ -1,6 +1,7 @@
 import random
 
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -69,13 +70,15 @@ class QuizAnswers(BaseModel):
 
 # Calculates quiz results
 @router.post("/results")
-async def post_results(quiz_answers: QuizAnswers, db: Session = Depends(get_db)):
+async def post_results(
+    quiz_answers: QuizAnswers, session: Session = Depends(get_session)
+):
     results = {}
     for question_id, choice in quiz_answers.answers.items():
         if not (
-            query_result := db.query(question_table)
-            .filter_by(question_id=question_id)
-            .first()
+            query_result := session.scalar(
+                select(Question).filter_by(question_id=question_id).limit(1)
+            )
         ):
             raise HTTPException(
                 status_code=404, detail=f"Question {question_id} not found"
@@ -83,11 +86,7 @@ async def post_results(quiz_answers: QuizAnswers, db: Session = Depends(get_db))
 
         results[question_id] = {
             "correct": choice == query_result.correct_option,
-            "correct_option_text": (
-                query_result.option_a,
-                query_result.option_b,
-                query_result.option_c,
-            )[query_result.correct_option],
+            "correct_option_text": query_result.options[query_result.correct_option],
         }
 
     return results
