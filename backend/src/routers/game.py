@@ -7,8 +7,9 @@ from sqlalchemy.orm import Session
 
 from ..database.database import get_session
 from ..database.schema import Question, Text
+from ..logger import LoggerRoute
 
-router = APIRouter(prefix="/game", tags=["game"])
+router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
 
 # Collects a random text from the database
