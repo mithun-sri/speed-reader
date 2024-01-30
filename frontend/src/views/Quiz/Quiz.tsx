@@ -4,6 +4,7 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./Quiz.css";
+import axios from "axios";
 
 import { useEffect, useState } from "react";
 
@@ -13,33 +14,38 @@ type Question = {
   correctIndex: number;
 };
 
-const questions: Question[] = [
-  {
-    text: "Why did the chicken cross the road?",
-    options: [
-      "he was hungry",
-      "to get to the other side faster",
-      "he saw a chic",
-    ],
-    correctIndex: 1,
-  },
-  {
-    text: "What is the meaning of life?",
-    options: ["42", "to be happy", "to be sad"],
-    correctIndex: 0,
-  },
-  {
-    text: "What is the best color?",
-    options: ["red", "blue", "green"],
-    correctIndex: 1,
-  },
-];
-
 const QuizView = () => {
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<(number | null)[]>(
     new Array(questions.length).fill(null),
   );
   const [currentQuestion, setCurrentQuestion] = useState(0);
+
+  useEffect(() => {
+    const config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: "/api/v1/game/texts/questions/1",
+      headers: {},
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        for (let i = 0; i < response.data.length; i++) {
+          const question: Question = {
+            text: response.data[i].question_text,
+            options: response.data[i].options,
+            correctIndex: response.data[i].correct_option,
+          };
+          setQuestions((questions) => [...questions, question]);
+          setSelectedOptions((selectedOptions) => [...selectedOptions, null]);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleOptionClick = (questionIndex: number, optionIndex: number) => {
     // Check if the clicked question is the current answerable question

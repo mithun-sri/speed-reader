@@ -16,7 +16,12 @@ export enum StandardMode {
 }
 
 interface TextsApiResponse {
-  text: string;
+  word_count: number;
+  title: string;
+  content: string;
+  text_id: number;
+  difficulty_level: string;
+  created_at: string;
 }
 
 const StandardModeGameView: React.FC<{
@@ -24,7 +29,6 @@ const StandardModeGameView: React.FC<{
   mode?: StandardMode;
 }> = ({ wpm, mode }) => {
   const [text, setText] = useState(
-    // "The quick brown fox jumped over the lazy dog",
     "Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider.",
   );
 
@@ -32,7 +36,7 @@ const StandardModeGameView: React.FC<{
     const config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${process.env.API_HOSTNAME}/api/v1/game/texts`,
+      url: `/api/v1/game/texts`,
       headers: {},
     };
 
@@ -40,7 +44,7 @@ const StandardModeGameView: React.FC<{
       .request(config)
       .then((response: AxiosResponse<TextsApiResponse>) => {
         console.log(JSON.stringify(response.data));
-        setText(response.data.text);
+        setText(response.data.content);
       })
       .catch((error: AxiosError) => {
         console.log(error);
