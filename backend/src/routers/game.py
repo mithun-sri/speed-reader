@@ -56,8 +56,9 @@ async def get_question(id: int, session: Session = Depends(get_session)):
     for question in selected_questions:
         result.append(
             {
-                "question_id": question.question_id,
-                "question_text": question.question_text,
+                # TODO: Update response model fields to match the ones in database.
+                "question_id": question.id,
+                "question_text": question.text,
                 "options": question.options,
                 "correct_option": question.correct_option,
             }
