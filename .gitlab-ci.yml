@@ -16,11 +16,12 @@ variables:
 # Dummy job that always passes
 # so that MRs without any pipeline runs can be merged.
 # https://stackoverflow.com/questions/69799364/in-gitlab-how-to-set-pipelines-must-succeed-only-for-specific-branches-but-no
-merge_request:
+init:
   stage: init
-  only: [merge_requests]
-  script: 
-    - echo "$CI_MERGE_REQUEST_ID" 
+  except:
+    changes:
+      - frontend/**/*
+      - backend/**/*
 
 .frontend:
   tags: [private]
