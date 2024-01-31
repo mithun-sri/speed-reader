@@ -1,3 +1,8 @@
+[TYPECHECK]
+ignored-modules =
+    alembic.op,
+    alembic.context,
+
 [FORMAT]
 max-line-length = 88
 
