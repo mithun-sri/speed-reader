@@ -22,6 +22,8 @@ init:
     changes:
       - frontend/**/*
       - backend/**/*
+  script:
+    - echo "Initialising"
 
 .frontend:
   tags: [private]
