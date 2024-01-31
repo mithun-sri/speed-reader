@@ -1,16 +1,29 @@
+[TYPECHECK]
+ignored-modules =
+    alembic.op,
+    alembic.context,
+
 [FORMAT]
 max-line-length = 88
 
 [MESSAGES CONTROL]
 disable = 
+    fixme,
     missing-docstring,
     too-few-public-methods,
     redefined-builtin,
     broad-exception-caught,
     broad-exception-raised,
     raise-missing-from,
+    # TODO:
+    # Pylint gives false-positive sqlalchemy.func.* is not callable.
+    # Ideally we should disable this per line.
+    # https://github.com/pylint-dev/pylint/issues/8138
     not-callable,
-    # Ignore TODO and FIXME comments.
-    fixme,
+    # TODO:
+    # Pylint gives false-positive sqlalchemy.orm.Mapped is not subscriptable.
+    # Ideally we should disable this per line.
+    # https://github.com/pylint-dev/pylint/issues/1498
+    unsubscriptable-object,
     # Handled by black.
     format,
