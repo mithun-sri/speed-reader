@@ -20,6 +20,8 @@ metadata = MetaData()
 
 def get_session():
     session = None
+    # TODO: We should not ignore the exception here.
+    # TODO: No need to specify bind= here as it is the first argument.
     try:
         with Session(bind=engine) as session:
             yield session
