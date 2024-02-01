@@ -1,5 +1,2 @@
-from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass
-
-
-class Base(DeclarativeBase, MappedAsDataclass):
-    pass
+from .question import *
+from .text import *
