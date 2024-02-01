@@ -10,7 +10,6 @@ const PreGameView = () => {
       <Header />
       <SpeedSlider />
       <StartButton />
-      <Footer />
     </div>
   );
 };

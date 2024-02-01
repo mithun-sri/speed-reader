@@ -17,7 +17,7 @@ const calculateFontSize = () => {
 const VerticalLinesBox = styled(Box)`
   display: flex;
   justify-content: space-between;
-  height: 70px; /* Adjust the height of the box */
+  height: 60px; /* Adjust the height of the box */
   align-items: start; /* Align lines vertically at the center */
   padding-top: 1%;
 `;
@@ -91,7 +91,7 @@ function SpeedSlider() {
         <Box
           sx={{
             paddingBottom: "5px",
-            fontSize: fontSize * 1.1,
+            fontSize: fontSize / 1.1,
             color: "#D1D0C5",
             fontFamily: "JetBrains Mono, monospace",
             margin: "20px",
@@ -103,7 +103,7 @@ function SpeedSlider() {
         <Box
           sx={{
             margin: "20px",
-            fontSize: fontSize / 1.4,
+            fontSize: fontSize / 2.1,
             color: "#fff",
             fontFamily: "JetBrains Mono, monospace",
             fontWeight: "bolder",
@@ -119,7 +119,7 @@ function SpeedSlider() {
           marks={false}
           min={100}
           max={500}
-          sx={{ marginBottom: "10px" }}
+          sx={{ marginBottom: "10px", marginTop: "10px" }}
         />
         <VerticalLinesBox>
           <Line height="7vh" />
@@ -129,8 +129,8 @@ function SpeedSlider() {
           <Line height="7vh" />
         </VerticalLinesBox>
       </Box>
-      <SliderLevelText fontSize={fontSize} />
-      <SliderRateText fontSize={fontSize} />
+      <SliderLevelText fontSize={fontSize / 1.2} />
+      <SliderRateText fontSize={fontSize / 1.2} />
     </Box>
   );
 }

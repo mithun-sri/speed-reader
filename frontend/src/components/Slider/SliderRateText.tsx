@@ -15,10 +15,10 @@ const SliderRateText: React.FC<{
         alignItems: "center",
         justifyContent: "center",
         color: "#fff",
-        fontSize: fontSize / 2.6,
+        fontSize: fontSize / 2.7,
         fontWeight: "bolder",
         fontFamily: "JetBrains Mono, monospace",
-        height: "90px",
+        height: "70px",
         paddingBottom: "20px",
       }}
     >

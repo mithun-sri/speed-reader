@@ -39,9 +39,9 @@ const StartButton = () => {
           border: "10px solid #646669",
           borderRadius: "30px",
           background: "#E2B714",
-          padding: "10px 60px 10px 60px",
+          padding: "7px 40px 7px 40px",
           fontWeight: "bolder",
-          fontSize: fontSize * 1.1,
+          fontSize: fontSize * 1,
         }}
       >
         <Link
