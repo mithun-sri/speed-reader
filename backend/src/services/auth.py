@@ -100,8 +100,7 @@ async def register_user(
 ) -> RegistrationUserRepsonse:
     email = form_data.username
 
-    # TODO
-    # Make request to db client to see if user with email already exists
+    # TODO: Make request to db client to see if user with email already exists
     if await user_registered(email, db):
         raise HTTPException(
             detail="Email is already registered", status_code=status.HTTP_409_CONFLICT
@@ -110,8 +109,7 @@ async def register_user(
     hashed_password = get_password_hash(form_data.password)
     created_at = datetime.utcnow()
 
-    # TODO
-    # Add new user data to DB
+    # TODO: Add new user data to DB
     new_user = UserRegister(
         email=email, password=hashed_password, created_at=created_at
     )
@@ -122,6 +120,8 @@ async def register_user(
     _new_user_ref = {"id": 232}
 
     return RegistrationUserRepsonse(
+        # TODO: No need to return this message - client should be able to tell by the status code.
+        # TODO: Also no need to prepare dedicated Pydantic model for this.
         message="User registration successful",
         data=UserResponse(id=3232, email=email, created_at=created_at),
     )
@@ -139,8 +139,7 @@ async def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     if not await user_registered(email, db):
         raise credentials_exception
 
-    # TO DO
-    # Get user password (hashed + salt) from Firestore
+    # TODO: Get user password (hashed + salt) from Firestore.
     valid_password = db.get("email")["password"]
 
     if not verify_password(form_data.password, valid_password):
@@ -150,8 +149,7 @@ async def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
 
 
 async def user_registered(email: str, db) -> bool:
-    # TO DO
-    # Make request to db and check if user registered
+    # TODO: Make request to db and check if user registered.
     query_result = db.get(email)
 
     return len(query_result) != 0
