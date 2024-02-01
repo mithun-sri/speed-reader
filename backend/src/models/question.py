@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ARRAY, ForeignKey, String
+from sqlalchemy import JSON, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import Base
@@ -14,7 +14,7 @@ class Question(ULIDMixin, TimestampMixin, Base):
     __tablename__ = "question"
 
     content: Mapped[str]
-    options: Mapped[list[str]] = mapped_column(ARRAY(String))
+    options: Mapped[list[str]] = mapped_column(JSON)
     correct_option: Mapped[int]
 
     text_id: Mapped[int] = mapped_column(ForeignKey("text.id"), init=False)
