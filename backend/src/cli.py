@@ -4,6 +4,7 @@ from typing import Annotated
 import typer
 from rich import print
 from rich.progress import track
+from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 
 from .database import engine
@@ -28,6 +29,16 @@ def seed(
         typer.confirm("Are you sure you want to continue?", abort=True)
 
     with Session(engine) as session:
+        print("💣 Clearing database...")
+        meta = MetaData()
+        meta.reflect(engine)
+        for table in reversed(meta.sorted_tables):
+            if table.name == "alembic_version":
+                continue
+            session.execute(table.delete())
+            session.commit()
+
+    with Session(engine) as session:
         print("🌱 Seeding texts...")
         texts = []
         for _ in track(range(10)):
@@ -43,7 +54,7 @@ def seed(
 
         session.commit()
 
-    print("✅ [green]Successfully seeded database.")
+    print("🌴 [green]Successfully seeded database.")
 
 
 if __name__ == "__main__":
