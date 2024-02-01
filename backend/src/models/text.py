@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy.orm import Mapped, relationship
 
 from .base import Base
 from .mixins import TimestampMixin, ULIDMixin
-from .question import Question
+
+if TYPE_CHECKING:
+    from .question import Question
 
 
 class Text(ULIDMixin, TimestampMixin, Base):
@@ -13,7 +17,7 @@ class Text(ULIDMixin, TimestampMixin, Base):
     difficulty: Mapped[str]
     word_count: Mapped[int]
 
-    questions: Mapped[list[Question]] = relationship(
+    questions: Mapped[list["Question"]] = relationship(
         back_populates="text",
         default_factory=list,
     )
