@@ -6,7 +6,7 @@ from rich import print
 from rich.progress import track
 from sqlalchemy.orm import Session
 
-from .database.database import engine
+from .database import engine
 from .factories.question import QuestionFactory
 from .factories.text import TextFactory
 
