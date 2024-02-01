@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/admin", tags=["admin"])
+from ..logger import LoggerRoute
+
+router = APIRouter(prefix="/admin", tags=["admin"], route_class=LoggerRoute)
 
 
 @router.post("/quiz")

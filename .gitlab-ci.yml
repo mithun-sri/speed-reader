@@ -1,4 +1,5 @@
 stages:
+  - init
   - check
   - lint
   - format
@@ -12,9 +13,30 @@ variables:
   STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
   PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
 
+# Dummy job that always passes
+# so that MRs without any pipeline runs can be merged.
+# https://stackoverflow.com/questions/69799364/in-gitlab-how-to-set-pipelines-must-succeed-only-for-specific-branches-but-no
+init:
+  stage: init
+  except:
+    changes:
+      - frontend/**/*
+      - backend/**/*
+  script:
+    - echo "Initialising"
+
 .frontend:
   tags: [private]
   image: node:21
+  only:
+    changes:
+      - frontend/**/*
+  cache:
+    - key:
+        files:
+          - frontend/yarn.lock
+      paths:
+        - frontend/node_modules
   before_script:
     - cd frontend
     - yarn install
@@ -22,9 +44,19 @@ variables:
 .backend:
   tags: [private]
   image: python:3.12
+  only:
+    changes:
+      - backend/**/*
+  cache:
+    - key:
+        files:
+          - backend/poetry.lock
+      paths:
+        - backend/.venv
   before_script:
     - cd backend
     - pip install poetry==1.6.1
+    - poetry config virtualenvs.in-project true
     - poetry install
 
 .deploy:
@@ -40,44 +72,38 @@ typecheck_frontend:
   extends: .frontend
   stage: check
   script:
-    - echo "Checking"
-    # - yarn tsc --noEmit
+    - yarn tsc --noEmit
 
 typecheck_backend:
   extends: .backend
   stage: check
   script:
-    - echo "Checking"
-    # - poetry run mypy src
+    - poetry run mypy src
 
 check_lint_frontend:
   extends: .frontend
   stage: lint
   script:
-    - echo "Linting"
-    # - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
+    - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
 
 check_lint_backend:
   extends: .backend
   stage: lint
   script:
-    - echo "Linting"
-    # - poetry run pylint src
+    - poetry run pylint src
 
 format_frontend:
   extends: .frontend
   stage: format
   script:
-    - echo "Formatting"
-    # - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
+    - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
 format_backend:
   extends: .backend
   stage: format
   script:
-    - echo "Formatting"
-    # - poetry run isort --profile black --check src
-    # - poetry run black --check src
+    - poetry run isort --profile black --check src
+    - poetry run black --check src
 
 unit_test_frontend:
   extends: .frontend
@@ -98,7 +124,7 @@ deploy_staging_frontend:
   # Need to make sure backend app is deployed
   # otherwise network alias speed-reader-backend.web cannot be resolved.
   needs: [deploy_staging_backend]
-  only: [staging]
+  only: [master]
   variables:
     BRANCH: staging
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-frontend
@@ -106,7 +132,7 @@ deploy_staging_frontend:
 
 deploy_staging_backend:
   extends: .deploy
-  only: [staging]
+  only: [master]
   variables:
     BRANCH: staging
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
@@ -115,7 +141,8 @@ deploy_staging_backend:
 deploy_prod_frontend:
   extends: .deploy
   needs: [deploy_prod_backend]
-  only: [master]
+  only: [tags]
+  except: [branches]
   variables:
     BRANCH: master
     GIT_REMOTE_URL: $PROD_URL/speed-reader-frontend
@@ -123,7 +150,8 @@ deploy_prod_frontend:
 
 deploy_prod_backend:
   extends: .deploy
-  only: [master]
+  only: [tags]
+  except: [branches]
   variables:
     BRANCH: master
     GIT_REMOTE_URL: $PROD_URL/speed-reader-backend

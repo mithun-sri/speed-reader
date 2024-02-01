@@ -2,7 +2,6 @@ import "@fontsource/jetbrains-mono";
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 
-import Typography from "@mui/material/Typography";
 import { STANDARD_MODE_1 } from "../../common/constants";
 
 const CountdownComponent: React.FC<{
@@ -16,7 +15,7 @@ const CountdownComponent: React.FC<{
   // Change instruction text according to the mode
   let instruction: string = "read as many words as you can.";
   if (mode === STANDARD_MODE_1) {
-    instruction = "get ready.";
+    instruction = "Get ready.";
   }
 
   useEffect(() => {
@@ -56,7 +55,7 @@ const CountdownComponent: React.FC<{
     // Calculate the font size based on window dimensions or any other logic
     const calculatedFontSize = Math.min(
       maxFontSize,
-      Math.max(minFontSize, windowWidth / 4)
+      Math.max(minFontSize, windowWidth / 4),
     );
 
     return calculatedFontSize;
@@ -66,10 +65,6 @@ const CountdownComponent: React.FC<{
     <Box
       sx={{
         textAlign: "center",
-        display: "flex",
-        flexDirection: "column", // Stack items vertically
-        justifyContent: "center",
-        alignItems: "center",
         fontSize: fontSize,
         fontFamily: "JetBrains Mono, monospace",
         fontWeight: "bolder",
@@ -92,17 +87,26 @@ const CountdownComponent: React.FC<{
           height: "400px", // 40% of the viewport height
         }}
       >
-        <Typography
-          variant="h1"
-          color={"#D1D0C5"}
+        <Box
           sx={{
             fontSize: fontSize,
             fontFamily: "JetBrains Mono, monospace",
             fontWeight: "bolder",
+            color: "#D1D0C5",
           }}
         >
           {count}
-        </Typography>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          fontFamily: "JetBrains Mono, monospace",
+          fontWeight: "light",
+          fontSize: fontSize / 12,
+          color: "#D1D0C5",
+        }}
+      >
+        Tip: Tap ↑ ↓ to control wpm.
       </Box>
     </Box>
   );

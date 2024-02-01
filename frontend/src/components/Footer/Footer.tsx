@@ -32,7 +32,7 @@ const Footer = () => {
     // Calculate the size based on window dimensions or any other logic
     const calculatedSize = Math.min(
       maxSize,
-      Math.max(minSize, windowWidth / 15)
+      Math.max(minSize, windowWidth / 15),
     );
 
     return calculatedSize;
@@ -42,9 +42,9 @@ const Footer = () => {
     <Box
       sx={{
         textAlign: "center",
-        padding: "10px",
-        marginTop: "25px", // Add margin top
-        marginBottom: "50px", // Add margin bottom
+        padding: "4px",
+        marginTop: "7px", // Add margin top
+        marginBottom: "40px", // Add margin bottom
         display: "flex",
         justifyContent: "center",
         alignItems: "center",

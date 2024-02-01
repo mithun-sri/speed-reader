@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const HeaderContainer = styled(Box)({
   backgroundColor: "#2C2E31",
@@ -39,41 +40,43 @@ const Header = () => {
     // Calculate the size based on window dimensions or any other logic
     const calculatedSize = Math.min(
       maxSize,
-      Math.max(minSize, windowWidth / 15)
+      Math.max(minSize, windowWidth / 15),
     );
 
     return calculatedSize;
   }
   return (
     <HeaderContainer>
-      <IconButton>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Box
-            sx={{
-              fontSize: iconSize,
-              marginRight: "20px",
-              marginLeft: "30px",
-              color: "#D1D0C5",
-            }}
-          >
-            <FontAwesomeIcon icon={faStopwatch} color="#E2B714" />
-          </Box>
-          <Box sx={{ color: "#D1D0C5" }}>
-            <div
-              style={{
-                textAlign: "left",
-                fontWeight: "bolder",
-                fontSize: iconSize / 2.4,
-                lineHeight: "1.5",
-                fontFamily: "JetBrains Mono, monospace",
+      <Link to={"/"} style={{ textDecoration: "" }}>
+        <IconButton>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box
+              sx={{
+                fontSize: iconSize,
+                marginRight: "20px",
+                marginLeft: "30px",
+                color: "#D1D0C5",
               }}
             >
-              Speed <br />
-              Reader
-            </div>
+              <FontAwesomeIcon icon={faStopwatch} color="#E2B714" />
+            </Box>
+            <Box sx={{ color: "#D1D0C5" }}>
+              <div
+                style={{
+                  textAlign: "left",
+                  fontWeight: "bolder",
+                  fontSize: iconSize / 2.4,
+                  lineHeight: "1.5",
+                  fontFamily: "JetBrains Mono, monospace",
+                }}
+              >
+                Speed <br />
+                Reader
+              </div>
+            </Box>
           </Box>
-        </Box>
-      </IconButton>
+        </IconButton>
+      </Link>
       <IconButton
         style={{
           fontSize: iconSize / 1.8,

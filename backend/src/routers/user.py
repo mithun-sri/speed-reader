@@ -2,7 +2,9 @@ from typing import Any
 
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/user", tags=["user"])
+from ..logger import LoggerRoute
+
+router = APIRouter(prefix="/user", tags=["user"], route_class=LoggerRoute)
 
 user_db: dict[str, Any] = {}
 

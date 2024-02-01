@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .database.database import engine
+from .database import engine
 from .routers.admin import router as admin_router
 from .routers.auth import router as auth_router
 from .routers.game import router as game_router
