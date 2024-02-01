@@ -7,7 +7,7 @@ from rich.progress import track
 from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 
-from .database import engine
+from .database import NO_DATABASE, engine
 from .factories.question import QuestionFactory
 from .factories.text import TextFactory
 
@@ -27,6 +27,10 @@ def seed(
     if not force:
         print("❗ [red]This command should not be run in production.")
         typer.confirm("Are you sure you want to continue?", abort=True)
+
+    if NO_DATABASE:
+        print("❗ [red]The NO_DATABASE flag is set")
+        return
 
     with Session(engine) as session:
         print("💣 Clearing database...")

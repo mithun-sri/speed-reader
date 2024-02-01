@@ -3,9 +3,9 @@ import os
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import Session
 
-engine = None
+NO_DATABASE = bool(os.environ.get("NO_DATABASE"))
 
-if not os.environ.get("NO_DATABASE"):
+if not NO_DATABASE:
     DATABASE_URL = os.environ.get("DATABASE_URL")
     if not DATABASE_URL:
         raise Exception("DATABASE_URL environment variable is not set")
