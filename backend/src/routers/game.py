@@ -5,9 +5,10 @@ from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from ..database.database import get_session
-from ..database.schema import Question, Text
+from ..database import get_session
 from ..logger import LoggerRoute
+from ..models.question import Question
+from ..models.text import Text
 
 router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
