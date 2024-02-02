@@ -1,11 +1,15 @@
 import os
 
+from mongoengine import connect
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.orm import Session
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
+MONGO_URL = os.environ.get("MONGO_URL")
 if not DATABASE_URL:
     raise Exception("DATABASE_URL environment variable is not set")
+if not MONGO_URL:
+    raise Exception("MONGO_URL environment variable is not set")
 
 try:
     engine = create_engine(DATABASE_URL, pool_pre_ping=True)
@@ -15,7 +19,14 @@ except Exception as e:
     print("Database connection failed")
     print(e)
 
-metadata = MetaData()
+try:
+    connect(host=MONGO_URL)
+    print("MongoDB connection established")
+except Exception as e:
+    print("MongoDB connection failed")
+    print(e)
+
+# metadata = MetaData()
 
 
 def get_session():
