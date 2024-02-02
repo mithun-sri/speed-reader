@@ -4,12 +4,14 @@ from mongoengine import connect
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
+
 DATABASE_URL = os.environ.get("DATABASE_URL")
 MONGO_URL = os.environ.get("MONGO_URL")
+
+# Connect to PostgreSQL database
+
 if not DATABASE_URL:
     raise Exception("DATABASE_URL environment variable is not set")
-if not MONGO_URL:
-    raise Exception("MONGO_URL environment variable is not set")
 
 try:
     engine = create_engine(DATABASE_URL, pool_pre_ping=True)
@@ -18,6 +20,11 @@ try:
 except Exception as e:
     print("Database connection failed")
     print(e)
+
+# Connect to MongoDB database
+
+if not MONGO_URL:
+    raise Exception("MONGO_URL environment variable is not set")
 
 try:
     connect(host=MONGO_URL)
@@ -29,10 +36,11 @@ except Exception as e:
 
 def get_session():
     session = None
-    # TODO: We should not ignore the exception here.
-    # TODO: No need to specify bind= here as it is the first argument.
     try:
-        with Session(bind=engine) as session:
+        with Session(engine) as session:
             yield session
+    except Exception as e:
+        print("Failed to get PostgreSQL session")
+        print(e)
     finally:
         pass
