@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from .. import models, schema
+from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
 
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
 @router.get(
     "/texts/random",
-    response_model=list[schema.Text],
+    response_model=list[schemas.Text],
 )
 async def get_random_text(
     session: Session = Depends(get_session),
@@ -26,7 +26,7 @@ async def get_random_text(
 
 @router.get(
     "/texts/{text_id}",
-    response_model=schema.Text,
+    response_model=schemas.Text,
 )
 async def get_text(
     text_id: str,
@@ -42,7 +42,7 @@ async def get_text(
 # Collects three questions at random from the database
 @router.get(
     "/texts/{text_id}/questions",
-    response_model=list[schema.Question],
+    response_model=list[schemas.Question],
 )
 async def get_questions(
     text_id: str,
@@ -58,10 +58,10 @@ async def get_questions(
 # Calculates quiz results
 @router.post(
     "/texts/{text_id}/answers",
-    response_model=list[schema.QuestionResult],
+    response_model=list[schemas.QuestionResult],
 )
 async def submit_answers(
-    answers: list[schema.QuestionAnswer],
+    answers: list[schemas.QuestionAnswer],
     session: Session = Depends(get_session),
 ):
     results = []
@@ -73,7 +73,7 @@ async def submit_answers(
             )
 
         results.append(
-            schema.QuestionResult(
+            schemas.QuestionResult(
                 question_id=answer.question_id,
                 correct=answer.selected_option == question.correct_option,
                 selected_option=answer.selected_option,

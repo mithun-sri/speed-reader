@@ -5,8 +5,8 @@ from fastapi import Depends, Header, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
 
-from ..schema.token import TokenResponse
-from ..schema.user import RegistrationUserRepsonse, UserRegister, UserResponse
+from ..schemas.token import TokenResponse
+from ..schemas.user import RegistrationUserRepsonse, UserRegister, UserResponse
 from ..utils.security.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     ALGORITHM,
