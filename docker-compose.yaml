@@ -18,6 +18,7 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/default
     volumes:
       - ./backend/src:/app/src
+      - ./backend/tests:/app/tests
       - ./backend/migrations:/app/migrations
     ports:
       - 8000:8000
