@@ -55,12 +55,12 @@ export const GameScreen = () => {
   };
 
   const stages = [
-    <ModeSelectView />,
-    <StandardSelect />, // will be skipped if mode is not standard
-    <WpmSelect />,
-    <DiffSelect />,
-    <Game />,
-    <Quiz />,
+    <ModeSelectView key={0} />,
+    <StandardSelect key={1} />, // will be skipped if mode is not standard
+    <WpmSelect key={2} />,
+    <DiffSelect key={3} />,
+    <Game key={4} />,
+    <Quiz key={5} />,
   ];
 
   useEffect(() => {
