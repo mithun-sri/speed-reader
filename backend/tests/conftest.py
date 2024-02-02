@@ -19,7 +19,6 @@ def session_fixture():
         poolclass=StaticPool,
     )
     Base.metadata.create_all(engine)
-    print("Table keys: ", Base.metadata.sorted_tables)
 
     with Session(engine) as session:
         yield session
