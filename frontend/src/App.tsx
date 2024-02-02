@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { GameProvider } from "./context/GameContext";
 import { GameScreen } from "./views/GameScreen/GameScreen";
 
 function App() {
-  const [wpm, setWPM] = useState<number>(300);
-
   return (
     <GameProvider>
       <BrowserRouter>
