@@ -79,6 +79,7 @@ async def get_next_questions(
     response_model=list[schemas.QuestionResult],
 )
 async def submit_answers(
+    text_id: str,
     answers: list[schemas.QuestionAnswer],
     session: Session = Depends(get_session),
 ):
@@ -91,6 +92,11 @@ async def submit_answers(
         if question is None:
             raise HTTPException(
                 status_code=404, detail=f"Question {answer.question_id} not found"
+            )
+        if question.text_id != text_id:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Question {answer.question_id} does not belong to text {text_id}",
             )
 
         results.append(
