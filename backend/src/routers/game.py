@@ -12,12 +12,16 @@ router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
 
 @router.get(
-    "/texts/random",
+    "/texts/new",
     response_model=list[schemas.Text],
 )
-async def get_random_text(
+async def get_new_text(
     session: Session = Depends(get_session),
 ):
+    """
+    Gets a text that the user has not seen before.
+    Currently returns a random text.
+    """
     query = select(models.Text).order_by(func.random()).limit(1)
     text = session.scalars(query).one()
     if not text:
@@ -34,6 +38,9 @@ async def get_text(
     text_id: str,
     session: Session = Depends(get_session),
 ):
+    """
+    Gets a text by the given text ID.
+    """
     text = session.get(models.Text, text_id)
     if text is None:
         raise HTTPException(status_code=404, detail="Text not found")
@@ -50,7 +57,8 @@ async def get_random_questions(
     session: Session = Depends(get_session),
 ):
     """
-    Get 3 random questions associated with a text
+    Gets 3 random questions for the given text.
+    Currently returns 3 random questions.
     """
     text = session.get(models.Text, text_id)
     if text is None:
@@ -75,7 +83,7 @@ async def submit_answers(
     session: Session = Depends(get_session),
 ):
     """
-    Accepts a list of answers and returns the results
+    Accepts question answers and returns the results.
     """
     results = []
     for answer in answers:
