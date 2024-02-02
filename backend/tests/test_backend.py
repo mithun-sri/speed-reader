@@ -152,7 +152,7 @@ class TestQuestions(TextIDGetEndpointTestClass):
         )
 
 
-class TestAnswers(TextIDGetEndpointTestClass):
+class TestAnswers(TextsEndpointTestClass):
 
     def test_returns_404_if_question_does_not_exist(self, empty_text):
         with Session() as session:
