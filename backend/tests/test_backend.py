@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import delete
 from src import __version__
 from src.database import get_session
@@ -13,11 +13,13 @@ TEST_DATABASE_FILENAME = "test_database.db"
 engine = create_engine(f"sqlite:///{TEST_DATABASE_FILENAME}")
 Base.metadata.create_all(engine)
 
+Session = sessionmaker(engine)
+
 
 def override_get_session():
     session = None
     try:
-        with Session(engine) as session:
+        with Session() as session:
             yield session
     finally:
         pass
@@ -34,7 +36,7 @@ def test_version():
 class TestTextsRandom:
 
     def test_returns_404_when_text_table_is_empty(self):
-        with Session(engine) as session:
+        with Session() as session:
             session.execute(delete(Text))
             session.commit()
 
@@ -42,7 +44,7 @@ class TestTextsRandom:
         assert response.status_code == 404
 
     def test_returns_text(self):
-        with Session(engine) as session:
+        with Session() as session:
             session.execute(delete(Text))
             session.add(
                 Text(
@@ -66,7 +68,7 @@ class TestTextsRandom:
 class TestTextsID:
 
     def test_returns_404_when_no_text_matches_id(self):
-        with Session(engine) as session:
+        with Session() as session:
             session.execute(delete(Text))
             session.add(
                 Text(
@@ -82,7 +84,7 @@ class TestTextsID:
         assert test_client.get("/api/v1/game/texts/dcba").status_code == 404
 
     def test_returns_requested_text(self):
-        with Session(engine) as session:
+        with Session() as session:
             session.execute(delete(Text))
             for i in range(5):
                 session.add(
