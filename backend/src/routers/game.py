@@ -10,18 +10,18 @@ router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
 
 @router.get(
-    "/texts",
+    "/texts/random",
     response_model=list[schema.Text],
 )
-async def get_texts(
+async def get_random_text(
     session: Session = Depends(get_session),
 ):
-    query = select(models.Text).order_by(func.random()).limit(10)
-    texts = session.scalars(query).all()
-    if len(texts) == 0:
-        raise HTTPException(status_code=404, detail="No texts available")
+    query = select(models.Text).order_by(func.random()).limit(1)
+    text = session.scalars(query).one()
+    if not text:
+        raise HTTPException(status_code=404, detail="No text available")
 
-    return texts
+    return text
 
 
 @router.get(
