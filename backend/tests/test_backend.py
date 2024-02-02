@@ -6,6 +6,7 @@ from src import __version__
 from src.database import get_session
 from src.main import app
 from src.models.base import Base
+from src.models.question import Question
 from src.models.text import Text
 
 TEST_DATABASE_FILENAME = "test_database.db"
@@ -58,11 +59,11 @@ class TestTextsRandom:
 
         response = test_client.get("/api/v1/game/texts/random")
         assert response.status_code == 200
-        response_json = response.json()
-        assert response_json["title"] == "test_title"
-        assert response_json["content"] == "test text"
-        assert response_json["difficulty"] == "test_difficulty"
-        assert response_json["word_count"] == 2
+        response_body = response.json()
+        assert response_body["title"] == "test_title"
+        assert response_body["content"] == "test text"
+        assert response_body["difficulty"] == "test_difficulty"
+        assert response_body["word_count"] == 2
 
 
 class TestTextsID:
@@ -101,3 +102,58 @@ class TestTextsID:
         response = test_client.get("/api/v1/game/texts/id3")
         assert response.status_code == 200
         assert response.json()["content"] == "test text 3"
+
+
+class TestQuestions:
+
+    def test_returns_404_when_no_text_matches_id(self):
+        with Session() as session:
+            session.execute(delete(Text))
+            session.execute(delete(Question))
+            test_text = Text(
+                id="not_a",
+                title="",
+                content="",
+                difficulty="",
+                word_count=0,
+            )
+            session.add(test_text)
+            session.add(
+                Question(content="", options=[], correct_option=0, text=test_text)
+            )
+            session.commit()
+
+        response = test_client.get("/api/v1/game/texts/a/questions")
+        assert response.status_code == 404
+
+    def test_returns_all_questions_for_the_text(self):
+        with Session() as session:
+            session.execute(delete(Text))
+            session.execute(delete(Question))
+            test_text = Text(
+                id="a",
+                title="",
+                content="",
+                difficulty="",
+                word_count=0,
+            )
+            session.add(test_text)
+            for i in range(10):
+                session.add(
+                    Question(
+                        id=str(i),
+                        content="",
+                        options=[],
+                        correct_option=0,
+                        text=test_text,
+                    )
+                )
+            session.commit()
+
+        response = test_client.get("/api/v1/game/texts/a/questions")
+        assert response.status_code == 200
+        response_body = response.json()
+        # TODO: Check number of questions returned
+        assert all(
+            question["id"] in (str(i) for i in range(10)) for question in response_body
+        )
