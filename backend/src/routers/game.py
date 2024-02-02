@@ -12,15 +12,15 @@ router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
 
 @router.get(
-    "/texts/new",
+    "/texts/next",
     response_model=list[schemas.Text],
 )
-async def get_new_text(
+async def get_next_text(
     session: Session = Depends(get_session),
 ):
     """
-    Gets a text that the user has not seen before.
-    Currently returns a random text.
+    Gets the next text that the user has not attempted before.
+    TODO: Currently returns a random text regardless of which texts the user has seen.
     """
     query = select(models.Text).order_by(func.random()).limit(1)
     text = session.scalars(query).one()
@@ -39,7 +39,7 @@ async def get_text(
     session: Session = Depends(get_session),
 ):
     """
-    Gets a text by the given text ID.
+    Gets a text by the given id.
     """
     text = session.get(models.Text, text_id)
     if text is None:
@@ -49,16 +49,16 @@ async def get_text(
 
 
 @router.get(
-    "/texts/{text_id}/questions/random",
+    "/texts/{text_id}/questions/next",
     response_model=list[schemas.Question],
 )
-async def get_random_questions(
+async def get_next_questions(
     text_id: str,
     session: Session = Depends(get_session),
 ):
     """
-    Gets 3 random questions for the given text.
-    Currently returns 3 random questions.
+    Gets next 3 questions that the user has not attempted before.
+    TODO: Currently returns 3 random questions for the given text, regardless of which questions the user has seen.
     """
     text = session.get(models.Text, text_id)
     if text is None:
