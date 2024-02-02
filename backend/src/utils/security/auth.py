@@ -1,3 +1,4 @@
+# TODO: No need to put this file under `utils/security` directory i.e. move to `utils/`.
 from datetime import datetime, timedelta, timezone
 
 from jose import jwt
@@ -26,6 +27,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
     return jwt.encode(to_encode, key=ACCESS_TOKEN_SECRET_KEY, algorithm=ALGORITHM)
 
 
+# TODO: Set expiry for refresh token.
 def create_refresh_token(data: dict) -> str:
     to_encode = data.copy()
     to_encode.update({"sub": to_encode.get("email")})

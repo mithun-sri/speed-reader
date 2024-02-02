@@ -1,11 +1,11 @@
 import factory
 
-from ..models.text import Text
+from .. import models
 
 
 class TextFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = Text
+        model = models.Text
 
     title = factory.Faker("sentence")
     content = factory.Faker("text")

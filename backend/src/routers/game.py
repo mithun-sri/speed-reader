@@ -1,34 +1,38 @@
-import random
-
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
-from ..models.question import Question
-from ..models.text import Text
 
 router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
 
-# Collects a random text from the database
-@router.get("/texts")
-async def get_texts(session: Session = Depends(get_session)):
-    result = session.scalar(select(Text).order_by(func.random()).limit(1))
+@router.get(
+    "/texts/random",
+    response_model=list[schemas.Text],
+)
+async def get_random_text(
+    session: Session = Depends(get_session),
+):
+    query = select(models.Text).order_by(func.random()).limit(1)
+    text = session.scalars(query).one()
+    if not text:
+        raise HTTPException(status_code=404, detail="No text available")
 
-    if result is None:
-        raise HTTPException(status_code=404, detail="No texts found")
-
-    return result
+    return text
 
 
-# Collects a text from the database by id
-@router.get("/texts/{id}")
-async def get_text(id: int, session: Session = Depends(get_session)):
-    text = session.scalar(select(Text).filter_by(text_id=id))
-
+@router.get(
+    "/texts/{text_id}",
+    response_model=schemas.Text,
+)
+async def get_text(
+    text_id: str,
+    session: Session = Depends(get_session),
+):
+    text = session.get(models.Text, text_id)
     if text is None:
         raise HTTPException(status_code=404, detail="Text not found")
 
@@ -36,60 +40,45 @@ async def get_text(id: int, session: Session = Depends(get_session)):
 
 
 # Collects three questions at random from the database
-@router.get("/texts/questions/{id}")
-async def get_question(id: int, session: Session = Depends(get_session)):
-    num_questions = 3
-    all_questions = session.scalars(select(Question).filter_by(text_id=id)).all()
+@router.get(
+    "/texts/{text_id}/questions",
+    response_model=list[schemas.Question],
+)
+async def get_questions(
+    text_id: str,
+    session: Session = Depends(get_session),
+):
+    text = session.get(models.Text, text_id)
+    if text is None:
+        raise HTTPException(status_code=404, detail="Text not found")
 
-    if all_questions is None:
-        raise HTTPException(status_code=404, detail="Text or questions not found")
-
-    # Check if there are enough questions in the database
-    if len(all_questions) < num_questions:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Not enough questions available. Found {len(all_questions)}, requested {num_questions}.",
-        )
-
-    selected_questions = random.sample(all_questions, num_questions)
-
-    result = []
-    for question in selected_questions:
-        result.append(
-            {
-                # TODO: Update response model fields to match the ones in database.
-                "question_id": question.id,
-                "question_text": question.text,
-                "options": question.options,
-                "correct_option": question.correct_option,
-            }
-        )
-    return result
-
-
-class QuizAnswers(BaseModel):
-    answers: dict[str, int]
+    return text.questions
 
 
 # Calculates quiz results
-@router.post("/results")
-async def post_results(
-    quiz_answers: QuizAnswers, session: Session = Depends(get_session)
+@router.post(
+    "/texts/{text_id}/answers",
+    response_model=list[schemas.QuestionResult],
+)
+async def submit_answers(
+    answers: list[schemas.QuestionAnswer],
+    session: Session = Depends(get_session),
 ):
-    results = {}
-    for question_id, choice in quiz_answers.answers.items():
-        if not (
-            query_result := session.scalar(
-                select(Question).filter_by(question_id=question_id).limit(1)
-            )
-        ):
+    results = []
+    for answer in answers:
+        question = session.get(models.Question, answer.question_id)
+        if question is None:
             raise HTTPException(
-                status_code=404, detail=f"Question {question_id} not found"
+                status_code=404, detail=f"Question {answer.question_id} not found"
             )
 
-        results[question_id] = {
-            "correct": choice == query_result.correct_option,
-            "correct_option_text": query_result.options[query_result.correct_option],
-        }
+        results.append(
+            schemas.QuestionResult(
+                question_id=answer.question_id,
+                correct=answer.selected_option == question.correct_option,
+                selected_option=answer.selected_option,
+                correct_option=question.correct_option,
+            )
+        )
 
     return results
