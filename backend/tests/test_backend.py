@@ -1,19 +1,33 @@
 from fastapi.testclient import TestClient
 from pytest import fixture
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql.expression import delete
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 from src import __version__
-from src.database import engine
+from src.database import get_session
 from src.main import app
 from src.models.base import Base
 from src.models.question import Question
 from src.models.text import Text
 
-TEST_DATABASE_FILENAME = "test_database.db"
-
-Base.metadata.create_all(engine)
-Session = sessionmaker(engine)
 test_client = TestClient(app)
+
+
+@fixture(name="session")
+def session_fixture():
+    engine = create_engine(
+        "sqlite://", echo=True, connect_args={"check_same_thread": False}
+    )
+    Base.metadata.create_all(engine)
+    print("Tables in metadata:", Base.metadata.tables.keys())
+
+    def override_get_session():
+        with Session(engine) as session:
+            yield session
+
+    app.dependency_overrides[get_session] = override_get_session
+
+    with Session(engine) as session:
+        yield session
 
 
 def test_version():
@@ -36,26 +50,21 @@ class TextsEndpointTestClass:
 class TestTextsRandom(TextsEndpointTestClass):
     URL: str = "/api/v1/game/texts/next"
 
-    def test_returns_404_when_text_table_is_empty(self):
-        with Session() as session:
-            session.execute(delete(Text))
-            session.commit()
-
+    def test_returns_404_when_text_table_is_empty(self, session: Session):
+        _ = session
         response = test_client.get(self.URL)
         assert response.status_code == 404
 
-    def test_returns_text(self):
-        with Session() as session:
-            session.execute(delete(Text))
-            session.add(
-                Text(
-                    title="test_title",
-                    content="test text",
-                    difficulty="test_difficulty",
-                    word_count=2,
-                )
+    def test_returns_text(self, session: Session):
+        session.add(
+            Text(
+                title="test_title",
+                content="test text",
+                difficulty="test_difficulty",
+                word_count=2,
             )
-            session.commit()
+        )
+        session.commit()
 
         response = test_client.get(self.URL)
         assert response.status_code == 200
@@ -69,39 +78,35 @@ class TestTextsRandom(TextsEndpointTestClass):
 class TextIDGetEndpointTestClass(TextsEndpointTestClass):
     PATH: str = ""
 
-    def test_returns_404_when_no_text_matches_id(self):
-        with Session() as session:
-            session.execute(delete(Text))
-            session.add(
-                Text(
-                    id="abcd",
-                    title="test_title",
-                    content="test text",
-                    difficulty="test_difficulty",
-                    word_count=2,
-                )
+    def test_returns_404_when_no_text_matches_id(self, session: Session):
+        session.add(
+            Text(
+                id="abcd",
+                title="test_title",
+                content="test text",
+                difficulty="test_difficulty",
+                word_count=2,
             )
-            session.commit()
+        )
+        session.commit()
 
         assert test_client.get("/api/v1/game/texts/dcba" + self.PATH).status_code == 404
 
 
 class TestTextsID(TextIDGetEndpointTestClass):
 
-    def test_returns_requested_text(self):
-        with Session() as session:
-            session.execute(delete(Text))
-            for i in range(5):
-                session.add(
-                    Text(
-                        id=f"id{i}",
-                        title="test_title",
-                        content=f"test text {i}",
-                        difficulty="test_difficulty",
-                        word_count=2,
-                    )
+    def test_returns_requested_text(self, session: Session):
+        for i in range(5):
+            session.add(
+                Text(
+                    id=f"id{i}",
+                    title="test_title",
+                    content=f"test text {i}",
+                    difficulty="test_difficulty",
+                    word_count=2,
                 )
-            session.commit()
+            )
+        session.commit()
 
         response = test_client.get("/api/v1/game/texts/id3")
         assert response.status_code == 200
@@ -111,22 +116,21 @@ class TestTextsID(TextIDGetEndpointTestClass):
 class TestQuestions(TextIDGetEndpointTestClass):
     PATH: str = "/questions/next"
 
-    def test_returns_all_questions_for_the_text(self, empty_text):
-        with Session() as session:
-            session.execute(delete(Text))
-            session.execute(delete(Question))
-            session.add(empty_text)
-            for i in range(10):
-                session.add(
-                    Question(
-                        id=str(i),
-                        content="",
-                        options=[],
-                        correct_option=0,
-                        text=empty_text,
-                    )
+    def test_returns_all_questions_for_the_text(
+        self, empty_text: Text, session: Session
+    ):
+        session.add(empty_text)
+        for i in range(10):
+            session.add(
+                Question(
+                    id=str(i),
+                    content="",
+                    options=[],
+                    correct_option=0,
+                    text=empty_text,
                 )
-            session.commit()
+            )
+        session.commit()
 
         response = test_client.get("/api/v1/game/texts/empty/questions/next")
         assert response.status_code == 200
@@ -139,12 +143,11 @@ class TestQuestions(TextIDGetEndpointTestClass):
 
 class TestAnswers(TextsEndpointTestClass):
 
-    def test_returns_404_if_question_does_not_exist(self, empty_text):
-        with Session() as session:
-            session.execute(delete(Text))
-            session.execute(delete(Question))
-            session.add(empty_text)
-            session.commit()
+    def test_returns_404_if_question_does_not_exist(
+        self, empty_text: Text, session: Session
+    ):
+        session.add(empty_text)
+        session.commit()
 
         response = test_client.post(
             "/api/v1/game/texts/empty/answers",
@@ -152,17 +155,14 @@ class TestAnswers(TextsEndpointTestClass):
         )
         assert response.status_code == 404
 
-    def test_returns_400_if_questions_do_not_match_text_id(self, empty_text):
-        with Session() as session:
-            session.execute(delete(Text))
-            session.execute(delete(Question))
-            session.add(empty_text)
-            session.add(
-                Question(
-                    id="a", content="", options=[], correct_option=0, text=empty_text
-                )
-            )
-            session.commit()
+    def test_returns_400_if_questions_do_not_match_text_id(
+        self, empty_text: Text, session: Session
+    ):
+        session.add(empty_text)
+        session.add(
+            Question(id="a", content="", options=[], correct_option=0, text=empty_text)
+        )
+        session.commit()
 
         response = test_client.post(
             "/api/v1/game/texts/not_empty/answers",
@@ -170,22 +170,21 @@ class TestAnswers(TextsEndpointTestClass):
         )
         assert response.status_code == 400
 
-    def test_returns_results_and_correct_answers(self, empty_text):
-        with Session() as session:
-            session.execute(delete(Text))
-            session.execute(delete(Question))
-            session.add(empty_text)
-            for i in range(5):
-                session.add(
-                    Question(
-                        id=str(i),
-                        content="",
-                        options=[],
-                        correct_option=i,
-                        text=empty_text,
-                    )
+    def test_returns_results_and_correct_answers(
+        self, empty_text: Text, session: Session
+    ):
+        session.add(empty_text)
+        for i in range(5):
+            session.add(
+                Question(
+                    id=str(i),
+                    content="",
+                    options=[],
+                    correct_option=i,
+                    text=empty_text,
                 )
-            session.commit()
+            )
+        session.commit()
 
         response = test_client.post(
             "/api/v1/game/texts/empty/answers",

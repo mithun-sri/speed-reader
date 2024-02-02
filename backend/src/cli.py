@@ -4,10 +4,9 @@ from typing import Annotated
 import typer
 from rich import print
 from rich.progress import track
-from sqlalchemy import MetaData
-from sqlalchemy.orm import Session
+from src.models.base import Base
 
-from .database import NO_DATABASE, engine
+from .database import get_session
 from .factories.question import QuestionFactory
 from .factories.text import TextFactory
 
@@ -28,21 +27,16 @@ def seed(
         print("❗ [red]This command should not be run in production.")
         typer.confirm("Are you sure you want to continue?", abort=True)
 
-    if NO_DATABASE:
-        print("❗ [red]The NO_DATABASE flag is set")
-        return
-
-    with Session(engine) as session:
+    with next(get_session()) as session:
         print("💣 Clearing database...")
-        meta = MetaData()
-        meta.reflect(engine)
+        meta = Base.metadata
         for table in reversed(meta.sorted_tables):
             if table.name == "alembic_version":
                 continue
             session.execute(table.delete())
             session.commit()
 
-    with Session(engine) as session:
+    with next(get_session()) as session:
         print("🌱 Seeding texts...")
         texts = []
         for _ in track(range(10)):
