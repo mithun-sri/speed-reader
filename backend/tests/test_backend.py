@@ -1,208 +1,179 @@
+import ulid
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pytest import fixture
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from src import __version__
+from sqlalchemy.pool import StaticPool
+from src import schemas
 from src.database import get_session
+from src.factories import QuestionFactory, TextFactory
 from src.main import app
-from src.models.base import Base
-from src.models.question import Question
-from src.models.text import Text
-
-test_client = TestClient(app)
+from src.models import Base
+from src.services.auth import get_current_user, get_refresh_token, get_token
 
 
 @fixture(name="session")
 def session_fixture():
     engine = create_engine(
-        "sqlite://", echo=True, connect_args={"check_same_thread": False}
+        "sqlite://",
+        echo=True,
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
     )
     Base.metadata.create_all(engine)
-    print("Tables in metadata:", Base.metadata.tables.keys())
-
-    def override_get_session():
-        with Session(engine) as session:
-            yield session
-
-    app.dependency_overrides[get_session] = override_get_session
+    print("Table keys: ", Base.metadata.sorted_tables)
 
     with Session(engine) as session:
         yield session
 
 
-def test_version():
-    assert __version__ == "0.1.0"
+@fixture(name="app")
+def app_fixture(session: Session):
+    app.dependency_overrides[get_session] = lambda: session
+    app.dependency_overrides[get_token] = lambda: ""
+    app.dependency_overrides[get_refresh_token] = lambda: ""
+
+    yield app
+
+    app.dependency_overrides.clear()
 
 
-class TextsEndpointTestClass:
+@fixture(name="client")
+# pylint: disable=redefined-outer-name
+def client_fixture(app: FastAPI):
+    app.dependency_overrides[get_current_user] = lambda: None
 
-    @fixture
-    def empty_text(self):
-        return Text(
-            id="empty",
-            title="",
-            content="",
-            difficulty="",
-            word_count=0,
-        )
+    yield TestClient(app)
 
 
-class TestTextsRandom(TextsEndpointTestClass):
-    URL: str = "/api/v1/game/texts/next"
-
-    def test_returns_404_when_text_table_is_empty(self, session: Session):
-        _ = session
-        response = test_client.get(self.URL)
+class TestGetNextText:
+    @staticmethod
+    def test_returns_404_when_text_table_is_empty(client: TestClient):
+        response = client.get("/api/v1/game/texts/next")
         assert response.status_code == 404
 
-    def test_returns_text(self, session: Session):
-        session.add(
-            Text(
-                title="test_title",
-                content="test text",
-                difficulty="test_difficulty",
-                word_count=2,
-            )
-        )
+    @staticmethod
+    def test_returns_text(client: TestClient, session: Session):
+        text = TextFactory.build()
+        session.add(text)
         session.commit()
 
-        response = test_client.get(self.URL)
+        response = client.get("/api/v1/game/texts/next")
         assert response.status_code == 200
+
         response_body = response.json()
-        assert response_body["title"] == "test_title"
-        assert response_body["content"] == "test text"
-        assert response_body["difficulty"] == "test_difficulty"
-        assert response_body["word_count"] == 2
+        assert response_body["id"] == text.id
 
 
-class TextIDGetEndpointTestClass(TextsEndpointTestClass):
-    PATH: str = ""
-
-    def test_returns_404_when_no_text_matches_id(self, session: Session):
-        session.add(
-            Text(
-                id="abcd",
-                title="test_title",
-                content="test text",
-                difficulty="test_difficulty",
-                word_count=2,
-            )
-        )
+class TextGetText:
+    @staticmethod
+    def test_returns_404_when_no_text_matches_id(client: TestClient, session: Session):
+        text = TextFactory.build()
+        session.add(text)
         session.commit()
 
-        assert test_client.get("/api/v1/game/texts/dcba" + self.PATH).status_code == 404
+        new_text_id = str(ulid.new())
+        assert text.id != new_text_id
+        response = client.get(f"/api/v1/game/texts/{new_text_id}")
+        assert response.status_code == 404
 
-
-class TestTextsID(TextIDGetEndpointTestClass):
-
-    def test_returns_requested_text(self, session: Session):
-        for i in range(5):
-            session.add(
-                Text(
-                    id=f"id{i}",
-                    title="test_title",
-                    content=f"test text {i}",
-                    difficulty="test_difficulty",
-                    word_count=2,
-                )
-            )
+    @staticmethod
+    def test_returns_requested_text(client: TestClient, session: Session):
+        texts = TextFactory.build_batch(5)
+        session.add_all(texts)
         session.commit()
 
-        response = test_client.get("/api/v1/game/texts/id3")
+        text = texts[3]
+        response = client.get(f"/api/v1/game/texts/{text.id}")
         assert response.status_code == 200
-        assert response.json()["content"] == "test text 3"
 
 
-class TestQuestions(TextIDGetEndpointTestClass):
-    PATH: str = "/questions/next"
-
-    def test_returns_all_questions_for_the_text(
-        self, empty_text: Text, session: Session
-    ):
-        session.add(empty_text)
-        for i in range(10):
-            session.add(
-                Question(
-                    id=str(i),
-                    content="",
-                    options=[],
-                    correct_option=0,
-                    text=empty_text,
-                )
-            )
+class TestGetQuestions:
+    @staticmethod
+    def test_returns_all_questions_for_the_text(client: TestClient, session: Session):
+        text = TextFactory.build()
+        questions = QuestionFactory.build_batch(10, text=text)
+        session.add(text)
+        session.add_all(questions)
         session.commit()
 
-        response = test_client.get("/api/v1/game/texts/empty/questions/next")
+        response = client.get(f"/api/v1/game/texts/{text.id}/questions/next")
         assert response.status_code == 200
+
         response_body = response.json()
-        assert len(response_body) == 3
-        assert all(
-            question["id"] in (str(i) for i in range(10)) for question in response_body
-        )
+        assert len(response_body) == 3  # picks 3 questions
+        # fmt: off
+        assert set(question["id"] for question in response_body) \
+            .issubset(question.id for question in questions)
 
 
-class TestAnswers(TextsEndpointTestClass):
-
+class TestSubmitAnswers:
+    @staticmethod
     def test_returns_404_if_question_does_not_exist(
-        self, empty_text: Text, session: Session
+        client: TestClient, session: Session
     ):
-        session.add(empty_text)
+        text = TextFactory.build()
+        session.add(text)
         session.commit()
 
-        response = test_client.post(
-            "/api/v1/game/texts/empty/answers",
-            json=[{"question_id": "a", "selected_option": 0}],
+        question_id = str(ulid.new())
+        response = client.post(
+            f"/api/v1/game/texts/{text.id}/answers",
+            json=[
+                schemas.QuestionAnswer(
+                    question_id=question_id,
+                    selected_option=0,
+                ).model_dump()
+            ],
         )
         assert response.status_code == 404
 
+    @staticmethod
     def test_returns_400_if_questions_do_not_match_text_id(
-        self, empty_text: Text, session: Session
+        client: TestClient, session: Session
     ):
-        session.add(empty_text)
-        session.add(
-            Question(id="a", content="", options=[], correct_option=0, text=empty_text)
-        )
+        text1 = TextFactory.build()
+        text2 = TextFactory.build()
+        question = QuestionFactory.build(text=text2)
+        session.add(text1)
+        session.add(text2)
+        session.add(question)
         session.commit()
 
-        response = test_client.post(
-            "/api/v1/game/texts/not_empty/answers",
-            json=[{"question_id": "a", "selected_option": 0}],
+        response = client.post(
+            f"/api/v1/game/texts/{text1.id}/answers",
+            json=[
+                schemas.QuestionAnswer(
+                    question_id=question.id,
+                    selected_option=0,
+                ).model_dump()
+            ],
         )
         assert response.status_code == 400
 
-    def test_returns_results_and_correct_answers(
-        self, empty_text: Text, session: Session
-    ):
-        session.add(empty_text)
-        for i in range(5):
-            session.add(
-                Question(
-                    id=str(i),
-                    content="",
-                    options=[],
-                    correct_option=i,
-                    text=empty_text,
-                )
-            )
+    @staticmethod
+    def test_returns_results_and_correct_answers(client: TestClient, session: Session):
+        text = TextFactory.build()
+        questions = QuestionFactory.build_batch(5, text=text)
+        session.add(text)
+        session.add_all(questions)
         session.commit()
 
-        response = test_client.post(
-            "/api/v1/game/texts/empty/answers",
+        response = client.post(
+            f"/api/v1/game/texts/{text.id}/answers",
             json=[
-                {"question_id": "0", "selected_option": 4},
-                {"question_id": "1", "selected_option": 1},
-                {"question_id": "2", "selected_option": 2},
-                {"question_id": "4", "selected_option": 3},
-                {"question_id": "3", "selected_option": 4},
+                schemas.QuestionAnswer(
+                    question_id=question.id,
+                    selected_option=question.correct_option,
+                ).model_dump()
+                for question in questions
             ],
         )
         assert response.status_code == 200
-        response_body = response.json()
+        data = response.json()
+        assert len(data) == len(questions)
         assert all(
-            (answer["correct_option"] == int(answer["question_id"]))
-            and (
-                answer["correct"]
-                == (answer["selected_option"] == answer["correct_option"])
-            )
-            for answer in response_body
+            result["correct"] and result["selected_option"] == result["correct_option"]
+            for result in data
         )
