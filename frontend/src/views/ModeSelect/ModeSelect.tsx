@@ -41,6 +41,7 @@ const ModeSelectView = () => {
       <Header />
       <header className="ModeSelect-header">
         <Carousel
+          title="choose game mode."
           options={options}
           returnSelectedIndex={handleValueFromCarousel}
         />

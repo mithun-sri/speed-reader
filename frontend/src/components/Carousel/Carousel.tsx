@@ -87,7 +87,7 @@ const Carousel: React.FC<{
           fontSize: fontSize / 6.3,
         }}
       >
-        choose game mode.
+        {title !== undefined ? title : "choose."}
       </Box>
       <Box
         sx={{
