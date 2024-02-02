@@ -4,7 +4,6 @@ from mongoengine import connect
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-
 DATABASE_URL = os.environ.get("DATABASE_URL")
 MONGO_URL = os.environ.get("MONGO_URL")
 
@@ -39,8 +38,8 @@ def get_session():
     try:
         with Session(engine) as session:
             yield session
-    except Exception as e:
+    except Exception as exception:
         print("Failed to get PostgreSQL session")
-        print(e)
+        print(exception)
     finally:
         pass
