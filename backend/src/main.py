@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .database import engine
 from .routers.admin import router as admin_router
 from .routers.auth import router as auth_router
 from .routers.game import router as game_router
@@ -21,15 +20,3 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-
-@app.on_event("startup")
-async def startup():
-    engine.connect()
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    # TODO: engine.disconnect() does not exist
-    # await engine.disconnect()
-    pass

@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.expression import delete
 from src import __version__
-from src.database import engine, get_session
+from src.database import get_session
 from src.main import app
 from src.models.base import Base
 from src.models.text import Text
@@ -27,17 +27,12 @@ test_client = TestClient(app)
 app.dependency_overrides[get_session] = override_get_session
 
 
-def get_test_database_session():
-    assert (session := next(override_get_session(), False))
-    return session
-
-
 def test_version():
     assert __version__ == "0.1.0"
 
 
 def test_texts_returns_404_when_text_table_is_empty():
-    with get_test_database_session() as session:
+    with Session(engine) as session:
         session.execute(delete(Text))
         session.commit()
 
@@ -53,7 +48,7 @@ def test_texts_returns_text():
         difficulty="test_difficulty",
         word_count=2,
     )
-    with get_test_database_session() as session:
+    with Session(engine) as session:
         session.execute(delete(Text))
         session.add(test_text)
         session.commit()
