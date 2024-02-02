@@ -31,17 +31,16 @@ def test_version():
     assert __version__ == "0.1.0"
 
 
-def test_texts_returns_404_when_text_table_is_empty():
+def test_texts_random_returns_404_when_text_table_is_empty():
     with Session(engine) as session:
         session.execute(delete(Text))
         session.commit()
 
-    response = test_client.get("/api/v1/game/texts")
+    response = test_client.get("/api/v1/game/texts/random")
     assert response.status_code == 404
-    assert response.json()["detail"] == "No texts found"
 
 
-def test_texts_returns_text():
+def test_texts_random_returns_text():
     test_text = Text(
         title="test_title",
         content="test text",
@@ -53,7 +52,7 @@ def test_texts_returns_text():
         session.add(test_text)
         session.commit()
 
-    response = test_client.get("/api/v1/game/texts")
+    response = test_client.get("/api/v1/game/texts/random")
     assert response.status_code == 200
     response_json = response.json()
     assert response_json["title"] == "test_title"

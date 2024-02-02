@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
@@ -11,14 +12,15 @@ router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
 @router.get(
     "/texts/random",
-    response_model=list[schemas.Text],
+    response_model=schemas.Text,
 )
 async def get_random_text(
     session: Session = Depends(get_session),
 ):
     query = select(models.Text).order_by(func.random()).limit(1)
-    text = session.scalars(query).one()
-    if not text:
+    try:
+        text = session.scalars(query).one()
+    except NoResultFound:
         raise HTTPException(status_code=404, detail="No text available")
 
     return text
