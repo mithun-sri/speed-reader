@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import PropTypes from "prop-types";
-import { STANDARD_MODE_1 } from "../../common/constants";
+import { STANDARD_MODE } from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
@@ -65,7 +65,7 @@ const StandardModeGameView: React.FC<{
     >
       <CountdownComponent
         duration={3}
-        mode={STANDARD_MODE_1}
+        mode={STANDARD_MODE}
         onCountdownFinish={startStandardModeGame}
       />
     </Box>
