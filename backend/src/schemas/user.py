@@ -14,6 +14,8 @@ class UserLogin(BaseModel):
     password: str
 
 
+# TODO: Update fields of `UserResponse` class.
+# TODO: Rename `UserResponse` to `User` - read models in Pydantic are named without any suffix.
 class UserResponse(BaseModel):
     id: int
     email: str

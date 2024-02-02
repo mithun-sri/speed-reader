@@ -1,11 +1,11 @@
 import factory
 
-from ..models.question import Question
+from .. import models
 
 
 class QuestionFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
-        model = Question
+        model = models.Question
 
     content = factory.Faker("sentence")
     options = factory.Faker("sentences", nb=3)
