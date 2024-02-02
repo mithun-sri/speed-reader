@@ -1,8 +1,6 @@
 stages:
   - init
   - check
-  - lint
-  - format
   - test
   - deploy
 
@@ -82,25 +80,25 @@ typecheck_backend:
 
 check_lint_frontend:
   extends: .frontend
-  stage: lint
+  stage: check
   script:
     - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
 
 check_lint_backend:
   extends: .backend
-  stage: lint
+  stage: check
   script:
     - poetry run pylint src
 
-format_frontend:
+check_format_frontend:
   extends: .frontend
-  stage: format
+  stage: check
   script:
     - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
-format_backend:
+check_format_backend:
   extends: .backend
-  stage: format
+  stage: check
   script:
     - poetry run isort --profile black --check src
     - poetry run black --check src
