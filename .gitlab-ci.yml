@@ -115,7 +115,7 @@ unit_test_backend:
   stage: test
   script:
     - echo "Testing"
-    - NO_DATABASE=true poetry run pytest --verbose tests
+    - DATABASE_URL="sqlite:///test_database.db" poetry run pytest --verbose tests
 
 deploy_staging_frontend:
   extends: .deploy

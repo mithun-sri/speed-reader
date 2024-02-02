@@ -1,10 +1,9 @@
 from fastapi.testclient import TestClient
 from pytest import fixture
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import delete
 from src import __version__
-from src.database import get_session
+from src.database import engine
 from src.main import app
 from src.models.base import Base
 from src.models.question import Question
@@ -12,23 +11,9 @@ from src.models.text import Text
 
 TEST_DATABASE_FILENAME = "test_database.db"
 
-engine = create_engine(f"sqlite:///{TEST_DATABASE_FILENAME}")
 Base.metadata.create_all(engine)
-
 Session = sessionmaker(engine)
-
-
-def override_get_session():
-    session = None
-    try:
-        with Session() as session:
-            yield session
-    finally:
-        pass
-
-
 test_client = TestClient(app)
-app.dependency_overrides[get_session] = override_get_session
 
 
 def test_version():
