@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from pytest import fixture
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import delete
@@ -34,14 +35,28 @@ def test_version():
     assert __version__ == "0.1.0"
 
 
-class TestTextsRandom:
+class TextsEndpointTestClass:
+
+    @fixture
+    def empty_text(self):
+        return Text(
+            id="empty",
+            title="",
+            content="",
+            difficulty="",
+            word_count=0,
+        )
+
+
+class TestTextsRandom(TextsEndpointTestClass):
+    URL: str = "/api/v1/game/texts/next"
 
     def test_returns_404_when_text_table_is_empty(self):
         with Session() as session:
             session.execute(delete(Text))
             session.commit()
 
-        response = test_client.get("/api/v1/game/texts/random")
+        response = test_client.get(self.URL)
         assert response.status_code == 404
 
     def test_returns_text(self):
@@ -57,7 +72,7 @@ class TestTextsRandom:
             )
             session.commit()
 
-        response = test_client.get("/api/v1/game/texts/random")
+        response = test_client.get(self.URL)
         assert response.status_code == 200
         response_body = response.json()
         assert response_body["title"] == "test_title"
@@ -66,7 +81,8 @@ class TestTextsRandom:
         assert response_body["word_count"] == 2
 
 
-class TestTextsID:
+class TextIDGetEndpointTestClass(TextsEndpointTestClass):
+    PATH: str = ""
 
     def test_returns_404_when_no_text_matches_id(self):
         with Session() as session:
@@ -82,7 +98,10 @@ class TestTextsID:
             )
             session.commit()
 
-        assert test_client.get("/api/v1/game/texts/dcba").status_code == 404
+        assert test_client.get("/api/v1/game/texts/dcba" + self.PATH).status_code == 404
+
+
+class TestTextsID(TextIDGetEndpointTestClass):
 
     def test_returns_requested_text(self):
         with Session() as session:
@@ -104,40 +123,14 @@ class TestTextsID:
         assert response.json()["content"] == "test text 3"
 
 
-class TestQuestions:
+class TestQuestions(TextIDGetEndpointTestClass):
+    PATH: str = "/questions/next"
 
-    def test_returns_404_when_no_text_matches_id(self):
+    def test_returns_all_questions_for_the_text(self, empty_text):
         with Session() as session:
             session.execute(delete(Text))
             session.execute(delete(Question))
-            test_text = Text(
-                id="not_a",
-                title="",
-                content="",
-                difficulty="",
-                word_count=0,
-            )
-            session.add(test_text)
-            session.add(
-                Question(content="", options=[], correct_option=0, text=test_text)
-            )
-            session.commit()
-
-        response = test_client.get("/api/v1/game/texts/a/questions")
-        assert response.status_code == 404
-
-    def test_returns_all_questions_for_the_text(self):
-        with Session() as session:
-            session.execute(delete(Text))
-            session.execute(delete(Question))
-            test_text = Text(
-                id="a",
-                title="",
-                content="",
-                difficulty="",
-                word_count=0,
-            )
-            session.add(test_text)
+            session.add(empty_text)
             for i in range(10):
                 session.add(
                     Question(
@@ -145,15 +138,87 @@ class TestQuestions:
                         content="",
                         options=[],
                         correct_option=0,
-                        text=test_text,
+                        text=empty_text,
                     )
                 )
             session.commit()
 
-        response = test_client.get("/api/v1/game/texts/a/questions")
+        response = test_client.get("/api/v1/game/texts/empty/questions/next")
         assert response.status_code == 200
         response_body = response.json()
-        # TODO: Check number of questions returned
+        assert len(response_body) == 3
         assert all(
             question["id"] in (str(i) for i in range(10)) for question in response_body
+        )
+
+
+class TestAnswers(TextIDGetEndpointTestClass):
+
+    def test_returns_404_if_question_does_not_exist(self, empty_text):
+        with Session() as session:
+            session.execute(delete(Text))
+            session.execute(delete(Question))
+            session.add(empty_text)
+            session.commit()
+
+        response = test_client.post(
+            "/api/v1/game/texts/empty/answers",
+            json=[{"question_id": "a", "selected_option": 0}],
+        )
+        assert response.status_code == 404
+
+    def test_returns_400_if_questions_do_not_match_text_id(self, empty_text):
+        with Session() as session:
+            session.execute(delete(Text))
+            session.execute(delete(Question))
+            session.add(empty_text)
+            session.add(
+                Question(
+                    id="a", content="", options=[], correct_option=0, text=empty_text
+                )
+            )
+            session.commit()
+
+        response = test_client.post(
+            "/api/v1/game/texts/not_empty/answers",
+            json=[{"question_id": "a", "selected_option": 0}],
+        )
+        assert response.status_code == 400
+
+    def test_returns_results_and_correct_answers(self, empty_text):
+        with Session() as session:
+            session.execute(delete(Text))
+            session.execute(delete(Question))
+            session.add(empty_text)
+            for i in range(5):
+                session.add(
+                    Question(
+                        id=str(i),
+                        content="",
+                        options=[],
+                        correct_option=i,
+                        text=empty_text,
+                    )
+                )
+            session.commit()
+
+        response = test_client.post(
+            "/api/v1/game/texts/empty/answers",
+            json=[
+                {"question_id": "0", "selected_option": 4},
+                {"question_id": "1", "selected_option": 1},
+                {"question_id": "2", "selected_option": 2},
+                {"question_id": "4", "selected_option": 3},
+                {"question_id": "3", "selected_option": 4},
+            ],
+        )
+        assert response.status_code == 200
+        response_body = response.json()
+        assert all(
+            (answer["correct_option"] == int(answer["question_id"]))
+            and (
+                answer["correct"]
+                == (answer["selected_option"] == answer["correct_option"])
+            )
+            for answer in response_body
         )

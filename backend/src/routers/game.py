@@ -14,7 +14,7 @@ router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
 @router.get(
     "/texts/next",
-    response_model=list[schemas.Text],
+    response_model=schemas.Text,
 )
 async def get_next_text(
     session: Session = Depends(get_session),
