@@ -117,7 +117,7 @@ unit_test_backend:
   stage: test
   script:
     - echo "Testing"
-    - ./run_tests.sh
+    - NO_DATABASE=true poetry run pytest --verbose tests
 
 deploy_staging_frontend:
   extends: .deploy
