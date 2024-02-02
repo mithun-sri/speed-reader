@@ -1,0 +1,1 @@
+NO_DATABASE=true poetry run pytest --verbose tests
