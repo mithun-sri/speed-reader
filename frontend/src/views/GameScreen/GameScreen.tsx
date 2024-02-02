@@ -24,6 +24,7 @@ export const useGameScreenContext = () => {
   return context;
 };
 
+// TODO: Waiting for @Taeho's component
 const StandardSelect = () => {
   const { incrementCurrentStage } = useGameScreenContext();
 
