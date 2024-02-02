@@ -1,11 +1,7 @@
 from datetime import datetime
 
-from mongoengine import (
-    DateTimeField,
-    Document,
-    IntField,
-    StringField
-)
+from mongoengine import DateTimeField, Document, IntField, StringField
+
 
 class User(Document):
     user_id = IntField(primary_key=True)

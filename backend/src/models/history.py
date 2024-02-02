@@ -1,10 +1,5 @@
-from mongoengine import (
-    DateTimeField,
-    Document,
-    IntField,
-    UUIDField,
-    ListField
-)
+from mongoengine import DateTimeField, Document, IntField, ListField, UUIDField
+
 
 class History(Document):
     id = UUIDField(primary_key=True)

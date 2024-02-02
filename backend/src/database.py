@@ -1,7 +1,7 @@
 import os
 
 from mongoengine import connect
-from sqlalchemy import MetaData, create_engine
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -25,8 +25,6 @@ try:
 except Exception as e:
     print("MongoDB connection failed")
     print(e)
-
-# metadata = MetaData()
 
 
 def get_session():
