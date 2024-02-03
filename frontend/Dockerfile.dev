@@ -8,4 +8,4 @@ RUN yarn install
 COPY . .
 
 EXPOSE 8080
-CMD PORT=8080 HOST=0.0.0.0 yarn start
+ENTRYPOINT ./docker-entrypoint.sh
