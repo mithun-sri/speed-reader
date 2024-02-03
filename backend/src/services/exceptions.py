@@ -1,54 +1,36 @@
-from fastapi import HTTPException, status
+from fastapi import status
 
 
-class UnauthorisedException(HTTPException):
-    def __init__(self, detail: str) -> None:
-        super().__init__(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=detail,
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-
-
-class InvalidCredentialsException(UnauthorisedException):
+class InvalidCredentialsException(Exception):
     def __init__(self) -> None:
-        super().__init__(
-            detail="Invalid credentials",
-        )
+        self.status_code = status.HTTP_401_UNAUTHORIZED
+        self.headers = {"WWW-Authenticate": "Bearer"}
+        self.detail = "Invalid credentials"
 
 
-class InvalidTokenException(UnauthorisedException):
+class InvalidTokenException(Exception):
     def __init__(self) -> None:
-        super().__init__(
-            detail="Invalid token",
-        )
+        self.status_code = status.HTTP_401_UNAUTHORIZED
+        self.headers = {"WWW-Authenticate": "Bearer"}
+        self.detail = "Invalid token"
 
 
-class UserNotFoundException(HTTPException):
-    def __init__(self) -> None:
-        super().__init__(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found",
-        )
+class UserNotFoundException(Exception):
+    def __init__(self, username) -> None:
+        self.status_code = status.HTTP_404_NOT_FOUND
+        self.detail = f"User {username} not found"
+        self.username = username
 
 
-class DuplicateDetailsException(HTTPException):
-    def __init__(self, detail: str) -> None:
-        super().__init__(
-            status_code=status.HTTP_409_CONFLICT,
-            detail=detail,
-        )
+class UserAlreadyExistsException(Exception):
+    def __init__(self, username) -> None:
+        self.status_code = status.HTTP_409_CONFLICT
+        self.detail = f"User {username} already exists"
+        self.username = username
 
 
-class UserAlreadyExistsException(DuplicateDetailsException):
-    def __init__(self) -> None:
-        super().__init__(
-            detail="User already exists",
-        )
-
-
-class EmailAlreadyUsedException(DuplicateDetailsException):
-    def __init__(self) -> None:
-        super().__init__(
-            detail="Email already registered to another user",
-        )
+class EmailAlreadyUsedException(Exception):
+    def __init__(self, email) -> None:
+        self.status_code = status.HTTP_409_CONFLICT
+        self.detail = f"Email {email} already in use"
+        self.email = email

@@ -87,7 +87,7 @@ async def register_user(
 
     # TODO: Make request to db client to see if user with email already exists
     if await user_registered(email, db):
-        raise EmailAlreadyUsedException()
+        raise EmailAlreadyUsedException(email=email)
 
     hashed_password = get_password_hash(form_data.password)
     created_at = datetime.utcnow()
