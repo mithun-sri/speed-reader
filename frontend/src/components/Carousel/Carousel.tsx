@@ -3,28 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  PATH_ADAPTIVE_MODE,
-  PATH_STANDARD_MODE_1,
-  PATH_STANDARD_MODE_2,
-  PATH_SUMMARISED_ADAPTIVE_MODE,
-} from "../../common/constants";
 
-const Carousel = () => {
-  // Note: these two arrays (options, paths) will be passed in as arguments to allow reusability
-  const options = [
-    "Standard Mode (Word)",
-    "Standard Mode (Justified)",
-    "Adaptive Mode",
-    "Summarised Adaptive Mode",
-  ];
-  const paths = [
-    PATH_STANDARD_MODE_1,
-    PATH_STANDARD_MODE_2,
-    PATH_ADAPTIVE_MODE,
-    PATH_SUMMARISED_ADAPTIVE_MODE,
-  ];
+const Carousel: React.FC<{
+  title?: string;
+  options: string[];
+  returnSelectedIndex: (value: number) => void;
+}> = ({ title, options, returnSelectedIndex }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
@@ -103,7 +87,7 @@ const Carousel = () => {
           fontSize: fontSize / 6.3,
         }}
       >
-        choose game mode.
+        {title !== undefined ? title : "choose."}
       </Box>
       <Box
         sx={{
@@ -120,16 +104,17 @@ const Carousel = () => {
         {visibleOptions.map((option, index) => (
           <Box key={index} style={index === 1 ? centerBoxStyle : boxStyle}>
             {index === 1 ? (
-              <Link
-                to={paths[currentIndex]}
-                style={{
-                  textDecoration: "none",
+              <Box
+                onClick={() => {
+                  returnSelectedIndex(currentIndex); // Return index of selected carousel item
+                }}
+                sx={{
                   color: "inherit",
                   cursor: "pointer",
                 }}
               >
                 {option}
-              </Link>
+              </Box>
             ) : (
               option
             )}

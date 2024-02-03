@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
-import { useContext, useEffect, useState } from "react";
-import Context from "../../Context";
+import { useEffect, useState } from "react";
+import { useGameContext } from "../../context/GameContext";
 import SliderLevelText from "./SliderLevelText";
 import SliderRateText from "./SliderRateText";
 
@@ -58,8 +58,7 @@ const PrettoSlider = styled(Slider)(() => ({
 }));
 
 function SpeedSlider() {
-  const SPEED_RANGES = [100, 150, 200, 300, 600, 2000];
-  const context = useContext(Context);
+  const { setWpm } = useGameContext();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const onSliderChange = (
@@ -68,9 +67,7 @@ function SpeedSlider() {
     _activeThumb: number,
   ) => {
     const newNumber = newValue as number;
-    const min = SPEED_RANGES[newNumber];
-    const max = SPEED_RANGES[newNumber + 1];
-    context.setWPM(Math.floor(Math.random() * (max - min + 1)) + min);
+    setWpm(newNumber);
   };
 
   useEffect(() => {

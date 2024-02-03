@@ -1,9 +1,9 @@
 import { Box, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { PATH_STANDARD_MODE_1 } from "../../common/constants";
+import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 
 const StartButton = () => {
+  const { incrementCurrentStage } = useGameScreenContext();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -29,6 +29,9 @@ const StartButton = () => {
 
   return (
     <IconButton
+      onClick={() => {
+        incrementCurrentStage();
+      }}
       sx={{
         fontFamily: "JetBrains Mono, monospace",
         color: "#FFFFFF",
@@ -44,15 +47,7 @@ const StartButton = () => {
           fontSize: fontSize * 1,
         }}
       >
-        <Link
-          to={PATH_STANDARD_MODE_1}
-          style={{
-            textDecoration: "none",
-            color: "white",
-          }}
-        >
-          <Box>Start.</Box>
-        </Link>
+        Start.
       </Box>
     </IconButton>
   );
