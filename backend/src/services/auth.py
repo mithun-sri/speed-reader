@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Annotated
 
-from fastapi import Depends, Header, HTTPException, status
+from fastapi import Depends, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
 
@@ -15,6 +15,11 @@ from ..utils.security.auth import (
     create_refresh_token,
 )
 from ..utils.security.crypt import get_password_hash, verify_password
+from .exceptions import (
+    EmailAlreadyUsedException,
+    InvalidCredentialsException,
+    InvalidTokenException,
+)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
 
@@ -27,20 +32,12 @@ async def get_token(
     user = db.get(email)
 
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise InvalidCredentialsException()
 
     hashed_password = user.get("password")
 
     if not verify_password(raw_password, hashed_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise InvalidCredentialsException()
 
     payload = {"email": email}
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -61,20 +58,12 @@ async def get_refresh_token(refresh_token: Annotated[str, Header] = Header(), db
     email = payload.get("sub", None)
 
     if not email:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid Token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise InvalidTokenException()
 
     user = db.get(email)
 
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid Token",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise InvalidTokenException()
 
     payload = {"email": email}
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -88,11 +77,7 @@ async def get_refresh_token(refresh_token: Annotated[str, Header] = Header(), db
 
 
 async def get_current_user(_token: Annotated[str, Depends(oauth2_scheme)]):
-    _credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+    _credentials_exception = InvalidCredentialsException()
 
 
 async def register_user(
@@ -102,9 +87,7 @@ async def register_user(
 
     # TODO: Make request to db client to see if user with email already exists
     if await user_registered(email, db):
-        raise HTTPException(
-            detail="Email is already registered", status_code=status.HTTP_409_CONFLICT
-        )
+        raise EmailAlreadyUsedException()
 
     hashed_password = get_password_hash(form_data.password)
     created_at = datetime.utcnow()
@@ -130,20 +113,14 @@ async def register_user(
 async def login_user(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db):
     email = form_data.username
 
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-
     if not await user_registered(email, db):
-        raise credentials_exception
+        raise InvalidCredentialsException()
 
     # TODO: Get user password (hashed + salt) from Firestore.
     valid_password = db.get("email")["password"]
 
     if not verify_password(form_data.password, valid_password):
-        raise credentials_exception
+        raise InvalidCredentialsException()
 
     return {"message": "Successful"}
 
