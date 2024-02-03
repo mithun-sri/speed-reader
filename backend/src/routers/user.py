@@ -1,6 +1,13 @@
 from fastapi import APIRouter, Query
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from fastapi import Depends
+from ..database import get_session
+from uuid import UUID
 
 from ..logger import LoggerRoute
+from ..models.history import History
+from ..models.text import Text
 
 router = APIRouter(prefix="/user", tags=["user"], route_class=LoggerRoute)
 
@@ -10,11 +17,24 @@ router = APIRouter(prefix="/user", tags=["user"], route_class=LoggerRoute)
 def get_user_summary():
     pass
 
-# TODO: Create endpoint for collecting available texts for users.
-@router.get("{user_id}/available_texts")
-def get_available_texts(
+@router.get("/available_texts")
+async def get_available_texts(
     user_id: str,
     page: int = Query(1, ge=1),
     page_size: int = Query(10, ge=1, le=100),
+    session: Session = Depends(get_session),
 ):
-    pass
+    # Collect texts read by user in user.history from MongoDB
+    texts_read_by_user = History.objects(user_id=user_id).distinct("text_id")
+
+    # Collect paginated texts from PostgreSQL of texts not read by user
+    query = select(Text).where(~Text.id.in_(texts_read_by_user))
+    results = session.scalars(query)
+
+    response = {
+        "texts": [text for text in results],
+        "page": page,
+        "page_size": page_size,
+        # "total_texts": Text.query.count(),
+    }
+    return response
