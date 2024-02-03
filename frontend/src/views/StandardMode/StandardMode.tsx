@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import PropTypes from "prop-types";
-import { STANDARD_MODE } from "../../common/constants";
+import { GameDifficulty, STANDARD_MODE } from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
@@ -10,9 +10,10 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 
-export enum StandardMode {
+export enum StandardView {
   Word = 0,
-  Justified = 1,
+  Highlighted = 1,
+  Peripheral = 2,
 }
 
 interface TextsApiResponse {
@@ -26,7 +27,8 @@ interface TextsApiResponse {
 
 const StandardModeGameView: React.FC<{
   wpm?: number;
-  mode?: StandardMode;
+  mode?: StandardView;
+  difficulty?: GameDifficulty;
 }> = ({ wpm, mode }) => {
   const [text, setText] = useState(
     "Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider.",
@@ -91,9 +93,9 @@ const StandardModeGameView: React.FC<{
       >
         {showGameScreen ? (
           <StandardModeGameComponent
-            wpm={wpm || 200}
+            wpm={wpm || 200} // Handle undefined wpm
             text={text}
-            mode={mode || StandardMode.Word}
+            mode={mode || StandardView.Word} // Handle undefined mode
           />
         ) : (
           countdownComp
@@ -105,13 +107,17 @@ const StandardModeGameView: React.FC<{
 
 StandardModeGameView.propTypes = {
   wpm: PropTypes.number,
-  mode: PropTypes.oneOf([StandardMode.Word, StandardMode.Justified]),
+  mode: PropTypes.oneOf([
+    StandardView.Word,
+    StandardView.Highlighted,
+    StandardView.Peripheral,
+  ]),
 };
 
 const StandardModeGameComponent: React.FC<{
   wpm: number;
   text: string;
-  mode: StandardMode;
+  mode: StandardView;
 }> = ({ wpm, text, mode }) => {
   return (
     <Box
@@ -119,10 +125,10 @@ const StandardModeGameComponent: React.FC<{
         padding: "25px",
       }}
     >
-      {mode == StandardMode.Word ? (
+      {mode == StandardView.Word ? (
         <WordTextDisplay text={text} wpm={wpm} />
       ) : (
-        <JustifiedTextDisplay text={text} wpm={wpm} />
+        <HighlightedTextDisplay text={text} wpm={wpm} />
       )}
     </Box>
   );
@@ -131,7 +137,11 @@ const StandardModeGameComponent: React.FC<{
 StandardModeGameComponent.propTypes = {
   wpm: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
-  mode: PropTypes.oneOf([StandardMode.Word, StandardMode.Justified]).isRequired,
+  mode: PropTypes.oneOf([
+    StandardView.Word,
+    StandardView.Highlighted,
+    StandardView.Peripheral,
+  ]).isRequired,
 };
 
 // eslint-disable-next-line
@@ -254,10 +264,10 @@ WordTextDisplay.propTypes = {
 };
 
 /*
-  Mode 1.2 (Justified): Standard mode displaying the entire text in a justified format across multiple lines.
+  Mode 1.2 (Highlighted): Standard mode displaying the entire text across multiple lines.
   Words are highlighted sequentially based on the specified words per minute (wpm).
 */
-const JustifiedTextDisplay: React.FC<{
+const HighlightedTextDisplay: React.FC<{
   text: string;
   wpm: number;
   size?: number;
@@ -348,7 +358,7 @@ const JustifiedTextDisplay: React.FC<{
   );
 };
 
-JustifiedTextDisplay.propTypes = {
+HighlightedTextDisplay.propTypes = {
   text: PropTypes.string.isRequired,
   wpm: PropTypes.number.isRequired,
   size: PropTypes.number,
