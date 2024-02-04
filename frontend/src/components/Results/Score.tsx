@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 const Score: React.FC<{
   score: number;
 }> = ({ score }) => {
-  const [circleWidth, setCircleWidth] = useState(window.innerWidth / 7)
+  const [circleWidth, setCircleWidth] = useState(window.innerWidth / 7);
   const [_progress, setProgress] = useState(0);
 
   useEffect(() => {
