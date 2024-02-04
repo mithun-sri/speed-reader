@@ -87,6 +87,7 @@ async def submit_answers(
     Accepts question answers and returns the results.
     """
     results = []
+    question_ids = []
     for answer in answers:
         question = session.get(models.Question, answer.question_id)
         if not question:
@@ -98,6 +99,10 @@ async def submit_answers(
                 status_code=400,
                 detail=f"Question {answer.question_id} does not belong to text {text_id}",
             )
+        if answer.question_id in question_ids:
+            raise HTTPException(
+                status_code=400, detail=f"Duplicate question {answer.question_id}"
+            )
 
         results.append(
             schemas.QuestionResult(
@@ -107,5 +112,6 @@ async def submit_answers(
                 correct_option=question.correct_option,
             )
         )
+        question_ids.append(answer.question_id)
 
     return results
