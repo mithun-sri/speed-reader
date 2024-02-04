@@ -16,6 +16,7 @@ class Text(ULIDMixin, TimestampMixin, Base):
     content: Mapped[str]
     difficulty: Mapped[str]
     word_count: Mapped[int]
+    game_mode: Mapped[int]
 
     questions: Mapped[list["Question"]] = relationship(
         back_populates="text",
