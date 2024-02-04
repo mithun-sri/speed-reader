@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import PlayAgain from "./PlayAgain";
 import ChangeGameMode from "./ChangeGameMode";
 
-const ResultsBottom: React.FC<{}> = () => {
+const ResultsBottom = () => {
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 5;
