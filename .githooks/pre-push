@@ -93,7 +93,7 @@ print_info "[7/8] Running frontend unit tests..."
 # fi
 
 print_info "[8/8] Running backend unit tests..."
-if ! docker compose exec -T backend poetry run pytest --verbose tests; then
+if ! docker compose exec -T backend poetry run pytest --verbose --disable-warnings tests; then
     print_error "Backend unit tests failed. Please fix the issue before pushing."
     exit 1
 else

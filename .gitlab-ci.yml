@@ -109,7 +109,7 @@ unit_test_backend:
   extends: .backend
   stage: test
   script:
-    - docker compose run backend poetry run pytest --verbose tests
+    - docker compose run backend poetry run pytest --verbose --disable-warnings tests
 
 deploy_staging_frontend:
   extends: .deploy
