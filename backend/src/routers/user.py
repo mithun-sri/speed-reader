@@ -26,32 +26,40 @@ class TextFilter(BaseModel):
     game_mode: Optional[int] = Query(None)
     sort: Optional[str] = Query(None)
 
-@router.get("/stats")
-async def get_user_stats(user_id: str, session: Session = Depends(get_session)):
 
+@router.get("/stats")
+async def get_user_stats(user_id: str):
     user = User.objects(user_id=user_id).first()  # pylint: disable=no-member
 
+    # Calculate the average score of the user
     pipeline = [
-    {"$group" : {"_id" : user_id}},
-    {"$project": {"_id": 0, "avgScore": {"$avg": "$score"}}}
+        {"$group": {"_id": user_id}},
+        {"$project": {"_id": 0, "avgScore": {"$avg": "$score"}}},
     ]
-    data = list(History.objects().aggregate(pipeline))[0]
+    data = list(History.objects().aggregate(pipeline))[0]  # pylint: disable=no-member
     avg_score = data["avgScore"]
 
+    # Calculate the min, max and average wpm of the user
     pipeline = [
-    {"$group" : {"_id" : user_id, "minWpm" : {"$min" : "$wpm"}, "maxWpm" : {"$max" : "$wpm"}, "avgWpm" : {"$avg" : "$wpm"}}},
-    {"$project": {"_id": user_id, "minWpm": 1, "maxWpm": 1, "avgWpm": 1}}
+        {
+            "$group": {
+                "_id": user_id,
+                "minWpm": {"$min": "$wpm"},
+                "maxWpm": {"$max": "$wpm"},
+                "avgWpm": {"$avg": "$wpm"},
+            }
+        },
+        {"$project": {"_id": user_id, "minWpm": 1, "maxWpm": 1, "avgWpm": 1}},
     ]
-    data = list(History.objects().aggregate(pipeline))[0]
+    data = list(History.objects().aggregate(pipeline))[0]  # pylint: disable=no-member
     min_wpm, max_wpm, avg_wpm = data["minWpm"], data["maxWpm"], data["avgWpm"]
-
 
     response = {
         "user_id": user_id,
         "username": user.username,
         "email": user.email,
         "wpm": {"min": min_wpm, "max": max_wpm, "average": avg_wpm},
-        "time_series": "",
+        "historical": user.historical,
         "score": {"average": avg_score},
     }
     return response

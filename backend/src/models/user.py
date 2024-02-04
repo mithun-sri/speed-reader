@@ -1,6 +1,13 @@
 from datetime import datetime
 
-from mongoengine import DateTimeField, Document, IntField, StringField, ObjectIdField
+from mongoengine import (
+    DateTimeField,
+    DictField,
+    Document,
+    ListField,
+    ObjectIdField,
+    StringField,
+)
 
 
 class User(Document):
@@ -10,4 +17,5 @@ class User(Document):
     password = StringField(required=True)
     created_at = DateTimeField(default=datetime.utcnow)
     status = StringField(default="active")
+    historical = ListField(DictField(), default=[])
     meta = {"collection": "users"}
