@@ -22,7 +22,12 @@ default:
 .check:
   image: docker:24.0.5
   services:
-    - docker:24.0.5-dind
+    - name: docker:24.0.5-dind
+      # Make sure Docker Hub Registry mirror is setup.
+      # https://docs.gitlab.com/runner/configuration/speed_up_job_execution.html#docker-hub-registry-mirror
+      command:
+        - "--registry-mirror"
+        - "http://localhost:6000"
   before_script:
     - docker compose up -d
 
