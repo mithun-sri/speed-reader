@@ -15,7 +15,10 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/default
+      - POSTGRES_URL=postgresql://postgres:postgres@postgres:5432/default
+      - POSTGRES_TEST_URL=postgresql://postgres:postgres@postgres-test:5432/default
+      - MONGO_URL=mongodb://mongo:27017/default
+      - MONGO_TEST_URL=mongodb://mongo-test:27017/default
     volumes:
       - ./backend/src:/app/src
       - ./backend/tests:/app/tests
@@ -23,8 +26,11 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - db
-  db:
+      - postgres
+      - postgres-test
+      - mongo
+      - mongo-test
+  postgres:
     image: postgres:14-alpine
     restart: always
     environment:
@@ -35,6 +41,38 @@ services:
       - postgresql-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  postgres-test:
+    image: postgres:14-alpine
+    restart: always
+    environment:
+      - POSTGRES_DB=default
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgresql-test-data:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+  mongo:
+    image: mongo:4.4
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=default
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - 27017:27017
+  mongo-test:
+    image: mongo:4.4
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=default
+    volumes:
+      - mongodb-test-data:/data/db
+    ports:
+      - 27018:27017
 volumes:
   node_modules:
   postgresql-data:
+  postgresql-test-data:
+  mongodb-data:
+  mongodb-test-data:
