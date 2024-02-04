@@ -20,37 +20,12 @@ variables:
 default:
   tags: [private]
 
-# Dummy job that always passes
-# so that MRs without any matching jobs can be merged.
-# https://stackoverflow.com/questions/69799364/in-gitlab-how-to-set-pipelines-must-succeed-only-for-specific-branches-but-no
-init:
-  stage: init
-  except:
-    changes:
-      - frontend/**/*
-      - backend/**/*
-  script:
-    - echo "Initialising"
-
-.frontend:
-  only:
-    changes:
-      - frontend/**/*
+.check:
   image: docker:24.0.5
   services:
     - docker:24.0.5-dind
   before_script:
-    - docker compose build frontend
-
-.backend:
-  only:
-    changes:
-      - backend/**/*
-  image: docker:24.0.5
-  services:
-    - docker:24.0.5-dind
-  before_script:
-    - docker compose build backend
+    - docker compose up -d
 
 .deploy:
   tags: [private]
@@ -61,52 +36,32 @@ init:
   after_script:
     - dokku-unlock
 
-typecheck_frontend:
-  extends: .frontend
+check_frontend:
+  extends: .check
   stage: check
   script:
-    - docker compose run frontend yarn tsc --noEmit
+    - docker compose exec -T frontend yarn tsc --noEmit
+    - docker compose exec -T frontend yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
+    - docker compose exec -T frontend yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
-typecheck_backend:
-  extends: .backend
+check_backend:
+  extends: .check
   stage: check
   script:
-    - docker compose run backend poetry run mypy src
+    - docker compose exec -T backend poetry run mypy src
+    - docker compose exec -T backend poetry run pylint src
+    - docker compose exec -T backend poetry run isort --profile black --check src
+    - docker compose exec -T backend poetry run black --check src
 
-check_lint_frontend:
-  extends: .frontend
-  stage: check
-  script:
-    - docker compose run frontend yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
-
-check_lint_backend:
-  extends: .backend
-  stage: check
-  script:
-    - docker compose run backend poetry run pylint src
-
-check_format_frontend:
-  extends: .frontend
-  stage: check
-  script:
-    - docker compose run frontend yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
-
-check_format_backend:
-  extends: .backend
-  stage: check
-  script:
-    - docker compose run backend poetry run isort --profile black --check src
-    - docker compose run backend poetry run black --check src
-
-unit_test_frontend:
-  extends: .frontend
+test_frontend:
+  extends: .check
   stage: test
   script:
-    - echo "Testing"
-    # - docker compose run frontend yarn test
+    - docker compose exec -T frontend echo "Testing"
+    # - docker compose exec -T frontend yarn test
 
-unit_test_backend:
-  extends: .backend
+test_backend:
+  extends: .check
   stage: test
   script:
     - docker compose run backend poetry run pytest --verbose --disable-warnings tests
