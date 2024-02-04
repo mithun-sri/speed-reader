@@ -8,6 +8,7 @@ from ..database import get_session
 from ..logger import LoggerRoute
 from ..models.history import History
 from ..models.text import Text
+from ..models.user import User
 
 router = APIRouter(prefix="/user", tags=["user"], route_class=LoggerRoute)
 
@@ -24,6 +25,36 @@ class TextFilter(BaseModel):
     difficulty: Optional[str] = Query(None)
     game_mode: Optional[int] = Query(None)
     sort: Optional[str] = Query(None)
+
+@router.get("/stats")
+async def get_user_stats(user_id: str, session: Session = Depends(get_session)):
+
+    user = User.objects(user_id=user_id).first()  # pylint: disable=no-member
+
+    pipeline = [
+    {"$group" : {"_id" : user_id}},
+    {"$project": {"_id": 0, "avgScore": {"$avg": "$score"}}}
+    ]
+    data = list(History.objects().aggregate(pipeline))[0]
+    avg_score = data["avgScore"]
+
+    pipeline = [
+    {"$group" : {"_id" : user_id, "minWpm" : {"$min" : "$wpm"}, "maxWpm" : {"$max" : "$wpm"}, "avgWpm" : {"$avg" : "$wpm"}}},
+    {"$project": {"_id": user_id, "minWpm": 1, "maxWpm": 1, "avgWpm": 1}}
+    ]
+    data = list(History.objects().aggregate(pipeline))[0]
+    min_wpm, max_wpm, avg_wpm = data["minWpm"], data["maxWpm"], data["avgWpm"]
+
+
+    response = {
+        "user_id": user_id,
+        "username": user.username,
+        "email": user.email,
+        "wpm": {"min": min_wpm, "max": max_wpm, "average": avg_wpm},
+        "time_series": "",
+        "score": {"average": avg_score},
+    }
+    return response
 
 
 @router.get("/available_texts")

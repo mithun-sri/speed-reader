@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from mongoengine import DateTimeField, Document, IntField, StringField
+from mongoengine import DateTimeField, Document, IntField, StringField, ObjectIdField
 
 
 class User(Document):
-    user_id = IntField(primary_key=True)
+    user_id = ObjectIdField(primary_key=True, db_field="_id")
     username = StringField(required=True, unique=True)
     email = StringField(required=True, unique=True)
     password = StringField(required=True)

@@ -5,7 +5,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = "postgresql://postgres:d944ba8979acc540c9c89b3d2f867674@cloud-vm-42-173.doc.ic.ac.uk:5432/speed_reader_database"
 MONGO_URL = os.environ.get("MONGO_URL")
+MONGO_URL = "mongodb://speed-reader-mongodb:e6c9fe95da031c86319a226a1ef59b38@cloud-vm-42-173.doc.ic.ac.uk:27017/speed_reader_mongodb"
 
 # Connect to PostgreSQL database
 
