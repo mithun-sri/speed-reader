@@ -8,11 +8,20 @@ variables:
   # Disable shallow clone which is not supported by Dokku.
   # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
   GIT_DEPTH: 0
+
+  # Configure GitLab runner with Docker in Docker with TLS enabled.
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-in-docker-with-tls-enabled-in-the-docker-executor
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+
   STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
   PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
 
+default:
+  tags: [private]
+
 # Dummy job that always passes
-# so that MRs without any pipeline runs can be merged.
+# so that MRs without any matching jobs can be merged.
 # https://stackoverflow.com/questions/69799364/in-gitlab-how-to-set-pipelines-must-succeed-only-for-specific-branches-but-no
 init:
   stage: init
@@ -24,38 +33,24 @@ init:
     - echo "Initialising"
 
 .frontend:
-  tags: [private]
-  image: node:21
   only:
     changes:
       - frontend/**/*
-  cache:
-    - key:
-        files:
-          - frontend/yarn.lock
-      paths:
-        - frontend/node_modules
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
   before_script:
-    - cd frontend
-    - yarn install
+    - docker compose build frontend
 
 .backend:
-  tags: [private]
-  image: python:3.12
   only:
     changes:
       - backend/**/*
-  cache:
-    - key:
-        files:
-          - backend/poetry.lock
-      paths:
-        - backend/.venv
+  image: docker:24.0.5
+  services:
+    - docker:24.0.5-dind
   before_script:
-    - cd backend
-    - pip install poetry==1.6.1
-    - poetry config virtualenvs.in-project true
-    - poetry install
+    - docker compose build backend
 
 .deploy:
   tags: [private]
@@ -70,51 +65,51 @@ typecheck_frontend:
   extends: .frontend
   stage: check
   script:
-    - yarn tsc --noEmit
+    - docker compose run frontend yarn tsc --noEmit
 
 typecheck_backend:
   extends: .backend
   stage: check
   script:
-    - poetry run mypy src
+    - docker compose run backend poetry run mypy src
 
 check_lint_frontend:
   extends: .frontend
   stage: check
   script:
-    - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
+    - docker compose run frontend yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
 
 check_lint_backend:
   extends: .backend
   stage: check
   script:
-    - poetry run pylint src
+    - docker compose run backend poetry run pylint src
 
 check_format_frontend:
   extends: .frontend
   stage: check
   script:
-    - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
+    - docker compose run frontend yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
 check_format_backend:
   extends: .backend
   stage: check
   script:
-    - poetry run isort --profile black --check src
-    - poetry run black --check src
+    - docker compose run backend poetry run isort --profile black --check src
+    - docker compose run backend poetry run black --check src
 
 unit_test_frontend:
   extends: .frontend
   stage: test
   script:
     - echo "Testing"
-    # - yarn test
+    # - docker compose run frontend yarn test
 
 unit_test_backend:
   extends: .backend
   stage: test
   script:
-    - poetry run pytest --verbose tests
+    - docker compose run backend poetry run pytest --verbose --disable-warnings tests
 
 deploy_staging_frontend:
   extends: .deploy

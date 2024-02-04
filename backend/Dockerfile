@@ -15,5 +15,4 @@ RUN chown -R app:app /app && chmod -R 755 /app
 
 USER app
 EXPOSE 8000
-ENV FASTAPI_ENV=production
-CMD uvicorn src.main:app --reload --port 8000 --host 0.0.0.0
+CMD uvicorn src.main:app --port 8000 --host 0.0.0.0

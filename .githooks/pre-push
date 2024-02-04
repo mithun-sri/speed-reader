@@ -30,8 +30,11 @@ if [[ "$STDIN" =~ ^\(delete\) ]]; then
     exit 0
 fi
 
+print_info "Starting Docker containers..."
+docker compose up -d
+
 print_info "[1/8] Running frontend type checks..."
-if ! (cd frontend && yarn tsc --noEmit); then
+if ! docker compose exec -T frontend yarn tsc --noEmit; then
     print_error "Frontend type checks failed. Please fix the issue before pushing."
     exit 1
 else
@@ -39,7 +42,7 @@ else
 fi
 
 print_info "[2/8] Running backend type checks..."
-if ! (cd backend && poetry run mypy src); then
+if ! docker compose exec -T backend poetry run mypy src; then
     print_error "Backend type checks failed. Please fix the issue before pushing."
     exit 1
 else
@@ -47,7 +50,7 @@ else
 fi
 
 print_info "[3/8] Running frontend linting checks..."
-if ! (cd frontend && yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"); then
+if ! docker compose exec -T frontend yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"; then
     print_error "Frontend linting checks failed. Please fix the issue before pushing."
     exit 1
 else
@@ -55,7 +58,7 @@ else
 fi
 
 print_info "[4/8] Running backend linting checks..."
-if ! (cd backend && poetry run pylint src); then
+if ! docker compose exec -T backend poetry run pylint src; then
     print_error "Backend linting checks failed. Please fix the issue before pushing."
     exit 1
 else
@@ -63,7 +66,7 @@ else
 fi
 
 print_info "[5/8] Running frontend formatting checks..."
-if ! (cd frontend && yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"); then
+if ! docker compose exec -T frontend yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"; then
     print_error "Frontend checks failed. Please fix the issue before pushing."
     print_warning "Run 'cd frontend && yarn run prettier --write \"src/**/*.ts\" \"src/**/*.tsx\"' to fix the problem."
     exit 1
@@ -72,7 +75,8 @@ else
 fi
 
 print_info "[6/8] Running backend formatting checks..."
-if ! (cd backend && poetry run isort --profile black --check src && poetry run black --check src); then
+if ! docker compose exec -T backend poetry run isort --profile black --check src && \
+     docker compose exec -T backend poetry run black --check src; then
     print_error "Backend formatting checks failed. Please fix the issue before pushing."
     print_warning "Run 'cd backend && poetry run isort --profile black src && poetry run black src' to fix the problem."
     exit 1
@@ -81,7 +85,7 @@ else
 fi
 
 print_info "[7/8] Running frontend unit tests..."
-# if ! (cd frontend && yarn test); then
+# if ! docker compose exec -T frontend yarn test; then
 #     print_error "Frontend unit tests failed. Please fix the issue before pushing."
 #     exit 1
 # else
@@ -89,7 +93,7 @@ print_info "[7/8] Running frontend unit tests..."
 # fi
 
 print_info "[8/8] Running backend unit tests..."
-if ! (cd backend && poetry run pytest --verbose tests); then
+if ! docker compose exec -T backend poetry run pytest --verbose --disable-warnings tests; then
     print_error "Backend unit tests failed. Please fix the issue before pushing."
     exit 1
 else

@@ -4,12 +4,11 @@ from typing import Annotated
 import typer
 from rich import print
 from rich.progress import track
-from sqlalchemy import MetaData
 from sqlalchemy.orm import Session
 
 from .database import engine
-from .factories.question import QuestionFactory
-from .factories.text import TextFactory
+from .factories import QuestionFactory, TextFactory
+from .models import Base
 
 app = typer.Typer()
 
@@ -30,15 +29,13 @@ def seed(
 
     with Session(engine) as session:
         print("💣 Clearing database...")
-        meta = MetaData()
-        meta.reflect(engine)
-        for table in reversed(meta.sorted_tables):
+        tables = Base.metadata.sorted_tables
+        for table in reversed(tables):
             if table.name == "alembic_version":
                 continue
             session.execute(table.delete())
             session.commit()
 
-    with Session(engine) as session:
         print("🌱 Seeding texts...")
         texts = []
         for _ in track(range(10)):
