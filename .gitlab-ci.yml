@@ -17,6 +17,9 @@ variables:
   STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
   PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
 
+default:
+  tags: [private]
+
 # Dummy job that always passes
 # so that MRs without any matching jobs can be merged.
 # https://stackoverflow.com/questions/69799364/in-gitlab-how-to-set-pipelines-must-succeed-only-for-specific-branches-but-no
@@ -30,7 +33,6 @@ init:
     - echo "Initialising"
 
 .frontend:
-  tags: [private]
   only:
     changes:
       - frontend/**/*
@@ -41,7 +43,6 @@ init:
     - docker compose build frontend
 
 .backend:
-  tags: [private]
   only:
     changes:
       - backend/**/*
