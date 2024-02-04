@@ -18,6 +18,7 @@ import Quiz from "../Quiz/Quiz";
 import StandardModeGameView, {
   StandardView,
 } from "../StandardMode/StandardMode";
+import Footer from "../../components/Footer/Footer";
 
 const GameScreenContext = React.createContext<{
   currentStage: number;
@@ -116,6 +117,7 @@ const DiffSelect = () => {
           options={options}
           returnSelectedIndex={handleValueFromCarousel}
         />
+        <Footer />
       </Box>
     </Box>
   );
