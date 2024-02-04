@@ -13,7 +13,7 @@ const QuestionAnswer: React.FC<{
     const minFontSize = 15;
     const maxFontSize = 45;
 
-    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 20));
+    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 35));
   };
 
   const [fontSize, setFontSize] = useState(calculateFontSize());
@@ -67,9 +67,9 @@ const QuestionAnswer: React.FC<{
                   : index === userAnswer && userAnswer !== correctAnswer
                     ? "#BF3B33"
                     : "#379F3B",
-              border: "10px solid #646669",
-              borderRadius: "28px",
-              padding: `calc(${fontSize / 5}px) calc(${fontSize * 1.2}px)`,
+              border: `calc(${fontSize / 5}px) solid #646669`,
+              borderRadius: fontSize / 7,
+              padding: `calc(${fontSize / 5}px) calc(${fontSize * 1.4}px)`,
               color: "#fff",
               display: "flex",
               alignItems: "center",
