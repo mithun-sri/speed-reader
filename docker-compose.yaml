@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./frontend/src:/app/src
-      - node_modules:/app/node_modules
+      - ./frontend/node_modules:/app/node_modules
     ports:
       # Cannot use ports below 1000 (e.g. 80) 
       # as they are previleged ports that require root access.
@@ -71,7 +71,6 @@ services:
     ports:
       - 27018:27017
 volumes:
-  node_modules:
   postgresql-data:
   postgresql-test-data:
   mongodb-data:
