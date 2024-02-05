@@ -1,4 +1,5 @@
 stages:
+  - init
   - check
   - test
   - deploy
@@ -8,28 +9,56 @@ variables:
   # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
   GIT_DEPTH: 0
 
-  # Configure GitLab runner for Docker in Docker with TLS enabled.
-  # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-in-docker-with-tls-enabled-in-the-docker-executor
-  DOCKER_HOST: tcp://docker:2376
-  DOCKER_TLS_CERTDIR: "/certs"
-
   STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
   PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
 
+  POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/default
+  POSTGRES_TEST_URL: postgresql://postgres:postgres@postgres-test:5432/default
+  MONGO_URL: mongodb://mongo:27017/default
+  MONGO_TEST_URL: mongodb://mongo-test:27017/default
+
+  POSTGRES_DB: default
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  MONGO_INITDB_DATABASE: default
+
 default:
   tags: [private]
-
-.check:
-  image: docker:24.0.5
   services:
-    - name: docker:24.0.5-dind
-      # Make sure Docker Hub Registry mirror is setup.
-      # https://docs.gitlab.com/runner/configuration/speed_up_job_execution.html#docker-hub-registry-mirror
-      command:
-        - "--registry-mirror"
-        - "http://localhost:6000"
+    - name: postgres:14-alpine
+      alias: postgres
+    - name: postgres:14-alpine
+      alias: postgres-test
+    - name: mongo:4.4
+      alias: mongo
+    - name: mongo:4.4
+      alias: mongo-test
+
+.frontend:
+  image: node:21
+  cache:
+    - key:
+        files:
+          - frontend/yarn.lock
+      paths:
+        - frontend/node_modules
   before_script:
-    - docker compose build
+    - cd frontend
+    - yarn install
+
+.backend:
+  image: python:3.12
+  cache:
+    - key:
+        files:
+          - backend/poetry.lock
+      paths:
+        - backend/.venv
+  before_script:
+    - cd backend
+    - pip install poetry==1.6.1
+    - poetry config virtualenvs.in-project true
+    - poetry install
 
 .deploy:
   tags: [private]
@@ -40,35 +69,56 @@ default:
   after_script:
     - dokku-unlock
 
-check_frontend:
-  extends: .check
+typecheck_frontend:
+  extends: .frontend
   stage: check
   script:
-    - docker compose run frontend yarn tsc --noEmit
-    - docker compose run frontend yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
-    - docker compose run frontend yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
+    - yarn tsc --noEmit
 
-check_backend:
-  extends: .check
+typecheck_backend:
+  extends: .backend
   stage: check
   script:
-    - docker compose run backend poetry run mypy src
-    - docker compose run backend poetry run pylint src
-    - docker compose run backend poetry run isort --profile black --check src
-    - docker compose run backend poetry run black --check src
+    - poetry run mypy src
 
-test_frontend:
-  extends: .check
+check_lint_frontend:
+  extends: .frontend
+  stage: check
+  script:
+    - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
+
+check_lint_backend:
+  extends: .backend
+  stage: check
+  script:
+    - poetry run pylint src
+
+check_format_frontend:
+  extends: .frontend
+  stage: check
+  script:
+    - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
+
+check_format_backend:
+  extends: .backend
+  stage: check
+  script:
+    - poetry run isort --profile black --check src
+    - poetry run black --check src
+
+unit_test_frontend:
+  extends: .frontend
   stage: test
   script:
-    - docker compose run frontend echo "Testing"
-    # - docker compose exec -T frontend yarn test
+    - echo "Testing"
+    # - yarn test
 
-test_backend:
-  extends: .check
+unit_test_backend:
+  extends: .backend
   stage: test
   script:
-    - docker compose run backend poetry run pytest --verbose --disable-warnings tests
+    - echo "Testing"
+    - poetry run pytest --verbose tests
 
 deploy_staging_frontend:
   extends: .deploy
