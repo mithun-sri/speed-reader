@@ -7,9 +7,9 @@ const ResultsBottom = () => {
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 5;
-    const maxFontSize = 45;
+    const maxFontSize = 35;
 
-    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 20));
+    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 30));
   };
 
   const [fontSize, setFontSize] = useState(calculateFontSize());
@@ -35,6 +35,7 @@ const ResultsBottom = () => {
         alignContent: "center",
         justifyContent: "center",
         alignItems: "center",
+        margin: "50px 0px",
       }}
     >
       <PlayAgain fontSize={fontSize} />
