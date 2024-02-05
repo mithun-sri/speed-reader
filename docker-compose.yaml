@@ -20,6 +20,7 @@ services:
       - MONGO_URL=mongodb://mongo:27017/default
       - MONGO_TEST_URL=mongodb://mongo-test:27017/default
     volumes:
+      - ./backend/.venv:/app/.venv
       - ./backend/src:/app/src
       - ./backend/tests:/app/tests
       - ./backend/migrations:/app/migrations
