@@ -13,6 +13,7 @@ import QuizView from "./views/Quiz/Quiz";
 import StandardModeGameView, {
   StandardMode,
 } from "./views/StandardMode/StandardMode";
+import WebGazerLoader from "./views/Calibration/WebGazerLoader";
 
 function App() {
   const [wpm, setWPM] = useState<number>(300);
@@ -22,6 +23,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<ModeSelectView />} />
+          <Route path="/calibration" element={<WebGazerLoader />} />
           <Route path="/pre-game" element={<PreGameView />} />
           <Route
             path={PATH_STANDARD_MODE_1}

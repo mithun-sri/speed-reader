@@ -1,0 +1,133 @@
+#container { 
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 800px;
+}
+
+.top-right {
+    position: absolute; /* or 'fixed' */
+    top: 20%;
+    right: 0;
+    max-width: 100%; /* ensures the width doesn't exceed the viewport */
+    overflow: auto; /* adds scrollbars if the content overflows */
+    padding-right: 10px; /* adds some space on the right */
+}
+
+.top-button {
+    position: absolute; /* or 'fixed' */
+    top: 5%;
+    right: 20%;
+    max-width: 100%; /* ensures the width doesn't exceed the viewport */
+    overflow: auto; /* adds scrollbars if the content overflows */
+    padding-left: 10px; /* adds some space on the right */
+
+}
+
+/* Video Feed Styling */
+#overlay {
+/* Video Feed Styling:
+ * Include the !important keyword to override default styles applied by JS.
+ * webgazer.js sets defaults for: display, position, top, left, width, height
+ */
+}
+
+#webgazerVideoContainer {
+    display: flex !important; 
+    position: fixed !important;
+    width: 320px !important;
+    height: 240px !important;
+    justify-content: center;
+    align-items: center;
+    top: 7vh;
+    left: 0;
+    right: 0;
+    bottom: 0; 
+    margin: auto;
+    z-index: 1;
+}
+
+.calibration-done {
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0; 
+    padding-top: 33vh;
+    margin: auto;
+    display: none;
+}
+
+.calibration-done > * {
+    margin-bottom: 15vh;
+}
+
+.calibration-in-progress {
+    text-align: center;
+    margin-bottom: 14vh;
+}
+
+.in_progress_text {
+    padding-top: 20%;
+}
+
+.instructions_text {
+    padding-top: 290px;
+    padding-bottom: 10px;
+}
+
+/* Calibration button styling */
+.CalibrationButton {
+    width: 7vh;
+    height: 7vh;
+    border-radius: 50%;
+    box-shadow: none;
+    border: none;
+    background-color: #D1D0C5;
+    opacity: 0.2;
+    position:fixed;
+    z-index: 10;
+    outline: none;
+}
+
+/* Calibration point position */
+#Pt1{
+    top: 2vh;
+    left: 1vw;
+}
+#Pt2{
+    top: 2vh;
+    left:50vw;
+    transform: translate(-50%, -0%);
+}
+#Pt3{
+    top: 2vh;
+    right:1vw;
+}
+#Pt4{
+    top:50vh;
+    left:1vw;
+}
+#Pt5{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#Pt6{
+    top: 50vh;
+    right:1vw;
+}
+#Pt7{
+    bottom:2vh;
+    left: 1vw;
+}
+#Pt8{
+    bottom:2vh;
+    left:50vw;
+    transform: translate(-50%, -0%);
+}
+#Pt9{
+    bottom:2vh;
+    right:1vw;
+}
