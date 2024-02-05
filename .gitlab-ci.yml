@@ -8,7 +8,7 @@ variables:
   # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
   GIT_DEPTH: 0
 
-  # Configure GitLab runner with Docker in Docker with TLS enabled.
+  # Configure GitLab runner for Docker in Docker with TLS enabled.
   # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-in-docker-with-tls-enabled-in-the-docker-executor
   DOCKER_HOST: tcp://docker:2376
   DOCKER_TLS_CERTDIR: "/certs"
@@ -29,7 +29,7 @@ default:
         - "--registry-mirror"
         - "http://localhost:6000"
   before_script:
-    - docker compose up -d
+    - docker compose build
 
 .deploy:
   tags: [private]
@@ -44,18 +44,18 @@ check_frontend:
   extends: .check
   stage: check
   script:
-    - docker compose exec -T frontend yarn tsc --noEmit
-    - docker compose exec -T frontend yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
-    - docker compose exec -T frontend yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
+    - docker compose run frontend yarn tsc --noEmit
+    - docker compose run frontend yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
+    - docker compose run frontend yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
 check_backend:
   extends: .check
   stage: check
   script:
-    - docker compose exec -T backend poetry run mypy src
-    - docker compose exec -T backend poetry run pylint src
-    - docker compose exec -T backend poetry run isort --profile black --check src
-    - docker compose exec -T backend poetry run black --check src
+    - docker compose run backend poetry run mypy src
+    - docker compose run backend poetry run pylint src
+    - docker compose run backend poetry run isort --profile black --check src
+    - docker compose run backend poetry run black --check src
 
 test_frontend:
   extends: .check
