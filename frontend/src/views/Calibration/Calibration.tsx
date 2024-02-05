@@ -59,16 +59,6 @@ class Calibration extends React.Component<any, any> {
     document
       .getElementById("calibration_in_progress")
       ?.style.setProperty("display", "block");
-
-    // Add event listeners to calibration buttons
-    document.querySelectorAll(".CalibrationButton").forEach((i: Element) => {
-      if (i instanceof HTMLElement && !i.dataset.listenerAdded) {
-        i.addEventListener("click", () => {
-          this.calcPointClick(i);
-        });
-        i.dataset.listenerAdded = "true"; // Mark as listener added
-      }
-    });
   }
 
   canvasSetup() {
