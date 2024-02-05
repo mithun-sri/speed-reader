@@ -1,6 +1,8 @@
 stages:
-  - check
-  - test
+  - type_check
+  - check_lint
+  - check_format
+  - unit_test
   - deploy
 
 default:
@@ -68,53 +70,53 @@ default:
   after_script:
     - dokku-unlock
 
-typecheck_frontend:
+type_check_frontend:
   extends: .frontend
-  stage: check
+  stage: type_check
   script:
     - yarn tsc --noEmit
 
-typecheck_backend:
+type_check_backend:
   extends: .backend
-  stage: check
+  stage: type_check
   script:
     - poetry run mypy src
 
 check_lint_frontend:
   extends: .frontend
-  stage: check
+  stage: check_lint
   script:
     - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
 
 check_lint_backend:
   extends: .backend
-  stage: check
+  stage: check_lint
   script:
     - poetry run pylint src
 
 check_format_frontend:
   extends: .frontend
-  stage: check
+  stage: check_format
   script:
     - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
 check_format_backend:
   extends: .backend
-  stage: check
+  stage: check_format
   script:
     - poetry run isort --profile black --check src
     - poetry run black --check src
 
 unit_test_frontend:
   extends: .frontend
-  stage: test
+  stage: unit_test
   script:
     - echo "Testing"
     # - yarn test
 
 unit_test_backend:
   extends: .backend
-  stage: test
+  stage: unit_test
   script:
     - echo "Testing"
     - poetry run pytest --verbose tests
