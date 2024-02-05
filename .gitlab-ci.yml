@@ -12,16 +12,6 @@ variables:
   STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
   PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
 
-  POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/default
-  POSTGRES_TEST_URL: postgresql://postgres:postgres@postgres-test:5432/default
-  MONGO_URL: mongodb://mongo:27017/default
-  MONGO_TEST_URL: mongodb://mongo-test:27017/default
-
-  POSTGRES_DB: default
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
-  MONGO_INITDB_DATABASE: default
-
 default:
   tags: [private]
 
@@ -39,6 +29,18 @@ default:
 
 .backend:
   image: python:3.12
+  variables:
+    # Environment variables for backend container.
+    POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/default
+    POSTGRES_TEST_URL: postgresql://postgres:postgres@postgres-test:5432/default
+    MONGO_URL: mongodb://mongo:27017/default
+    MONGO_TEST_URL: mongodb://mongo-test:27017/default
+
+    # Environment variables for database services.
+    POSTGRES_DB: default
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    MONGO_INITDB_DATABASE: default
   services:
     - name: postgres:14-alpine
       alias: postgres
