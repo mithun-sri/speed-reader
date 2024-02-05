@@ -5,7 +5,6 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./frontend/src:/app/src
-      - ./frontend/node_modules:/app/node_modules
     ports:
       # Cannot use ports below 1000 (e.g. 80) 
       # as they are previleged ports that require root access.
@@ -20,7 +19,6 @@ services:
       - MONGO_URL=mongodb://mongo:27017/default
       - MONGO_TEST_URL=mongodb://mongo-test:27017/default
     volumes:
-      - ./backend/.venv:/app/.venv
       - ./backend/src:/app/src
       - ./backend/tests:/app/tests
       - ./backend/migrations:/app/migrations
