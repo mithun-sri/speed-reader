@@ -36,24 +36,26 @@ default:
 
 .frontend:
   image: node:21
-  cache:
-    - key:
-        files:
-          - frontend/yarn.lock
-      paths:
-        - frontend/node_modules
+  cache: []
+  # cache:
+  #   - key:
+  #       files:
+  #         - frontend/yarn.lock
+  #     paths:
+  #       - frontend/node_modules
   before_script:
     - cd frontend
     - yarn install
 
 .backend:
   image: python:3.12
-  cache:
-    - key:
-        files:
-          - backend/poetry.lock
-      paths:
-        - backend/.venv
+  cache: []
+  # cache:
+  #   - key:
+  #       files:
+  #         - backend/poetry.lock
+  #     paths:
+  #       - backend/.venv
   before_script:
     - cd backend
     - pip install poetry==1.6.1
