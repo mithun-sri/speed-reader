@@ -2,7 +2,7 @@ import "@fontsource/jetbrains-mono";
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 
-import { STANDARD_MODE_1 } from "../../common/constants";
+import { STANDARD_MODE } from "../../common/constants";
 
 const CountdownComponent: React.FC<{
   duration: number;
@@ -14,7 +14,7 @@ const CountdownComponent: React.FC<{
 
   // Change instruction text according to the mode
   let instruction: string = "read as many words as you can.";
-  if (mode === STANDARD_MODE_1) {
+  if (mode === STANDARD_MODE) {
     instruction = "Get ready.";
   }
 

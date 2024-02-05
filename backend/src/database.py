@@ -1,29 +1,41 @@
 import os
 
-from sqlalchemy import MetaData, create_engine
+from mongoengine import connect
+from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if not DATABASE_URL:
-    raise Exception("DATABASE_URL environment variable is not set")
+POSTGRES_URL = os.environ.get("POSTGRES_URL")
+MONGO_URL = os.environ.get("MONGO_URL")
 
+# Connect to PostgreSQL database
+if not POSTGRES_URL:
+    raise Exception("DATABASE_URL environment variable is not set")
 try:
-    engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+    engine = create_engine(POSTGRES_URL, pool_pre_ping=True)
     with engine.connect():
-        print("Database connection established")
+        print("Postgres connection established")
 except Exception as e:
-    print("Database connection failed")
+    print("Postgres connection failed")
     print(e)
 
-metadata = MetaData()
+# Connect to MongoDB database
+if not MONGO_URL:
+    raise Exception("MONGO_URL environment variable is not set")
+try:
+    mongodb = connect(host=MONGO_URL)
+    print("MongoDB connection established")
+except Exception as e:
+    print("MongoDB connection failed")
+    print(e)
 
 
+# TODO: Move this function into `dependencies.py` together with `get_token` etc.
 def get_session():
+    # TODO: This line may be redundant.
     session = None
-    # TODO: We should not ignore the exception here.
-    # TODO: No need to specify bind= here as it is the first argument.
     try:
-        with Session(bind=engine) as session:
+        with Session(engine) as session:
             yield session
-    finally:
-        pass
+    except Exception as exception:
+        print("Failed to get PostgreSQL session")
+        print(exception)

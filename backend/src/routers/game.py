@@ -13,7 +13,7 @@ router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
 @router.get(
     "/texts/next",
-    response_model=list[schemas.Text],
+    response_model=schemas.Text,
 )
 async def get_next_text(
     session: Session = Depends(get_session),
@@ -23,7 +23,7 @@ async def get_next_text(
     TODO: Currently returns a random text regardless of which texts the user has seen.
     """
     query = select(models.Text).order_by(func.random()).limit(1)
-    text = session.scalars(query).one()
+    text = session.scalars(query).one_or_none()
     if not text:
         raise HTTPException(status_code=404, detail="No text available")
 
@@ -42,7 +42,7 @@ async def get_text(
     Gets a text by the given id.
     """
     text = session.get(models.Text, text_id)
-    if text is None:
+    if not text:
         raise HTTPException(status_code=404, detail="Text not found")
 
     return text
@@ -61,7 +61,7 @@ async def get_next_questions(
     TODO: Currently returns 3 random questions for the given text, regardless of which questions the user has seen.
     """
     text = session.get(models.Text, text_id)
-    if text is None:
+    if not text:
         raise HTTPException(status_code=404, detail="Text not found")
 
     num_questions = 3
@@ -87,9 +87,10 @@ async def submit_answers(
     Accepts question answers and returns the results.
     """
     results = []
+    question_ids = []
     for answer in answers:
         question = session.get(models.Question, answer.question_id)
-        if question is None:
+        if not question:
             raise HTTPException(
                 status_code=404, detail=f"Question {answer.question_id} not found"
             )
@@ -97,6 +98,10 @@ async def submit_answers(
             raise HTTPException(
                 status_code=400,
                 detail=f"Question {answer.question_id} does not belong to text {text_id}",
+            )
+        if answer.question_id in question_ids:
+            raise HTTPException(
+                status_code=400, detail=f"Duplicate question {answer.question_id}"
             )
 
         results.append(
@@ -107,5 +112,6 @@ async def submit_answers(
                 correct_option=question.correct_option,
             )
         )
+        question_ids.append(answer.question_id)
 
     return results

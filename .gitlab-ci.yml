@@ -1,34 +1,15 @@
 stages:
-  - init
-  - check
-  - test
+  - type_check
+  - check_lint
+  - check_format
+  - unit_test
   - deploy
 
-variables:
-  # Disable shallow clone which is not supported by Dokku.
-  # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
-  GIT_DEPTH: 0
-  STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
-  PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
-
-# Dummy job that always passes
-# so that MRs without any pipeline runs can be merged.
-# https://stackoverflow.com/questions/69799364/in-gitlab-how-to-set-pipelines-must-succeed-only-for-specific-branches-but-no
-init:
-  stage: init
-  except:
-    changes:
-      - frontend/**/*
-      - backend/**/*
-  script:
-    - echo "Initialising"
+default:
+  tags: [private]
 
 .frontend:
-  tags: [private]
   image: node:21
-  only:
-    changes:
-      - frontend/**/*
   cache:
     - key:
         files:
@@ -40,11 +21,28 @@ init:
     - yarn install
 
 .backend:
-  tags: [private]
   image: python:3.12
-  only:
-    changes:
-      - backend/**/*
+  variables:
+    # Environment variables for backend container.
+    POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/default
+    POSTGRES_TEST_URL: postgresql://postgres:postgres@postgres-test:5432/default
+    MONGO_URL: mongodb://mongo:27017/default
+    MONGO_TEST_URL: mongodb://mongo-test:27017/default
+
+    # Environment variables for database services.
+    POSTGRES_DB: default
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    MONGO_INITDB_DATABASE: default
+  services:
+    - name: postgres:14-alpine
+      alias: postgres
+    - name: postgres:14-alpine
+      alias: postgres-test
+    - name: mongo:4.4
+      alias: mongo
+    - name: mongo:4.4
+      alias: mongo-test
   cache:
     - key:
         files:
@@ -58,62 +56,69 @@ init:
     - poetry install
 
 .deploy:
-  tags: [private]
   image: dokku/ci-docker-image
   stage: deploy
+  variables:
+    # Disable shallow clone which is not supported by Dokku.
+    # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
+    GIT_DEPTH: 0
+
+    STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
+    PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
   script:
     - dokku-deploy
   after_script:
     - dokku-unlock
 
-typecheck_frontend:
+type_check_frontend:
   extends: .frontend
-  stage: check
+  stage: type_check
   script:
     - yarn tsc --noEmit
 
-typecheck_backend:
+type_check_backend:
   extends: .backend
-  stage: check
+  stage: type_check
   script:
     - poetry run mypy src
 
 check_lint_frontend:
   extends: .frontend
-  stage: check
+  stage: check_lint
   script:
     - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
 
 check_lint_backend:
   extends: .backend
-  stage: check
+  stage: check_lint
   script:
     - poetry run pylint src
 
 check_format_frontend:
   extends: .frontend
-  stage: check
+  stage: check_format
   script:
     - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
 check_format_backend:
   extends: .backend
-  stage: check
+  stage: check_format
   script:
     - poetry run isort --profile black --check src
     - poetry run black --check src
 
 unit_test_frontend:
   extends: .frontend
-  stage: test
+  stage: unit_test
   script:
     - echo "Testing"
     # - yarn test
 
 unit_test_backend:
   extends: .backend
-  stage: test
+  stage: unit_test
   script:
+    - echo "Testing"
     - poetry run pytest --verbose tests
 
 deploy_staging_frontend:
