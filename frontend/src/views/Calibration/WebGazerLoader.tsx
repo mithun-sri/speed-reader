@@ -1,19 +1,21 @@
-import React from 'react';
-import { WebGazerContext } from './WebGazerContext';
-import Calibration from './Calibration';
-const Script: any = require('react-load-script');
+import React from "react";
+import Calibration from "./Calibration";
+import { WebGazerContext } from "./WebGazerContext";
 
-declare var webgazer: any;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Script: any = require("react-load-script");
+
+declare const webgazer: any;
 
 interface WebGazerState {
   context: { x: number; y: number };
 }
 
-class WebGazerLoader extends React.Component<{}, WebGazerState> {
-  constructor(props: {}) {
+class WebGazerLoader extends React.Component<any, WebGazerState> {
+  constructor(props: any) {
     super(props);
     this.state = {
-      context: {x: -1, y: -1}
+      context: { x: -1, y: -1 },
     };
   }
 
@@ -21,18 +23,20 @@ class WebGazerLoader extends React.Component<{}, WebGazerState> {
     await webgazer.clearData();
 
     await webgazer
-      .setRegression('ridge')
-      .setGazeListener((data: any, clock: any) => {
+      .setRegression("ridge")
+      .setGazeListener((data: any, _clock: any) => {
         if (data == null) {
           return;
         }
-        this.setState({context: webgazer.util.bound(data)})
+        this.setState({ context: webgazer.util.bound(data) });
       })
       .saveDataAcrossSessions(true)
       .begin();
 
     await webgazer
-      .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
+      .showPredictionPoints(
+        true,
+      ) /* shows a square every 100 milliseconds where current prediction is */
       .showVideoPreview(true)
       // turn the above off for production
       .applyKalmanFilter(true); /* Kalman Filter defaults to on */
@@ -43,7 +47,7 @@ class WebGazerLoader extends React.Component<{}, WebGazerState> {
   }
 
   handleScriptError() {
-    console.log('error');
+    console.log("error");
   }
 
   async webgazerRestart() {
@@ -58,9 +62,9 @@ class WebGazerLoader extends React.Component<{}, WebGazerState> {
     return (
       <WebGazerContext.Provider value={this.state.context}>
         <Script
-            url="https://webgazer.cs.brown.edu/webgazer.js"
-            onLoad={this.handleScriptLoad.bind(this)}
-            onError={this.handleScriptError.bind(this)}
+          url="https://webgazer.cs.brown.edu/webgazer.js"
+          onLoad={this.handleScriptLoad.bind(this)}
+          onError={this.handleScriptError.bind(this)}
         />
         <Calibration
           restartWebgazerMethod={this.webgazerRestart.bind(this)}
