@@ -267,7 +267,7 @@ WordTextDisplay.propTypes = {
   Mode 1.2 (Highlighted): Standard mode displaying the entire text across multiple lines.
   Words are highlighted sequentially based on the specified words per minute (wpm).
 */
-const HighlightedTextDisplay: React.FC<{
+export const HighlightedTextDisplay: React.FC<{
   text: string;
   wpm: number;
   size?: number;

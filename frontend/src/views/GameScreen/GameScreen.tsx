@@ -10,15 +10,16 @@ import {
   SUMMARISED_ADAPTIVE_MODE,
 } from "../../common/constants";
 import Carousel from "../../components/Carousel/Carousel";
+import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { useGameContext } from "../../context/GameContext";
+import AdaptiveModeView from "../AdaptiveMode/AdaptiveMode";
 import ModeSelectView from "../ModeSelect/ModeSelect";
 import PreGameView from "../PreGame/PreGame";
 import Quiz from "../Quiz/Quiz";
 import StandardModeGameView, {
   StandardView,
 } from "../StandardMode/StandardMode";
-import Footer from "../../components/Footer/Footer";
 
 const GameScreenContext = React.createContext<{
   currentStage: number;
@@ -131,7 +132,7 @@ const Game = () => {
     console.log(`wpm is ${wpm}`);
     gameView = <StandardModeGameView wpm={wpm!} mode={view!} />;
   } else if (mode === ADAPTIVE_MODE) {
-    gameView = <div> ADAPTIVE MODE. </div>;
+    gameView = <AdaptiveModeView />;
   } else if (mode === SUMMARISED_ADAPTIVE_MODE) {
     gameView = <div> SUMMARISED ADAPTIVE MODE. </div>;
   } else {
