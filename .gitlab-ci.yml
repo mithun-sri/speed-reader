@@ -3,14 +3,6 @@ stages:
   - test
   - deploy
 
-variables:
-  # Disable shallow clone which is not supported by Dokku.
-  # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
-  GIT_DEPTH: 0
-
-  STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
-  PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
-
 default:
   tags: [private]
 
@@ -64,6 +56,13 @@ default:
 .deploy:
   image: dokku/ci-docker-image
   stage: deploy
+  variables:
+    # Disable shallow clone which is not supported by Dokku.
+    # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
+    GIT_DEPTH: 0
+
+    STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
+    PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
   script:
     - dokku-deploy
   after_script:
