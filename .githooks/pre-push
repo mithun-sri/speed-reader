@@ -34,6 +34,8 @@ print_info "[0/8] Starting Docker containers..."
 if ! docker compose up -d; then
     print_error "Failed to start Docker containers. Please fix the issue before pushing."
     exit 1
+else
+    print_success "Docker containers started successfully!"
 fi
 
 print_info "[0/8] Checking OpenAPI spec updates..."
@@ -41,6 +43,8 @@ docker compose exec -T frontend yarn generate-docker
 if git status --porcelain | grep -Eq frontend/src/api; then
     print_error "OpenAPI spec has been updated. Please commit the updated client before pushing."
     exit 1
+else
+    print_success "OpenAPI spec is up to date!"
 fi
 
 print_info "[1/8] Running frontend type checks..."
