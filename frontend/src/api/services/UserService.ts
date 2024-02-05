@@ -17,4 +17,39 @@ export class UserService {
             url: '/user/summary',
         });
     }
+    /**
+     * Get Available Texts
+     * @param userId
+     * @param page
+     * @param pageSize
+     * @param difficulty
+     * @param gameMode
+     * @param sort
+     * @returns any Successful Response
+     * @throws ApiError
+     */
+    public static getAvailableTextsUserAvailableTextsGet(
+        userId: string,
+        page: number = 1,
+        pageSize: number = 10,
+        difficulty?: (string | null),
+        gameMode?: (number | null),
+        sort?: (string | null),
+    ): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/user/available_texts',
+            query: {
+                'user_id': userId,
+                'page': page,
+                'page_size': pageSize,
+                'difficulty': difficulty,
+                'game_mode': gameMode,
+                'sort': sort,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
 }
