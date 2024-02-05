@@ -61,7 +61,7 @@ test_frontend:
   extends: .check
   stage: test
   script:
-    - docker compose exec -T frontend echo "Testing"
+    - docker compose run frontend echo "Testing"
     # - docker compose exec -T frontend yarn test
 
 test_backend:
