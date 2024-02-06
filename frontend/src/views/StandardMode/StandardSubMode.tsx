@@ -1,15 +1,11 @@
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import { useEffect, useState } from "react";
 import Header from "../../components/Header/Header";
 import HighlightWordsPreview from "../../components/Preview/HighlightWords";
 import PeripheralPreview from "../../components/Preview/Peripheral";
 import WordByWordPreview from "../../components/Preview/WordByWord";
-import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const StandardSubModeView = () => {
-  const { incrementCurrentStage } = useGameScreenContext();
-
   const previewText =
     "Is this a dagger which I see before me, The handle toward my hand? Come, let me clutch thee. I have thee not, and yet I see thee still.";
   const calculateFontSize = () => {
@@ -59,17 +55,11 @@ const StandardSubModeView = () => {
           justifyContent: "center",
         }}
       >
-        <IconButton>
-          <WordByWordPreview text={previewText} />
-        </IconButton>
+        <WordByWordPreview text={previewText} />
         <Box sx={{ width: "5vw" }} />
-        <IconButton>
-          <HighlightWordsPreview text={previewText} />
-        </IconButton>
+        <HighlightWordsPreview text={previewText} />
         <Box sx={{ width: "5vw" }} />
-        <IconButton>
-          <PeripheralPreview text={previewText} />
-        </IconButton>
+        <PeripheralPreview text={previewText} />
       </Box>
     </Box>
   );
