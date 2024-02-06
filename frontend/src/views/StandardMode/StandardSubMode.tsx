@@ -4,6 +4,7 @@ import WordByWordPreview from "../../components/Preview/WordByWord";
 import { useEffect, useState } from "react";
 import HighlightWordsPreview from "../../components/Preview/HighlightWords";
 import PeripheralPreview from "../../components/Preview/Peripheral";
+import IconButton from "@mui/material/IconButton";
 
 const StandardSubModeView = () => {
   const previewText =
@@ -55,11 +56,17 @@ const StandardSubModeView = () => {
           justifyContent: "center",
         }}
       >
-        <WordByWordPreview text={previewText} />
+        <IconButton>
+          <WordByWordPreview text={previewText} />
+        </IconButton>
         <Box sx={{ width: "5vw" }} />
-        <HighlightWordsPreview text={previewText} />
+        <IconButton>
+          <HighlightWordsPreview text={previewText} />
+        </IconButton>
         <Box sx={{ width: "5vw" }} />
-        <PeripheralPreview text={previewText} />
+        <IconButton>
+          <PeripheralPreview text={previewText} />
+        </IconButton>
       </Box>
     </Box>
   );
