@@ -54,10 +54,11 @@ const HighlightWordsPreview: React.FC<{
 
   return (
     <IconButton
-    onClick={() => {
-      setView(StandardView.Highlighted);
-      incrementCurrentStage();
-    }}>
+      onClick={() => {
+        setView(StandardView.Highlighted);
+        incrementCurrentStage();
+      }}
+    >
       <Box
         sx={{
           display: "flex",

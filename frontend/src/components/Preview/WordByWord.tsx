@@ -11,7 +11,7 @@ const WordByWordPreview: React.FC<{
 }> = ({ text }) => {
   const { incrementCurrentStage } = useGameScreenContext();
   const { setView } = useGameContext();
-  
+
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const calculateFontSize = () => {
