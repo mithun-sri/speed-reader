@@ -1,11 +1,17 @@
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import { useGameContext } from "../../context/GameContext";
+import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
+import { StandardView } from "../../views/StandardMode/StandardMode";
 import GameProgressBar from "../ProgressBar/GameProgressBar";
 import ModeDescriptionComponent from "./ModeDescription";
 
 const HighlightWordsPreview: React.FC<{
   text: string;
 }> = ({ text }) => {
+  const { incrementCurrentStage } = useGameScreenContext();
+  const { setView } = useGameContext();
+
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const calculateFontSize = () => {
@@ -47,49 +53,55 @@ const HighlightWordsPreview: React.FC<{
   }, [text, wordIndex, words.length]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "1%",
-      }}
-    >
+    <IconButton
+    onClick={() => {
+      setView(StandardView.Highlighted);
+      incrementCurrentStage();
+    }}>
       <Box
         sx={{
-          width: fontSize * 6.5,
-          height: fontSize * 3.2,
-          borderRadius: "20px",
-          border: "4px solid #646669",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          padding: "1%",
         }}
       >
         <Box
           sx={{
-            width: "70%",
-            fontSize: fontSize / 5,
-            margin: fontSize / 17,
-            color: "#646669",
-            fontFamily: "JetBrains Mono, monospace",
+            width: fontSize * 6.5,
+            height: fontSize * 3.2,
+            borderRadius: "20px",
+            border: "4px solid #646669",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          {text}
+          <Box
+            sx={{
+              width: "70%",
+              fontSize: fontSize / 5,
+              margin: fontSize / 17,
+              color: "#646669",
+              fontFamily: "JetBrains Mono, monospace",
+            }}
+          >
+            {text}
+          </Box>
+          <Box sx={{ width: "60%" }}>
+            <GameProgressBar
+              gameProgress={(wordIndex / (words.length - 1)) * 100}
+            />
+          </Box>
         </Box>
-        <Box sx={{ width: "60%" }}>
-          <GameProgressBar
-            gameProgress={(wordIndex / (words.length - 1)) * 100}
-          />
-        </Box>
+        <ModeDescriptionComponent
+          mode="Highlight Words"
+          description="description more useful description amd more useful description"
+        />
       </Box>
-      <ModeDescriptionComponent
-        mode="Highlight Words"
-        description="description more useful description amd more useful description"
-      />
-    </Box>
+    </IconButton>
   );
 };
 
