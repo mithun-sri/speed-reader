@@ -5,7 +5,7 @@ import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 const BackButton: React.FC<{
   label?: string;
 }> = ({ label }) => {
-  const { incrementCurrentStage } = useGameScreenContext();
+  const { decrementCurrentStage } = useGameScreenContext();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -34,13 +34,13 @@ const BackButton: React.FC<{
   return (
     <IconButton
       onClick={() => {
-        incrementCurrentStage();
+        decrementCurrentStage();
       }}
       sx={{
         fontFamily: "JetBrains Mono, monospace",
         color: "#FFFFFF",
         fontWeight: "bolder",
-        fontSize: fontSize / 6.3,
+        fontSize: fontSize / 6.8,
       }}
     >
       {`<_${buttonText}`}

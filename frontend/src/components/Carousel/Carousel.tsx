@@ -8,8 +8,9 @@ const Carousel: React.FC<{
   title?: string;
   options: string[];
   returnSelectedIndex: (value: number) => void;
-}> = ({ title, options, returnSelectedIndex }) => {
-  const [currentIndex, setCurrentIndex] = useState(1);
+  defaultIdx?: number;
+}> = ({ title, options, returnSelectedIndex, defaultIdx }) => {
+  const [currentIndex, setCurrentIndex] = useState(defaultIdx || 1);
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const boxStyle = {
@@ -76,7 +77,7 @@ const Carousel: React.FC<{
     <Box
       sx={{
         marginBottom: 10,
-        marginTop: "32px",
+        marginTop: "15px",
       }}
     >
       <Box

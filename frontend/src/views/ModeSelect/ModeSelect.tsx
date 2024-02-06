@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   ADAPTIVE_MODE,
@@ -39,6 +40,7 @@ const ModeSelectView = () => {
   return (
     <div className="ModeSelect">
       <Header />
+      <Box sx={{ marginTop: "85px" }} />
       <header className="ModeSelect-header">
         <Carousel
           title="choose game mode."

@@ -9,10 +9,11 @@ import {
   STANDARD_MODE,
   SUMMARISED_ADAPTIVE_MODE,
 } from "../../common/constants";
+import BackButton from "../../components/Button/BackButton";
 import Carousel from "../../components/Carousel/Carousel";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
-import { useGameContext } from "../../context/GameContext";
+import { GameProvider, useGameContext } from "../../context/GameContext";
 import ModeSelectView from "../ModeSelect/ModeSelect";
 import PreGameView from "../PreGame/PreGame";
 import Quiz from "../Quiz/Quiz";
@@ -22,9 +23,11 @@ import StandardSubModeView from "../StandardMode/StandardSubMode";
 const GameScreenContext = React.createContext<{
   currentStage: number;
   incrementCurrentStage: () => void;
+  decrementCurrentStage: () => void;
 }>({
   currentStage: 0,
   incrementCurrentStage: () => {},
+  decrementCurrentStage: () => {},
 });
 
 export const useGameScreenContext = () => {
@@ -69,6 +72,9 @@ const DiffSelect = () => {
   return (
     <Box>
       <Header />
+      <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
+        <BackButton label="mode" />
+      </Box>
       <Box
         sx={{
           backgroundColor: "#2c2e31",
@@ -110,12 +116,9 @@ const GameView = () => {
   return gameView;
 };
 
-export const GameScreen = () => {
+const GameScreen = () => {
   const { mode } = useGameContext();
   const [currentStage, setCurrentStage] = useState(0);
-  const incrementCurrentStage = () => {
-    setCurrentStage(currentStage + 1);
-  };
 
   const stages = [
     <ModeSelectView key={0} />,
@@ -126,16 +129,51 @@ export const GameScreen = () => {
     <Quiz key={5} />,
   ];
 
-  useEffect(() => {
-    // If mode is not standard, skip StandardSelect & WpmSelect and jump straight to Game
-    if (mode !== STANDARD_MODE && currentStage === 2) {
-      setCurrentStage(4);
+  const DIFF_SELECT_STAGE = 1;
+  const STANDARD_SELECT_STAGE = 2;
+  const WPM_SELECT_STAGE = 3;
+  const GAME_STAGE = 4;
+
+  const incrementCurrentStage = () => {
+    const newStage = currentStage + 1;
+
+    if (mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
+      setCurrentStage(GAME_STAGE);
+    } else {
+      setCurrentStage(newStage);
     }
-  }, [mode, currentStage]);
+  };
+
+  const decrementCurrentStage = () => {
+    const newStage = currentStage - 1;
+
+    if (mode !== STANDARD_MODE && newStage === WPM_SELECT_STAGE) {
+      setCurrentStage(DIFF_SELECT_STAGE);
+    } else {
+      setCurrentStage(newStage);
+    }
+  };
 
   return (
-    <GameScreenContext.Provider value={{ currentStage, incrementCurrentStage }}>
+    <GameScreenContext.Provider
+      value={{
+        currentStage,
+        incrementCurrentStage,
+        decrementCurrentStage,
+      }}
+    >
       {stages[currentStage]}
     </GameScreenContext.Provider>
+  );
+};
+
+// When GamePage is re-rendered (i.e. unmounted), GameContext will be cleared.
+// Note: Since GameScreen is using 'mode' from the GameContext, GameProvider has to be wrapped
+// around a parent of GameScreen, hence why we need GamePage.
+export const GamePage = () => {
+  return (
+    <GameProvider>
+      <GameScreen />
+    </GameProvider>
   );
 };
