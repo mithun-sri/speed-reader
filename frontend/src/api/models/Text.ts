@@ -2,7 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-export type QuizAnswers = {
-    answers: Record<string, number>;
+export type Text = {
+    id: string;
+    title: string;
+    content: string;
+    difficulty: string;
+    word_count: number;
 };
 

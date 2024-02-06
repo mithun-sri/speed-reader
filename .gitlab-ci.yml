@@ -1,115 +1,125 @@
 stages:
-  - init
-  - check
-  - test
+  - type_check
+  - check_lint
+  - check_format
+  - unit_test
   - deploy
-
-variables:
-  # Disable shallow clone which is not supported by Dokku.
-  # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
-  GIT_DEPTH: 0
-
-  # Configure GitLab runner with Docker in Docker with TLS enabled.
-  # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#docker-in-docker-with-tls-enabled-in-the-docker-executor
-  DOCKER_HOST: tcp://docker:2376
-  DOCKER_TLS_CERTDIR: "/certs"
-
-  STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
-  PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
 
 default:
   tags: [private]
 
-# Dummy job that always passes
-# so that MRs without any matching jobs can be merged.
-# https://stackoverflow.com/questions/69799364/in-gitlab-how-to-set-pipelines-must-succeed-only-for-specific-branches-but-no
-init:
-  stage: init
-  except:
-    changes:
-      - frontend/**/*
-      - backend/**/*
-  script:
-    - echo "Initialising"
-
 .frontend:
-  only:
-    changes:
-      - frontend/**/*
-  image: docker:24.0.5
-  services:
-    - docker:24.0.5-dind
+  image: node:21
+  cache:
+    - key:
+        files:
+          - frontend/yarn.lock
+      paths:
+        - frontend/node_modules
   before_script:
-    - docker compose build frontend
+    - cd frontend
+    - yarn install
 
 .backend:
-  only:
-    changes:
-      - backend/**/*
-  image: docker:24.0.5
+  image: python:3.12
+  variables:
+    # Environment variables for backend container.
+    POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/default
+    POSTGRES_TEST_URL: postgresql://postgres:postgres@postgres-test:5432/default
+    MONGO_URL: mongodb://mongo:27017/default
+    MONGO_TEST_URL: mongodb://mongo-test:27017/default
+
+    # Environment variables for database services.
+    POSTGRES_DB: default
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: postgres
+    MONGO_INITDB_DATABASE: default
   services:
-    - docker:24.0.5-dind
+    - name: postgres:14-alpine
+      alias: postgres
+    - name: postgres:14-alpine
+      alias: postgres-test
+    - name: mongo:4.4
+      alias: mongo
+    - name: mongo:4.4
+      alias: mongo-test
+  cache:
+    - key:
+        files:
+          - backend/poetry.lock
+      paths:
+        - backend/.venv
   before_script:
-    - docker compose build backend
+    - cd backend
+    - pip install poetry==1.6.1
+    - poetry config virtualenvs.in-project true
+    - poetry install
 
 .deploy:
-  tags: [private]
   image: dokku/ci-docker-image
   stage: deploy
+  variables:
+    # Disable shallow clone which is not supported by Dokku.
+    # https://github.com/dokku/dokku/issues/2514#issuecomment-616775470
+    GIT_DEPTH: 0
+
+    STAGING_URL: ssh://dokku@cloud-vm-42-173.doc.ic.ac.uk:22
+    PROD_URL: ssh://dokku@cloud-vm-42-228.doc.ic.ac.uk:22
   script:
     - dokku-deploy
   after_script:
     - dokku-unlock
 
-typecheck_frontend:
+type_check_frontend:
   extends: .frontend
-  stage: check
+  stage: type_check
   script:
-    - docker compose run frontend yarn tsc --noEmit
+    - yarn tsc --noEmit
 
-typecheck_backend:
+type_check_backend:
   extends: .backend
-  stage: check
+  stage: type_check
   script:
-    - docker compose run backend poetry run mypy src
+    - poetry run mypy src
 
 check_lint_frontend:
   extends: .frontend
-  stage: check
+  stage: check_lint
   script:
-    - docker compose run frontend yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
+    - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
 
 check_lint_backend:
   extends: .backend
-  stage: check
+  stage: check_lint
   script:
-    - docker compose run backend poetry run pylint src
+    - poetry run pylint src
 
 check_format_frontend:
   extends: .frontend
-  stage: check
+  stage: check_format
   script:
-    - docker compose run frontend yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
+    - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
 check_format_backend:
   extends: .backend
-  stage: check
+  stage: check_format
   script:
-    - docker compose run backend poetry run isort --profile black --check src
-    - docker compose run backend poetry run black --check src
+    - poetry run isort --profile black --check src
+    - poetry run black --check src
 
 unit_test_frontend:
   extends: .frontend
-  stage: test
+  stage: unit_test
   script:
     - echo "Testing"
-    # - docker compose run frontend yarn test
+    # - yarn test
 
 unit_test_backend:
   extends: .backend
-  stage: test
+  stage: unit_test
   script:
-    - docker compose run backend poetry run pytest --verbose --disable-warnings tests
+    - echo "Testing"
+    - poetry run pytest --verbose tests
 
 deploy_staging_frontend:
   extends: .deploy
