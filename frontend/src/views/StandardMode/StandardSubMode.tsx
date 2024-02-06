@@ -1,10 +1,9 @@
 import Box from "@mui/material/Box";
-import Header from "../../components/Header/Header";
-import WordByWordPreview from "../../components/Preview/WordByWord";
 import { useEffect, useState } from "react";
+import Header from "../../components/Header/Header";
 import HighlightWordsPreview from "../../components/Preview/HighlightWords";
 import PeripheralPreview from "../../components/Preview/Peripheral";
-import IconButton from "@mui/material/IconButton";
+import WordByWordPreview from "../../components/Preview/WordByWord";
 
 const StandardSubModeView = () => {
   const previewText =
@@ -56,17 +55,11 @@ const StandardSubModeView = () => {
           justifyContent: "center",
         }}
       >
-        <IconButton>
-          <WordByWordPreview text={previewText} />
-        </IconButton>
+        <WordByWordPreview text={previewText} />
         <Box sx={{ width: "5vw" }} />
-        <IconButton>
-          <HighlightWordsPreview text={previewText} />
-        </IconButton>
+        <HighlightWordsPreview text={previewText} />
         <Box sx={{ width: "5vw" }} />
-        <IconButton>
-          <PeripheralPreview text={previewText} />
-        </IconButton>
+        <PeripheralPreview text={previewText} />
       </Box>
     </Box>
   );

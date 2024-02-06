@@ -10,15 +10,14 @@ import {
   SUMMARISED_ADAPTIVE_MODE,
 } from "../../common/constants";
 import Carousel from "../../components/Carousel/Carousel";
+import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { useGameContext } from "../../context/GameContext";
 import ModeSelectView from "../ModeSelect/ModeSelect";
 import PreGameView from "../PreGame/PreGame";
 import Quiz from "../Quiz/Quiz";
-import StandardModeGameView, {
-  StandardView,
-} from "../StandardMode/StandardMode";
-import Footer from "../../components/Footer/Footer";
+import StandardModeGameView from "../StandardMode/StandardMode";
+import StandardSubModeView from "../StandardMode/StandardSubMode";
 
 const GameScreenContext = React.createContext<{
   currentStage: number;
@@ -39,39 +38,8 @@ export const useGameScreenContext = () => {
   return context;
 };
 
-// TODO: Waiting for @Taeho's component
 const StandardSelect = () => {
-  const { incrementCurrentStage } = useGameScreenContext();
-  const { setView } = useGameContext();
-
-  return (
-    <>
-      <button
-        onClick={() => {
-          incrementCurrentStage();
-          setView(StandardView.Word);
-        }}
-      >
-        Word
-      </button>
-      <button
-        onClick={() => {
-          incrementCurrentStage();
-          setView(StandardView.Highlighted);
-        }}
-      >
-        Highlighted
-      </button>
-      <button
-        onClick={() => {
-          incrementCurrentStage();
-          setView(StandardView.Peripheral);
-        }}
-      >
-        Peripheral
-      </button>
-    </>
-  );
+  return <StandardSubModeView />;
 };
 
 const WpmSelect = () => {
@@ -123,7 +91,7 @@ const DiffSelect = () => {
   );
 };
 
-const Game = () => {
+const GameView = () => {
   const { mode, wpm, view } = useGameContext();
 
   let gameView = null;
@@ -152,9 +120,9 @@ export const GameScreen = () => {
   const stages = [
     <ModeSelectView key={0} />,
     <DiffSelect key={1} />,
-    <StandardSelect key={2} />, // will be skipped if mode is not standard
-    <WpmSelect key={3} />, // will be skipped if mode is not standard
-    <Game key={4} />,
+    <StandardSelect key={2} />, // to be skipped if mode is not standard
+    <WpmSelect key={3} />, // to be skipped if mode is not standard
+    <GameView key={4} />,
     <Quiz key={5} />,
   ];
 

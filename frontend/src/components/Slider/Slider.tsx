@@ -59,6 +59,8 @@ const PrettoSlider = styled(Slider)(() => ({
 
 function SpeedSlider() {
   const { setWpm } = useGameContext();
+
+  const SPEED_RANGES = [100, 150, 200, 300, 600, 2000];
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const onSliderChange = (
@@ -67,7 +69,9 @@ function SpeedSlider() {
     _activeThumb: number,
   ) => {
     const newNumber = newValue as number;
-    setWpm(newNumber);
+    const min = SPEED_RANGES[newNumber];
+    const max = SPEED_RANGES[newNumber + 1];
+    setWpm(Math.floor(Math.random() * (max - min + 1)) + min);
   };
 
   useEffect(() => {
@@ -110,12 +114,12 @@ function SpeedSlider() {
         </Box>
         <PrettoSlider
           valueLabelDisplay="auto"
-          step={100}
-          defaultValue={300}
+          step={1}
+          defaultValue={2}
           onChange={onSliderChange}
           marks={false}
-          min={100}
-          max={500}
+          min={0}
+          max={4}
           sx={{ marginBottom: "10px", marginTop: "10px" }}
         />
         <VerticalLinesBox>
