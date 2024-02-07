@@ -29,7 +29,7 @@ const WebGazerLoader = () => {
         .begin();
 
       await webgazer
-        .showPredictionPoints(true)
+        .showPredictionPoints(false)
         .showVideoPreview(true)
         .applyKalmanFilter(true);
     };
@@ -45,17 +45,20 @@ const WebGazerLoader = () => {
   }, [setGazeX, setGazeY]);
 
   const turnOffCam = async () => {
-    console.log("turnOffCam");
-    await webgazer.showVideoPreview(false);
+    //await webgazer.showVideoPreview(false);
+    document
+      .getElementById("webgazerVideoContainer")
+      ?.style.setProperty("z-index", "-1");
+    document
+      .getElementById("webgazerVideoContainer")
+      ?.style.setProperty("opacity", "0");
   };
 
   const webgazerRestart = async () => {
-    console.log("webgazerRestart");
     await webgazer.clearData();
   };
 
   const handleEnd = async () => {
-    console.log("handleEnd");
     await webgazer.end();
   };
 

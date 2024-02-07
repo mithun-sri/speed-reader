@@ -7,7 +7,6 @@ import "./Calibration.css";
 const Calibration = (props: any) => {
   const canvasRef = useRef(null);
   const [pointCalibrate, setPointCalibrate] = useState(0);
-  const [hasLoaded, setHasLoaded] = useState(false);
   const [clickCounts, setClickCounts] = useState({
     Pt1: 0,
     Pt2: 0,
@@ -21,20 +20,21 @@ const Calibration = (props: any) => {
   });
 
   useEffect(() => {
-    if (!hasLoaded) {
-      const handleLoad = () => {
-        canvasSetup();
-        docLoad();
-        setHasLoaded(true);
-      };
+    const handleLoad = () => {
+      canvasSetup();
+      docLoad();
+    };
 
+    if (document.readyState === "complete") {
+      handleLoad();
+    } else {
       window.addEventListener("load", handleLoad);
-
-      return () => {
-        window.removeEventListener("load", handleLoad);
-      };
     }
-  }, [hasLoaded, props]);
+
+    return () => {
+      window.removeEventListener("load", handleLoad);
+    };
+  }, []);
 
   const docLoad = () => {
     clearCanvas();
@@ -67,17 +67,26 @@ const Calibration = (props: any) => {
   };
 
   useEffect(() => {
-    // Logic that depends on pointCalibrate updates
-    console.log(pointCalibrate);
+    let noPointsCalibrated = 0;
+
+    for (const node in clickCounts) {
+      const nodeId = node as keyof typeof clickCounts;
+      if (clickCounts[nodeId] >= 5) {
+        noPointsCalibrated++;
+      }
+    }
+
+    setPointCalibrate(noPointsCalibrated);
+  }, [clickCounts]);
+
+  useEffect(() => {
     if (pointCalibrate === 8) {
-      // Your logic when 8 points have been calibrated
       document
         .getElementById("calibration_in_progress")
         ?.style.setProperty("display", "none");
       document.getElementById("Pt5")?.style.removeProperty("display");
       props.turnOffCam();
     } else if (pointCalibrate >= 9) {
-      // Your logic for when all points have been calibrated
       document.querySelectorAll(".CalibrationButton").forEach((i) => {
         if (i instanceof HTMLElement) {
           i.style.setProperty("display", "none");
@@ -91,37 +100,11 @@ const Calibration = (props: any) => {
     }
   }, [pointCalibrate]);
 
-  const incPointClick = async (node: any) => {
+  const incPointClick = (node: any) => {
     const nodeId = node.id as keyof typeof clickCounts;
     setClickCounts((prevState) => {
-      const newState = { ...prevState, [nodeId]: prevState[nodeId] + 1 };
-
-      if (newState[nodeId] === 5) {
-        setPointCalibrate((prev) => prev + 1);
-      }
-
-      return newState;
+      return { ...prevState, [nodeId]: prevState[nodeId] + 1 };
     });
-
-    console.log(pointCalibrate);
-    if (pointCalibrate === 8) {
-      document
-        .getElementById("calibration_in_progress")
-        ?.style.setProperty("display", "none");
-      document.getElementById("Pt5")?.style.removeProperty("display");
-      await props.turnOffCam();
-    } else if (pointCalibrate >= 9) {
-      document.querySelectorAll(".CalibrationButton").forEach((i) => {
-        if (i instanceof HTMLElement) {
-          i.style.setProperty("display", "none");
-        }
-      });
-      document.getElementById("Pt5")?.style.removeProperty("display");
-      document
-        .getElementById("calibration_done")
-        ?.style.setProperty("display", "block");
-      clearCanvas();
-    }
   };
 
   const handleRestart = async () => {
@@ -228,7 +211,6 @@ const Calibration = (props: any) => {
                 fontWeight: "bold",
                 fontSize: 25,
                 color: "#E2B714",
-                paddingTop: "10vw",
               }}
               onClick={() => {
                 context.incrementCurrentStage();

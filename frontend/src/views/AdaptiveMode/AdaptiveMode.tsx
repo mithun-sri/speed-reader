@@ -65,7 +65,7 @@ const AdaptiveModeTextDisplay: React.FC<{
 
   const wordsArray = text.split(" ");
   const maxCharactersPerLine = 60;
-  const leftCheckpoint = 0.25;
+  const leftCheckpoint = 0.5;
   const rightCheckpoint = 0.75;
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
@@ -75,7 +75,6 @@ const AdaptiveModeTextDisplay: React.FC<{
   const { setWpm, gazeX } = useGameContext();
 
   useEffect(() => {
-    console.log("x: " + gazeX);
     if (
       nextLineIndex == 0 ||
       (hitLeftCheckpoint && gazeX > window.innerWidth * rightCheckpoint)
