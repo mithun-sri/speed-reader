@@ -83,7 +83,7 @@ class TestGetQuestions:
             .issubset(question.id for question in questions)
 
 
-class TestSubmitAnswers:
+class TestPostAnswers:
     @pytest.fixture(autouse=True)
     def setup_fixture(
         self,

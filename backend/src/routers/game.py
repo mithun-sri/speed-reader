@@ -93,7 +93,7 @@ async def get_next_questions(
     "/texts/{text_id}/answers",
     response_model=list[schemas.QuestionResult],
 )
-async def post_game_results(
+async def post_answers(
     *,
     text_id: str,
     answers: list[schemas.QuestionAnswer],
