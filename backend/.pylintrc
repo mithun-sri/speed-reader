@@ -10,18 +10,17 @@ disable =
     broad-exception-caught,
     broad-exception-raised,
     raise-missing-from,
+    too-many-arguments,
     # TODO:
     # Pylint gives false-positive to many of generated attributes are not defined.
     # Ignore `no-member` to supress them as many are checked by mypy too.
     no-member,
     # TODO:
     # Pylint gives false-positive sqlalchemy.func.* is not callable.
-    # Ideally we should disable this per line.
     # https://github.com/pylint-dev/pylint/issues/8138
     not-callable,
     # TODO:
     # Pylint gives false-positive sqlalchemy.orm.Mapped is not subscriptable.
-    # Ideally we should disable this per line.
     # https://github.com/pylint-dev/pylint/issues/1498
     unsubscriptable-object,
     # Handled by black.
