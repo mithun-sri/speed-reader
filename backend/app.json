@@ -1,7 +1,0 @@
-{
-    "scripts": {
-      "dokku": {
-        "postdeploy": "poetry run alembic upgrade head"
-      }
-    }
-  }
