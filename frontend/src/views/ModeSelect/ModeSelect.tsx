@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   ADAPTIVE_MODE,
@@ -14,7 +15,7 @@ import "./ModeSelect.css";
 
 const ModeSelectView = () => {
   const { incrementCurrentStage } = useGameScreenContext(); // This is possible because Carousel is only used within a GameScreenContext
-  const { setMode } = useGameContext();
+  const { mode, setMode } = useGameContext();
   const [valueFromCarousel, setValueFromCarousel] = useState<number>(-1); // To retrieve selected index from Carousel
 
   const options: GameMode[] = [
@@ -39,11 +40,13 @@ const ModeSelectView = () => {
   return (
     <div className="ModeSelect">
       <Header />
+      <Box sx={{ marginTop: "85px" }} />
       <header className="ModeSelect-header">
         <Carousel
           title="choose game mode."
           options={options}
           returnSelectedIndex={handleValueFromCarousel}
+          defaultIdx={mode !== null ? options.indexOf(mode) : undefined}
         />
         <Footer />
       </header>

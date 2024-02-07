@@ -26,9 +26,9 @@ target_metadata = None
 # ... etc.
 
 # Set the database URL from the environment variable.
-DATABASE_URL = os.environ.get("DATABASE_URL")
+DATABASE_URL = os.environ.get("POSTGRES_URL")
 if not DATABASE_URL:
-    raise ValueError("DATABASE_URL environment variable is not set")
+    raise ValueError("POSTGRES_URL environment variable is not set")
 
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
 

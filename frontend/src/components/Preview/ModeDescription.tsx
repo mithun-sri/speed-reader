@@ -37,7 +37,7 @@ const ModeDescriptionComponent: React.FC<ModeDescriptionProps> = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        width: fontSize * 6,
+        width: fontSize * 7,
         justifyContent: "center",
         fontFamily: "JetBrains Mono, monospace",
         fontWeight: "bolder",
@@ -56,6 +56,7 @@ const ModeDescriptionComponent: React.FC<ModeDescriptionProps> = ({
       </Box>
       <Box
         sx={{
+          padding: "0 20px",
           alignContent: "center",
           textAlign: "center",
           fontSize: fontSize / 3.4,

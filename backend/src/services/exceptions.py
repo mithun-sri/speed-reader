@@ -16,10 +16,10 @@ class InvalidTokenException(Exception):
 
 
 class UserNotFoundException(Exception):
-    def __init__(self, username) -> None:
+    def __init__(self, user_id) -> None:
         self.status_code = status.HTTP_404_NOT_FOUND
-        self.detail = f"User {username} not found"
-        self.username = username
+        self.detail = f"User {user_id} not found"
+        self.user_id = user_id
 
 
 class UserAlreadyExistsException(Exception):
@@ -34,3 +34,10 @@ class EmailAlreadyUsedException(Exception):
         self.status_code = status.HTTP_409_CONFLICT
         self.detail = f"Email {email} already in use"
         self.email = email
+
+
+class TextNotFoundException(Exception):
+    def __init__(self, text_id) -> None:
+        self.status_code = status.HTTP_404_NOT_FOUND
+        self.detail = f"Text {text_id} not found"
+        self.text_id = text_id

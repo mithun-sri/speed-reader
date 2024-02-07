@@ -95,7 +95,7 @@ const StandardModeGameView: React.FC<{
           <StandardModeGameComponent
             wpm={wpm || 200} // Handle undefined wpm
             text={text}
-            mode={mode || StandardView.Word} // Handle undefined mode
+            view={mode || StandardView.Word} // Handle undefined mode
           />
         ) : (
           countdownComp
@@ -117,19 +117,36 @@ StandardModeGameView.propTypes = {
 const StandardModeGameComponent: React.FC<{
   wpm: number;
   text: string;
-  mode: StandardView;
-}> = ({ wpm, text, mode }) => {
+  view: StandardView;
+}> = ({ wpm, text, view }) => {
+  let display = null;
+
+  switch (view) {
+    case StandardView.Word: {
+      display = <WordTextDisplay text={text} wpm={wpm} />;
+      break;
+    }
+    case StandardView.Highlighted: {
+      display = <HighlightedTextDisplay text={text} wpm={wpm} />;
+      break;
+    }
+    case StandardView.Peripheral: {
+      console.log("Peripheral view not implemented.");
+      break;
+    }
+    default: {
+      console.log("Invalid Standard submode / view.");
+      break;
+    }
+  }
+
   return (
     <Box
       sx={{
         padding: "25px",
       }}
     >
-      {mode == StandardView.Word ? (
-        <WordTextDisplay text={text} wpm={wpm} />
-      ) : (
-        <HighlightedTextDisplay text={text} wpm={wpm} />
-      )}
+      {display}
     </Box>
   );
 };
@@ -137,7 +154,7 @@ const StandardModeGameComponent: React.FC<{
 StandardModeGameComponent.propTypes = {
   wpm: PropTypes.number.isRequired,
   text: PropTypes.string.isRequired,
-  mode: PropTypes.oneOf([
+  view: PropTypes.oneOf([
     StandardView.Word,
     StandardView.Highlighted,
     StandardView.Peripheral,

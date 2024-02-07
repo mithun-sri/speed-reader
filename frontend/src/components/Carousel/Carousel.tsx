@@ -3,13 +3,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
+import clickAudio from "../../common/audio";
 
 const Carousel: React.FC<{
   title?: string;
   options: string[];
   returnSelectedIndex: (value: number) => void;
-}> = ({ title, options, returnSelectedIndex }) => {
-  const [currentIndex, setCurrentIndex] = useState(1);
+  defaultIdx?: number;
+}> = ({ title, options, returnSelectedIndex, defaultIdx }) => {
+  const [currentIndex, setCurrentIndex] = useState(
+    defaultIdx !== undefined ? defaultIdx : 1,
+  );
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const boxStyle = {
@@ -76,7 +80,7 @@ const Carousel: React.FC<{
     <Box
       sx={{
         marginBottom: 10,
-        marginTop: "32px",
+        marginTop: "15px",
       }}
     >
       <Box
@@ -85,6 +89,7 @@ const Carousel: React.FC<{
           fontWeight: "bolder",
           paddingTop: "20px",
           fontSize: fontSize / 6.3,
+          color: "#D1D0C5",
         }}
       >
         {title !== undefined ? title : "choose."}
@@ -106,6 +111,7 @@ const Carousel: React.FC<{
             {index === 1 ? (
               <Box
                 onClick={() => {
+                  clickAudio.play();
                   returnSelectedIndex(currentIndex); // Return index of selected carousel item
                 }}
                 sx={{

@@ -1,77 +1,111 @@
-from typing import Optional
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, Query
-from pydantic import BaseModel
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
-from ..models.history import History
-from ..models.text import Text
+from ..services.exceptions import UserNotFoundException
 
 router = APIRouter(prefix="/user", tags=["user"], route_class=LoggerRoute)
 
 
-# TODO: Create dedicated endpoints for stats, available texts and recent games.
 @router.get("/summary")
 def get_user_summary():
     pass
 
 
-class TextFilter(BaseModel):
-    page: int = Query(1, ge=1)
-    page_size: int = Query(10, ge=1, le=100)
-    difficulty: Optional[str] = Query(None)
-    game_mode: Optional[int] = Query(None)
-    sort: Optional[str] = Query(None)
-
-
-@router.get("/available_texts")
-async def get_available_texts(
+@router.get(
+    "/{user_id}/statistics",
+    response_model=schemas.UserStatistics,
+)
+async def get_user_statistics(
     user_id: str,
-    text_filter: TextFilter = Depends(),
-    session: Session = Depends(get_session),
+    session: Annotated[Session, Depends(get_session)],
 ):
-    page, page_size, difficulty, game_mode, sort = (
-        text_filter.page,
-        text_filter.page_size,
-        text_filter.difficulty,
-        text_filter.game_mode,
-        text_filter.sort,
+    """
+    Gets the statistics based on the user's game history.
+    """
+    user = session.get(models.User, user_id)
+    if not user:
+        raise UserNotFoundException(user_id=user_id)
+
+    pipeline = [
+        {
+            "$group": {
+                "_id": user_id,
+                "minWpm": {"$min": "$wpm"},
+                "maxWpm": {"$max": "$wpm"},
+                "avgWpm": {"$avg": "$wpm"},
+                "avgScore": {"$avg": "$score"},
+            }
+        }
+    ]
+    data = models.History.objects(user_id=user_id).aggregate(pipeline)
+    data = list(data)[0]
+
+    return schemas.UserStatistics(
+        user_id=user_id,
+        username=user.username,
+        email=user.email,
+        min_wpm=data["minWpm"],
+        max_wpm=data["maxWpm"],
+        avg_wpm=data["avgWpm"],
+        avg_score=data["avgScore"],
     )
-    # Collect text_ids of texts read by user in user.history from MongoDB
-    texts_read_by_user = History.objects(  # pylint: disable=no-member
-        user_id=user_id
-    ).distinct("text_id")
 
-    # Build the base query for texts not read by user
-    base_query = session.query(Text).filter(~Text.id.in_(texts_read_by_user))
 
-    if difficulty:
-        base_query = base_query.filter(Text.difficulty == difficulty)
-    if game_mode is not None:
-        base_query = base_query.filter(Text.game_mode == game_mode)
-    # Sort the texts by the given attribute
-    if sort:
-        if sort.startswith("-"):
-            attr = getattr(Text, sort[1:])
-            base_query = base_query.order_by(attr.desc())
-        else:
-            attr = getattr(Text, sort)
-            base_query = base_query.order_by(sort)
+@router.get(
+    "/{user_id}/available_texts",
+    response_model=schemas.UserAvailableTexts,
+)
+async def get_user_available_texts(
+    *,
+    user_id: str,
+    page: Annotated[int, Query()] = 1,
+    page_size: Annotated[int, Query()] = 10,
+    text_filter: Optional[schemas.TextFilter] = None,
+    text_sort: Optional[schemas.TextSort] = None,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Gets the texts not read by the user.
+    Returns the texts paginated and sorted/filtered by the given parameters.
+    """
 
-    # Calculate the total number of texts not read by the user
-    total_texts = base_query.count()
+    def filter_query(query):
+        # Build the base query for texts not read by user
+        read_text_ids = models.History.objects(user_id=user_id).distinct("text_id")
+        query = query.filter(models.Text.id.not_in(read_text_ids))
 
-    # Collect paginated texts from PostgreSQL of texts not read by user
-    query = base_query.offset((page - 1) * page_size).limit(page_size)
-    results = session.scalars(query)
+        if text_filter.game_mode:
+            query = query.filter(models.Text.game_mode == text_filter.game_mode)
+        if text_filter.difficulty:
+            query = query.filter(models.Text.difficulty == text_filter.difficulty)
 
-    response = {
-        "texts": list(results),
-        "page": page,
-        "page_size": page_size,
-        "total_texts": total_texts,
-    }
+        if text_sort:
+            attr = getattr(models.Text, text_sort.field)
+            if text_sort.ascending:
+                query = query.order_by(attr)
+            else:
+                query = query.order_by(attr.desc())
 
-    return response
+        return query
+
+    # Calculate the total number of available texts
+    query = filter_query(select(func.count(models.Text.id)))
+    total_texts = session.scalar(query)
+
+    # Collect paginated available texts
+    query = filter_query(select(models.Text.id))
+    query = query.offset((page - 1) * page_size).limit(page_size)
+    texts = session.scalars(query).all()
+
+    return schemas.UserAvailableTexts(
+        texts=texts,  # type: ignore
+        page=page,
+        page_size=page_size,
+        total_texts=total_texts,
+    )
