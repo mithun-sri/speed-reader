@@ -10,7 +10,7 @@ const TEXT =
   "The Software Engineering Group projects are on offer to Third Year Computing and JMC undergraduates as an optional Term 2 module (this may also be available as an option for external undergraduate exchange students). Students wishing to take the module must register for it and form a group before the project selection deadline. Dropping the module is not possible once groups have been formed and projects allocated (as that would not be fair on other students). We can't guarantee that every student will be able to find a suitable group. The aim of the Group Project is to try to simulate what working on a software development project in the professional world is like. Normally, professionals work in groups, have tight deadlines and have to be able to communicate and co-operate effectively with customers and other stakeholders. The performance of a group does not depend simply on the sum of the abilities of the individuals within it. Careful planning, frequent constructive meetings, goodwill and co-operation are needed to make a group successful. The expected workload is 250 hours per student. The Software Engineering Group Project is coordinated by Dr Thomas Lancaster. The software engineering teaching and assessment components are delivered by Dr Eoin Woods and Mr Matt Green. The project deliverables and the peer review process are administrated by David Loughlin. The Ed Board is used for general announcements and questions. Note that you will have to be subscribed to the Group Project on the module registration system at Level 2 or higher to access the Ed Board.";
 
 const AdaptiveModeView = () => {
-  const { wpm, setWpm } = useGameContext();
+  const { wpm, setWpm, gazeX, gazeY } = useGameContext();
 
   return (
     <Box
