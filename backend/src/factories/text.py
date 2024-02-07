@@ -9,6 +9,12 @@ class TextFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     title = factory.Faker("sentence")
     content = factory.Faker("text")
-    difficulty = factory.Faker("random_element", elements=["easy", "medium", "hard"])
-    game_mode = factory.Faker("random_int", min=1, max=2)
+    game_mode = factory.Faker(
+        "random_element",
+        elements=["standard", "adaptive", "summary"],
+    )
     word_count = factory.LazyAttribute(lambda obj: len(obj.content.split()))
+    difficulty = factory.Faker(
+        "random_element",
+        elements=["easy", "medium", "hard"],
+    )
