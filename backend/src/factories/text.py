@@ -9,6 +9,7 @@ class TextFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     title = factory.Faker("sentence")
     content = factory.Faker("text")
+    source = factory.Faker("url")
     game_mode = factory.Faker(
         "random_element",
         elements=["standard", "adaptive", "summary"],
