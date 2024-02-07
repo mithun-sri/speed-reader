@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import ulid
 from mongoengine import DateTimeField, Document, IntField, ListField, StringField
 
@@ -10,7 +12,7 @@ class History(Document):
         db_field="_id",
         default=lambda: str(ulid.new()),
     )
-    date = DateTimeField(required=True)
+    datetime = DateTimeField(required=True, default=datetime.utcnow)
     user_id = StringField(required=True)
     text_id = StringField(required=True)
     question_ids = ListField(StringField(), required=True)
