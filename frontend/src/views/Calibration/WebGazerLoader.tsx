@@ -43,6 +43,7 @@ class WebGazerLoader extends React.Component<any, WebGazerState> {
   }
 
   async turnOffCam() {
+    console.log("turnOffCam");
     await webgazer.showVideoPreview(false);
   }
 
@@ -51,10 +52,12 @@ class WebGazerLoader extends React.Component<any, WebGazerState> {
   }
 
   async webgazerRestart() {
+    console.log("webgazerRestart");
     await webgazer.clearData();
   }
 
   async handleEnd() {
+    console.log("handleEnd");
     await webgazer.end();
   }
 

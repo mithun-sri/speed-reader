@@ -1,5 +1,7 @@
+import { Box } from "@mui/material";
 import React from "react";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
+import { GameScreenContext } from "../GameScreen/GameScreen";
 import "./Calibration.css";
 import { WebGazerContext } from "./WebGazerContext";
 
@@ -184,73 +186,95 @@ class Calibration extends React.Component<any, any> {
 
   render() {
     return (
-      <div id="container">
-        <canvas
-          ref={this.canvasRef}
-          id="plotting_canvas"
-          width={500}
-          height={500}
-          style={{ cursor: "crosshair" }}
-        />
+      <GameScreenContext.Consumer>
+        {(context) => (
+          <div id="container">
+            <canvas
+              ref={this.canvasRef}
+              id="plotting_canvas"
+              width={500}
+              height={500}
+              style={{ cursor: "crosshair" }}
+            />
 
-        <div className="calibrationDiv">
-          {Object.keys(this.state.clickCounts).map((pointId) => (
+            <div className="calibrationDiv">
+              {Object.keys(this.state.clickCounts).map((pointId) => (
+                <button
+                  key={pointId}
+                  className="CalibrationButton"
+                  id={pointId}
+                  onClick={() =>
+                    this.calcPointClick(document.getElementById(pointId))
+                  }
+                  disabled={this.state.clickCounts[pointId] >= 5}
+                  style={{
+                    opacity: (
+                      0.2 *
+                      (this.state.clickCounts[pointId] + 1)
+                    ).toString(),
+                    backgroundColor:
+                      this.state.clickCounts[pointId] >= 5
+                        ? "#E2B714"
+                        : "#D1D0C5",
+                  }}
+                />
+              ))}
+            </div>
+
+            <div
+              id="calibration_in_progress"
+              className="calibration-in-progress"
+            >
+              <div className="in_progress_text">
+                <JetBrainsMonoText
+                  text={"Calibration in progress."}
+                  size={35}
+                  color="#D1D0C5"
+                />
+              </div>
+              <div className="instructions_text">
+                <JetBrainsMonoText
+                  text={"Stare at each circle and click until it turns yellow."}
+                  size={25}
+                  color="#D1D0C5"
+                />
+              </div>
+            </div>
+
+            <div id="calibration_done" className="calibration-done">
+              <JetBrainsMonoText
+                text={"Calibration done!"}
+                size={35}
+                color="#D1D0C5"
+              />
+              <Box
+                sx={{
+                  fontFamily: "JetBrains Mono, monospace",
+                  fontWeight: "bold",
+                  fontSize: 25,
+                  color: "#E2B714",
+                }}
+                onClick={() => {
+                  context.incrementCurrentStage();
+                }}
+                style={{ zIndex: 10 }}
+              >
+                Start
+              </Box>
+            </div>
+
+            {/* Temporary button for ease of testing */}
             <button
-              key={pointId}
-              className="CalibrationButton"
-              id={pointId}
-              onClick={() =>
-                this.calcPointClick(document.getElementById(pointId))
-              }
-              disabled={this.state.clickCounts[pointId] >= 5}
-              style={{
-                opacity: (
-                  0.2 *
-                  (this.state.clickCounts[pointId] + 1)
-                ).toString(),
-                backgroundColor:
-                  this.state.clickCounts[pointId] >= 5 ? "#E2B714" : "#D1D0C5",
-              }}
-            />
-          ))}
-        </div>
-
-        <div id="calibration_in_progress" className="calibration-in-progress">
-          <div className="in_progress_text">
-            <JetBrainsMonoText
-              text={"Calibration in progress."}
-              size={35}
-              color="#D1D0C5"
-            />
+              type="button"
+              id="restart_calibration"
+              className="top-button"
+              onClick={this.handleRestart}
+            >
+              Recalibrate
+            </button>
           </div>
-          <div className="instructions_text">
-            <JetBrainsMonoText
-              text={"Stare at each circle and click until it turns yellow."}
-              size={25}
-              color="#D1D0C5"
-            />
-          </div>
-        </div>
-
-        <div id="calibration_done" className="calibration-done">
-          <JetBrainsMonoText
-            text={"Calibration done!"}
-            size={35}
-            color="#D1D0C5"
-          />
-          <JetBrainsMonoText text={"Start"} size={25} color="#E2B714" />
-        </div>
-
-        {/* Temporary button for ease of testing */}
-        <button
-          type="button"
-          id="restart_calibration"
-          className="top-button"
-          onClick={this.handleRestart}
-        >
-          Recalibrate
-        </button>
-      </div>
+        )}
+      </GameScreenContext.Consumer>
     );
   }
 }
