@@ -4,9 +4,8 @@ import StartButton from "../../components/Button/StartButton";
 import Header from "../../components/Header/Header";
 import SpeedSlider from "../../components/Slider/Slider";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
-import "./PreGame.css";
 
-const PreGameView = () => {
+const WpmView = () => {
   const { decrementCurrentStage } = useGameScreenContext();
   return (
     <>
@@ -27,4 +26,4 @@ const PreGameView = () => {
   );
 };
 
-export default PreGameView;
+export default WpmView;

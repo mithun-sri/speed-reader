@@ -15,7 +15,7 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { GameProvider, useGameContext } from "../../context/GameContext";
 import ModeSelectView from "../ModeSelect/ModeSelect";
-import PreGameView from "../PreGame/PreGame";
+import WpmView from "../WpmView/WpmView";
 import Quiz from "../Quiz/Quiz";
 import StandardModeGameView from "../StandardMode/StandardMode";
 import StandardSubModeView from "../StandardMode/StandardSubMode";
@@ -46,7 +46,7 @@ const StandardSelect = () => {
 };
 
 const WpmSelect = () => {
-  return <PreGameView />;
+  return <WpmView />;
 };
 
 const DiffSelect = () => {
