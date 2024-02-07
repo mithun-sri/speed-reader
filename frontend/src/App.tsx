@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import WebGazerLoader from "./views/Calibration/WebGazerLoader";
 import { GamePage } from "./views/GameScreen/GameScreen";
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/game" />} />
         <Route path="/game" element={<GamePage />} />
+        <Route path="/calibration" element={<WebGazerLoader />} />
         <Route path="/user" />
         <Route path="/admin" />
       </Routes>
