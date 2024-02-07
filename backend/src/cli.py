@@ -7,13 +7,13 @@ import typer
 from rich import print
 from rich.progress import track
 from sqlalchemy.orm import Session
-from src.logger import LOGGER_DIR
 
 from .database import engine, mongodb
 from .factories.history import HistoryFactory
 from .factories.question import QuestionFactory
 from .factories.text import TextFactory
 from .factories.user import UserFactory
+from .logger import LOGGER_DIR
 from .models import Base
 
 app = typer.Typer()
