@@ -1,7 +1,4 @@
-from typing import Optional
-
-from fastapi import APIRouter, Depends, Query
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from ..database import get_session
@@ -9,6 +6,7 @@ from ..logger import LoggerRoute
 from ..models.history import History
 from ..models.text import Text
 from ..models.user import User
+from ..schemas.text import TextFilter
 
 router = APIRouter(prefix="/user", tags=["user"], route_class=LoggerRoute)
 
@@ -19,24 +17,18 @@ def get_user_summary():
     pass
 
 
-class TextFilter(BaseModel):
-    page: int = Query(1, ge=1)
-    page_size: int = Query(10, ge=1, le=100)
-    difficulty: Optional[str] = Query(None)
-    game_mode: Optional[int] = Query(None)
-    sort: Optional[str] = Query(None)
-
-
-@router.get("/stats")
-async def get_user_stats(user_id: str):
-    user = User.objects(user_id=user_id).first()  # pylint: disable=no-member
+@router.get("/{user_id}/stats")
+async def get_user_stats(
+    user_id: str,
+):
+    user = User.objects(user_id=user_id).first()
 
     # Calculate the average score of the user
     pipeline = [
         {"$group": {"_id": user_id}},
         {"$project": {"_id": 0, "avgScore": {"$avg": "$score"}}},
     ]
-    data = list(History.objects().aggregate(pipeline))[0]  # pylint: disable=no-member
+    data = list(History.objects().aggregate(pipeline))[0]
     avg_score = data["avgScore"]
 
     # Calculate the min, max and average wpm of the user
@@ -51,7 +43,7 @@ async def get_user_stats(user_id: str):
         },
         {"$project": {"_id": user_id, "minWpm": 1, "maxWpm": 1, "avgWpm": 1}},
     ]
-    data = list(History.objects().aggregate(pipeline))[0]  # pylint: disable=no-member
+    data = list(History.objects().aggregate(pipeline))[0]
     min_wpm, max_wpm, avg_wpm = data["minWpm"], data["maxWpm"], data["avgWpm"]
 
     response = {
@@ -65,13 +57,13 @@ async def get_user_stats(user_id: str):
     return response
 
 
-@router.get("/available_texts")
-async def get_available_texts(
+@router.get("/{user_id}/available_texts")
+async def get_user_available_texts(
     user_id: str,
     text_filter: TextFilter = Depends(),
     session: Session = Depends(get_session),
 ):
-    page, page_size, difficulty, game_mode, sort = (
+    page, page_size, difficulty, game_mode, sort_option = (
         text_filter.page,
         text_filter.page_size,
         text_filter.difficulty,
@@ -79,9 +71,7 @@ async def get_available_texts(
         text_filter.sort,
     )
     # Collect text_ids of texts read by user in user.history from MongoDB
-    texts_read_by_user = History.objects(  # pylint: disable=no-member
-        user_id=user_id
-    ).distinct("text_id")
+    texts_read_by_user = History.objects(user_id=user_id).distinct("text_id")
 
     # Build the base query for texts not read by user
     base_query = session.query(Text).filter(~Text.id.in_(texts_read_by_user))
@@ -91,13 +81,12 @@ async def get_available_texts(
     if game_mode is not None:
         base_query = base_query.filter(Text.game_mode == game_mode)
     # Sort the texts by the given attribute
-    if sort:
-        if sort.startswith("-"):
-            attr = getattr(Text, sort[1:])
-            base_query = base_query.order_by(attr.desc())
+    if sort_option:
+        attr = getattr(Text, sort_option.field)
+        if sort_option.ascending:
+            base_query = base_query.order_by(attr)
         else:
-            attr = getattr(Text, sort)
-            base_query = base_query.order_by(sort)
+            base_query = base_query.order_by(attr.desc())
 
     # Calculate the total number of texts not read by the user
     total_texts = base_query.count()
