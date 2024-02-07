@@ -6,6 +6,7 @@ import { StandardView } from "../../views/StandardMode/StandardMode";
 import GameProgressBar from "../ProgressBar/GameProgressBar";
 import ModeDescriptionComponent from "./ModeDescription";
 import clickAudio from "../../common/audio";
+import { motion } from "framer-motion";
 
 const PeripheralPreview: React.FC<{
   text: string;
@@ -13,8 +14,6 @@ const PeripheralPreview: React.FC<{
   const { incrementCurrentStage } = useGameScreenContext();
   const { setView } = useGameContext();
 
-  const [words, setWords] = useState<string[]>([]);
-  const [wordIndex, setWordIndex] = useState(0);
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 16;
@@ -37,21 +36,21 @@ const PeripheralPreview: React.FC<{
     };
   }, []);
 
-  useEffect(() => {
-    const wordsArray: string[] = text.split(" ");
-    setWords(wordsArray);
+  const [seconds, setSeconds] = useState(0);
+  const duration = 8;
 
+  useEffect(() => {
     const interval = setInterval(() => {
-      if (wordIndex < words.length - 1) {
-        setWordIndex((prevIndex) => prevIndex + 1);
-      } else {
-        setWordIndex(0);
-      }
-    }, 60000 / 160);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [text, wordIndex, words.length]);
+      setSeconds((prevSeconds) => {
+        if (prevSeconds >= duration) {
+          return 0;
+        }
+        return prevSeconds + 0.1;
+      });
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [duration]);
 
   return (
     <IconButton
@@ -86,17 +85,40 @@ const PeripheralPreview: React.FC<{
             sx={{
               width: "70%",
               fontSize: fontSize / 5,
-              margin: fontSize / 17,
+              margin: fontSize / 25,
               color: "#646669",
               fontFamily: "JetBrains Mono, monospace",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
-            {text}
+            <motion.p
+              initial={{ translateY: 50, opacity: 0.7 }}
+              animate={{ translateY: "-60px", opacity: 1 }}
+              transition={{
+                duration: duration + 0.205,
+                repeat: Infinity,
+                repeatDelay: 0,
+                ease: "easeInOut",
+              }}
+              style={{
+                fontSize: fontSize / 5,
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#D1D0C5",
+                alignItems: "left",
+                fontWeight: "bolder",
+                display: "flex",
+                justifyContent: "left",
+                alignContent: "left",
+                textAlign: "left",
+                bottom: 0,
+              }}
+            >
+              {text}
+            </motion.p>
           </Box>
           <Box sx={{ width: "60%" }}>
-            <GameProgressBar
-              gameProgress={(wordIndex / (words.length - 1)) * 100}
-            />
+            <GameProgressBar gameProgress={(seconds / duration) * 100} />
           </Box>
         </Box>
         <ModeDescriptionComponent

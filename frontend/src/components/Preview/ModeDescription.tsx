@@ -56,6 +56,7 @@ const ModeDescriptionComponent: React.FC<ModeDescriptionProps> = ({
       </Box>
       <Box
         sx={{
+          padding: "0 20px",
           alignContent: "center",
           textAlign: "center",
           fontSize: fontSize / 3.4,
