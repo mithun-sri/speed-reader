@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
-import Header from "../../components/Header/Header";
-import WordByWordPreview from "../../components/Preview/WordByWord";
 import { useEffect, useState } from "react";
+import Header from "../../components/Header/Header";
 import HighlightWordsPreview from "../../components/Preview/HighlightWords";
 import PeripheralPreview from "../../components/Preview/Peripheral";
+import WordByWordPreview from "../../components/Preview/WordByWord";
 
 const StandardSubModeView = () => {
   const previewText =

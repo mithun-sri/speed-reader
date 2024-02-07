@@ -37,7 +37,7 @@ const ModeDescriptionComponent: React.FC<ModeDescriptionProps> = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        width: fontSize * 6,
+        width: fontSize * 7,
         justifyContent: "center",
         fontFamily: "JetBrains Mono, monospace",
         fontWeight: "bolder",
