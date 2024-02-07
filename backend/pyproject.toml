@@ -3,6 +3,7 @@ name = "backend"
 version = "0.1.0"
 description = ""
 authors = []
+packages = [{ include = "src" }]
 
 [tool.poetry.scripts]
 speed-reader-cli = "src.cli:app"
