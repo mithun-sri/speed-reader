@@ -1,13 +1,13 @@
-from datetime import datetime
+from sqlalchemy.orm import Mapped, mapped_column
 
-from mongoengine import DateTimeField, Document, IntField, StringField
+from .base import Base
+from .mixins import TimestampMixin, ULIDMixin
 
 
-class User(Document):
-    user_id = IntField(primary_key=True)
-    username = StringField(required=True, unique=True)
-    email = StringField(required=True, unique=True)
-    password = StringField(required=True)
-    created_at = DateTimeField(default=datetime.utcnow)
-    status = StringField(default="active")
-    meta = {"collection": "users"}
+class User(ULIDMixin, TimestampMixin, Base):
+    __tablename__ = "user"
+
+    username: Mapped[str]
+    email: Mapped[str]
+    password: Mapped[str]
+    status: Mapped[str] = mapped_column(default="active")

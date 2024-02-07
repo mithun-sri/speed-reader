@@ -7,7 +7,10 @@ from rich.progress import track
 from sqlalchemy.orm import Session
 
 from .database import engine
-from .factories import QuestionFactory, TextFactory
+from .factories.history import HistoryFactory
+from .factories.question import QuestionFactory
+from .factories.text import TextFactory
+from .factories.user import UserFactory
 from .models import Base
 
 app = typer.Typer()
@@ -36,6 +39,13 @@ def seed(
             session.execute(table.delete())
             session.commit()
 
+        print("🌱 Seeding users...")
+        users = []
+        for _ in track(range(10)):
+            user = UserFactory.build()
+            users.append(user)
+            session.add(user)
+
         print("🌱 Seeding texts...")
         texts = []
         for _ in track(range(10)):
@@ -50,6 +60,20 @@ def seed(
             session.add(question)
 
         session.commit()
+
+    print("🌱 [green]Seeding histories...")
+    for _ in track(range(100)):
+        user = random.choice(users)
+        text = random.choice(texts)
+        questions = random.sample(text.questions, 10)
+        history = HistoryFactory.build(
+            user_id=user.id,
+            text_id=text.id,
+            question_ids=[question.id for question in questions],
+            mode=text.mode,
+            submode=random.choice(["word_by_word", "highlight", "peripheral"]),
+        )
+        history.save()
 
     print("🌴 [green]Successfully seeded database.")
 

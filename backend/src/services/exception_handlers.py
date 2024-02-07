@@ -5,13 +5,14 @@ from .exceptions import (
     EmailAlreadyUsedException,
     InvalidCredentialsException,
     InvalidTokenException,
+    TextNotFoundException,
     UserAlreadyExistsException,
     UserNotFoundException,
 )
 
 
 async def invalid_credentials_exception_handler(
-    request: Request,  # pylint: disable=unused-argument
+    _request: Request,
     exc: InvalidCredentialsException,
 ):
     return JSONResponse(
@@ -21,7 +22,8 @@ async def invalid_credentials_exception_handler(
 
 
 async def invalid_token_exception_handler(
-    request: Request, exc: InvalidTokenException  # pylint: disable=unused-argument
+    _request: Request,
+    exc: InvalidTokenException,
 ):
     return JSONResponse(
         status_code=exc.status_code,
@@ -30,16 +32,18 @@ async def invalid_token_exception_handler(
 
 
 async def user_not_found_exception_handler(
-    request: Request, exc: UserNotFoundException  # pylint: disable=unused-argument
+    _request: Request,
+    exc: UserNotFoundException,
 ):
     return JSONResponse(
         status_code=exc.status_code,
-        content={"message": f"Oops! User {exc.username} could not be found."},
+        content={"message": f"Oops! User {exc.user_id} could not be found."},
     )
 
 
 async def user_already_exists_exception_handler(
-    request: Request, exc: UserAlreadyExistsException  # pylint: disable=unused-argument
+    _request: Request,
+    exc: UserAlreadyExistsException,
 ):
     return JSONResponse(
         status_code=exc.status_code,
@@ -48,9 +52,20 @@ async def user_already_exists_exception_handler(
 
 
 async def email_already_used_exception_handler(
-    request: Request, exc: EmailAlreadyUsedException  # pylint: disable=unused-argument
+    _request: Request,
+    exc: EmailAlreadyUsedException,
 ):
     return JSONResponse(
         status_code=exc.status_code,
         content={"message": f"Oops! {exc.email} is already in use by another user."},
+    )
+
+
+async def text_not_found_exception_handler(
+    _request: Request,
+    exc: TextNotFoundException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": f"Oops! Text {exc.text_id} could not be found."},
     )

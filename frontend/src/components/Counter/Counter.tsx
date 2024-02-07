@@ -20,7 +20,7 @@ const CountdownComponent: React.FC<{
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {
-      if (count === 0) {
+      if (count === 1) {
         clearInterval(countdownInterval);
         // Add your game initialization logic here
         if (onCountdownFinish) onCountdownFinish();

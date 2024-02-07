@@ -1,11 +1,14 @@
 import Box from "@mui/material/Box";
-import Header from "../../components/Header/Header";
-import WordByWordPreview from "../../components/Preview/WordByWord";
 import { useEffect, useState } from "react";
+import BackButton from "../../components/Button/BackButton";
+import Header from "../../components/Header/Header";
 import HighlightWordsPreview from "../../components/Preview/HighlightWords";
 import PeripheralPreview from "../../components/Preview/Peripheral";
+import WordByWordPreview from "../../components/Preview/WordByWord";
+import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const StandardSubModeView = () => {
+  const { decrementCurrentStage } = useGameScreenContext();
   const previewText =
     "Is this a dagger which I see before me, The handle toward my hand? Come, let me clutch thee. I have thee not, and yet I see thee still.";
   const calculateFontSize = () => {
@@ -33,20 +36,23 @@ const StandardSubModeView = () => {
   return (
     <Box>
       <Header />
+      <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
+        <BackButton label="difficulty" handleClick={decrementCurrentStage} />
+      </Box>
       <Box
         sx={{
-          marginTop: fontSize / 6,
+          marginTop: "30px",
           color: "#D1D0C5",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           fontFamily: "JetBrains Mono, monospace",
-          fontSize: fontSize / 1.4,
+          fontSize: fontSize / 1.5,
           fontWeight: "bold",
           marginBottom: fontSize / 8,
         }}
       >
-        choose your mode.
+        choose your view.
       </Box>
       <Box
         sx={{

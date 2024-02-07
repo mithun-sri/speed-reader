@@ -7,14 +7,14 @@ from jose import jwt
 
 from ..schemas.token import TokenResponse
 from ..schemas.user import RegistrationUserRepsonse, UserRegister, UserResponse
-from ..utils.security.auth import (
+from ..utils.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     ALGORITHM,
     REFRESH_TOKEN_SECRET_KEY,
     create_access_token,
     create_refresh_token,
 )
-from ..utils.security.crypt import get_password_hash, verify_password
+from ..utils.crypt import get_password_hash, verify_password
 from .exceptions import (
     EmailAlreadyUsedException,
     InvalidCredentialsException,
