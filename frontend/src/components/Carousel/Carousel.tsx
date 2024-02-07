@@ -86,6 +86,7 @@ const Carousel: React.FC<{
           fontWeight: "bolder",
           paddingTop: "20px",
           fontSize: fontSize / 6.3,
+          color: "#D1D0C5",
         }}
       >
         {title !== undefined ? title : "choose."}

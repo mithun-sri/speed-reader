@@ -38,7 +38,7 @@ const BackButton: React.FC<{
       }}
       sx={{
         fontFamily: "JetBrains Mono, monospace",
-        color: "#FFFFFF",
+        color: "#D1D0C5",
         fontWeight: "bolder",
         fontSize: fontSize / 6.8,
       }}
