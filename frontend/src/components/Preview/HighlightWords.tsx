@@ -96,6 +96,7 @@ const HighlightWordsPreview: React.FC<{
           >
             {text.split(" ").map((word, index) => (
               <Box
+                key={index}
                 sx={{
                   marginRight: "0.5em",
                   fontWeight: "bolder",
