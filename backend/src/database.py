@@ -22,7 +22,7 @@ except Exception as e:
 if not MONGO_URL:
     raise Exception("MONGO_URL environment variable is not set")
 try:
-    mongodb = connect(host=MONGO_URL)
+    connect(host=MONGO_URL)
     print("MongoDB connection established")
 except Exception as e:
     print("MongoDB connection failed")

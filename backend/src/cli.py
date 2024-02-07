@@ -4,11 +4,12 @@ import re
 from typing import Annotated
 
 import typer
+from mongoengine import get_db
 from rich import print
 from rich.progress import track
 from sqlalchemy.orm import Session
 
-from .database import engine, mongodb
+from .database import engine
 from .factories.history import HistoryFactory
 from .factories.question import QuestionFactory
 from .factories.text import TextFactory
@@ -35,16 +36,16 @@ def seed(
 
     with Session(engine) as session:
         print("💣 Clearing PostgreSQL database...")
-        tables = Base.metadata.sorted_tables
-        for table in reversed(tables):
+        for table in Base.metadata.sorted_tables:
             if table.name == "alembic_version":
                 continue
             session.execute(table.delete())
             session.commit()
 
         print("💣 Clearing MongoDB database...")
-        for collection in mongodb.collections.list_collection_names():
-            mongodb[collection].drop()
+        mongodb = get_db()
+        for collection_name in mongodb.list_collection_names():
+            mongodb[collection_name].delete_many({})
 
         print("🌱 Seeding users...")
         users = []

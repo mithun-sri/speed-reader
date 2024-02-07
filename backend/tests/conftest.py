@@ -16,9 +16,10 @@ os.environ["MONGO_URL"] = MONGO_TEST_URL
 # pylint: disable=wrong-import-position
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from mongoengine import get_db
 from pytest import fixture
 from sqlalchemy.orm import Session
-from src.database import engine, get_session, mongodb
+from src.database import engine, get_session
 from src.main import app
 from src.models import Base
 from src.services.auth import get_current_user, get_refresh_token, get_token
@@ -40,8 +41,9 @@ def session_fixture():
 def mongodb_fixture():
     # Drop all MongoDB collections before each test.
     # Collections will be automatically created by MongoEngine if they do not exist.
-    for collection in mongodb.collections.list_collection_names():
-        mongodb[collection].drop()
+    mongodb = get_db()
+    for collection_name in mongodb.list_collection_names():
+        mongodb[collection_name].delete_many({})
 
     yield mongodb
 
