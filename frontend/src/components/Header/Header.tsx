@@ -84,6 +84,8 @@ const Header = () => {
           marginLeft: "30px",
           color: "#D1D0C5",
         }}
+        component={Link}
+        to="/user"
       >
         <FontAwesomeIcon icon={faUser} color="#E2B714" />
       </IconButton>

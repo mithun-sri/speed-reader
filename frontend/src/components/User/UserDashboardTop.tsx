@@ -1,8 +1,8 @@
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box } from "@mui/material";
-import LogOut from "../Button/LogOut";
 import { useEffect, useState } from "react";
+import LogOut from "../Button/LogOut";
 
 const UserDashboardTop: React.FC<{
   user_id: string;
@@ -64,6 +64,7 @@ const UserDashboardTop: React.FC<{
             color: "#D1D0C5",
             fontWeight: "bolder",
             textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+            fontFamily: "JetBrains Mono, monospace",
           }}
         >
           User {user_id}
