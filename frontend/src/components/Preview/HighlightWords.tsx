@@ -106,7 +106,7 @@ const HighlightWordsPreview: React.FC<{
                 {word}
               </Box>
             ))}
-          </Box>  
+          </Box>
           <Box sx={{ width: "60%" }}>
             <GameProgressBar
               gameProgress={(wordIndex / (words.length - 1)) * 100}
