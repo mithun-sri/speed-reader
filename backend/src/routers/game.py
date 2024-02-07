@@ -1,7 +1,8 @@
 import random
-from typing import Annotated
+from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends
+import ulid
+from fastapi import APIRouter, Body, Depends
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -10,8 +11,10 @@ from ..database import get_session
 from ..logger import LoggerRoute
 from ..services.auth import get_current_user
 from ..services.exceptions import (
-    DuplicateQuestionsException,
+    DuplicateAnswersException,
+    NotEnoughAnswersException,
     NotEnoughQuestionsException,
+    NoTextAvailableException,
     QuestionNotBelongToTextException,
     QuestionNotFoundException,
     TextNotFoundException,
@@ -35,6 +38,8 @@ async def get_next_text(
     """
     query = select(models.Text).order_by(func.random()).limit(1)
     text = session.scalars(query).one_or_none()
+    if not text:
+        raise NoTextAvailableException()
 
     return text
 
@@ -57,6 +62,9 @@ async def get_text(
     return text
 
 
+NUM_QUESTIONS_PER_GAME = 10
+
+
 @router.get(
     "/texts/{text_id}/questions/next",
     response_model=list[schemas.Question],
@@ -75,11 +83,10 @@ async def get_next_questions(
     if not text:
         raise TextNotFoundException(text_id=text_id)
 
-    num_questions = 10
-    if len(text.questions) < num_questions:
+    if len(text.questions) < NUM_QUESTIONS_PER_GAME:
         raise NotEnoughQuestionsException(text_id=text_id)
 
-    return random.sample(text.questions, num_questions)
+    return random.sample(text.questions, NUM_QUESTIONS_PER_GAME)
 
 
 @router.post(
@@ -87,9 +94,16 @@ async def get_next_questions(
     response_model=list[schemas.QuestionResult],
 )
 async def post_game_results(
+    *,
     text_id: str,
-    answers: schemas.QuestionAnswersWithWpm,
-    user: Annotated[models.User, Depends(get_current_user)],
+    answers: list[schemas.QuestionAnswer],
+    # TODO:
+    # Extract the following payload to a separate schema.
+    average_wpm: Annotated[int, Body()],
+    interval_wpms: Annotated[list[int], Body()],
+    game_mode: Annotated[str, Body()],
+    game_submode: Annotated[Optional[str], Body()] = None,
+    _user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ):
     """
@@ -97,8 +111,14 @@ async def post_game_results(
     Returns the results to the answers.
     """
     results = []
-    question_ids = []
-    for answer in answers.answers:
+    question_ids = [answer.question_id for answer in answers]
+
+    if len(answers) < NUM_QUESTIONS_PER_GAME:
+        raise NotEnoughAnswersException()
+    if len(set(question_ids)) != len(question_ids):
+        raise DuplicateAnswersException()
+
+    for answer in answers:
         question = session.get(models.Question, answer.question_id)
         if not question:
             raise QuestionNotFoundException(question_id=answer.question_id)
@@ -106,8 +126,6 @@ async def post_game_results(
             # TODO: Extracting every exception like this may be overkill.
             # fmt: off
             raise QuestionNotBelongToTextException(question_id=answer.question_id, text_id=text_id)
-        if answer.question_id in question_ids:
-            raise DuplicateQuestionsException(question_id=answer.question_id)
 
         results.append(
             schemas.QuestionResult(
@@ -117,7 +135,6 @@ async def post_game_results(
                 correct_option=question.correct_option,
             )
         )
-        question_ids.append(answer.question_id)
 
     # Save the history before returning the results to the question answers.
     text = session.get(models.Text, text_id)
@@ -125,13 +142,16 @@ async def post_game_results(
         raise TextNotFoundException(text_id=text_id)
 
     history = models.History(
-        user_id=user.id,
+        # TODO:
+        # Uncomment the following line once `get_current_user` is implemented.
+        # user_id=user.id,
+        user_id=str(ulid.new()),
         text_id=text_id,
         question_ids=question_ids,
-        game_mode=answers.game_mode,
-        game_submode=answers.game_submode,
-        average_wpm=answers.average_wpm,
-        interval_wpms=answers.interval_wpms,
+        game_mode=game_mode,
+        game_submode=game_submode,
+        average_wpm=average_wpm,
+        interval_wpms=interval_wpms,
         score=sum(result.correct for result in results) / len(results) * 100,
         answers=[result.selected_option for result in results],
     )

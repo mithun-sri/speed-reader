@@ -1,19 +1,37 @@
+import logging
+
 from fastapi import Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from .exceptions import (
-    DuplicateQuestionsException,
+    DuplicateAnswersException,
     EmailAlreadyUsedException,
     HistoryNotFoundException,
     InvalidCredentialsException,
     InvalidTokenException,
+    NotEnoughAnswersException,
     NotEnoughQuestionsException,
+    NoTextAvailableException,
     QuestionNotBelongToTextException,
     QuestionNotFoundException,
     TextNotFoundException,
     UserAlreadyExistsException,
     UserNotFoundException,
 )
+
+
+async def validation_exception_handler(
+    _request: Request,
+    exc: RequestValidationError,
+):
+    # Log more information on 422 unprocessable entity error.
+    # By default FastAPI does not produce detailed error message.
+    logging.error(exc)
+    return JSONResponse(
+        content={"status_code": 422, "message": str(exc), "data": None},
+        status_code=422,
+    )
 
 
 async def invalid_credentials_exception_handler(
@@ -66,6 +84,16 @@ async def email_already_used_exception_handler(
     )
 
 
+async def no_text_available_exception_handler(
+    _request: Request,
+    exc: NoTextAvailableException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": "Oops! No text available."},
+    )
+
+
 async def text_not_found_exception_handler(
     _request: Request,
     exc: TextNotFoundException,
@@ -98,18 +126,6 @@ async def not_enough_questions_exception_handler(
     )
 
 
-async def duplicate_questions_exception_handler(
-    _request: Request,
-    exc: DuplicateQuestionsException,
-):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={
-            "message": f"Oops! Question {exc.question_id} has been answered already."
-        },
-    )
-
-
 async def question_not_belong_to_text_exception_handler(
     _request: Request,
     exc: QuestionNotBelongToTextException,
@@ -119,6 +135,26 @@ async def question_not_belong_to_text_exception_handler(
         content={
             "message": f"Oops! Question {exc.question_id} does not belong to text {exc.text_id}."
         },
+    )
+
+
+async def not_enough_answers_exception_handler(
+    _request: Request,
+    exc: NotEnoughAnswersException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": "Oops! Not enough answers for a question."},
+    )
+
+
+async def duplicate_answers_exception_handler(
+    _request: Request,
+    exc: DuplicateAnswersException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": "Oops! There are duplicate answers for a question."},
     )
 
 
