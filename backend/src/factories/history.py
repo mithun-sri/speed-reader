@@ -21,5 +21,7 @@ class HistoryFactory(factory.mongoengine.MongoEngineFactory):
 
     @factory.lazy_attribute
     def game_submode(self):
-        if self.game_mode == "standard":
-            return random.choice(["word_by_word", "highlight", "peripheral"])
+        if self.game_mode != "standard":
+            return None
+
+        return random.choice(["word_by_word", "highlight", "peripheral"])
