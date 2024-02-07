@@ -128,7 +128,7 @@ deploy_staging_frontend:
   needs: [deploy_staging_backend]
   only: [master]
   variables:
-    BRANCH: staging
+    BRANCH: master
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-frontend
     GIT_PUSH_FLAGS: -f
 
@@ -136,7 +136,7 @@ deploy_staging_backend:
   extends: .deploy
   only: [master]
   variables:
-    BRANCH: staging
+    BRANCH: master
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
     GIT_PUSH_FLAGS: -f
 
