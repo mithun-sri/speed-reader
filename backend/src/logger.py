@@ -9,10 +9,11 @@ from typing import Any, Callable
 from fastapi import Request, Response
 from fastapi.routing import APIRoute
 
-# TODO: Make the log file path configurable.
-base_path = dirname(dirname(abspath(__file__)))
+# TODO: Make the log dir configurable.
+LOGGER_DIR = dirname(dirname(abspath(__file__))) + "/logs"
+
 handler = RotatingFileHandler(
-    f"{base_path}/logs/app.log",
+    f"{LOGGER_DIR}/app.log",
     maxBytes=16 * 1024**2,
     backupCount=10,
 )
