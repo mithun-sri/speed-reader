@@ -13,7 +13,9 @@ export class GameService {
     /**
      * Get Next Text
      * Gets the next text that the user has not attempted before.
-     * TODO: Currently returns a random text regardless of which texts the user has seen.
+     * NOTE:
+     * The current implementation returns a random text,
+     * regardless of which texts the user has seen.
      * @returns Text Successful Response
      * @throws ApiError
      */
@@ -47,7 +49,9 @@ export class GameService {
     /**
      * Get Next Questions
      * Gets next 3 questions that the user has not attempted before.
-     * TODO: Currently returns 3 random questions for the given text, regardless of which questions the user has seen.
+     * NOTE:
+     * The current implementation returns 3 random questions for the given text,
+     * regardless of which questions the user has seen.
      * @param textId
      * @returns Question Successful Response
      * @throws ApiError
