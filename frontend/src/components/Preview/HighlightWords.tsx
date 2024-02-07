@@ -5,6 +5,7 @@ import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 import { StandardView } from "../../views/StandardMode/StandardMode";
 import GameProgressBar from "../ProgressBar/GameProgressBar";
 import ModeDescriptionComponent from "./ModeDescription";
+import clickAudio from "../../common/audio";
 
 const HighlightWordsPreview: React.FC<{
   text: string;
@@ -46,7 +47,7 @@ const HighlightWordsPreview: React.FC<{
       } else {
         setWordIndex(0);
       }
-    }, 60000 / 160);
+    }, 60000 / 300);
     return () => {
       clearInterval(interval);
     };
@@ -55,6 +56,7 @@ const HighlightWordsPreview: React.FC<{
   return (
     <IconButton
       onClick={() => {
+        clickAudio.play();
         setView(StandardView.Highlighted);
         incrementCurrentStage();
       }}
@@ -83,13 +85,27 @@ const HighlightWordsPreview: React.FC<{
           <Box
             sx={{
               width: "70%",
+              paddingLeft: "20px",
               fontSize: fontSize / 5,
               margin: fontSize / 17,
               color: "#646669",
               fontFamily: "JetBrains Mono, monospace",
+              display: "flex",
+              flexWrap: "wrap",
             }}
           >
-            {text}
+            {text.split(" ").map((word, index) => (
+              <Box
+                key={index}
+                sx={{
+                  marginRight: "0.5em",
+                  fontWeight: "bolder",
+                  color: index <= wordIndex ? "#E2B714" : "#646669",
+                }}
+              >
+                {word}
+              </Box>
+            ))}
           </Box>
           <Box sx={{ width: "60%" }}>
             <GameProgressBar

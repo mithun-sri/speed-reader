@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
+import clickAudio from "../../common/audio";
 
 const Carousel: React.FC<{
   title?: string;
@@ -106,6 +107,7 @@ const Carousel: React.FC<{
             {index === 1 ? (
               <Box
                 onClick={() => {
+                  clickAudio.play();
                   returnSelectedIndex(currentIndex); // Return index of selected carousel item
                 }}
                 sx={{

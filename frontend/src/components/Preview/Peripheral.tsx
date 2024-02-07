@@ -5,6 +5,7 @@ import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 import { StandardView } from "../../views/StandardMode/StandardMode";
 import GameProgressBar from "../ProgressBar/GameProgressBar";
 import ModeDescriptionComponent from "./ModeDescription";
+import clickAudio from "../../common/audio";
 
 const PeripheralPreview: React.FC<{
   text: string;
@@ -55,6 +56,7 @@ const PeripheralPreview: React.FC<{
   return (
     <IconButton
       onClick={() => {
+        clickAudio.play();
         setView(StandardView.Peripheral);
         incrementCurrentStage();
       }}
