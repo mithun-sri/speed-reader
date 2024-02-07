@@ -9,7 +9,7 @@ MONGO_URL = os.environ.get("MONGO_URL")
 
 # Connect to PostgreSQL database
 if not POSTGRES_URL:
-    raise Exception("DATABASE_URL environment variable is not set")
+    raise Exception("POSTGRES_URL environment variable is not set")
 try:
     engine = create_engine(POSTGRES_URL, pool_pre_ping=True)
     with engine.connect():

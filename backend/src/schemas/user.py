@@ -39,10 +39,11 @@ class UserStatistics(BaseModel):
     email: str
     min_wpm: int
     max_wpm: int
-    avg_wpm: int
-    avg_score: int
+    average_wpm: int
+    average_score: int
 
 
+# TODO: Move the schemas below to where appropriate.
 class TextSort(BaseModel):
     field: str
     ascending: bool = False
@@ -58,3 +59,13 @@ class UserAvailableTexts(BaseModel):
     page: int
     page_size: int
     total_texts: int
+
+
+class History(BaseModel):
+    text_id: str
+    game_mode: str
+    game_submode: Optional[str]
+    average_wpm: int
+    interval_wpms: list[int]
+    score: int
+    answers: list[int]

@@ -7,35 +7,26 @@ from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
-from ..services.exceptions import UserNotFoundException
+from ..services.auth import get_current_user
+from ..services.exceptions import HistoryNotFoundException
 
-router = APIRouter(prefix="/user", tags=["user"], route_class=LoggerRoute)
-
-
-@router.get("/summary")
-def get_user_summary():
-    pass
+router = APIRouter(prefix="/users", tags=["user"], route_class=LoggerRoute)
 
 
 @router.get(
-    "/{user_id}/statistics",
+    "/current/statistics",
     response_model=schemas.UserStatistics,
 )
 async def get_user_statistics(
-    user_id: str,
-    session: Annotated[Session, Depends(get_session)],
+    user: Annotated[models.User, Depends(get_current_user)],
 ):
     """
     Gets the statistics based on the user's game history.
     """
-    user = session.get(models.User, user_id)
-    if not user:
-        raise UserNotFoundException(user_id=user_id)
-
     pipeline = [
         {
             "$group": {
-                "_id": user_id,
+                "_id": user.id,
                 "minWpm": {"$min": "$wpm"},
                 "maxWpm": {"$max": "$wpm"},
                 "avgWpm": {"$avg": "$wpm"},
@@ -43,31 +34,31 @@ async def get_user_statistics(
             }
         }
     ]
-    data = models.History.objects(user_id=user_id).aggregate(pipeline)
+    data = models.History.objects(user_id=user.id).aggregate(pipeline)
     data = list(data)[0]
 
     return schemas.UserStatistics(
-        user_id=user_id,
+        user_id=user.id,
         username=user.username,
         email=user.email,
         min_wpm=data["minWpm"],
         max_wpm=data["maxWpm"],
-        avg_wpm=data["avgWpm"],
-        avg_score=data["avgScore"],
+        average_wpm=data["avgWpm"],
+        average_score=data["avgScore"],
     )
 
 
 @router.get(
-    "/{user_id}/available_texts",
+    "/current/available_texts",
     response_model=schemas.UserAvailableTexts,
 )
 async def get_user_available_texts(
     *,
-    user_id: str,
     page: Annotated[int, Query()] = 1,
     page_size: Annotated[int, Query()] = 10,
     text_filter: Optional[schemas.TextFilter] = None,
     text_sort: Optional[schemas.TextSort] = None,
+    user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ):
     """
@@ -77,7 +68,7 @@ async def get_user_available_texts(
 
     def filter_query(query):
         # Build the base query for texts not read by user
-        read_text_ids = models.History.objects(user_id=user_id).distinct("text_id")
+        read_text_ids = models.History.objects(user_id=user.id).distinct("text_id")
         query = query.filter(models.Text.id.not_in(read_text_ids))
 
         if text_filter.game_mode:
@@ -108,4 +99,58 @@ async def get_user_available_texts(
         page=page,
         page_size=page_size,
         total_texts=total_texts,
+    )
+
+
+# TODO: Move the endpoints below to where appropriate.
+@router.get(
+    "/current/results",
+    response_model=list[schemas.History],
+)
+async def get_histories(
+    user: Annotated[models.User, Depends(get_current_user)],
+):
+    """
+    Gets the history of games played by the user.
+    """
+    histories = models.History.objects(user_id=user.id)
+    histories = list(histories)
+
+    return [
+        schemas.History(
+            text_id=history.text_id,
+            game_mode=history.game_mode,
+            game_submode=history.game_submode,
+            average_wpm=history.average_wpm,
+            interval_wpms=history.interval_wpms,
+            score=history.score,
+            answers=history.answers,
+        )
+        for history in histories
+    ]
+
+
+@router.get(
+    "/current/results/{history_id}",
+    response_model=schemas.History,
+)
+async def get_history(
+    history_id: str,
+    user: Annotated[models.User, Depends(get_current_user)],
+):
+    """
+    Gets the history of games played by the user.
+    """
+    history = models.History.objects(user_id=user.id, id=history_id).first()
+    if not history:
+        raise HistoryNotFoundException(history_id=history_id)
+
+    return schemas.History(
+        text_id=history.text_id,
+        game_mode=history.game_mode,
+        game_submode=history.game_submode,
+        average_wpm=history.average_wpm,
+        interval_wpms=history.interval_wpms,
+        score=history.score,
+        answers=history.answers,
     )

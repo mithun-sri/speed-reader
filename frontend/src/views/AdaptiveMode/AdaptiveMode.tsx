@@ -65,17 +65,24 @@ const AdaptiveModeTextDisplay: React.FC<{
     };
   }, []);
 
-  const [highlightedIndex, setHighlightedIndex] = useState(0);
-  const [currentLineIndex, setCurrentLineIndex] = useState(-1);
-  const [nextLineIndex, setNextLineIndex] = useState(0);
-  const [lastLineChangeTime, setLastLineChangeTime] = useState(Date.now());
   const wordsArray = text.split(" ");
   const maxCharactersPerLine = 60;
+  const leftCheckpoint = 0.25;
+  const rightCheckpoint = 0.75;
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [nextLineIndex, setNextLineIndex] = useState(0);
+  const [lastLineChangeTime, setLastLineChangeTime] = useState(Date.now());
+  const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
   const { x } = useContext(WebGazerContext);
 
   useEffect(() => {
     const checkNextLine = setInterval(() => {
-      if (nextLineIndex == 0 || x > 100 || Math.random() < 0.05) {
+      if (
+        nextLineIndex == 0 ||
+        (hitLeftCheckpoint && x > window.innerWidth * rightCheckpoint) ||
+        Math.random() < 0.05
+      ) {
         setNextLineIndex((prevNextLineIndex) => {
           const timeNow = Date.now();
           setWpm(
@@ -85,6 +92,7 @@ const AdaptiveModeTextDisplay: React.FC<{
           setLastLineChangeTime(timeNow);
           setHighlightedIndex(prevNextLineIndex);
           setCurrentLineIndex(prevNextLineIndex);
+          setHitLeftCheckpoint(false);
           let lineLength = wordsArray[prevNextLineIndex].length;
 
           for (let i = prevNextLineIndex + 1; i < wordsArray.length; i++) {
@@ -98,7 +106,11 @@ const AdaptiveModeTextDisplay: React.FC<{
           return prevNextLineIndex;
         });
       }
-    }, 100);
+
+      if (!hitLeftCheckpoint) {
+        setHitLeftCheckpoint(x < window.innerWidth * leftCheckpoint);
+      }
+    }, 10);
 
     const updateHighlightedIndex = setInterval(() => {
       setHighlightedIndex((prevIndex) => {
