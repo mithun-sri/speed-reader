@@ -1,8 +1,3 @@
-[TYPECHECK]
-ignored-modules =
-    alembic.op,
-    alembic.context,
-
 [FORMAT]
 max-line-length = 88
 
@@ -15,6 +10,10 @@ disable =
     broad-exception-caught,
     broad-exception-raised,
     raise-missing-from,
+    # TODO:
+    # Pylint gives false-positive to many of generated attributes are not defined.
+    # Ignore `no-member` to supress them as many are checked by mypy too.
+    no-member,
     # TODO:
     # Pylint gives false-positive sqlalchemy.func.* is not callable.
     # Ideally we should disable this per line.
