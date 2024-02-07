@@ -1,13 +1,24 @@
 import random
-from typing import Annotated
+from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+import ulid
+from fastapi import APIRouter, Body, Depends
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
+from ..services.auth import get_current_user
+from ..services.exceptions import (
+    DuplicateAnswersException,
+    NotEnoughAnswersException,
+    NotEnoughQuestionsException,
+    NoTextAvailableException,
+    QuestionNotBelongToTextException,
+    QuestionNotFoundException,
+    TextNotFoundException,
+)
 
 router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
 
@@ -28,7 +39,7 @@ async def get_next_text(
     query = select(models.Text).order_by(func.random()).limit(1)
     text = session.scalars(query).one_or_none()
     if not text:
-        raise HTTPException(status_code=404, detail="No text available")
+        raise NoTextAvailableException()
 
     return text
 
@@ -46,9 +57,12 @@ async def get_text(
     """
     text = session.get(models.Text, text_id)
     if not text:
-        raise HTTPException(status_code=404, detail="Text not found")
+        raise TextNotFoundException(text_id=text_id)
 
     return text
+
+
+NUM_QUESTIONS_PER_GAME = 10
 
 
 @router.get(
@@ -60,54 +74,58 @@ async def get_next_questions(
     session: Annotated[Session, Depends(get_session)],
 ):
     """
-    Gets next 3 questions that the user has not attempted before.
+    Gets next 10 questions that the user has not attempted before.
     NOTE:
-    The current implementation returns 3 random questions for the given text,
+    The current implementation returns 10 random questions for the given text,
     regardless of which questions the user has seen.
     """
     text = session.get(models.Text, text_id)
     if not text:
-        raise HTTPException(status_code=404, detail="Text not found")
+        raise TextNotFoundException(text_id=text_id)
 
-    num_questions = 3
-    if len(text.questions) < num_questions:
-        raise HTTPException(
-            status_code=404,
-            detail="Text does not have enough questions",
-        )
+    if len(text.questions) < NUM_QUESTIONS_PER_GAME:
+        raise NotEnoughQuestionsException(text_id=text_id)
 
-    return random.sample(text.questions, num_questions)
+    return random.sample(text.questions, NUM_QUESTIONS_PER_GAME)
 
 
 @router.post(
     "/texts/{text_id}/answers",
     response_model=list[schemas.QuestionResult],
 )
-async def submit_answers(
+async def post_answers(
+    *,
     text_id: str,
     answers: list[schemas.QuestionAnswer],
+    # TODO:
+    # Extract the following payload to a separate schema.
+    average_wpm: Annotated[int, Body()],
+    interval_wpms: Annotated[list[int], Body()],
+    game_mode: Annotated[str, Body()],
+    game_submode: Annotated[Optional[str], Body()] = None,
+    _user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ):
     """
-    Accepts question answers and returns the results.
+    Accepts the question answers and other statistics.
+    Returns the results to the answers.
     """
     results = []
-    question_ids = []
+    question_ids = [answer.question_id for answer in answers]
+
+    if len(answers) < NUM_QUESTIONS_PER_GAME:
+        raise NotEnoughAnswersException()
+    if len(set(question_ids)) != len(question_ids):
+        raise DuplicateAnswersException()
+
     for answer in answers:
         question = session.get(models.Question, answer.question_id)
         if not question:
-            raise HTTPException(
-                status_code=404, detail=f"Question {answer.question_id} not found"
-            )
+            raise QuestionNotFoundException(question_id=answer.question_id)
         if question.text_id != text_id:
-            raise HTTPException(
-                status_code=400,
-                detail=f"Question {answer.question_id} does not belong to text {text_id}",
-            )
-        if answer.question_id in question_ids:
-            raise HTTPException(
-                status_code=400, detail=f"Duplicate question {answer.question_id}"
-            )
+            # TODO: Extracting every exception like this may be overkill.
+            # fmt: off
+            raise QuestionNotBelongToTextException(question_id=answer.question_id, text_id=text_id)
 
         results.append(
             schemas.QuestionResult(
@@ -117,6 +135,26 @@ async def submit_answers(
                 correct_option=question.correct_option,
             )
         )
-        question_ids.append(answer.question_id)
+
+    # Save the history before returning the results to the question answers.
+    text = session.get(models.Text, text_id)
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
+
+    history = models.History(
+        # TODO:
+        # Uncomment the following line once `get_current_user` is implemented.
+        # user_id=user.id,
+        user_id=str(ulid.new()),
+        text_id=text_id,
+        question_ids=question_ids,
+        game_mode=game_mode,
+        game_submode=game_submode,
+        average_wpm=average_wpm,
+        interval_wpms=interval_wpms,
+        score=sum(result.correct for result in results) / len(results) * 100,
+        answers=[result.selected_option for result in results],
+    )
+    history.save()
 
     return results

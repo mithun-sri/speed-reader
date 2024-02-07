@@ -6,7 +6,7 @@ from rich import print
 from rich.progress import track
 from sqlalchemy.orm import Session
 
-from .database import engine
+from .database import engine, mongodb
 from .factories.history import HistoryFactory
 from .factories.question import QuestionFactory
 from .factories.text import TextFactory
@@ -31,13 +31,17 @@ def seed(
         typer.confirm("Are you sure you want to continue?", abort=True)
 
     with Session(engine) as session:
-        print("💣 Clearing database...")
+        print("💣 Clearing PostgreSQL database...")
         tables = Base.metadata.sorted_tables
         for table in reversed(tables):
             if table.name == "alembic_version":
                 continue
             session.execute(table.delete())
             session.commit()
+
+        print("💣 Clearing MongoDB database...")
+        for collection in mongodb.collections.list_collection_names():
+            mongodb[collection].drop()
 
         print("🌱 Seeding users...")
         users = []
@@ -65,7 +69,6 @@ def seed(
                 text_id=text.id,
                 question_ids=[question.id for question in questions],
                 game_mode=text.game_mode,
-                game_submode=random.choice(["word_by_word", "highlight", "peripheral"]),
             )
             history.save()
 
