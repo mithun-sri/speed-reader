@@ -1,11 +1,10 @@
 import { IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 
 const BackButton: React.FC<{
   label?: string;
-}> = ({ label }) => {
-  const { decrementCurrentStage } = useGameScreenContext();
+  handleClick?: () => void;
+}> = ({ label, handleClick }) => {
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -34,7 +33,7 @@ const BackButton: React.FC<{
   return (
     <IconButton
       onClick={() => {
-        decrementCurrentStage();
+        handleClick ? handleClick() : () => {};
       }}
       sx={{
         fontFamily: "JetBrains Mono, monospace",

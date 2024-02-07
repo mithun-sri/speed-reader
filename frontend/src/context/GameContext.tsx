@@ -5,8 +5,8 @@ import { StandardView } from "../views/StandardMode/StandardMode";
 interface GameContextType {
   mode: GameMode | null;
   setMode: (mode: GameMode) => void;
-  difficulty: string | null;
-  setDifficulty: (difficulty: GameDifficulty) => void;
+  difficulty: GameDifficulty | null;
+  setDifficulty: (difficulty: GameDifficulty | null) => void;
   wpm: number | null;
   setWpm: (wpm: number) => void;
   view: StandardView | null; // TODO: change to GameView when StandardSelect is implemented
@@ -42,7 +42,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [mode, setMode] = useState<GameMode | null>(null);
-  const [difficulty, setDifficulty] = useState<string | null>(null);
+  const [difficulty, setDifficulty] = useState<GameDifficulty | null>(null);
   const [wpm, setWpm] = useState<number | null>(null);
   const [view, setView] = useState<StandardView | null>(null);
 

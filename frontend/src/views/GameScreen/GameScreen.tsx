@@ -50,11 +50,17 @@ const WpmSelect = () => {
 };
 
 const DiffSelect = () => {
-  const { incrementCurrentStage } = useGameScreenContext();
-  const { setDifficulty } = useGameContext();
+  const { incrementCurrentStage, decrementCurrentStage } =
+    useGameScreenContext();
+  const { difficulty, setDifficulty } = useGameContext();
   const [valueFromCarousel, setValueFromCarousel] = useState<number>(-1); // To retrieve selected index from Carousel
 
   const options: GameDifficulty[] = [EASY, MED, HARD];
+
+  const handleBackButton = () => {
+    setDifficulty(null);
+    decrementCurrentStage();
+  };
 
   // Callback function to handle the selected index form the Carousel
   const handleValueFromCarousel = (value: number) => {
@@ -73,7 +79,7 @@ const DiffSelect = () => {
     <Box>
       <Header />
       <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
-        <BackButton label="mode" />
+        <BackButton label="mode" handleClick={handleBackButton} />
       </Box>
       <Box
         sx={{
@@ -90,6 +96,9 @@ const DiffSelect = () => {
           title="choose text difficulty."
           options={options}
           returnSelectedIndex={handleValueFromCarousel}
+          defaultIdx={
+            difficulty !== null ? options.indexOf(difficulty) : undefined
+          }
         />
         <Footer />
       </Box>

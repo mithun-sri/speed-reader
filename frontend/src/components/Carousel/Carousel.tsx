@@ -10,7 +10,9 @@ const Carousel: React.FC<{
   returnSelectedIndex: (value: number) => void;
   defaultIdx?: number;
 }> = ({ title, options, returnSelectedIndex, defaultIdx }) => {
-  const [currentIndex, setCurrentIndex] = useState(defaultIdx || 1);
+  const [currentIndex, setCurrentIndex] = useState(
+    defaultIdx !== undefined ? defaultIdx : 1,
+  );
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const boxStyle = {
