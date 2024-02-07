@@ -1,4 +1,5 @@
 import random
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, select
@@ -16,11 +17,13 @@ router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
     response_model=schemas.Text,
 )
 async def get_next_text(
-    session: Session = Depends(get_session),
+    session: Annotated[Session, Depends(get_session)],
 ):
     """
     Gets the next text that the user has not attempted before.
-    TODO: Currently returns a random text regardless of which texts the user has seen.
+    NOTE:
+    The current implementation returns a random text,
+    regardless of which texts the user has seen.
     """
     query = select(models.Text).order_by(func.random()).limit(1)
     text = session.scalars(query).one_or_none()
@@ -36,7 +39,7 @@ async def get_next_text(
 )
 async def get_text(
     text_id: str,
-    session: Session = Depends(get_session),
+    session: Annotated[Session, Depends(get_session)],
 ):
     """
     Gets a text by the given id.
@@ -54,11 +57,13 @@ async def get_text(
 )
 async def get_next_questions(
     text_id: str,
-    session: Session = Depends(get_session),
+    session: Annotated[Session, Depends(get_session)],
 ):
     """
     Gets next 3 questions that the user has not attempted before.
-    TODO: Currently returns 3 random questions for the given text, regardless of which questions the user has seen.
+    NOTE:
+    The current implementation returns 3 random questions for the given text,
+    regardless of which questions the user has seen.
     """
     text = session.get(models.Text, text_id)
     if not text:
@@ -81,7 +86,7 @@ async def get_next_questions(
 async def submit_answers(
     text_id: str,
     answers: list[schemas.QuestionAnswer],
-    session: Session = Depends(get_session),
+    session: Annotated[Session, Depends(get_session)],
 ):
     """
     Accepts question answers and returns the results.
