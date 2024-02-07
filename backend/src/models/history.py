@@ -1,19 +1,28 @@
+import ulid
 from mongoengine import (
     DateTimeField,
     Document,
     IntField,
     ListField,
     ObjectIdField,
-    UUIDField,
+    StringField,
 )
 
 
 class History(Document):
-    id = ObjectIdField(primary_key=True, db_field="_id")
-    user_id = ObjectIdField(required=True)
-    text_id = UUIDField(required=True)
-    date_played = DateTimeField(required=True)
-    score = IntField(required=True)
-    game_mode = IntField(required=True)
-    question_ids = ListField(UUIDField(), required=True)
     meta = {"collection": "history"}
+
+    id = ObjectIdField(
+        primary_key=True,
+        db_field="_id",
+        default=lambda: str(ulid.new()),
+    )
+    date = DateTimeField(required=True)
+    user_id = StringField(required=True)
+    text_id = StringField(required=True)
+    question_ids = ListField(StringField(), required=True)
+    game_mode = StringField(required=True)
+    game_submode = StringField(required=True)
+    wpm = IntField(required=True)
+    score = IntField(required=True)
+    answers = ListField(IntField(), required=True)
