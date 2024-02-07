@@ -3,7 +3,7 @@
 # e.g.
 # We can `import schemas` and access models by `schemas.User`
 # rather than `from .schemas import User`.
-from .question import *
+from .game import *
 from .text import *
 from .token import *
 from .user import *

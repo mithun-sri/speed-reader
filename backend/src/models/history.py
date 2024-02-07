@@ -15,7 +15,8 @@ class History(Document):
     text_id = StringField(required=True)
     question_ids = ListField(StringField(), required=True)
     game_mode = StringField(required=True)
-    game_submode = StringField(required=True)
-    wpm = IntField(required=True)
+    game_submode = StringField(required=False)  # Only for standard game mode
+    average_wpm = IntField(required=True)
+    interval_wpms = ListField(IntField(), required=True)
     score = IntField(required=True)
     answers = ListField(IntField(), required=True)
