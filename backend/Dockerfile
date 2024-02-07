@@ -17,4 +17,3 @@ RUN chown -R app:app /app && chmod -R 755 /app
 
 USER app
 EXPOSE 8000
-CMD poetry run uvicorn src.main:app --port 8000 --host 0.0.0.0
