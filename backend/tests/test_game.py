@@ -2,7 +2,8 @@ import ulid
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from src import schemas
-from src.factories import QuestionFactory, TextFactory
+from src.factories.question import QuestionFactory
+from src.factories.text import TextFactory
 
 
 class TestGetNextText:
