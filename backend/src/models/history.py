@@ -1,18 +1,11 @@
 import ulid
-from mongoengine import (
-    DateTimeField,
-    Document,
-    IntField,
-    ListField,
-    ObjectIdField,
-    StringField,
-)
+from mongoengine import DateTimeField, Document, IntField, ListField, StringField
 
 
 class History(Document):
     meta = {"collection": "history"}
 
-    id = ObjectIdField(
+    id = StringField(
         primary_key=True,
         db_field="_id",
         default=lambda: str(ulid.new()),

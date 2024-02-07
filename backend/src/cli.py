@@ -46,34 +46,30 @@ def seed(
             users.append(user)
             session.add(user)
 
-        print("🌱 Seeding texts...")
+        print("🌱 Seeding texts and questions...")
         texts = []
         for _ in track(range(10)):
             text = TextFactory.build()
+            questions = QuestionFactory.build_batch(100, text=text)
             texts.append(text)
             session.add(text)
+            session.add_all(questions)
 
-        print("🌱 Seeding questions...")
+        print("🌱 [green]Seeding histories...")
         for _ in track(range(100)):
+            user = random.choice(users)
             text = random.choice(texts)
-            question = QuestionFactory.build(text=text)
-            session.add(question)
+            questions = random.sample(text.questions, 10)
+            history = HistoryFactory.build(
+                user_id=user.id,
+                text_id=text.id,
+                question_ids=[question.id for question in questions],
+                game_mode=text.game_mode,
+                game_submode=random.choice(["word_by_word", "highlight", "peripheral"]),
+            )
+            history.save()
 
         session.commit()
-
-    print("🌱 [green]Seeding histories...")
-    for _ in track(range(100)):
-        user = random.choice(users)
-        text = random.choice(texts)
-        questions = random.sample(text.questions, 10)
-        history = HistoryFactory.build(
-            user_id=user.id,
-            text_id=text.id,
-            question_ids=[question.id for question in questions],
-            mode=text.mode,
-            submode=random.choice(["word_by_word", "highlight", "peripheral"]),
-        )
-        history.save()
 
     print("🌴 [green]Successfully seeded database.")
 

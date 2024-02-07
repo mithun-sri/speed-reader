@@ -1,3 +1,5 @@
+import random
+
 import factory
 
 from .. import models
@@ -15,4 +17,4 @@ class HistoryFactory(factory.mongoengine.MongoEngineFactory):
     def answers(self):
         # NOTE:
         # The current implementation does not make sure score and answers are consistent.
-        return [factory.Faker("random_int", min=0, max=3) for _ in range(10)]
+        return [random.randint(0, 2) for _ in range(10)]
