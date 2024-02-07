@@ -47,7 +47,7 @@ const Header = () => {
   }
   return (
     <HeaderContainer>
-      <Link to={"/"} style={{ textDecoration: "" }}>
+      <Link reloadDocument to={"/"} style={{ textDecoration: "" }}>
         <IconButton>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box
