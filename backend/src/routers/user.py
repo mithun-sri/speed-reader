@@ -14,7 +14,7 @@ router = APIRouter(prefix="/users", tags=["user"], route_class=LoggerRoute)
 
 
 @router.get(
-    "/statistics",
+    "/current/statistics",
     response_model=schemas.UserStatistics,
 )
 async def get_user_statistics(
@@ -49,7 +49,7 @@ async def get_user_statistics(
 
 
 @router.get(
-    "/available_texts",
+    "/current/available_texts",
     response_model=schemas.UserAvailableTexts,
 )
 async def get_user_available_texts(
@@ -131,7 +131,7 @@ async def get_histories(
 
 
 @router.get(
-    "/{user_id}/results/{history_id}",
+    "/current/results/{history_id}",
     response_model=schemas.History,
 )
 async def get_history(

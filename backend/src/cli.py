@@ -1,4 +1,6 @@
+import glob
 import random
+import re
 from typing import Annotated
 
 import typer
@@ -11,6 +13,7 @@ from .factories.history import HistoryFactory
 from .factories.question import QuestionFactory
 from .factories.text import TextFactory
 from .factories.user import UserFactory
+from .logger import LOGGER_DIR
 from .models import Base
 
 app = typer.Typer()
@@ -18,13 +21,13 @@ app = typer.Typer()
 db_app = typer.Typer()
 app.add_typer(db_app, name="db")
 
+log_app = typer.Typer()
+app.add_typer(log_app, name="log")
+
 
 @db_app.command("seed")
 def seed(
-    force: Annotated[
-        bool,
-        typer.Option(False, help="Skips confirmation if set"),
-    ] = False,
+    force: Annotated[bool, typer.Option(False, help="Skips confirmation")] = False,
 ):
     if not force:
         print("❗ [red]This command should not be run in production.")
@@ -75,6 +78,20 @@ def seed(
         session.commit()
 
     print("🌴 [green]Successfully seeded database.")
+
+
+@log_app.command()
+def grep(
+    pattern: Annotated[str, typer.Argument(None, help="Pattern to search for")],
+):
+    for path in glob.glob(f"{LOGGER_DIR}/app*.log"):
+        with open(path, encoding="utf8") as file:
+            for i, line in enumerate(file):
+                if re.search(pattern, line):
+                    print(f"👀[blue] Found a match at line #{i + 1}")
+                    print(line)
+
+    print("🎉[green] Successfully searched the application logs.")
 
 
 if __name__ == "__main__":
