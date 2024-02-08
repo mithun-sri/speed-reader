@@ -1,15 +1,8 @@
-import { Box, SelectChangeEvent } from "@mui/material";
+import { Box } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { useEffect, useState } from "react";
 
 const UserGraph = () => {
-  const userId = "placeholder";
-  const [mode, setMode] = useState<string>("");
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setMode(event.target.value as string);
-  };
-
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 15;
@@ -45,6 +38,7 @@ const UserGraph = () => {
           color: "#FFFFFF",
           fontFamily: "JetBrains Mono, monospace",
           fontWeight: "bolder",
+          fontSize: fontSize,
         }}
       >
         STANDARD MODE

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 
-const UserStats: React.FC<{}> = ({}) => {
+const UserStats: React.FC<> = () => {
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 35;

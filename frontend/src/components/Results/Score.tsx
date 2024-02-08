@@ -34,7 +34,7 @@ const Score: React.FC<{
           fontFamily: "JetBrains Mono, monospace",
           margin: "30px",
           paddingRight: circleWidth / 14,
-          color: "#FFFFFF"
+          color: "#FFFFFF",
         }}
       >
         score.
