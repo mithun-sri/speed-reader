@@ -1,7 +1,10 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import Footer from "../../components/Footer/Footer";
+import UserGraph from "../../components/Graph/UserGraph";
 import Header from "../../components/Header/Header";
 import UserDashboardTop from "../../components/User/UserDashboardTop";
+import UserStats from "../../components/User/UserStats";
 
 const UserView = () => {
   const userId = "placeholder";
@@ -38,43 +41,71 @@ const UserView = () => {
         }}
       >
         <UserDashboardTop user_id={userId} />
-        <PageContainer>
-          <StatisticsTitle fontSize={fontSize} />
+        <PageContainer size={fontSize} title="Statistics">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <UserStats></UserStats>
+            <UserGraph></UserGraph>
+          </Box>
+        </PageContainer>
+        <PageContainer size={fontSize} title="History">
+          <Box></Box>
         </PageContainer>
       </Box>
+      <Footer />
     </>
   );
 };
 
-const StatisticsTitle: React.FC<{
+const Title: React.FC<{
   fontSize: number;
-}> = ({ fontSize }) => (
+  text: string;
+}> = ({ fontSize, text }) => (
   <Box
     sx={{
-      paddingBottom: "5px",
-      fontSize: fontSize / 1.1,
+      fontSize: fontSize * 0.9,
       color: "#FFFFFF",
       fontFamily: "JetBrains Mono, monospace",
-      margin: "20px",
+      marginLeft: "50px",
       fontWeight: "bolder",
     }}
   >
-    Statistics
+    {text}
   </Box>
 );
 
 const PageContainer: React.FC<{
+  title?: string;
+  size: number;
   children: React.ReactNode;
-}> = ({ children }) => (
+}> = ({ title, size, children }) => (
   <Box
     sx={{
-      backgroundColor: "#323437",
-      borderRadius: "50px",
-      margin: "20px 100px",
-      padding: "10px 100px",
+      width: "80%",
+      maxWidth: "1050px",
+      margin: "0 auto",
+      marginTop: size / 15,
     }}
   >
-    {children}
+    <Title fontSize={size} text={title === undefined ? "" : title} />
+    <Box
+      sx={{
+        backgroundColor: "#323437",
+        borderRadius: "50px",
+        margin: "5px auto",
+        marginBottom: "30px",
+        padding: "40px 50px",
+        border: "2px solid #646669",
+        minHeight: "250px",
+        boxSizing: "border-box",
+      }}
+    >
+      {children}
+    </Box>
   </Box>
 );
 
