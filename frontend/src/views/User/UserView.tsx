@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Footer from "../../components/Footer/Footer";
 import UserGraph from "../../components/Graph/UserGraph";
 import Header from "../../components/Header/Header";
+import UserTable from "../../components/Table/UserTable";
 import UserDashboardTop from "../../components/User/UserDashboardTop";
 import UserStats from "../../components/User/UserStats";
 
@@ -53,7 +54,9 @@ const UserView = () => {
           </Box>
         </PageContainer>
         <PageContainer size={fontSize} title="History">
-          <Box></Box>
+          <Box>
+            <UserTable />
+          </Box>
         </PageContainer>
       </Box>
       <Footer />

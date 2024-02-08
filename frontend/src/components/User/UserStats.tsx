@@ -28,8 +28,6 @@ const UserStats = () => {
     <Box
       sx={{
         alignItems: "center",
-        // width: "200px",
-        // backgroundColor: "#FFFFFF",
         flex: "1",
       }}
     >
