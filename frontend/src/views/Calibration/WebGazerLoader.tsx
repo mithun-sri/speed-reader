@@ -1,80 +1,74 @@
-import React from "react";
+import { useEffect } from "react";
+import { useGameContext } from "../../context/GameContext";
 import Calibration from "./Calibration";
-import { WebGazerContext } from "./WebGazerContext";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Script: any = require("react-load-script");
 
 declare const webgazer: any;
 
-interface WebGazerState {
-  context: { x: number; y: number };
-}
+const WebGazerLoader = () => {
+  const { setGazeX, setGazeY } = useGameContext();
 
-class WebGazerLoader extends React.Component<any, WebGazerState> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      context: { x: -1, y: -1 },
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://webgazer.cs.brown.edu/webgazer.js";
+    script.async = true;
+
+    const handleScriptLoad = async () => {
+      await webgazer.clearData();
+
+      await webgazer
+        .setRegression("ridge")
+        .setGazeListener((data: any, _clock: any) => {
+          if (data == null) {
+            return;
+          }
+          const bound_data = webgazer.util.bound(data);
+          setGazeX(bound_data.x);
+          setGazeY(bound_data.y);
+        })
+        .saveDataAcrossSessions(true)
+        .begin();
+
+      await webgazer
+        .showPredictionPoints(false)
+        .showVideoPreview(true)
+        .applyKalmanFilter(true);
     };
-  }
 
-  async handleScriptLoad() {
+    script.addEventListener("load", handleScriptLoad);
+
+    document.body.appendChild(script);
+
+    return () => {
+      script.removeEventListener("load", handleScriptLoad);
+      document.body.removeChild(script);
+    };
+  }, [setGazeX, setGazeY]);
+
+  const turnOffCam = async () => {
+    //await webgazer.showVideoPreview(false);
+    document
+      .getElementById("webgazerVideoContainer")
+      ?.style.setProperty("z-index", "-1");
+    document
+      .getElementById("webgazerVideoContainer")
+      ?.style.setProperty("opacity", "0");
+  };
+
+  const webgazerRestart = async () => {
     await webgazer.clearData();
+  };
 
-    await webgazer
-      .setRegression("ridge")
-      .setGazeListener((data: any, _clock: any) => {
-        if (data == null) {
-          return;
-        }
-        this.setState({ context: webgazer.util.bound(data) });
-      })
-      .saveDataAcrossSessions(true)
-      .begin();
-
-    await webgazer
-      .showPredictionPoints(
-        true,
-      ) /* shows a square every 100 milliseconds where current prediction is */
-      .showVideoPreview(true)
-      // turn the above off for production
-      .applyKalmanFilter(true); /* Kalman Filter defaults to on */
-  }
-
-  async turnOffCam() {
-    await webgazer.showVideoPreview(false);
-  }
-
-  handleScriptError() {
-    console.log("error");
-  }
-
-  async webgazerRestart() {
-    await webgazer.clearData();
-  }
-
-  async handleEnd() {
+  const handleEnd = async () => {
     await webgazer.end();
-  }
+  };
 
-  render() {
-    return (
-      <WebGazerContext.Provider value={this.state.context}>
-        <Script
-          url="https://webgazer.cs.brown.edu/webgazer.js"
-          onLoad={this.handleScriptLoad.bind(this)}
-          onError={this.handleScriptError.bind(this)}
-        />
-        <Calibration
-          restartWebgazerMethod={this.webgazerRestart.bind(this)}
-          endWedgazerMethod={this.handleEnd.bind(this)}
-          turnOffCam={this.turnOffCam.bind(this)}
-        />
-      </WebGazerContext.Provider>
-    );
-  }
-}
-WebGazerLoader.contextType = WebGazerContext;
+  return (
+    <Calibration
+      restartWebgazerMethod={webgazerRestart}
+      endWedgazerMethod={handleEnd}
+      turnOffCam={turnOffCam}
+    />
+  );
+};
 
 export default WebGazerLoader;

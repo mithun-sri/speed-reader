@@ -5,6 +5,8 @@ import {
   SUMMARISED_ADAPTIVE_MODE,
 } from "../../common/constants";
 import { GameProvider, useGameContext } from "../../context/GameContext";
+import AdaptiveModeView from "../AdaptiveMode/AdaptiveMode";
+import WebGazerLoader from "../Calibration/WebGazerLoader";
 import DiffSelect from "../DiffSelect/DiffSelect";
 import ModeSelectView from "../ModeSelect/ModeSelect";
 import Quiz from "../Quiz/Quiz";
@@ -12,7 +14,7 @@ import StandardModeGameView from "../StandardMode/StandardMode";
 import StandardSubModeView from "../StandardMode/StandardSubMode";
 import WpmView from "../WpmView/WpmView";
 
-const GameScreenContext = React.createContext<{
+export const GameScreenContext = React.createContext<{
   currentStage: number;
   incrementCurrentStage: () => void;
   decrementCurrentStage: () => void;
@@ -49,7 +51,7 @@ const GameView = () => {
     console.log(`wpm is ${wpm}`);
     gameView = <StandardModeGameView wpm={wpm!} mode={view!} />;
   } else if (mode === ADAPTIVE_MODE) {
-    gameView = <div> ADAPTIVE MODE. </div>;
+    gameView = <AdaptiveModeView />;
   } else if (mode === SUMMARISED_ADAPTIVE_MODE) {
     gameView = <div> SUMMARISED ADAPTIVE MODE. </div>;
   } else {
@@ -69,19 +71,23 @@ const GameScreen = () => {
     <DiffSelect key={1} />,
     <StandardSelect key={2} />, // to be skipped if mode is not standard
     <WpmSelect key={3} />, // to be skipped if mode is not standard
-    <GameView key={4} />,
-    <Quiz key={5} />,
+    <WebGazerLoader key={4} />, // to be skipped if mode is standard
+    <GameView key={5} />,
+    <Quiz key={6} />,
   ];
 
   const DIFF_SELECT_STAGE = 1;
   const STANDARD_SELECT_STAGE = 2;
   const WPM_SELECT_STAGE = 3;
-  const GAME_STAGE = 4;
+  const CALIBRATION_STAGE = 4;
+  const GAME_STAGE = 5;
 
   const incrementCurrentStage = () => {
     const newStage = currentStage + 1;
 
     if (mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
+      setCurrentStage(CALIBRATION_STAGE);
+    } else if (mode === STANDARD_MODE && newStage === CALIBRATION_STAGE) {
       setCurrentStage(GAME_STAGE);
     } else {
       setCurrentStage(newStage);
@@ -93,6 +99,8 @@ const GameScreen = () => {
 
     if (mode !== STANDARD_MODE && newStage === WPM_SELECT_STAGE) {
       setCurrentStage(DIFF_SELECT_STAGE);
+    } else if (mode === STANDARD_MODE && newStage === CALIBRATION_STAGE) {
+      setCurrentStage(WPM_SELECT_STAGE);
     } else {
       setCurrentStage(newStage);
     }

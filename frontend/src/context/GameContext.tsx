@@ -11,6 +11,10 @@ interface GameContextType {
   setWpm: (wpm: number) => void;
   view: StandardView | null; // TODO: change to GameView when StandardSelect is implemented
   setView: (view: StandardView) => void;
+  gazeX: number;
+  setGazeX: (x: number) => void;
+  gazeY: number;
+  setGazeY: (y: number) => void;
 }
 
 const GameContext = createContext<GameContextType>({
@@ -24,6 +28,12 @@ const GameContext = createContext<GameContextType>({
   setWpm: () => {},
   view: null,
   setView: () => {},
+
+  // gaze_x and gaze_y are only for ADAPTIVE_MODE
+  gazeX: 0,
+  setGazeX: () => {},
+  gazeY: 0,
+  setGazeY: () => {},
 });
 
 export const useGameContext = () => {
@@ -45,6 +55,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [difficulty, setDifficulty] = useState<GameDifficulty | null>(null);
   const [wpm, setWpm] = useState<number | null>(null);
   const [view, setView] = useState<StandardView | null>(null);
+  const [gazeX, setGazeX] = useState<number>(0);
+  const [gazeY, setGazeY] = useState<number>(0);
 
   return (
     <GameContext.Provider
@@ -57,6 +69,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         setWpm,
         view,
         setView,
+        gazeX,
+        setGazeX,
+        gazeY,
+        setGazeY,
       }}
     >
       {children}
