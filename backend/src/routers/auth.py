@@ -18,15 +18,16 @@ router = APIRouter(prefix="/auth", tags=["auth"], route_class=LoggerRoute)
 async def get_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: Annotated[Session, Depends(get_session)]):
     # TODO: No need to extract this `get_token` function into a separate service
     # - this makes it harder to keep track of logic and request/response models.
-    user = session.get(User, form_data.username)
+    username = form_data.username
+    password = form_data.password
+    user = session.query(User).filter(User.username == username).first()
     if not user:
         raise InvalidCredentialsException()
     
-    if not verify_password(form_data.password, user.password):
+    if not verify_password(password, user.password):
         raise InvalidCredentialsException()
     access_token = create_access_token(data={"sub": form_data.username})
-    return Token(access_token=access_token, refresh_token=None, token_type="bearer")
-
+    return Token(access_token=access_token, token_type="Bearer")
 
 @router.post("/refresh", status_code=status.HTTP_200_OK)
 # TODO: Use `Annotated` instead of default value for `refresh_token`.

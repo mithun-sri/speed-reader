@@ -11,6 +11,7 @@ from ..services.auth import get_current_user
 from ..services.exceptions import HistoryNotFoundException
 from ..schemas.user import UserRegistrationResponse, UserRegister, UserResponse
 from ..models.user import User
+from ..utils.crypt import get_password_hash
 
 
 router = APIRouter(prefix="/users", tags=["user"], route_class=LoggerRoute)
@@ -179,7 +180,7 @@ async def register_user(
     new_user = User(
         username=username,
         email=email,
-        password=password,
+        password=get_password_hash(password),
     )
     session.add(new_user)
     session.commit()
