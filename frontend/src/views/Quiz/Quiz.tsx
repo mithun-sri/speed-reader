@@ -4,48 +4,19 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./Quiz.css";
-import axios from "axios";
 
 import { useEffect, useState } from "react";
-
-type Question = {
-  text: string;
-  options: string[];
-  correctIndex: number;
-};
+import { useNextQuestions, usePostAnswers } from "../../hooks/game";
 
 const QuizView = () => {
-  const [questions, setQuestions] = useState<Question[]>([]);
+  // TODO:
+  // Get `textId` for the current game session.
+  const textId = "";
+  const { data: questions } = useNextQuestions(textId);
   const [selectedOptions, setSelectedOptions] = useState<(number | null)[]>(
     new Array(questions.length).fill(null),
   );
   const [currentQuestion, setCurrentQuestion] = useState(0);
-
-  useEffect(() => {
-    const config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: "/api/v1/game/texts/questions/1",
-      headers: {},
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        for (let i = 0; i < response.data.length; i++) {
-          const question: Question = {
-            text: response.data[i].question_text,
-            options: response.data[i].options,
-            correctIndex: response.data[i].correct_option,
-          };
-          setQuestions((questions) => [...questions, question]);
-          setSelectedOptions((selectedOptions) => [...selectedOptions, null]);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
 
   const handleOptionClick = (questionIndex: number, optionIndex: number) => {
     // Check if the clicked question is the current answerable question
@@ -78,10 +49,10 @@ const QuizView = () => {
   const getOptionClass = (questionIndex: number, optionIndex: number) => {
     const selectedOptionIndex = selectedOptions[questionIndex];
     const isCorrectOption =
-      questions[questionIndex].correctIndex === optionIndex;
+      questions[questionIndex].correctOption === optionIndex;
     const isIncorrectSelected =
       selectedOptionIndex !== null &&
-      selectedOptionIndex !== questions[questionIndex].correctIndex;
+      selectedOptionIndex !== questions[questionIndex].correctOption;
 
     if (selectedOptionIndex === optionIndex) {
       return isCorrectOption ? "correct" : "incorrect";
@@ -95,7 +66,7 @@ const QuizView = () => {
   const calculateScore = () => {
     let score = 0;
     for (let i = 0; i < questions.length; i++) {
-      if (selectedOptions[i] === questions[i].correctIndex) {
+      if (selectedOptions[i] === questions[i].correctOption) {
         score++;
       }
     }
@@ -107,9 +78,14 @@ const QuizView = () => {
   );
   const score = calculateScore();
 
+  const postAnswers = usePostAnswers(textId);
   useEffect(() => {
     if (allQuestionsAnswered) {
       setTimeout(() => {
+        // TODO:
+        // Not sure how you currently move to the result screen,
+        // but I think the idea is to modify GameContext to switch to the result screen
+        // after we fetch the result data from API.
         const resultsSection = document.getElementById("results-section");
         if (resultsSection) {
           resultsSection.scrollIntoView({
@@ -117,6 +93,32 @@ const QuizView = () => {
             block: "start", // Scroll to the top of the results section
           });
         }
+        // NOTE:
+        // We are passing dummy data as an example.
+        postAnswers.mutate(
+          {
+            answers: selectedOptions.map((selectedOption) => ({
+              questionId: "",
+              selectedOption: selectedOption!,
+            })),
+            averageWpm: 0,
+            intervalWpms: [0, 0, 0],
+            gameMode: "adaptive",
+            gameSubmode: undefined,
+          },
+          {
+            onSuccess: (res) => {
+              // TODO:
+              // Navigate to result screen.
+              console.log("Answers posted successfully: ", res?.data);
+            },
+            onError: (err) => {
+              // TODO:
+              // Handle API request error.
+              console.error("Failed to post answers: ", err);
+            },
+          },
+        );
       }, 500);
     }
   }, [allQuestionsAnswered]);
@@ -140,7 +142,7 @@ const QuizView = () => {
               className={`question-container ${currentQuestion === index ? "current" : ""}`}
             >
               <JetBrainsMonoText
-                text={"Q. " + question.text}
+                text={"Q. " + question.content}
                 size={35}
                 color="#D1D0C5"
               />

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import QuestionAnswer from "../../components/Results/QuestionAnswer";
-import Score from "../../components/Results/Score";
 import ResultsBottom from "../../components/Results/ResultsBottom";
+import Score from "../../components/Results/Score";
 
 const ResultsPage: React.FC<{ playAgain?: boolean }> = ({ playAgain }) => {
   return (
