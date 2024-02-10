@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -9,6 +9,9 @@ from ..database import get_session
 from ..logger import LoggerRoute
 from ..services.auth import get_current_user
 from ..services.exceptions import HistoryNotFoundException
+from ..schemas.user import UserRegistrationResponse, UserRegister, UserResponse
+from ..models.user import User
+
 
 router = APIRouter(prefix="/users", tags=["user"], route_class=LoggerRoute)
 
@@ -153,4 +156,40 @@ async def get_history(
         interval_wpms=history.interval_wpms,
         score=history.score,
         answers=history.answers,
+    )
+
+@router.post(
+    "/register",
+    response_model=UserRegistrationResponse,
+)
+async def register_user(
+    username: str,
+    email: str,
+    password: str,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Registers a new user.
+    """
+    if session.query(User).filter(User.username == username).first():
+        raise HTTPException(status_code=409, detail="Username already exists")
+    if session.query(User).filter(User.email == email).first():
+        raise HTTPException(status_code=409, detail="Email already exists")
+    
+    new_user = User(
+        username=username,
+        email=email,
+        password=password,
+    )
+    session.add(new_user)
+    session.commit()
+
+    return UserRegistrationResponse(
+        message="User registered successfully",
+        data=UserResponse(
+            id=new_user.id,
+            username=new_user.username,
+            email=new_user.email,
+            created_at=new_user.created_at,
+        ),
     )

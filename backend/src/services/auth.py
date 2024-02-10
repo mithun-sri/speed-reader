@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
 
 from ..schemas.token import TokenResponse, TokenData
-from ..schemas.user import RegistrationUserRepsonse, UserRegister, UserResponse
+from ..schemas.user import UserRegistrationResponse, UserRegister, UserResponse
 from ..utils.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     ACCESS_TOKEN_SECRET_KEY,
@@ -95,7 +95,7 @@ async def get_current_user(_token: Annotated[str, Depends(oauth2_scheme)], sessi
 
 async def register_user(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db
-) -> RegistrationUserRepsonse:
+) -> UserRegistrationResponse:
     email = form_data.username
 
     # TODO: Make request to db client to see if user with email already exists
