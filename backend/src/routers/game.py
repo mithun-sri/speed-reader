@@ -155,6 +155,8 @@ async def post_answers(
         score=sum(result.correct for result in results) / len(results) * 100,
         answers=[result.selected_option for result in results],
     )
-    history.save()
+    # Set `force_insert` to true to avoid the error caused
+    # by MongoEngine trying to update the time series document which is not possible.
+    history.save(force_insert=True)
 
     return results
