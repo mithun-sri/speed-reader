@@ -122,7 +122,6 @@ class TestPostAnswers:
                 "game_submode": self.history.game_submode,
             },
         )
-        print(response.content)
         assert response.status_code == 404
 
     def test_returns_400_if_questions_do_not_match_text_id(
