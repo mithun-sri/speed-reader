@@ -5,10 +5,11 @@ from fastapi import Depends, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
 
-from ..schemas.token import TokenResponse
+from ..schemas.token import TokenResponse, TokenData
 from ..schemas.user import RegistrationUserRepsonse, UserRegister, UserResponse
 from ..utils.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
+    ACCESS_TOKEN_SECRET_KEY,
     ALGORITHM,
     REFRESH_TOKEN_SECRET_KEY,
     create_access_token,
@@ -20,6 +21,8 @@ from .exceptions import (
     InvalidCredentialsException,
     InvalidTokenException,
 )
+from ..database import Session, get_session
+from ..models.user import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
 
@@ -76,9 +79,19 @@ async def get_refresh_token(refresh_token: Annotated[str, Header] = Header(), db
     )
 
 
-async def get_current_user(_token: Annotated[str, Depends(oauth2_scheme)]):
-    _credentials_exception = InvalidCredentialsException()
-
+async def get_current_user(_token: Annotated[str, Depends(oauth2_scheme)], session: Annotated[Session, Depends(get_session)]) -> UserResponse:
+    try:
+        payload = jwt.decode(_token, ACCESS_TOKEN_SECRET_KEY, algorithms=[ALGORITHM])
+        username = payload.get("sub")
+        if username is None:
+            raise InvalidCredentialsException()
+        token_data = TokenData(username=username)
+    except jwt.JWTError:
+        raise InvalidCredentialsException()
+    user = session.query(User).filter(User.username == token_data.username).first()
+    if user is None:
+        raise InvalidCredentialsException()
+    return UserResponse(id=user.id, email=user.username, created_at=user.created_at)
 
 async def register_user(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db

@@ -21,7 +21,7 @@ class UserLogin(BaseModel):
 # TODO: Rename `UserResponse` to `User` - read models in Pydantic are named without any suffix.
 class UserResponse(BaseModel):
     id: int
-    email: str
+    username: str
     created_at: datetime
 
     class Config:
