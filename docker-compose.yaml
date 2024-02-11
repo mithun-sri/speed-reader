@@ -52,7 +52,7 @@ services:
     ports:
       - 5433:5432
   mongo:
-    image: mongo:4.4
+    image: mongo:6.0
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=default
@@ -61,7 +61,7 @@ services:
     ports:
       - 27017:27017
   mongo-test:
-    image: mongo:4.4
+    image: mongo:6.0
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=default

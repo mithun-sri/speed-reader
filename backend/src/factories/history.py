@@ -9,7 +9,8 @@ class HistoryFactory(factory.mongoengine.MongoEngineFactory):
     class Meta:
         model = models.History
 
-    datetime = factory.Faker("date_time")
+    timestamp = factory.Faker("iso8601")
+    metadata = factory.LazyAttribute(lambda _obj: {})
     average_wpm = factory.Faker("random_int", min=1, max=1000)
     interval_wpms = factory.List(
         [factory.Faker("random_int", min=1, max=1000) for _ in range(10)]
