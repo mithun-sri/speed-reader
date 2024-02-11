@@ -18,7 +18,7 @@ function App() {
               <Route path="/" element={<Navigate to="/game" />} />
               <Route path="/game" element={<GamePage />} />
               <Route path="/calibration" element={<WebGazerLoader />} />
-              <Route path="/user" />
+              <Route path="/user" element={<UserView />} />
               <Route path="/admin" />
             </Routes>
           </BrowserRouter>
