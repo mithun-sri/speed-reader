@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from ..logger import LoggerRoute
 from ..services.auth import get_refresh_token
 from ..schemas.token import Token
-from ..utils.auth import create_access_token
+from ..utils.auth import create_access_token, create_refresh_token
 from ..database import Session, get_session
 from ..models import User
 from ..utils.crypt import verify_password
@@ -27,7 +27,8 @@ async def get_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], 
     if not verify_password(password, user.password):
         raise InvalidCredentialsException()
     access_token = create_access_token(data={"sub": form_data.username})
-    return Token(access_token=access_token, token_type="Bearer")
+    refresh_token = create_refresh_token(data={"sub": form_data.username})
+    return Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer")
 
 @router.post("/refresh", status_code=status.HTTP_200_OK)
 # TODO: Use `Annotated` instead of default value for `refresh_token`.
