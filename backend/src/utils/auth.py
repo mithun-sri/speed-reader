@@ -24,14 +24,15 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
         expire = issued_at + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode.update(
-        {"sub": to_encode.get("username"), "exp": expire, "iat": issued_at}
+        {"exp": expire, "iat": issued_at}
     )
+    print(to_encode)
     return jwt.encode(to_encode, key=ACCESS_TOKEN_SECRET_KEY, algorithm=ALGORITHM)
 
 
 def create_refresh_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(days=30)
-    to_encode.update({"sub": to_encode.get("username")}, exp=expire)
+    to_encode.update({"sub": to_encode.get("sub"), "exp": expire})
 
-    return jwt.encode(data, key=REFRESH_TOKEN_SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, key=REFRESH_TOKEN_SECRET_KEY, algorithm=ALGORITHM)

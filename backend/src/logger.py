@@ -40,10 +40,10 @@ class LoggerRoute(APIRoute):
             record: dict[str, Any] = {}
             time_local = datetime.datetime.fromtimestamp(before)
             record["time_local"] = time_local.strftime("%Y/%m/%d %H:%M:%S%Z")
-            # request_body = await request.body()
-            # record["request_body"] = (
-            # request_body.decode("utf-8") if request_body else ""
-            # )
+            request_body = await request.body()
+            record["request_body"] = (
+            request_body.decode("utf-8") if request_body else ""
+            )
             # Exclude sensitive header information from the log.
             # fmt: off
             record["request_headers"] = {key: value for key, value in request.headers.items() if key not in ["authorization", "x-graph-token"]}

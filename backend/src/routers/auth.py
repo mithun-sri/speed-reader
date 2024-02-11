@@ -22,10 +22,13 @@ async def get_token(
     User passes their refresh token to get a new access token.
     TODO: Validate the refresh token.
     """
-    payload = jwt.decode(
-        refresh_token, REFRESH_TOKEN_SECRET_KEY, algorithms=[ALGORITHM]
-    )
-    username = payload.get("sub")
+    try:
+        payload = jwt.decode(
+            refresh_token, REFRESH_TOKEN_SECRET_KEY, algorithms=[ALGORITHM]
+        )
+        username = payload.get("sub")
+    except jwt.JWTError:
+        raise InvalidTokenException()
     if username is None:
         raise InvalidTokenException()
     token_data = TokenData(username=username)
