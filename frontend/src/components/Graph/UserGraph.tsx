@@ -1,6 +1,15 @@
 import { Box } from "@mui/material";
-import { LineChart } from "@mui/x-charts/LineChart";
 import { useEffect, useState } from "react";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 const UserGraph = () => {
   const calculateFontSize = () => {
@@ -43,45 +52,59 @@ const UserGraph = () => {
       >
         STANDARD MODE
       </Box>
-      <LineChart
-        xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-        series={[
-          {
-            id: "line1",
-            curve: "linear",
-            data: [2, 5.5, 2, 8.5, 1.5, 5],
-          },
-        ]}
-        width={725}
-        height={400}
-        sx={{
-          flex: 2,
-          // data line
-          "& .MuiLineElement-root": {
-            stroke: "#E2B714",
-            strokeDasharray: "10 5",
-            strokeWidth: 2,
-          },
-          // data plots
-          "& .MuiMarkElement-root": {
-            stroke: "#E2B714",
-            strokeWidth: 3,
-          },
-          // x and y axis
-          "& .MuiChartsAxis-line, .MuiChartsAxis-tick": {
-            stroke: "#646669",
-            strokeWidth: 3,
-          },
-          // numbers of the x and y axis
-          "& .MuiChartsAxis-left, .MuiChartsAxis-directionX": {
-            stroke: "#D1D0C5",
-          },
-        }}
-      />
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart
+          width={500}
+          height={300}
+          data={dummyData}
+          margin={{
+            top: 5,
+            right: 30,
+            left: 20,
+            bottom: 5,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Line type="monotone" dataKey="wpm" stroke="#E2B714" />
+        </LineChart>
+      </ResponsiveContainer>
     </Box>
   );
 };
 
-// https://mui.com/x/react-charts/lines/#css
+const dummyData = [
+  {
+    name: "12 Jan 2024 12:01",
+    wpm: 240,
+  },
+  {
+    name: "12 Jan 2024 12:01",
+    wpm: 139,
+  },
+  {
+    name: "12 Jan 2024 12:01",
+    wpm: 280,
+  },
+  {
+    name: "12 Jan 2024 12:01",
+    wpm: 390,
+  },
+  {
+    name: "12 Jan 2024 12:01",
+    wpm: 480,
+  },
+  {
+    name: "12 Jan 2024 12:01",
+    wpm: 380,
+  },
+  {
+    name: "12 Jan 2024 12:01",
+    wpm: 430,
+  },
+];
 
 export default UserGraph;
