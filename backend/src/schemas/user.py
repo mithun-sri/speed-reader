@@ -6,12 +6,6 @@ from pydantic import BaseModel
 from .text import Text
 
 
-class UserRegister(BaseModel):
-    username: str
-    email: str
-    password: str
-
-
 class UserLogin(BaseModel):
     email: str
     password: str
@@ -29,7 +23,7 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
-class UserRegistrationResponse(BaseModel):
+class UserRegistration(BaseModel):
     message: str
     data: UserResponse
 

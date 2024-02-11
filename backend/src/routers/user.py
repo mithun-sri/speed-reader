@@ -8,10 +8,12 @@ from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
 from ..models.user import User
-from ..schemas.user import UserRegistrationResponse, UserResponse
+from ..schemas.token import Token
+from ..schemas.user import UserRegistration, UserResponse
 from ..services.auth import get_current_user
-from ..services.exceptions import HistoryNotFoundException
-from ..utils.crypt import get_password_hash
+from ..services.exceptions import HistoryNotFoundException, InvalidCredentialsException
+from ..utils.auth import create_access_token, create_refresh_token
+from ..utils.crypt import get_password_hash, verify_password
 
 router = APIRouter(prefix="/users", tags=["user"], route_class=LoggerRoute)
 
@@ -161,7 +163,7 @@ async def get_history(
 
 @router.post(
     "/register",
-    response_model=UserRegistrationResponse,
+    response_model=UserRegistration,
 )
 async def register_user(
     username: str,
@@ -185,7 +187,7 @@ async def register_user(
     session.add(new_user)
     session.commit()
 
-    return UserRegistrationResponse(
+    return UserRegistration(
         message="User registered successfully",
         data=UserResponse(
             id=new_user.id,
@@ -193,4 +195,30 @@ async def register_user(
             email=new_user.email,
             created_at=new_user.created_at,
         ),
+    )
+
+
+@router.post(
+    "/login",
+    response_model=Token,
+)
+async def login_user(
+    username: str,
+    password: str,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Logs in a user. Returns access token and refresh token.
+    """
+    user = session.query(User).filter(User.username == username).first()
+    if not user or not verify_password(password, user.password):
+        raise InvalidCredentialsException()
+
+    access_token = create_access_token(data={"sub": user.username})
+    refresh_token = create_refresh_token(data={"sub": user.username})
+
+    return Token(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        token_type="bearer",
     )
