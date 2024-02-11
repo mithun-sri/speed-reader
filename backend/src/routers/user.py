@@ -1,18 +1,17 @@
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, Query, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
+from ..models.user import User
+from ..schemas.user import UserRegistrationResponse, UserResponse
 from ..services.auth import get_current_user
 from ..services.exceptions import HistoryNotFoundException
-from ..schemas.user import UserRegistrationResponse, UserRegister, UserResponse
-from ..models.user import User
 from ..utils.crypt import get_password_hash
-
 
 router = APIRouter(prefix="/users", tags=["user"], route_class=LoggerRoute)
 
@@ -159,6 +158,7 @@ async def get_history(
         answers=history.answers,
     )
 
+
 @router.post(
     "/register",
     response_model=UserRegistrationResponse,
@@ -176,7 +176,7 @@ async def register_user(
         raise HTTPException(status_code=409, detail="Username already exists")
     if session.query(User).filter(User.email == email).first():
         raise HTTPException(status_code=409, detail="Email already exists")
-    
+
     new_user = User(
         username=username,
         email=email,

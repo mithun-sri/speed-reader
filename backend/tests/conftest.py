@@ -22,7 +22,7 @@ from sqlalchemy.orm import Session
 from src.database import engine, get_session
 from src.main import app
 from src.models import Base
-from src.services.auth import get_current_user, get_refresh_token, get_token
+from src.services.auth import get_current_user
 
 
 # Set auto-use to True to make sure Postgres tables are recreated
@@ -51,8 +51,6 @@ def mongodb_fixture():
 @fixture(name="app", scope="function")
 def app_fixture(session: Session):
     app.dependency_overrides[get_session] = lambda: session
-    app.dependency_overrides[get_token] = lambda: ""
-    app.dependency_overrides[get_refresh_token] = lambda: ""
 
     yield app
 
