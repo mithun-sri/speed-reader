@@ -5,7 +5,7 @@ from fastapi import Depends, Header
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt
 
-from ..schemas.token import TokenResponse, TokenData
+from ..schemas.token import TokenResponse, TokenData, Token
 from ..schemas.user import UserRegistrationResponse, UserRegister, UserResponse
 from ..utils.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
@@ -25,59 +25,6 @@ from ..database import Session, get_session
 from ..models.user import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
-
-
-async def get_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db
-) -> TokenResponse:
-    email = form_data.username
-    raw_password = form_data.password
-    user = db.get(email)
-
-    if not user:
-        raise InvalidCredentialsException()
-
-    hashed_password = user.get("password")
-
-    if not verify_password(raw_password, hashed_password):
-        raise InvalidCredentialsException()
-
-    payload = {"email": email}
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(payload, access_token_expires)
-    refresh_token = create_refresh_token(payload)
-
-    return TokenResponse(
-        access_token=access_token,
-        refresh_token=refresh_token,
-        expires=access_token_expires.seconds,
-    )
-
-
-async def get_refresh_token(refresh_token: Annotated[str, Header] = Header(), db=None):
-    payload = jwt.decode(
-        refresh_token, REFRESH_TOKEN_SECRET_KEY, algorithms=[ALGORITHM]
-    )
-    email = payload.get("sub", None)
-
-    if not email:
-        raise InvalidTokenException()
-
-    user = db.get(email)
-
-    if not user:
-        raise InvalidTokenException()
-
-    payload = {"email": email}
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(payload, access_token_expires)
-
-    return TokenResponse(
-        access_token=access_token,
-        refresh_token=refresh_token,
-        expires=access_token_expires.seconds,
-    )
-
 
 async def get_current_user(_token: Annotated[str, Depends(oauth2_scheme)], session: Annotated[Session, Depends(get_session)]) -> UserResponse:
     try:
