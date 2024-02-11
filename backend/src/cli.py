@@ -4,18 +4,16 @@ import re
 from typing import Annotated
 
 import typer
-from mongoengine import get_db
 from rich import print
 from rich.progress import track
 from sqlalchemy.orm import Session
 
-from .database import engine
+from .database import engine, reset_mongodb_collections, reset_postgres_tables
 from .factories.history import HistoryFactory
 from .factories.question import QuestionFactory
 from .factories.text import TextFactory
 from .factories.user import UserFactory
 from .logger import LOGGER_DIR
-from .models import Base
 
 app = typer.Typer()
 
@@ -36,16 +34,10 @@ def seed(
 
     with Session(engine) as session:
         print("💣 Clearing PostgreSQL database...")
-        for table in Base.metadata.sorted_tables:
-            if table.name == "alembic_version":
-                continue
-            session.execute(table.delete())
-            session.commit()
+        reset_postgres_tables()
 
         print("💣 Clearing MongoDB database...")
-        mongodb = get_db()
-        for collection_name in mongodb.list_collection_names():
-            mongodb[collection_name].delete_many({})
+        reset_mongodb_collections()
 
         print("🌱 Seeding users...")
         users = []
@@ -74,7 +66,7 @@ def seed(
                 question_ids=[question.id for question in questions],
                 game_mode=text.game_mode,
             )
-            history.save()
+            history.save(force_insert=True)
 
         session.commit()
 

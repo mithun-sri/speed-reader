@@ -39,9 +39,9 @@ default:
       alias: postgres
     - name: postgres:14-alpine
       alias: postgres-test
-    - name: mongo:4.4
+    - name: mongo:6.0
       alias: mongo
-    - name: mongo:4.4
+    - name: mongo:6.0
       alias: mongo-test
   # cache:
   #   - key:
