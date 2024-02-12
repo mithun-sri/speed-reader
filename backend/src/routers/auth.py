@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
-from jose import jwt
+from jose import JWTError, jwt
 
 from ..database import Session, get_session
 from ..logger import LoggerRoute
@@ -27,7 +27,7 @@ async def get_token(
             refresh_token, REFRESH_TOKEN_SECRET_KEY, algorithms=[ALGORITHM]
         )
         username = payload.get("sub")
-    except jwt.JWTError:
+    except JWTError:
         raise InvalidTokenException()
     if username is None:
         raise InvalidTokenException()
