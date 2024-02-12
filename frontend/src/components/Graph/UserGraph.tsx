@@ -65,7 +65,7 @@ const UserGraph = () => {
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="date" />
           <YAxis />
           <Tooltip />
           <Legend />
@@ -78,31 +78,31 @@ const UserGraph = () => {
 
 const dummyData = [
   {
-    name: "12 Jan 2024 12:01",
+    date: "12 Jan 2024 12:01",
     wpm: 240,
   },
   {
-    name: "12 Jan 2024 12:01",
+    date: "12 Jan 2024 12:01",
     wpm: 139,
   },
   {
-    name: "12 Jan 2024 12:01",
+    date: "12 Jan 2024 12:01",
     wpm: 280,
   },
   {
-    name: "12 Jan 2024 12:01",
+    date: "12 Jan 2024 12:01",
     wpm: 390,
   },
   {
-    name: "12 Jan 2024 12:01",
+    date: "12 Jan 2024 12:01",
     wpm: 480,
   },
   {
-    name: "12 Jan 2024 12:01",
+    date: "12 Jan 2024 12:01",
     wpm: 380,
   },
   {
-    name: "12 Jan 2024 12:01",
+    date: "12 Jan 2024 12:01",
     wpm: 430,
   },
 ];
