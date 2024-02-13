@@ -36,6 +36,7 @@ const BackButton: React.FC<{
         handleClick ? handleClick() : () => {};
       }}
       sx={{
+        height: fontSize / 3.6,
         fontFamily: "JetBrains Mono, monospace",
         color: "#D1D0C5",
         fontWeight: "bolder",
