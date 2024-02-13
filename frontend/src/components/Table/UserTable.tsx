@@ -1,12 +1,9 @@
 import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  FormControl,
   IconButton,
-  InputLabel,
   MenuItem,
   Paper,
-  Select,
   SelectChangeEvent,
   Table,
   TableBody,
@@ -20,7 +17,11 @@ import {
 import { styled } from "@mui/system";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { StyledFormControl, StyledInputLabel, StyledSelect } from "../Button/DropDownMenu";
+import {
+  StyledFormControl,
+  StyledInputLabel,
+  StyledSelect,
+} from "../Button/DropDownMenu";
 
 interface Row {
   id: number;
@@ -114,8 +115,6 @@ const StyledTableCell = styled(TableCell)({
   fontSize: "20px",
   borderColor: "#646669",
 });
-
-
 
 function UserTable() {
   const [page, setPage] = useState(0);

@@ -15,7 +15,9 @@ import { StyledFormControl, StyledSelect } from "../Button/DropDownMenu";
 const DropDownMode: React.FC<{
   selectValue: string;
   selectOnChange: (event: SelectChangeEvent<string>) => void;
-}> = ({ selectValue, selectOnChange }) => {
+  size: number;
+}> = ({ selectValue, selectOnChange, size }) => {
+  console.log(size);
   return (
     <StyledFormControl>
       <StyledSelect value={selectValue} onChange={selectOnChange}>
@@ -67,6 +69,7 @@ const UserGraph = () => {
       <DropDownMode
         selectValue={mode}
         selectOnChange={handleSelectMode}
+        size={fontSize}
       ></DropDownMode>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
