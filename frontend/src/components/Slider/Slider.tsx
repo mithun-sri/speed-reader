@@ -111,11 +111,11 @@ function SpeedSlider() {
         </Box>
         <PrettoSlider
           valueLabelDisplay="auto"
-          defaultValue={550}
+          defaultValue={400}
           onChange={onSliderChange}
           marks={false}
           min={100}
-          max={1000}
+          max={700}
           sx={{ marginBottom: "10px", marginTop: "10px" }}
         />
         <VerticalLinesBox>
