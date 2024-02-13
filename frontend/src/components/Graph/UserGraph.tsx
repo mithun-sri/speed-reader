@@ -36,7 +36,7 @@ const UserGraph = () => {
   return (
     <Box
       sx={{
-        flex: 2,
+        flex: 3,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -54,8 +54,6 @@ const UserGraph = () => {
       </Box>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          width={500}
-          height={300}
           data={dummyData}
           margin={{
             top: 5,

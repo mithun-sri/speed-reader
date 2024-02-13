@@ -1,6 +1,8 @@
+import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  Button,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Paper,
@@ -17,6 +19,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 interface Row {
   id: number;
@@ -30,13 +33,13 @@ interface Row {
 }
 
 const columns = [
-  { id: "text", label: "Text", type: "string" },
-  { id: "mode", label: "Mode", type: "string" },
-  { id: "difficulty", label: "Difficulty", type: "string" },
-  { id: "average", label: "Average", type: "number" },
-  { id: "accuracy", label: "Accuracy", type: "number" },
-  { id: "date", label: "Date", type: "string" },
-  { id: "page", label: "Page", type: "button" },
+  { id: "text", label: "text", type: "string" },
+  { id: "mode", label: "mode", type: "string" },
+  { id: "difficulty", label: "diff.", type: "string" },
+  { id: "average", label: "avg.", type: "number" },
+  { id: "accuracy", label: "acc (%)", type: "number" },
+  { id: "date", label: "date", type: "string" },
+  { id: "page", label: "page", type: "button" },
 ];
 
 // Example data
@@ -48,7 +51,7 @@ const rows: Row[] = [
     difficulty: "easy",
     average: 255,
     accuracy: 80,
-    date: "2024-02-08 10:30",
+    date: "2024 Feb 08 10:30",
     page: "https://example.com",
   },
   {
@@ -58,7 +61,7 @@ const rows: Row[] = [
     difficulty: "med",
     average: 155,
     accuracy: 75,
-    date: "2024-02-09 14:45",
+    date: "2024 Feb 09 14:45",
     page: "https://example.com",
   },
   {
@@ -68,7 +71,37 @@ const rows: Row[] = [
     difficulty: "hard",
     average: 400,
     accuracy: 85,
-    date: "2024-02-10 08:15",
+    date: "2024 Feb 10 08:15",
+    page: "https://example.com",
+  },
+  {
+    id: 4,
+    text: "Sample Text",
+    mode: "standard",
+    difficulty: "easy",
+    average: 255,
+    accuracy: 80,
+    date: "2024 Feb 08 10:30",
+    page: "https://example.com",
+  },
+  {
+    id: 5,
+    text: "Another Text",
+    mode: "adaptive",
+    difficulty: "med",
+    average: 155,
+    accuracy: 75,
+    date: "2024 Feb 09 14:45",
+    page: "https://example.com",
+  },
+  {
+    id: 6,
+    text: "Yet Another Text",
+    mode: "summarised",
+    difficulty: "hard",
+    average: 400,
+    accuracy: 85,
+    date: "2024 Feb 10 08:15",
     page: "https://example.com",
   },
 ];
@@ -77,7 +110,8 @@ const StyledTableCell = styled(TableCell)({
   backgroundColor: "#323437",
   fontFamily: "JetBrains Mono, monospace",
   color: "white",
-  fontSize: "18px",
+  fontSize: "20px",
+  borderColor: "#646669",
 });
 
 const StyledFormControl = styled(FormControl)({
@@ -89,7 +123,7 @@ const StyledSelect = styled(Select<string>)({
   backgroundColor: "#323437",
   color: "white",
   "&:focus": {
-    backgroundColor: "#323437",
+    backgroundColor: "white",
   },
 });
 
@@ -161,7 +195,6 @@ function UserTable() {
       sx={{
         backgroundColor: "#323437",
         fontFamily: "JetBrains Mono, monospace",
-        color: "white",
         fontSize: "18px",
       }}
     >
@@ -191,7 +224,13 @@ function UserTable() {
           <TableHead>
             <TableRow>
               {columns.map((column) => (
-                <StyledTableCell key={column.id}>
+                <StyledTableCell
+                  key={column.id}
+                  sx={{
+                    fontSize: 25,
+                    fontWeight: 1000,
+                  }}
+                >
                   {column.type === "button" ? (
                     column.label
                   ) : (
@@ -217,7 +256,21 @@ function UserTable() {
                   {columns.map((column) => (
                     <StyledTableCell key={column.id}>
                       {column.type === "button" ? (
-                        <Button href={row.page}>Link</Button>
+                        <IconButton
+                          component={Link}
+                          to={row.page}
+                          sx={{
+                            color: "#FFFFFF",
+                            "& :hover": {
+                              color: "#E2B714",
+                            },
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faSquareArrowUpRight}
+                            className="fa-table-page-icon"
+                          />
+                        </IconButton>
                       ) : (
                         // Ensure only valid column IDs are used for accessing properties of Row objects
                         row[column.id as keyof Row]
@@ -229,22 +282,45 @@ function UserTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
+      <StyledTablePagination
         rowsPerPageOptions={[5, 10, 25]}
-        component="div"
         count={filteredRows.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{
-          fontFamily: "JetBrains Mono, monospace",
-          color: "white",
-          fontSize: "18px",
-        }}
       />
     </Paper>
   );
 }
+
+const StyledTablePagination = styled(TablePagination)`
+  display: flex;
+  justify-content: flex-end; /* Align toolbar to the right */
+  border-color: #646669;
+
+  .MuiTablePagination-toolbar {
+    background-color: #323437; /* Background color */
+    color: white; /* Text color */
+    font-family: "JetBrains Mono";
+  }
+
+  .MuiSelect-icon {
+    color: white; /* Drop down Arrow color */
+  }
+
+  .MuiTablePagination-input,
+  .MuiTablePagination-displayedRows {
+    color: white; /* Text colour */
+    font-family: "JetBrains Mono";
+    font-size: 16px;
+  }
+
+  /* 'Rows per page' text */
+  .MuiTablePagination-selectLabel {
+    font-family: "JetBrains Mono";
+    font-size: 16px;
+  }
+`;
 
 export default UserTable;
