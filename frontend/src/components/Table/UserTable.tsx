@@ -20,6 +20,7 @@ import {
 import { styled } from "@mui/system";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { StyledFormControl, StyledInputLabel, StyledSelect } from "../Button/DropDownMenu";
 
 interface Row {
   id: number;
@@ -114,23 +115,7 @@ const StyledTableCell = styled(TableCell)({
   borderColor: "#646669",
 });
 
-const StyledFormControl = styled(FormControl)({
-  margin: "10px",
-  width: "200px",
-});
 
-const StyledSelect = styled(Select<string>)({
-  backgroundColor: "#323437",
-  color: "white",
-  "&:focus": {
-    backgroundColor: "white",
-  },
-});
-
-const StyledInputLabel = styled(InputLabel)({
-  fontFamily: "JetBrains Mono, monospace",
-  color: "white",
-});
 
 function UserTable() {
   const [page, setPage] = useState(0);
@@ -208,7 +193,7 @@ function UserTable() {
         </StyledSelect>
       </StyledFormControl>
       <StyledFormControl>
-        <StyledInputLabel>Difficulty Filter</StyledInputLabel>
+        <StyledInputLabel>Diff Filter</StyledInputLabel>
         <StyledSelect
           value={difficultyFilter}
           onChange={handleDifficultyFilterChange}

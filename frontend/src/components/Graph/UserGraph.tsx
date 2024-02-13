@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, MenuItem, SelectChangeEvent } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
@@ -10,8 +10,26 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { StyledFormControl, StyledSelect } from "../Button/DropDownMenu";
+
+const DropDownMode: React.FC<{
+  selectValue: string;
+  selectOnChange: (event: SelectChangeEvent<string>) => void;
+}> = ({ selectValue, selectOnChange }) => {
+  return (
+    <StyledFormControl>
+      <StyledSelect value={selectValue} onChange={selectOnChange}>
+        <MenuItem value="standard">standard</MenuItem>
+        <MenuItem value="adaptive">adaptive</MenuItem>
+        <MenuItem value="summarised">summarised</MenuItem>
+      </StyledSelect>
+    </StyledFormControl>
+  );
+};
 
 const UserGraph = () => {
+  const [mode, setMode] = useState<string>("standard");
+
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 15;
@@ -33,6 +51,10 @@ const UserGraph = () => {
     };
   }, []);
 
+  const handleSelectMode = (event: SelectChangeEvent<string>) => {
+    setMode(event.target.value as string);
+  };
+
   return (
     <Box
       sx={{
@@ -42,16 +64,10 @@ const UserGraph = () => {
         alignItems: "center",
       }}
     >
-      <Box
-        sx={{
-          color: "#FFFFFF",
-          fontFamily: "JetBrains Mono, monospace",
-          fontWeight: "bolder",
-          fontSize: fontSize,
-        }}
-      >
-        STANDARD MODE
-      </Box>
+      <DropDownMode
+        selectValue={mode}
+        selectOnChange={handleSelectMode}
+      ></DropDownMode>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={dummyData}
