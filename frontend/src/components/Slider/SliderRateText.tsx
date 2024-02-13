@@ -7,7 +7,7 @@ const SliderRateText: React.FC<{
   return (
     <Box
       sx={{
-        margin: "0 auto",
+        margin: "0px auto",
         width: "78%",
         textAlign: "center",
         display: "flex",
@@ -22,9 +22,9 @@ const SliderRateText: React.FC<{
         paddingBottom: "20px",
       }}
     >
-      <Box sx={{ width: "20%" }}>100-150 WPM</Box>
-      <Box sx={{ width: "50%" }}>200-300 WPM</Box>
-      <Box sx={{ width: "20%", marginTop: "12px" }}>600+ WPM</Box>
+      <Box sx={{ width: "20%", marginTop: "12px" }}>100 WPM</Box>
+      <Box sx={{ width: "50%", marginTop: "12px" }}>400 WPM</Box>
+      <Box sx={{ width: "20%", marginTop: "12px" }}>700 WPM</Box>
     </Box>
   );
 };

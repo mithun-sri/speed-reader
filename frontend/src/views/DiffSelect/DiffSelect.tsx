@@ -37,12 +37,13 @@ const DiffSelect = () => {
   return (
     <Box>
       <Header />
-      <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
+      <Box sx={{ marginLeft: "7vw", marginTop: "35px", marginBottom: "0px" }}>
         <BackButton label="mode" handleClick={handleBackButton} />
       </Box>
       <Box
         sx={{
           backgroundColor: "#2c2e31",
+          marginTop: "0px",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

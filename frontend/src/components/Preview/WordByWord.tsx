@@ -134,7 +134,7 @@ const WordByWordPreview: React.FC<{
         </Box>
         <ModeDescriptionComponent
           mode="Word by Word"
-          description="description more useful description amd more useful description"
+          description="Displays one word at a time in the center, flanked by two adjacent words in smaller font, promoting focused reading."
         />
       </Box>
     </IconButton>
