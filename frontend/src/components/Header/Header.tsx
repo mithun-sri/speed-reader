@@ -1,5 +1,9 @@
 import "@fontsource/jetbrains-mono";
-import { faStopwatch, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileLines,
+  faStopwatch,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -77,16 +81,28 @@ const Header = () => {
           </Box>
         </IconButton>
       </Link>
-      <IconButton
-        style={{
-          fontSize: iconSize / 1.8,
-          marginRight: iconSize / 1.2,
-          marginLeft: "30px",
-          color: "#D1D0C5",
-        }}
-      >
-        <FontAwesomeIcon icon={faUser} color="#E2B714" />
-      </IconButton>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <IconButton
+          style={{
+            fontSize: iconSize / 1.8,
+            marginRight: "15px",
+          }}
+        >
+          <FontAwesomeIcon icon={faFileLines} color="#D1D0C5" />
+        </IconButton>
+        <IconButton
+          style={{
+            fontSize: iconSize / 1.8,
+            marginRight: iconSize / 1.2,
+            marginLeft: "10px",
+            color: "#D1D0C5",
+          }}
+          component={Link}
+          to="/user"
+        >
+          <FontAwesomeIcon icon={faUser} color="#E2B714" />
+        </IconButton>
+      </Box>
     </HeaderContainer>
   );
 };

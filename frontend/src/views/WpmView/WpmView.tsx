@@ -16,7 +16,7 @@ const WpmView = () => {
       <Box
         sx={{
           textAlign: "center",
-          minHeight: "100vh",
+          minHeight: "20vh",
         }}
       >
         <SpeedSlider />

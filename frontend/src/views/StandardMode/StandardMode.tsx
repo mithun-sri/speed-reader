@@ -1,4 +1,3 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
 import PropTypes from "prop-types";
 import { GameDifficulty, STANDARD_MODE } from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
@@ -9,6 +8,7 @@ import "./StandardMode.css";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
+import { useNextText } from "../../hooks/game";
 
 export enum StandardView {
   Word = 0,
@@ -16,43 +16,12 @@ export enum StandardView {
   Peripheral = 2,
 }
 
-interface TextsApiResponse {
-  word_count: number;
-  title: string;
-  content: string;
-  text_id: number;
-  difficulty_level: string;
-  created_at: string;
-}
-
 const StandardModeGameView: React.FC<{
   wpm?: number;
   mode?: StandardView;
   difficulty?: GameDifficulty;
 }> = ({ wpm, mode }) => {
-  const [text, setText] = useState(
-    "Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider Before you meet with your supervisor: as a group, reflect on your progress and propose a score from zero to ten for your progress during this iteration. Think about the software you produced, its quality, and also the way that you managed the work in your team. Did you meet the expectations of both yourselves and your supervisor? Think about what could have gone better, and what you can try to improve in the next iteration. On the next page there are some suggestions of things to consider.",
-  );
-
-  useEffect(() => {
-    const config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `/api/v1/game/texts`,
-      headers: {},
-    };
-
-    axios
-      .request(config)
-      .then((response: AxiosResponse<TextsApiResponse>) => {
-        console.log(JSON.stringify(response.data));
-        setText(response.data.content);
-      })
-      .catch((error: AxiosError) => {
-        console.log(error);
-      });
-  }, []);
-
+  const { data: text } = useNextText();
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   const startStandardModeGame = () => {
@@ -94,7 +63,7 @@ const StandardModeGameView: React.FC<{
         {showGameScreen ? (
           <StandardModeGameComponent
             wpm={wpm || 200} // Handle undefined wpm
-            text={text}
+            text={text.content}
             view={mode || StandardView.Word} // Handle undefined mode
           />
         ) : (

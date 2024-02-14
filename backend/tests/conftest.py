@@ -19,7 +19,12 @@ from fastapi.testclient import TestClient
 from mongoengine import get_db
 from pytest import fixture
 from sqlalchemy.orm import Session
-from src.database import engine, get_session
+from src.database import (
+    engine,
+    get_session,
+    reset_mongodb_collections,
+    reset_postgres_tables,
+)
 from src.main import app
 from src.models import Base
 from src.services.auth import get_current_user
@@ -29,9 +34,8 @@ from src.services.auth import get_current_user
 # for tests that do not depend on this fixture explicitly.
 @fixture(name="session", scope="function", autouse=True)
 def session_fixture():
-    # Recreate Postgres tables before each test.
-    Base.metadata.drop_all(engine)
-    Base.metadata.create_all(engine)
+    # Reset Postgres tables before each test.
+    reset_postgres_tables()
 
     with Session(engine) as session:
         yield session
@@ -39,13 +43,10 @@ def session_fixture():
 
 @fixture(name="mongodb", scope="function", autouse=True)
 def mongodb_fixture():
-    # Drop all MongoDB collections before each test.
-    # Collections will be automatically created by MongoEngine if they do not exist.
-    mongodb = get_db()
-    for collection_name in mongodb.list_collection_names():
-        mongodb[collection_name].delete_many({})
+    # Reset MongoDB collections before each test.
+    reset_mongodb_collections()
 
-    yield mongodb
+    yield get_db()
 
 
 @fixture(name="app", scope="function")

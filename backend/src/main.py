@@ -37,7 +37,13 @@ from .services.exceptions import (
     UserNotFoundException,
 )
 
-app = FastAPI(root_path="/api/v1")
+app = FastAPI(
+    root_path="/api/v1",
+    # Default unique ID for function has path name and HTTP verb as a suffix.
+    # This causes the method name in the auto-generated API client
+    # to look like `getNextTextGameTextsNextGet` instead of `getNextText`.
+    generate_unique_id_function=lambda route: route.name,
+)
 
 app.include_router(router=admin_router)
 app.include_router(router=auth_router)

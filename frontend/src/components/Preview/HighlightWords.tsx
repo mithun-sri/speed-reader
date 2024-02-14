@@ -115,7 +115,7 @@ const HighlightWordsPreview: React.FC<{
         </Box>
         <ModeDescriptionComponent
           mode="Highlight Words"
-          description="description more useful description amd more useful description"
+          description="Presents text with words highlighted at a set rate, encouraging consistent reading pace."
         />
       </Box>
     </IconButton>
