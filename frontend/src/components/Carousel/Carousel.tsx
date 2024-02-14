@@ -77,12 +77,7 @@ const Carousel: React.FC<{
   ];
 
   return (
-    <Box
-      sx={{
-        marginBottom: 10,
-        marginTop: "15px",
-      }}
-    >
+    <Box>
       <Box
         sx={{
           fontFamily: "JetBrains Mono, monospace",

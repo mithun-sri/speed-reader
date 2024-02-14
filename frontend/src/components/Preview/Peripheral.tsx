@@ -123,7 +123,7 @@ const PeripheralPreview: React.FC<{
         </Box>
         <ModeDescriptionComponent
           mode="Peripheral"
-          description="description more useful description amd more useful description"
+          description="Uses motion effects to simulate peripheral reading experience, enhancing overall reading speed and comprehension."
         />
       </Box>
     </IconButton>
