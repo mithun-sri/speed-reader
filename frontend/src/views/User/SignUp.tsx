@@ -10,11 +10,7 @@ interface SignUpFormData {
 }
 
 const SignUp: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignUpFormData>();
+  const { register, handleSubmit } = useForm<SignUpFormData>();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -119,7 +115,7 @@ const SignUp: React.FC = () => {
               })}
               placeholder="password"
             />
-            
+
             <Button
               type="submit"
               variant="contained"

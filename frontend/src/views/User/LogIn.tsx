@@ -9,11 +9,7 @@ interface LoginFormData {
 }
 
 const Login: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>();
+  const { register, handleSubmit } = useForm<LoginFormData>();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
