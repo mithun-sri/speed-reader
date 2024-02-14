@@ -29,10 +29,11 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.alter_column(
-        "question",
-        "options",
-        existing_type=sa.JSON(),
-        type_=sa.ARRAY(sa.String()),
-        postgresql_using="array_agg(json_array_elements_text(options))",
+    # We cannot use `op.alter_column` to change the column type from JSON to ARRAY
+    # because Postgres does not allow `json_array_elements_text()` in `ALTER COLUMN ... USING`.
+    op.add_column("question", sa.Column("options_json", sa.ARRAY(sa.String())))
+    op.execute(
+        "UPDATE question SET options_json = ARRAY(SELECT options::text FROM question)"
     )
+    op.drop_column("question", "options")
+    op.alter_column("question", "options_json", new_column_name="options")
