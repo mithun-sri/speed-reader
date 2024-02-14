@@ -99,7 +99,6 @@ class TestPostAnswers:
             text_id=self.text.id,
             user_id=self.user.id,
             question_ids=[question.id for question in self.questions],
-            game_mode=self.text.game_mode,
         )
 
     def test_returns_404_if_question_does_not_exist(
@@ -120,6 +119,7 @@ class TestPostAnswers:
                 "interval_wpms": self.history.interval_wpms,
                 "game_mode": self.history.game_mode,
                 "game_submode": self.history.game_submode,
+                "summary": self.history.summary,
             },
         )
         assert response.status_code == 404
@@ -149,6 +149,7 @@ class TestPostAnswers:
                 "interval_wpms": self.history.interval_wpms,
                 "game_mode": self.history.game_mode,
                 "game_submode": self.history.game_submode,
+                "summary": self.history.summary,
             },
         )
         assert response.status_code == 400
@@ -171,6 +172,7 @@ class TestPostAnswers:
                 "interval_wpms": self.history.interval_wpms,
                 "game_mode": self.history.game_mode,
                 "game_submode": self.history.game_submode,
+                "summary": self.history.summary,
             },
         )
         assert response.status_code == 200
