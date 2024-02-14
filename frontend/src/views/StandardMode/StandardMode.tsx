@@ -8,6 +8,7 @@ import "./StandardMode.css";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
+import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
 
 export enum StandardView {
@@ -22,7 +23,12 @@ const StandardModeGameView: React.FC<{
   difficulty?: GameDifficulty;
 }> = ({ wpm, mode }) => {
   const { data: text } = useNextText();
+  const { setTextId } = useGameContext();
   const [showGameScreen, setShowGameScreen] = useState(false);
+
+  useEffect(() => {
+    setTextId(text.id);
+  }, [text]);
 
   const startStandardModeGame = () => {
     setShowGameScreen(true);

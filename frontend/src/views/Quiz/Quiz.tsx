@@ -1,156 +1,102 @@
 import { Box, IconButton } from "@mui/material";
-import { Link } from "react-router-dom";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./Quiz.css";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useGameContext } from "../../context/GameContext";
 import { useNextQuestions, usePostAnswers } from "../../hooks/game";
+import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 
 const QuizView = () => {
-  // TODO:
-  // Get `textId` for the current game session.
-  const textId = "";
+  const { incrementCurrentStage } = useGameScreenContext();
+  const { textId, quizAnswers, setQuizAnswers, modifyQuizAnswer } =
+    useGameContext();
   const { data: questions } = useNextQuestions(textId);
-  const [selectedOptions, setSelectedOptions] = useState<(number | null)[]>(
-    new Array(questions.length).fill(null),
-  );
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const nextQuestion = quizAnswers.indexOf(null);
 
-  const handleOptionClick = (questionIndex: number, optionIndex: number) => {
-    // Check if the clicked question is the current answerable question
-    if (questionIndex !== currentQuestion) return;
-
-    // Prevent changing the answer if already selected
-    if (selectedOptions[questionIndex] != null) return;
-
-    const updatedSelectedOptions = [...selectedOptions];
-    updatedSelectedOptions[questionIndex] = optionIndex;
-    setSelectedOptions(updatedSelectedOptions);
-
-    // Auto-scroll to next question
-    if (questionIndex < questions.length - 1) {
-      setTimeout(() => {
-        setCurrentQuestion(questionIndex + 1);
-
-        const nextQuestionId = `question-${questionIndex + 1}`;
-        const nextQuestionContainer = document.getElementById(nextQuestionId);
-        if (nextQuestionContainer) {
-          nextQuestionContainer.scrollIntoView({
-            behavior: "smooth",
-            block: "center", // Scroll to the center of the next question
-          });
-        }
-      }, 500);
+  useEffect(() => {
+    if (questions) {
+      setQuizAnswers(new Array(questions.length).fill(null));
     }
-  };
+  }, [questions]);
 
-  const getOptionClass = (questionIndex: number, optionIndex: number) => {
-    const selectedOptionIndex = selectedOptions[questionIndex];
-    const isCorrectOption =
-      questions[questionIndex].correctOption === optionIndex;
-    const isIncorrectSelected =
-      selectedOptionIndex !== null &&
-      selectedOptionIndex !== questions[questionIndex].correctOption;
-
-    if (selectedOptionIndex === optionIndex) {
-      return isCorrectOption ? "correct" : "incorrect";
-    } else if (isIncorrectSelected && isCorrectOption) {
-      return "correct"; // Highlight the correct option if a wrong one is selected
+  // handle an option click ie. if quizAnswers has been changed
+  useEffect(() => {
+    let nextComponentContainer = document.getElementById("submit");
+    if (nextQuestion !== -1) {
+      nextComponentContainer = document.getElementById(
+        `question-${nextQuestion}`,
+      );
     }
-    return "";
-  };
 
-  // Calculate the score based on selected options
-  const calculateScore = () => {
-    let score = 0;
-    for (let i = 0; i < questions.length; i++) {
-      if (selectedOptions[i] === questions[i].correctOption) {
-        score++;
+    // Auto-scroll to next question or submit button if all questions are answered
+    setTimeout(() => {
+      if (nextComponentContainer) {
+        nextComponentContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "center", // Scroll to the center of the next question
+        });
       }
-    }
-    return score;
-  };
+    }, 500);
+  }, [quizAnswers]);
 
-  const allQuestionsAnswered = selectedOptions.every(
-    (option) => option !== null,
-  );
-  const score = calculateScore();
+  const getOptionClass = (questionIndex: number, optionIndex: number) =>
+    quizAnswers[questionIndex] === optionIndex ? "selected" : "";
+
+  const allQuestionsAnswered = quizAnswers.every((option) => option !== null);
 
   const postAnswers = usePostAnswers(textId);
-  useEffect(() => {
-    if (allQuestionsAnswered) {
-      setTimeout(() => {
-        // TODO:
-        // Not sure how you currently move to the result screen,
-        // but I think the idea is to modify GameContext to switch to the result screen
-        // after we fetch the result data from API.
-        const resultsSection = document.getElementById("results-section");
-        if (resultsSection) {
-          resultsSection.scrollIntoView({
-            behavior: "smooth",
-            block: "start", // Scroll to the top of the results section
-          });
-        }
-        // NOTE:
-        // We are passing dummy data as an example.
-        postAnswers.mutate(
-          {
-            answers: selectedOptions.map((selectedOption) => ({
-              questionId: "",
-              selectedOption: selectedOption!,
-            })),
-            averageWpm: 0,
-            intervalWpms: [0, 0, 0],
-            gameMode: "adaptive",
-            gameSubmode: undefined,
+  const moveToResults = () => {
+    setTimeout(() => {
+      postAnswers.mutate(
+        {
+          answers: quizAnswers.map((selectedOption, questionIndex) => ({
+            questionId: questions![questionIndex].id,
+            selectedOption: selectedOption!,
+          })),
+          averageWpm: 0,
+          intervalWpms: [0, 0, 0],
+          gameMode: "adaptive",
+          gameSubmode: undefined,
+        },
+        {
+          onSuccess: (res: any) => {
+            console.log("Answers posted successfully: ", res?.data);
+            incrementCurrentStage();
           },
-          {
-            onSuccess: (res) => {
-              // TODO:
-              // Navigate to result screen.
-              console.log("Answers posted successfully: ", res?.data);
-            },
-            onError: (err) => {
-              // TODO:
-              // Handle API request error.
-              console.error("Failed to post answers: ", err);
-            },
+          onError: (err: any) => {
+            // TODO:
+            // Handle API request error.
+            console.error("Failed to post answers: ", err);
           },
-        );
-      }, 500);
-    }
-  }, [allQuestionsAnswered]);
-
-  function scrollToTop() {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }
+        },
+      );
+    }, 500);
+  };
 
   return (
     <div className="Quiz">
       <Header />
       <div className="quiz-questions-screen">
         <div className="quiz-questions-container">
-          {questions.map((question, index) => (
+          {questions.map((question: any, index: any) => (
             <div
               key={index}
               id={`question-${index}`}
-              className={`question-container ${currentQuestion === index ? "current" : ""}`}
+              className="question-container"
             >
               <JetBrainsMonoText
-                text={"Q. " + question.content}
+                text={`Q${index}. ` + question.content}
                 size={35}
                 color="#D1D0C5"
               />
               <div className="options-container">
-                {question.options.map((option, optionIndex) => (
+                {question.options.map((option: any, optionIndex: any) => (
                   <div
                     key={optionIndex}
-                    onClick={() => handleOptionClick(index, optionIndex)}
+                    onClick={() => modifyQuizAnswer(index, optionIndex)}
                     className={`option ${getOptionClass(index, optionIndex)}`}
                   >
                     <JetBrainsMonoText
@@ -166,46 +112,28 @@ const QuizView = () => {
         </div>
       </div>
       {allQuestionsAnswered && (
-        <div className="results-section" id="results-section">
-          <div className="results-content">
-            <JetBrainsMonoText
-              text={"Congratulations!"}
-              size={45}
-              color="#D1D0C5"
-            />
-            <JetBrainsMonoText
-              text={"Your Score: " + score + "/" + questions.length}
-              size={35}
-              color="#D1D0C5"
-            />
-          </div>
-          <IconButton
+        <IconButton
+          id="submit"
+          sx={{
+            fontFamily: "JetBrains Mono, monospace",
+            color: "#FFFFFF",
+          }}
+        >
+          <Box
             sx={{
-              fontFamily: "JetBrains Mono, monospace",
-              color: "#FFFFFF",
+              border: "10px solid #646669",
+              borderRadius: "30px",
+              background: "#E2B714",
+              padding: "10px 60px 10px 60px",
+              fontWeight: "bolder",
+              fontSize: 35,
+              cursor: "pointer",
             }}
+            onClick={moveToResults}
           >
-            <Link
-              to="/pre-game"
-              style={{ textDecoration: "none", color: "white" }}
-            >
-              <Box
-                sx={{
-                  border: "10px solid #646669",
-                  borderRadius: "30px",
-                  background: "#E2B714",
-                  padding: "10px 60px 10px 60px",
-                  fontWeight: "bolder",
-                  fontSize: 35,
-                  cursor: "pointer", // Add cursor pointer for better UX
-                }}
-                onClick={scrollToTop} // Attach the scrollToTop function to onClick
-              >
-                Play Again
-              </Box>
-            </Link>
-          </IconButton>
-        </div>
+            Submit
+          </Box>
+        </IconButton>
       )}
       <Footer />
     </div>

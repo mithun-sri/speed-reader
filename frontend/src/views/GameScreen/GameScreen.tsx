@@ -10,6 +10,7 @@ import WebGazerLoader from "../Calibration/WebGazerLoader";
 import DiffSelect from "../DiffSelect/DiffSelect";
 import ModeSelectView from "../ModeSelect/ModeSelect";
 import Quiz from "../Quiz/Quiz";
+import ResultsPage from "../Results/ResultsPage";
 import StandardModeGameView from "../StandardMode/StandardMode";
 import StandardSubModeView from "../StandardMode/StandardSubMode";
 import WpmView from "../WpmView/WpmView";
@@ -74,6 +75,7 @@ const GameScreen = () => {
     <WebGazerLoader key={4} />, // to be skipped if mode is standard
     <GameView key={5} />,
     <Quiz key={6} />,
+    <ResultsPage key={7} />,
   ];
 
   const DIFF_SELECT_STAGE = 1;
