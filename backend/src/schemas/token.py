@@ -4,5 +4,10 @@ from pydantic import BaseModel
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
-    token_type: str = "Bearer"
-    expires: int
+    token_type: str = "bearer"
+
+
+class Token(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str

@@ -6,12 +6,6 @@ from pydantic import BaseModel
 from .text import Text
 
 
-class UserRegister(BaseModel):
-    email: str
-    password: str
-    created_at: datetime
-
-
 class UserLogin(BaseModel):
     email: str
     password: str
@@ -20,7 +14,8 @@ class UserLogin(BaseModel):
 # TODO: Update fields of `UserResponse` class.
 # TODO: Rename `UserResponse` to `User` - read models in Pydantic are named without any suffix.
 class UserResponse(BaseModel):
-    id: int
+    id: str
+    username: str
     email: str
     created_at: datetime
 
@@ -28,7 +23,7 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
-class RegistrationUserRepsonse(BaseModel):
+class UserRegistration(BaseModel):
     message: str
     data: UserResponse
 
