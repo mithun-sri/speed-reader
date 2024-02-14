@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
+import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 export enum StandardView {
   Word = 0,
@@ -199,6 +200,7 @@ const WordTextDisplay: React.FC<{
   wpm: number;
   size?: number;
 }> = ({ text, wpm }) => {
+  const { incrementCurrentStage } = useGameScreenContext();
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
@@ -225,6 +227,13 @@ const WordTextDisplay: React.FC<{
       clearInterval(interval);
     };
   }, [text, curr_wpm]);
+
+  // navigate to next screen (quiz) when game ends
+  useEffect(() => {
+    if (wordIndex === words.length && words.length > 0) {
+      incrementCurrentStage();
+    }
+  }, [wordIndex, words.length]);
 
   return (
     <Box>
@@ -264,6 +273,7 @@ export const HighlightedTextDisplay: React.FC<{
   wpm: number;
   size?: number;
 }> = ({ text, wpm }) => {
+  const { incrementCurrentStage } = useGameScreenContext();
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
@@ -292,6 +302,13 @@ export const HighlightedTextDisplay: React.FC<{
       clearInterval(interval);
     };
   }, [text, curr_wpm]);
+
+  // navigate to next screen (quiz) when game ends
+  useEffect(() => {
+    if (wordIndex === wordsArray.length && wordsArray.length > 0) {
+      incrementCurrentStage();
+    }
+  }, [wordIndex, wordsArray.length]);
 
   // calculates which words should be shown on the screen (in the current frame)
   const currentFrameIndex = Math.floor(highlightedIndex / wordsPerFrame);
