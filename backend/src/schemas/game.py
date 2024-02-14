@@ -5,7 +5,6 @@ class Question(BaseModel):
     id: str
     content: str
     options: list[str]
-    correct_option: int
 
 
 class QuestionAnswer(BaseModel):
