@@ -6,7 +6,6 @@ from jose import jwt
 
 from ..database import Session, get_session
 from ..models.user import User
-from ..schemas.token import TokenData
 from ..schemas.user import UserResponse
 from ..utils.auth import ACCESS_TOKEN_SECRET_KEY, ALGORITHM
 from .exceptions import InvalidCredentialsException
@@ -22,8 +21,7 @@ async def get_current_user(
     username = payload.get("sub")
     if username is None:
         raise InvalidCredentialsException()
-    token_data = TokenData(username=username)
-    user = session.query(User).filter(User.username == token_data.username).first()
+    user = session.query(User).filter(User.username == username).first()
     if user is None:
         raise InvalidCredentialsException()
     return UserResponse(

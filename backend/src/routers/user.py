@@ -174,10 +174,12 @@ async def register_user(
     """
     Registers a new user.
     """
-    if session.query(User).filter(User.username == username).first():
-        raise HTTPException(status_code=409, detail="Username already exists")
-    if session.query(User).filter(User.email == email).first():
-        raise HTTPException(status_code=409, detail="Email already exists")
+    query_check_username = select(User).filter(User.username == username)
+    if session.scalars(query_check_username).one_or_none():
+        raise HTTPException(status_code=409, detail="Username already used")
+    query_check_email = select(User).filter(User.email == email)
+    if session.scalars(query_check_email).one_or_none():
+        raise HTTPException(status_code=409, detail="Email already used")
 
     new_user = User(
         username=username,
@@ -210,7 +212,8 @@ async def login_user(
     """
     Logs in a user. Returns access token and refresh token.
     """
-    user = session.query(User).filter(User.username == username).first()
+    get_user_query = select(User).filter(User.username == username)
+    user = session.scalars(get_user_query).one_or_none()
     if not user or not verify_password(password, user.password):
         raise InvalidCredentialsException()
 

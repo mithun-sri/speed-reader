@@ -6,7 +6,7 @@ from jose import JWTError, jwt
 from ..database import Session, get_session
 from ..logger import LoggerRoute
 from ..models import User
-from ..schemas.token import Token, TokenData
+from ..schemas.token import Token
 from ..services.exceptions import InvalidCredentialsException, InvalidTokenException
 from ..utils.auth import ALGORITHM, REFRESH_TOKEN_SECRET_KEY, create_access_token
 
@@ -31,12 +31,11 @@ async def get_token(
         raise InvalidTokenException()
     if username is None:
         raise InvalidTokenException()
-    token_data = TokenData(username=username)
-    user = session.query(User).filter(User.username == token_data.username).first()
+    user = session.query(User).filter(User.username == username).first()
     if user is None:
         raise InvalidCredentialsException()
     return Token(
-        access_token=create_access_token(data={"sub": token_data.username}),
+        access_token=create_access_token(data={"sub": username}),
         refresh_token=refresh_token,
         token_type="bearer",
     )
