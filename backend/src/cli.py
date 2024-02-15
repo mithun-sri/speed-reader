@@ -64,7 +64,6 @@ def seed(
                 user_id=user.id,
                 text_id=text.id,
                 question_ids=[question.id for question in questions],
-                game_mode=text.game_mode,
             )
             history.save(force_insert=True)
 

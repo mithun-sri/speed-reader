@@ -14,8 +14,9 @@ class Text(ULIDMixin, TimestampMixin, Base):
 
     title: Mapped[str]
     content: Mapped[str]
+    summary: Mapped[str]
     source: Mapped[str]
-    game_mode: Mapped[str]
+    fiction: Mapped[bool]
     word_count: Mapped[int]
     difficulty: Mapped[str]
 
