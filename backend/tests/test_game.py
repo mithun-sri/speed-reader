@@ -109,7 +109,7 @@ class TestPostAnswers:
             f"/api/v1/game/texts/{self.text.id}/answers",
             json={
                 "answers": [
-                    schemas.QuestionAnswer(
+                    schemas.Answer(
                         question_id=str(ulid.new()),
                         selected_option=question.correct_option,
                     ).model_dump()
@@ -139,7 +139,7 @@ class TestPostAnswers:
             f"/api/v1/game/texts/{self.text.id}/answers",
             json={
                 "answers": [
-                    schemas.QuestionAnswer(
+                    schemas.Answer(
                         question_id=question.id,
                         selected_option=question.correct_option,
                     ).model_dump()
@@ -162,7 +162,7 @@ class TestPostAnswers:
             f"/api/v1/game/texts/{self.text.id}/answers",
             json={
                 "answers": [
-                    schemas.QuestionAnswer(
+                    schemas.Answer(
                         question_id=question.id,
                         selected_option=question.correct_option,
                     ).model_dump()

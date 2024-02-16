@@ -130,7 +130,15 @@ async def get_histories(
             average_wpm=history.average_wpm,
             interval_wpms=history.interval_wpms,
             score=history.score,
-            answers=history.answers,
+            results=[
+                schemas.Result(
+                    question_id=result.question_id,
+                    correct=result.correct,
+                    correct_option=result.correct_option,
+                    selected_option=result.selected_option,
+                )
+                for result in history.results
+            ],
         )
         for history in histories
     ]
@@ -159,7 +167,15 @@ async def get_history(
         average_wpm=history.average_wpm,
         interval_wpms=history.interval_wpms,
         score=history.score,
-        answers=history.answers,
+        results=[
+            schemas.Result(
+                question_id=result.question_id,
+                correct=result.correct,
+                correct_option=result.correct_option,
+                selected_option=result.selected_option,
+            )
+            for result in history.results
+        ],
     )
 
 

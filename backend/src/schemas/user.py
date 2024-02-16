@@ -3,6 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from .game import Result
 from .text import Text
 
 
@@ -23,6 +24,8 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+# TODO:
+# NO need to return message in response.
 class UserRegistration(BaseModel):
     message: str
     data: UserResponse
@@ -64,4 +67,4 @@ class History(BaseModel):
     average_wpm: int
     interval_wpms: list[int]
     score: int
-    answers: list[int]
+    results: list[Result]

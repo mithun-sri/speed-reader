@@ -8,6 +8,8 @@ from mongoengine import (
     DateTimeField,
     DictField,
     Document,
+    EmbeddedDocument,
+    EmbeddedDocumentField,
     IntField,
     ListField,
     StringField,
@@ -43,6 +45,13 @@ except Exception as e:
     logging.error("Failed to create history collection: %s", e)
 
 
+class Result(EmbeddedDocument):
+    question_id = StringField(required=True)
+    correct = BooleanField(required=True)
+    correct_option = IntField(required=True)
+    selected_option = IntField(required=True)
+
+
 class History(Document):
     meta = {"collection": "history"}
 
@@ -62,4 +71,4 @@ class History(Document):
     average_wpm = IntField(required=True)
     interval_wpms = ListField(IntField(), required=True)
     score = IntField(required=True)
-    answers = ListField(IntField(), required=True)
+    results = ListField(EmbeddedDocumentField(Result), required=True)
