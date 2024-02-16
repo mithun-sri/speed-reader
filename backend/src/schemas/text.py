@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from .game import QuestionWithCorrectOption
+
 
 class Text(BaseModel):
     id: str
@@ -7,3 +9,7 @@ class Text(BaseModel):
     content: str
     difficulty: str
     word_count: int
+
+
+class TextWithQuestions(Text):
+    questions: list[QuestionWithCorrectOption]
