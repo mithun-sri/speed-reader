@@ -11,6 +11,17 @@ GAME_SUBMODES = {
 }
 
 
+class ResultFactory(factory.mongoengine.MongoEngineFactory):
+    class Meta:
+        model = models.Result
+
+    correct = factory.LazyAttribute(
+        lambda obj: obj.correct_option == obj.selected_option
+    )
+    correct_option = factory.Faker("random_int", min=0, max=2)
+    selected_option = factory.Faker("random_int", min=0, max=2)
+
+
 class HistoryFactory(factory.mongoengine.MongoEngineFactory):
     class Meta:
         model = models.History
@@ -26,7 +37,8 @@ class HistoryFactory(factory.mongoengine.MongoEngineFactory):
     interval_wpms = factory.List(
         [factory.Faker("random_int", min=1, max=1000) for _ in range(10)]
     )
-    score = factory.Faker("random_int", min=0, max=100)
-    answers = factory.List(
-        [factory.Faker("random_int", min=0, max=2) for _ in range(10)]
+    score = factory.LazyAttribute(
+        # fmt: off
+        lambda obj: sum(result.correct for result in obj.results) * 100 // len(obj.results)
     )
+    results = factory.List([factory.RelatedFactory(ResultFactory) for _ in range(10)])

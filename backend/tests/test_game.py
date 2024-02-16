@@ -3,7 +3,7 @@ import ulid
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from src import schemas
-from src.factories.history import HistoryFactory
+from src.factories.history import HistoryFactory, ResultFactory
 from src.factories.question import QuestionFactory
 from src.factories.text import TextFactory
 from src.factories.user import UserFactory
@@ -95,10 +95,18 @@ class TestPostAnswers:
         session.add(self.text)
         session.commit()
 
+        self.results = [
+            ResultFactory.build(
+                question_id=question.id,
+                correct_option=question.correct_option,
+            )
+            for question in self.questions
+        ]
         self.history = HistoryFactory.build(
             text_id=self.text.id,
             user_id=self.user.id,
             question_ids=[question.id for question in self.questions],
+            results=self.results,
         )
 
     def test_returns_404_if_question_does_not_exist(
