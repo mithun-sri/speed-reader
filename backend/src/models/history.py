@@ -4,6 +4,7 @@ from datetime import datetime
 import ulid
 from bson.codec_options import CodecOptions
 from mongoengine import (
+    BooleanField,
     DateTimeField,
     DictField,
     Document,
@@ -56,7 +57,8 @@ class History(Document):
     text_id = StringField(required=True)
     question_ids = ListField(StringField(), required=True)
     game_mode = StringField(required=True)
-    game_submode = StringField(required=False)  # Only for standard game mode
+    game_submode = StringField(required=True)
+    summary = BooleanField(required=True)  # Can only be True if text is non-fiction
     average_wpm = IntField(required=True)
     interval_wpms = ListField(IntField(), required=True)
     score = IntField(required=True)

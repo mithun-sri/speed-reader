@@ -1,5 +1,5 @@
 import random
-from typing import Annotated, Optional
+from typing import Annotated
 
 import ulid
 from fastapi import APIRouter, Body, Depends
@@ -102,7 +102,8 @@ async def post_answers(
     average_wpm: Annotated[int, Body()],
     interval_wpms: Annotated[list[int], Body()],
     game_mode: Annotated[str, Body()],
-    game_submode: Annotated[Optional[str], Body()] = None,
+    game_submode: Annotated[str, Body()],
+    summary: Annotated[bool, Body()],
     _user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ):
@@ -150,6 +151,7 @@ async def post_answers(
         question_ids=question_ids,
         game_mode=game_mode,
         game_submode=game_submode,
+        summary=summary,
         average_wpm=average_wpm,
         interval_wpms=interval_wpms,
         score=sum(result.correct for result in results) / len(results) * 100,

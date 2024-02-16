@@ -60,6 +60,7 @@ class History(BaseModel):
     text_id: str
     game_mode: str
     game_submode: Optional[str]
+    summary: bool
     average_wpm: int
     interval_wpms: list[int]
     score: int
