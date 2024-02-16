@@ -84,6 +84,26 @@ async def get_text(
     return text
 
 
+@router.delete(
+    "/texts/{text_id}",
+    response_model=schemas.Text,
+)
+async def delete_text(
+    text_id: str,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Deletes a text by the given id.
+    """
+    text = session.get(models.Text, text_id)
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
+
+    session.delete(text)
+    session.commit()
+    return text
+
+
 @router.get(
     "/texts/{text_id}/questions",
     response_model=list[schemas.QuestionWithCorrectOption],
@@ -118,6 +138,29 @@ async def get_question(
     if question.text_id != text_id:
         raise QuestionNotBelongToTextException(question_id=question_id, text_id=text_id)
 
+    return question
+
+
+@router.delete(
+    "/texts/{text_id}/questions/{question_id}",
+    response_model=schemas.Question,
+)
+async def delete_question(
+    text_id: str,
+    question_id: str,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Deletes a question of a text by the given id.
+    """
+    question = session.get(models.Question, question_id)
+    if not question:
+        raise QuestionNotFoundException(question_id=question_id)
+    if question.text_id != text_id:
+        raise QuestionNotBelongToTextException(question_id=question_id, text_id=text_id)
+
+    session.delete(question)
+    session.commit()
     return question
 
 
