@@ -11,7 +11,7 @@ import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 
 const QuizView = () => {
   const { incrementCurrentStage } = useGameScreenContext();
-  const { textId, quizAnswers, setQuizAnswers, modifyQuizAnswer } =
+  const { textId, mode, view, quizAnswers, setQuizAnswers, modifyQuizAnswer } =
     useGameContext();
   const { data: questions } = useNextQuestions(textId);
   const nextQuestion = quizAnswers.indexOf(null);
@@ -22,7 +22,6 @@ const QuizView = () => {
     }
   }, [questions]);
 
-  // handle an option click ie. if quizAnswers has been changed
   useEffect(() => {
     let nextComponentContainer = document.getElementById("submit");
     if (nextQuestion !== -1) {
@@ -50,29 +49,29 @@ const QuizView = () => {
   const postAnswers = usePostAnswers(textId);
   const moveToResults = () => {
     setTimeout(() => {
-      postAnswers.mutate(
-        {
-          answers: quizAnswers.map((selectedOption, questionIndex) => ({
-            questionId: questions![questionIndex].id,
-            selectedOption: selectedOption!,
-          })),
-          averageWpm: 0,
-          intervalWpms: [0, 0, 0],
-          gameMode: "adaptive",
-          gameSubmode: undefined,
-        },
-        {
-          onSuccess: (res: any) => {
-            console.log("Answers posted successfully: ", res?.data);
-            incrementCurrentStage();
+      if (mode !== null && view !== null) {
+        postAnswers.mutate(
+          {
+            answers: quizAnswers.map((selectedOption, questionIndex) => ({
+              questionId: questions![questionIndex].id,
+              selectedOption: selectedOption!,
+            })),
+            averageWpm: 0,
+            intervalWpms: [0, 0, 0],
+            gameMode: mode,
+            gameSubmode: view,
           },
-          onError: (err: any) => {
-            // TODO:
-            // Handle API request error.
-            console.error("Failed to post answers: ", err);
+          {
+            onSuccess: (res: any) => {
+              console.log("Answers posted successfully: ", res?.data);
+              incrementCurrentStage();
+            },
+            onError: (err: any) => {
+              console.error("Failed to post answers: ", err);
+            },
           },
-        },
-      );
+        );
+      }
     }, 500);
   };
 
@@ -88,7 +87,7 @@ const QuizView = () => {
               className="question-container"
             >
               <JetBrainsMonoText
-                text={`Q${index}. ` + question.content}
+                text={`Q${index + 1}. ` + question.content}
                 size={35}
                 color="#D1D0C5"
               />
