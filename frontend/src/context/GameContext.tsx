@@ -15,6 +15,11 @@ interface GameContextType {
   setGazeX: (x: number) => void;
   gazeY: number;
   setGazeY: (y: number) => void;
+  textId: string;
+  setTextId: (textid: string) => void;
+  quizAnswers: (number | null)[];
+  setQuizAnswers: (answers: (number | null)[]) => void;
+  modifyQuizAnswer: (index: number, answer: number | null) => void;
 }
 
 const GameContext = createContext<GameContextType>({
@@ -34,6 +39,13 @@ const GameContext = createContext<GameContextType>({
   setGazeX: () => {},
   gazeY: 0,
   setGazeY: () => {},
+
+  textId: "",
+  setTextId: () => {},
+
+  quizAnswers: [],
+  setQuizAnswers: () => {},
+  modifyQuizAnswer: () => {},
 });
 
 export const useGameContext = () => {
@@ -57,6 +69,18 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [view, setView] = useState<StandardView | null>(null);
   const [gazeX, setGazeX] = useState<number>(0);
   const [gazeY, setGazeY] = useState<number>(0);
+  const [textId, setTextId] = useState<string>("");
+  const [quizAnswers, setQuizAnswers] = useState<(number | null)[]>([]);
+
+  const modifyQuizAnswer = (index: number, answer: number | null) => {
+    setQuizAnswers((prevAnswers) => {
+      const newAnswers = [...prevAnswers];
+      if (index >= 0 && index < newAnswers.length) {
+        newAnswers[index] = answer;
+      }
+      return newAnswers;
+    });
+  };
 
   return (
     <GameContext.Provider
@@ -73,6 +97,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         setGazeX,
         gazeY,
         setGazeY,
+        textId,
+        setTextId,
+        quizAnswers,
+        setQuizAnswers,
+        modifyQuizAnswer,
       }}
     >
       {children}
