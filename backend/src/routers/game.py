@@ -44,24 +44,8 @@ async def get_next_text(
     return text
 
 
-@router.get(
-    "/texts/{text_id}",
-    response_model=schemas.Text,
-)
-async def get_text(
-    text_id: str,
-    session: Annotated[Session, Depends(get_session)],
-):
-    """
-    Gets a text by the given id.
-    """
-    text = session.get(models.Text, text_id)
-    if not text:
-        raise TextNotFoundException(text_id=text_id)
-
-    return text
-
-
+# TODO:
+# Move this constant to somewhere else.
 NUM_QUESTIONS_PER_GAME = 10
 
 
@@ -91,12 +75,12 @@ async def get_next_questions(
 
 @router.post(
     "/texts/{text_id}/answers",
-    response_model=list[schemas.QuestionResult],
+    response_model=list[schemas.Result],
 )
 async def post_answers(
     *,
     text_id: str,
-    answers: list[schemas.QuestionAnswer],
+    answers: list[schemas.Answer],
     # TODO:
     # Extract the following payload to a separate schema.
     average_wpm: Annotated[int, Body()],
@@ -111,14 +95,17 @@ async def post_answers(
     Accepts the question answers and other statistics.
     Returns the results to the answers.
     """
-    results = []
+    text = session.get(models.Text, text_id)
     question_ids = [answer.question_id for answer in answers]
 
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
     if len(answers) < NUM_QUESTIONS_PER_GAME:
         raise NotEnoughAnswersException()
     if len(set(question_ids)) != len(question_ids):
         raise DuplicateAnswersException()
 
+    results = []
     for answer in answers:
         question = session.get(models.Question, answer.question_id)
         if not question:
@@ -129,19 +116,16 @@ async def post_answers(
             raise QuestionNotBelongToTextException(question_id=answer.question_id, text_id=text_id)
 
         results.append(
-            schemas.QuestionResult(
+            models.Result(
                 question_id=answer.question_id,
                 correct=answer.selected_option == question.correct_option,
-                selected_option=answer.selected_option,
                 correct_option=question.correct_option,
+                selected_option=answer.selected_option,
             )
         )
 
     # Save the history before returning the results to the question answers.
-    text = session.get(models.Text, text_id)
-    if not text:
-        raise TextNotFoundException(text_id=text_id)
-
+    score = sum(result.correct for result in results) * 100 // len(results)
     history = models.History(
         # TODO:
         # Uncomment the following line once `get_current_user` is implemented.
@@ -154,8 +138,8 @@ async def post_answers(
         summary=summary,
         average_wpm=average_wpm,
         interval_wpms=interval_wpms,
-        score=sum(result.correct for result in results) / len(results) * 100,
-        answers=[result.selected_option for result in results],
+        score=score,
+        results=results,
     )
     # Set `force_insert` to true to avoid the error caused
     # by MongoEngine trying to update the time series document which is not possible.

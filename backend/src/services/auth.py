@@ -13,6 +13,8 @@ from .exceptions import InvalidCredentialsException
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
 
 
+# TODO:
+# Make this dependency return User model rather than UserResponse.
 async def get_current_user(
     _token: Annotated[str, Depends(oauth2_scheme)],
     session: Annotated[Session, Depends(get_session)],
