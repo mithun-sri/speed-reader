@@ -3,7 +3,6 @@ import Checkbox from "@mui/material/Checkbox";
 import { useEffect, useState } from "react";
 import { StyledFormControl, StyledSelect } from "../Button/DropDownMenu";
 import GptButton from "../Button/GptButton";
-import Header from "../Header/Header";
 import JetBrainsMonoText from "../Text/TextComponent";
 
 const GptPrompt = () => {
@@ -46,73 +45,63 @@ const GptPrompt = () => {
 
   return (
     <>
-      <Header />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          minWidth: "450px",
-        }}
-      >
-        <StyledBox sx={{ width: "80%", maxWidth: "1050px", marginTop: "50px" }}>
+      <StyledBox sx={{ width: "80%", maxWidth: "1050px", marginTop: "50px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-around",
+            flexWrap: "wrap",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-around",
-              flexWrap: "wrap",
+              flexDirection: "column",
+              alignItems: "center",
+              paddingTop: "30px",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                paddingTop: "30px",
-              }}
-            >
-              <JetBrainsMonoText
-                text="choose text difficulty."
-                size={fontSize * 0.6}
-                color="#FFFFFF"
-              />
-              <DropDownDiff
-                selectValue={diff}
-                selectOnChange={handleSelectMode}
-              ></DropDownDiff>
-            </Box>
-            <Box
-              sx={{
-                display: "inherit",
-                flexDirection: "column",
-                alignItems: "center",
-                paddingTop: "30px",
-              }}
-            >
-              <JetBrainsMonoText
-                text="fiction?"
-                size={fontSize * 0.6}
-                color="#FFFFFF"
-              />
-              <StyledCheckbox checked={fiction} onChange={handleCheckFiction} />
-            </Box>
+            <JetBrainsMonoText
+              text="choose text difficulty."
+              size={fontSize * 0.6}
+              color="#FFFFFF"
+            />
+            <DropDownDiff
+              selectValue={diff}
+              selectOnChange={handleSelectMode}
+            ></DropDownDiff>
           </Box>
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "center",
-              padding: "20px",
+              display: "inherit",
+              flexDirection: "column",
+              alignItems: "center",
+              paddingTop: "30px",
             }}
           >
-            <GptButton
-              onButtonClick={handleGenerateButton}
-              color="#E2B714"
-              label="generate."
-            ></GptButton>
+            <JetBrainsMonoText
+              text="fiction?"
+              size={fontSize * 0.6}
+              color="#FFFFFF"
+            />
+            <StyledCheckbox checked={fiction} onChange={handleCheckFiction} />
           </Box>
-        </StyledBox>
-      </Box>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            padding: "20px",
+          }}
+        >
+          <GptButton
+            onButtonClick={handleGenerateButton}
+            color="#E2B714"
+            label="generate."
+          ></GptButton>
+        </Box>
+      </StyledBox>
     </>
   );
 };
