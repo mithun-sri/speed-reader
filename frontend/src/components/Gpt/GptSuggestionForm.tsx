@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import GptButton from "../Button/GptButton";
 import GptQuestionFeed from "./GptQuestionFeed";
 import GptSourceInfo from "./GptSourceInfo";
 import GptText from "./GptText";
@@ -54,12 +55,23 @@ const GptSuggestionForm: React.FC<{
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <GptSourceInfo
-          sourceTitle={"dummy source"}
-          author={"dummy author"}
+          sourceTitle={"The Element Of Style"}
+          author={"William Strunk Jr."}
           link={"https://example.com"}
         />
         <GptText useFormReturn={useGptForm} />
         <GptQuestionFeed useFormReturn={useGptForm} />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            paddingY: "30px",
+            gap: 5,
+          }}
+        >
+          <GptButton color={"#4285F4"} label={"generate 3 more questions"} />
+          <GptButton color={"#379F3B"} label={"approve"} />
+        </Box>
       </form>
     </Box>
   );
