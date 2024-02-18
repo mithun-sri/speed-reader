@@ -1,13 +1,12 @@
 import { Box, IconButton } from "@mui/material";
 import { MouseEventHandler, useEffect, useState } from "react";
 
-// onButtonClick
-// color
 const GptButton: React.FC<{
-  onButtonClick: MouseEventHandler<HTMLButtonElement>;
+  onButtonClick?: MouseEventHandler<HTMLButtonElement>;
   color: string;
   label: string;
-}> = ({ onButtonClick, color, label }) => {
+  submit?: boolean;
+}> = ({ onButtonClick = () => {}, color, label, submit }) => {
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -33,9 +32,8 @@ const GptButton: React.FC<{
 
   return (
     <IconButton
-      onClick={() => {
-        onButtonClick;
-      }}
+      type={submit ? "submit" : undefined}
+      onClick={onButtonClick}
       sx={{
         fontFamily: "JetBrains Mono, monospace",
         color: "#FFFFFF",
@@ -44,7 +42,7 @@ const GptButton: React.FC<{
       <Box
         sx={{
           border: "7px solid #646669",
-          borderRadius: "30px",
+          borderRadius: "20px",
           background: color,
           padding: "7px 40px 7px 40px",
           fontWeight: "bolder",
