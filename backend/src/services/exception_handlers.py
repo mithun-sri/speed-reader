@@ -18,6 +18,7 @@ from .exceptions import (
     TextNotFoundException,
     UserAlreadyExistsException,
     UserNotFoundException,
+    BadResponseFromOpenAI
 )
 
 
@@ -165,4 +166,14 @@ async def history_not_found_exception_handler(
     return JSONResponse(
         status_code=exc.status_code,
         content={"message": f"Oops! History {exc.history_id} could not be found."},
+    )
+
+
+async def bad_response_from_openai_exception_handler(
+    _request: Request,
+    exc: BadResponseFromOpenAI,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": "Bad response from OpenAI"},
     )
