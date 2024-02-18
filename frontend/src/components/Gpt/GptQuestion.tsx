@@ -5,7 +5,7 @@ import StyledTextField from "../Textbox/StyledTextField";
 import CheckboxGroup from "./CheckboxGroup";
 
 const containerStyles = {
-  width: "95%",
+  width: "100%",
   backgroundColor: "#323437",
   borderRadius: "20px",
   boxSizing: "border-box",

@@ -25,7 +25,7 @@ const GptButton: React.FC<{
     const maxSize = 36;
     const calculatedSize = Math.min(
       maxSize,
-      Math.max(minSize, windowWidth / 50),
+      Math.max(minSize, windowWidth / 70),
     );
     return calculatedSize;
   }
