@@ -14,47 +14,41 @@ const GptSourceInfo: React.FC<{
       sx={{
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        gap: 3,
-        textAlign: "center",
       }}
     >
       <Box
         sx={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
+          gap: 2,
         }}
       >
         <JetBrainsMonoText text={"Source:"} size={25} color={"#E2B714"} />
-        <JetBrainsMonoText text={sourceTitle} size={25} color={"#FFFFFF"} />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <JetBrainsMonoText text={"Author:"} size={25} color={"#E2B714"} />
-        <JetBrainsMonoText text={author} size={25} color={"#FFFFFF"} />
-      </Box>
-
-      <IconButton
-        component={Link}
-        to={link}
-        sx={{
-          color: "#FFFFFF",
-          "& :hover": {
-            color: "#E2B714",
-          },
-          fontSize: "40px",
-          width: "50px",
-        }}
-      >
-        <FontAwesomeIcon
-          icon={faSquareArrowUpRight}
-          className="fa-table-page-icon"
+        <JetBrainsMonoText
+          text={sourceTitle + ", " + author}
+          size={25}
+          color={"#FFFFFF"}
         />
-      </IconButton>
+        <IconButton
+          component={Link}
+          to={link}
+          target="_blank"
+          rel="noopener noreferrer" // To open in a new tab
+          sx={{
+            color: "#FFFFFF",
+            "& :hover": {
+              color: "#E2B714",
+            },
+            fontSize: "30px",
+            width: "50px",
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faSquareArrowUpRight}
+            className="fa-table-page-icon"
+          />
+        </IconButton>
+      </Box>
     </Box>
   );
 };
