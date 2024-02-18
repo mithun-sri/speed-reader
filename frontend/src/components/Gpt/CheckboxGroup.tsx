@@ -17,32 +17,38 @@ const CheckboxGroup: React.FC<{ defaultValue?: number }> = ({
   };
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <FormControl component="fieldset">
-        <Box
-          sx={{
-            fontFamily: "JetBrains Mono, monospace",
-            color: "#FFFFFF",
-          }}
-        >
-          Correct?
-        </Box>
-        <RadioGroup
-          aria-label="options"
-          name="options"
-          value={selectedValue || ""}
-          onChange={handleChange}
-        >
-          <FormControlLabel value="0" control={<StyledRadio />} label="" />
-          <FormControlLabel value="1" control={<StyledRadio />} label="" />
-          <FormControlLabel value="2" control={<StyledRadio />} label="" />
-        </RadioGroup>
-      </FormControl>
-    </Box>
+    <FormControl
+      component="fieldset"
+      sx={{ display: "flex", alignItems: "center" }}
+    >
+      <Box
+        sx={{
+          fontFamily: "JetBrains Mono, monospace",
+          color: "#FFFFFF",
+          fontSize: "20px",
+          fontWeight: "bolder",
+          marginBottom: "20px",
+        }}
+      >
+        Correct?
+      </Box>
+      <RadioGroup
+        aria-label="options"
+        name="options"
+        value={selectedValue || ""}
+        onChange={handleChange}
+      >
+        <FormControlLabel value="0" control={<StyledRadio />} label="" />
+        <FormControlLabel value="1" control={<StyledRadio />} label="" />
+        <FormControlLabel value="2" control={<StyledRadio />} label="" />
+      </RadioGroup>
+    </FormControl>
   );
 };
 
 const StyledRadio = styled(Radio)({
+  marginLeft: "20px",
+  marginBottom: "25px",
   color: "#FFFFFF",
   "&.Mui-checked": {
     color: "#E2B714",

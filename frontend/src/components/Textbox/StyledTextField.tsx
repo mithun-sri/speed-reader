@@ -12,8 +12,9 @@ const StyledTextField = styled(TextField)({
       },
     },
     "& input, & textarea": {
-      padding: "3px",
+      padding: "15px",
       fontFamily: "JetBrains Mono, monospace",
+      fontSize: "20px",
     },
   },
   "& .MuiOutlinedInput-root": {
