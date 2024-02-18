@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
-import { GptFormData } from "./GptSuggestions";
+import { GptFormData } from "./GptSuggestionForm";
 
 const GptText: React.FC<{
   useFormReturn: UseFormReturn<GptFormData>;
