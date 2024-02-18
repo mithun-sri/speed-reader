@@ -215,56 +215,64 @@ async def get_question_statistics(
 
 OPENAPI_KEY = os.environ.get("OPENAPI_KEY")
 
+
 def build_text_generation_prompt(difficulty: str, is_fiction: bool):
     return (
         "I want an extract of a text that belongs to the public domain. "
-        f"The text you choose must be {"fiction" if is_fiction else "non-fiction"}. "
-        f"The text you choose must have a reading difficulty of {difficulty} (you can judge this). "
-        "For this text, return to me in JSON format, the title, an extract from the text larger than 500 words, "
-        "author, a link to the Gutenberg project if it exists, "
-        "and a list of 10 questions to test how well someone has understood the extract after reading it. "
-        "The questions must all be answerable just from reading the extract. "
-        "Each question should have four options with one correct option. "
-        "I also want a summary of the provided text if it is non-fiction.\n"
-        "The JSON must follow the format:\n"
-        "{\n"
-        '    "title": <string>,\n'
-        '    "extract": <string>,\n'
-        '    "author": <string>,\n'
-        '    "gutenberg_link": <string>,\n'
-        '    "questions": [\n'
-        '        {'
-        '            "question": <string>,\n'
-        '            "options": [\n'
-        '                <string>,\n'
-        '                <string>,\n'
-        '                <string>,\n'
-        '                <string>\n'
-        '            ],\n'
-        '            "correct_option": <string>\n'
-        '        },\n'
-        '        ...\n'
-        '    ],\n'
-        '    "summarised": <string>\n'
-        "}\n"
-        "Your response must only contain the JSON answer and nothing else."
+        + f"The text you choose must be {'fiction' if is_fiction else 'non-fiction'}. "
+        + f"The text you choose must have a reading difficulty of {difficulty} (you can judge this). "
+        + "For this text, return to me in JSON format, the title, an extract from the text larger than 500 words, "
+        + "author, a link to the Gutenberg project if it exists, "
+        + "and a list of 10 questions to test how well someone has understood the extract after reading it. "
+        + "The questions must all be answerable just from reading the extract. "
+        + "Each question should have four options with one correct option. "
+        + "I also want a summary of the provided text if it is non-fiction.\n"
+        + "The JSON must follow the format:\n"
+        + "{\n"
+        + '    "title": <string>,\n'
+        + '    "extract": <string>,\n'
+        + '    "author": <string>,\n'
+        + '    "gutenberg_link": <string>,\n'
+        + '    "questions": [\n'
+        + "        {"
+        + '            "question": <string>,\n'
+        + '            "options": [\n'
+        + "                <string>,\n"
+        + "                <string>,\n"
+        + "                <string>,\n"
+        + "                <string>\n"
+        + "            ],\n"
+        + '            "correct_option": <string>\n'
+        + "        },\n"
+        + "        ...\n"
+        + "    ],\n"
+        + '    "summarised": <string>\n'
+        + "}\n"
+        + "Your response must only contain the JSON answer and nothing else."
     )
+
 
 @router.post(
     "/generate-text",
     response_model=schemas.TextWithQuestions,
 )
-async def generate_text(
-    difficulty: str,
-    is_fiction: bool
-):
+async def generate_text(difficulty: str, is_fiction: bool):
     if (
-        (response := openai.OpenAI(api_key=OPENAPI_KEY).chat.completions.create(
-            model="gpt-4", messages=[{"role": "user", "content": build_text_generation_prompt(difficulty, is_fiction)}]
-        ).choices[0].message.content) is None
-    ):
+        response := openai.OpenAI(api_key=OPENAPI_KEY)
+        .chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {
+                    "role": "user",
+                    "content": build_text_generation_prompt(difficulty, is_fiction),
+                }
+            ],
+        )
+        .choices[0]
+        .message.content
+    ) is None:
         raise BadResponseFromOpenAI()
-    
+
     # TODO: Use summarised text, gutenberg link, author
     response_json = json.loads(response)
     return schemas.TextWithQuestions(
@@ -278,8 +286,10 @@ async def generate_text(
                 id="",
                 content=question_json["question"],
                 options=question_json["options"],
-                correct_option=question_json["options"].index(question_json["correct_option"])
+                correct_option=question_json["options"].index(
+                    question_json["correct_option"]
+                ),
             )
             for question_json in response_json["questions"]
-        ]
+        ],
     )
