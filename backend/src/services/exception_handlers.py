@@ -5,6 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from .exceptions import (
+    BadResponseFromOpenAI,
     DuplicateAnswersException,
     EmailAlreadyUsedException,
     HistoryNotFoundException,
@@ -18,7 +19,6 @@ from .exceptions import (
     TextNotFoundException,
     UserAlreadyExistsException,
     UserNotFoundException,
-    BadResponseFromOpenAI
 )
 
 
