@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import GptView from "./views/Admin/GptView";
 import WebGazerLoader from "./views/Calibration/WebGazerLoader";
 import { GamePage } from "./views/GameScreen/GameScreen";
 import UserView from "./views/User/UserView";
@@ -20,6 +21,7 @@ function App() {
               <Route path="/calibration" element={<WebGazerLoader />} />
               <Route path="/user" element={<UserView />} />
               <Route path="/admin" />
+              <Route path="/gpt" element={<GptView />} />
             </Routes>
           </BrowserRouter>
         </ErrorBoundary>
