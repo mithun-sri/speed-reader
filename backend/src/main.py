@@ -1,7 +1,10 @@
+import json
+
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
+from .config import config
 from .database import engine
 from .routers.admin import router as admin_router
 from .routers.auth import router as auth_router
@@ -75,7 +78,12 @@ app.add_exception_handler(HistoryNotFoundException, history_not_found_exception_
 
 @app.on_event("startup")
 async def startup():
+    # TODO: This seems to be a dead code
     engine.connect()
+
+    # Save copy of OpenAPI specification.
+    with open(f"{config.app_dir}/openapi.json", "w", encoding="utf-8") as file:
+        file.write(json.dumps(app.openapi()))
 
 
 @app.on_event("shutdown")
