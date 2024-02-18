@@ -1,17 +1,19 @@
 import { Box, MenuItem, SelectChangeEvent, styled } from "@mui/material";
-import Checkbox from "@mui/material/Checkbox";
 import { useEffect, useState } from "react";
 import { StyledFormControl, StyledSelect } from "../Button/DropDownMenu";
 import GptButton from "../Button/GptButton";
+import { StyledCheckbox } from "../Checkbox/Checkbox";
 import JetBrainsMonoText from "../Text/TextComponent";
 
-const GptPrompt = () => {
+const GptPrompt: React.FC<{
+  onGenerateResponse: (response: string) => void;
+}> = ({ onGenerateResponse }) => {
   const [diff, setDiff] = useState<string>("easy");
   const [fiction, setFiction] = useState(false);
 
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
-    const minFontSize = 30;
+    const minFontSize = 15;
     const maxFontSize = 45;
 
     return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 35));
@@ -38,14 +40,15 @@ const GptPrompt = () => {
     setFiction(event.target.checked);
   };
 
-  const handleGenerateButton = () => {
+  const handleGenerateTextButton = () => {
     // TODO: Make request through GPT endpoint
     console.log("Button clicked!");
+    onGenerateResponse("TEST RESPONSE");
   };
 
   return (
     <>
-      <StyledBox sx={{ width: "80%", maxWidth: "1050px", marginTop: "50px" }}>
+      <StyledBox sx={{ width: "100%", marginTop: "50px" }}>
         <Box
           sx={{
             display: "flex",
@@ -96,7 +99,7 @@ const GptPrompt = () => {
           }}
         >
           <GptButton
-            onButtonClick={handleGenerateButton}
+            onButtonClick={handleGenerateTextButton}
             color="#E2B714"
             label="generate."
           ></GptButton>
@@ -105,16 +108,6 @@ const GptPrompt = () => {
     </>
   );
 };
-
-const StyledCheckbox = styled(Checkbox)({
-  color: "#D9D9D9",
-  "&.Mui-checked": {
-    color: "#E2B714", // Color when checked
-  },
-  "& .MuiSvgIcon-root": {
-    fontSize: 45,
-  },
-});
 
 const StyledBox = styled(Box)({
   backgroundColor: "#323437",
@@ -131,7 +124,6 @@ const DropDownDiff: React.FC<{
   selectValue: string;
   selectOnChange: (event: SelectChangeEvent<string>) => void;
 }> = ({ selectValue, selectOnChange }) => {
-  console.log("rendering dropdowndiff");
   return (
     <StyledFormControl>
       <StyledSelect
