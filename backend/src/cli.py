@@ -8,12 +8,12 @@ from rich import print
 from rich.progress import track
 from sqlalchemy.orm import Session
 
+from .config import config
 from .database import engine, reset_mongodb_collections, reset_postgres_tables
-from .factories.history import HistoryFactory
+from .factories.history import HistoryFactory, ResultFactory
 from .factories.question import QuestionFactory
 from .factories.text import TextFactory
 from .factories.user import UserFactory
-from .logger import LOGGER_DIR
 
 app = typer.Typer()
 
@@ -60,10 +60,19 @@ def seed(
             user = random.choice(users)
             text = random.choice(texts)
             questions = random.sample(text.questions, 10)
+            question_ids = [question.id for question in questions]
+            results = [
+                ResultFactory.build(
+                    question_id=question.id,
+                    correct_option=question.correct_option,
+                )
+                for question in questions
+            ]
             history = HistoryFactory.build(
                 user_id=user.id,
                 text_id=text.id,
-                question_ids=[question.id for question in questions],
+                question_ids=question_ids,
+                results=results,
             )
             history.save(force_insert=True)
 
@@ -76,7 +85,7 @@ def seed(
 def grep(
     pattern: Annotated[str, typer.Argument(None, help="Pattern to search for")],
 ):
-    for path in glob.glob(f"{LOGGER_DIR}/app*.log"):
+    for path in glob.glob(f"{config.app_dir}/logs/app*.log"):
         with open(path, encoding="utf8") as file:
             for i, line in enumerate(file):
                 if re.search(pattern, line):

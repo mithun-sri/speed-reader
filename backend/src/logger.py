@@ -3,17 +3,15 @@ import json
 import time
 from logging import DEBUG, getLogger
 from logging.handlers import RotatingFileHandler
-from os.path import abspath, dirname
 from typing import Any, Callable
 
 from fastapi import Request, Response
 from fastapi.routing import APIRoute
 
-# TODO: Make the log dir configurable.
-LOGGER_DIR = dirname(dirname(abspath(__file__))) + "/logs"
+from .config import config
 
 handler = RotatingFileHandler(
-    f"{LOGGER_DIR}/app.log",
+    f"{config.app_dir}/logs/app.log",
     maxBytes=16 * 1024**2,
     backupCount=10,
 )
