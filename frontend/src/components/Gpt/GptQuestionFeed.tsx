@@ -6,11 +6,7 @@ import { GptFormData } from "./GptSuggestionForm";
 const GptQuestionFeed: React.FC<{
   useFormReturn: UseFormReturn<GptFormData>;
 }> = ({ useFormReturn }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useFormReturn;
+  const _useFormReturn = useFormReturn; // temporary unused var
 
   const responseContainerStyles = {
     display: "flex",

@@ -7,11 +7,7 @@ import { GptFormData } from "./GptSuggestionForm";
 const GptText: React.FC<{
   useFormReturn: UseFormReturn<GptFormData>;
 }> = ({ useFormReturn }) => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useFormReturn;
+  const _useFormReturn = useFormReturn; // temporary unused var
 
   const containerStyles = {
     display: "flex",

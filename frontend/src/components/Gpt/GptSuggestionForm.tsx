@@ -40,6 +40,8 @@ const GptSuggestionForm: React.FC<{
   const useGptForm = useForm<GptFormData>();
   const { handleSubmit } = useGptForm;
 
+  console.log(response);
+
   const onSubmit: SubmitHandler<GptFormData> = (data) => {
     console.log(data);
   };
