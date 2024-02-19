@@ -132,14 +132,13 @@ unit_test_backend:
 e2e_test:
   image: docker:24.0.5
   stage: e2e_test
-  only: [master]
+  only: [151-wait-for-docker-compose-up-before-running-e2e-test]
   services:
     - docker:24.0.5-dind
   before_script:
     - docker info
   script:
-    - docker compose up --build -d
-    - docker compose run -T cypress yarn cypress run e2e
+    - ./frontend/cypress.sh
 
 deploy_staging_frontend:
   extends: .deploy
