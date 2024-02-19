@@ -90,8 +90,9 @@ async def shutdown():
 
 
 # TODO:
-# Protect this endpoint with a secret key
-@app.post("/db/seed")
+# Protect this endpoint with a secret key.
+# Disable this endpoint in production.
+@app.post("/testing/db/seed")
 async def seed():
     reset_database()
     seed_database()

@@ -855,7 +855,7 @@
         }
       }
     },
-    "/db/seed": {
+    "/testing/db/seed": {
       "post": {
         "summary": "Seed",
         "operationId": "seed",
