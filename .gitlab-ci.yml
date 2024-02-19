@@ -138,8 +138,7 @@ e2e_test:
   before_script:
     - docker info
   script:
-    - docker compose up --build -d
-    - docker compose run -T cypress yarn cypress run e2e
+    - ./frontend/cypress.sh
 
 deploy_staging_frontend:
   extends: .deploy
