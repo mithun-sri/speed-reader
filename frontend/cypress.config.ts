@@ -6,6 +6,9 @@ const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8001";
 
 export default defineConfig({
   e2e: {
+    experimentalStudio: true,
+    taskTimeout: 1000 * 60 * 10, // 10 minutes
+    pageLoadTimeout: 1000 * 60 * 10, // 10 minutes
     baseUrl: FRONTEND_URL,
     setupNodeEvents(on, _config) {
       // implement node event listeners here
@@ -18,6 +21,5 @@ export default defineConfig({
         },
       });
     },
-    experimentalStudio: true,
   },
 });
