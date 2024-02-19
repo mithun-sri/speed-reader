@@ -26,6 +26,56 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface AdminStatistics
+ */
+export interface AdminStatistics {
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminStatistics
+     */
+    averageScore: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminStatistics
+     */
+    averageWpm: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminStatistics
+     */
+    minWpm: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof AdminStatistics
+     */
+    maxWpm: number;
+}
+/**
+ * 
+ * @export
+ * @interface Answer
+ */
+export interface Answer {
+    /**
+     * 
+     * @type {string}
+     * @memberof Answer
+     */
+    questionId: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Answer
+     */
+    selectedOption: number;
+}
+/**
+ * 
+ * @export
  * @interface BodyGetUserAvailableTexts
  */
 export interface BodyGetUserAvailableTexts {
@@ -88,10 +138,10 @@ export interface BodyGetUserAvailableTextsTextSort {
 export interface BodyPostAnswers {
     /**
      * 
-     * @type {Array<QuestionAnswer>}
+     * @type {Array<Answer>}
      * @memberof BodyPostAnswers
      */
-    answers: Array<QuestionAnswer>;
+    answers: Array<Answer>;
     /**
      * 
      * @type {number}
@@ -112,24 +162,16 @@ export interface BodyPostAnswers {
     gameMode: string;
     /**
      * 
-     * @type {GameSubmode}
+     * @type {string}
      * @memberof BodyPostAnswers
      */
-    gameSubmode?: GameSubmode;
-}
-/**
- * 
- * @export
- * @interface ClientId
- */
-export interface ClientId {
-}
-/**
- * 
- * @export
- * @interface ClientSecret
- */
-export interface ClientSecret {
+    gameSubmode: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof BodyPostAnswers
+     */
+    summary: boolean;
 }
 /**
  * 
@@ -151,13 +193,6 @@ export interface GameMode {
  * @interface GameSubmode
  */
 export interface GameSubmode {
-}
-/**
- * 
- * @export
- * @interface GrantType
- */
-export interface GrantType {
 }
 /**
  * 
@@ -198,6 +233,12 @@ export interface History {
     gameSubmode: GameSubmode;
     /**
      * 
+     * @type {boolean}
+     * @memberof History
+     */
+    summary: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof History
      */
@@ -216,10 +257,10 @@ export interface History {
     score: number;
     /**
      * 
-     * @type {Array<number>}
+     * @type {Array<Result>}
      * @memberof History
      */
-    answers: Array<number>;
+    results: Array<Result>;
 }
 /**
  * 
@@ -245,62 +286,105 @@ export interface Question {
      * @memberof Question
      */
     options: Array<string>;
+}
+/**
+ * 
+ * @export
+ * @interface QuestionStatistics
+ */
+export interface QuestionStatistics {
+    /**
+     * 
+     * @type {string}
+     * @memberof QuestionStatistics
+     */
+    questionId: string;
     /**
      * 
      * @type {number}
-     * @memberof Question
+     * @memberof QuestionStatistics
+     */
+    averageScore: number;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof QuestionStatistics
+     */
+    options: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof QuestionStatistics
+     */
+    correctOption: number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof QuestionStatistics
+     */
+    selectedOptions: Array<number>;
+}
+/**
+ * 
+ * @export
+ * @interface QuestionWithCorrectOption
+ */
+export interface QuestionWithCorrectOption {
+    /**
+     * 
+     * @type {string}
+     * @memberof QuestionWithCorrectOption
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof QuestionWithCorrectOption
+     */
+    content: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof QuestionWithCorrectOption
+     */
+    options: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof QuestionWithCorrectOption
      */
     correctOption: number;
 }
 /**
  * 
  * @export
- * @interface QuestionAnswer
+ * @interface Result
  */
-export interface QuestionAnswer {
+export interface Result {
     /**
      * 
      * @type {string}
-     * @memberof QuestionAnswer
-     */
-    questionId: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof QuestionAnswer
-     */
-    selectedOption: number;
-}
-/**
- * 
- * @export
- * @interface QuestionResult
- */
-export interface QuestionResult {
-    /**
-     * 
-     * @type {string}
-     * @memberof QuestionResult
+     * @memberof Result
      */
     questionId: string;
     /**
      * 
      * @type {boolean}
-     * @memberof QuestionResult
+     * @memberof Result
      */
     correct: boolean;
     /**
      * 
      * @type {number}
-     * @memberof QuestionResult
+     * @memberof Result
      */
-    selectedOption: number;
+    correctOption: number;
     /**
      * 
      * @type {number}
-     * @memberof QuestionResult
+     * @memberof Result
      */
-    correctOption: number;
+    selectedOption: number;
 }
 /**
  * 
@@ -380,6 +464,74 @@ export interface TextSort {
 /**
  * 
  * @export
+ * @interface TextWithQuestions
+ */
+export interface TextWithQuestions {
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestions
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestions
+     */
+    title: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestions
+     */
+    content: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestions
+     */
+    difficulty: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithQuestions
+     */
+    wordCount: number;
+    /**
+     * 
+     * @type {Array<QuestionWithCorrectOption>}
+     * @memberof TextWithQuestions
+     */
+    questions: Array<QuestionWithCorrectOption>;
+}
+/**
+ * 
+ * @export
+ * @interface Token
+ */
+export interface Token {
+    /**
+     * 
+     * @type {string}
+     * @memberof Token
+     */
+    accessToken: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Token
+     */
+    refreshToken: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Token
+     */
+    tokenType: string;
+}
+/**
+ * 
+ * @export
  * @interface UserAvailableTexts
  */
 export interface UserAvailableTexts {
@@ -407,6 +559,56 @@ export interface UserAvailableTexts {
      * @memberof UserAvailableTexts
      */
     totalTexts: number;
+}
+/**
+ * 
+ * @export
+ * @interface UserRegistration
+ */
+export interface UserRegistration {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserRegistration
+     */
+    message: string;
+    /**
+     * 
+     * @type {UserResponse}
+     * @memberof UserRegistration
+     */
+    data: UserResponse;
+}
+/**
+ * 
+ * @export
+ * @interface UserResponse
+ */
+export interface UserResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserResponse
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserResponse
+     */
+    username: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserResponse
+     */
+    email: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserResponse
+     */
+    createdAt: string;
 }
 /**
  * 
@@ -497,13 +699,21 @@ export interface ValidationErrorLocInner {
 export const AdminApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 
-         * @summary Create Quiz
+         * Deletes a question of a text by the given id.
+         * @summary Delete Question
+         * @param {string} textId 
+         * @param {string} questionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createQuiz: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/admin/quiz`;
+        deleteQuestion: async (textId: string, questionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textId' is not null or undefined
+            assertParamExists('deleteQuestion', 'textId', textId)
+            // verify required parameter 'questionId' is not null or undefined
+            assertParamExists('deleteQuestion', 'questionId', questionId)
+            const localVarPath = `/admin/texts/{text_id}/questions/{question_id}`
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)))
+                .replace(`{${"question_id"}}`, encodeURIComponent(String(questionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -511,7 +721,7 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -527,13 +737,50 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
-         * 
-         * @summary Get Admin Dashboard
+         * Deletes a text by the given id.
+         * @summary Delete Text
+         * @param {string} textId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAdminDashboard: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/admin/dashboard`;
+        deleteText: async (textId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textId' is not null or undefined
+            assertParamExists('deleteText', 'textId', textId)
+            const localVarPath = `/admin/texts/{text_id}`
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets the statistics of the admin.
+         * @summary Get Admin Statistics
+         * @param {string} gameMode 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAdminStatistics: async (gameMode: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'gameMode' is not null or undefined
+            assertParamExists('getAdminStatistics', 'gameMode', gameMode)
+            const localVarPath = `/admin/statistics`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -544,6 +791,194 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (gameMode !== undefined) {
+                localVarQueryParameter['game_mode'] = gameMode;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets a question of a text by the given id.
+         * @summary Get Question
+         * @param {string} textId 
+         * @param {string} questionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getQuestion: async (textId: string, questionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textId' is not null or undefined
+            assertParamExists('getQuestion', 'textId', textId)
+            // verify required parameter 'questionId' is not null or undefined
+            assertParamExists('getQuestion', 'questionId', questionId)
+            const localVarPath = `/admin/texts/{text_id}/questions/{question_id}`
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)))
+                .replace(`{${"question_id"}}`, encodeURIComponent(String(questionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets a question statistics of a text by the given id.
+         * @summary Get Question Statistics
+         * @param {string} textId 
+         * @param {string} questionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getQuestionStatistics: async (textId: string, questionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textId' is not null or undefined
+            assertParamExists('getQuestionStatistics', 'textId', textId)
+            // verify required parameter 'questionId' is not null or undefined
+            assertParamExists('getQuestionStatistics', 'questionId', questionId)
+            const localVarPath = `/admin/texts/{text_id}/questions/{question_id}/statistics`
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)))
+                .replace(`{${"question_id"}}`, encodeURIComponent(String(questionId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets the questions of a text by the given id.
+         * @summary Get Questions
+         * @param {string} textId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getQuestions: async (textId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textId' is not null or undefined
+            assertParamExists('getQuestions', 'textId', textId)
+            const localVarPath = `/admin/texts/{text_id}/questions`
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets a text by the given id.
+         * @summary Get Text
+         * @param {string} textId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getText: async (textId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textId' is not null or undefined
+            assertParamExists('getText', 'textId', textId)
+            const localVarPath = `/admin/texts/{text_id}`
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets all texts.
+         * @summary Get Texts
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTexts: async (page?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/admin/texts`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['page_size'] = pageSize;
+            }
 
 
     
@@ -567,27 +1002,111 @@ export const AdminApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AdminApiAxiosParamCreator(configuration)
     return {
         /**
-         * 
-         * @summary Create Quiz
+         * Deletes a question of a text by the given id.
+         * @summary Delete Question
+         * @param {string} textId 
+         * @param {string} questionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createQuiz(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createQuiz(options);
+        async deleteQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Question>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteQuestion(textId, questionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.createQuiz']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.deleteQuestion']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * 
-         * @summary Get Admin Dashboard
+         * Deletes a text by the given id.
+         * @summary Delete Text
+         * @param {string} textId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAdminDashboard(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminDashboard(options);
+        async deleteText(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteText(textId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.getAdminDashboard']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.deleteText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Gets the statistics of the admin.
+         * @summary Get Admin Statistics
+         * @param {string} gameMode 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAdminStatistics(gameMode: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminStatistics(gameMode, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getAdminStatistics']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Gets a question of a text by the given id.
+         * @summary Get Question
+         * @param {string} textId 
+         * @param {string} questionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuestionWithCorrectOption>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestion(textId, questionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestion']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Gets a question statistics of a text by the given id.
+         * @summary Get Question Statistics
+         * @param {string} textId 
+         * @param {string} questionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getQuestionStatistics(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuestionStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestionStatistics(textId, questionId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestionStatistics']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Gets the questions of a text by the given id.
+         * @summary Get Questions
+         * @param {string} textId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getQuestions(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<QuestionWithCorrectOption>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestions(textId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestions']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Gets a text by the given id.
+         * @summary Get Text
+         * @param {string} textId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getText(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestions>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getText(textId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Gets all texts.
+         * @summary Get Texts
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTexts(page?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Text>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTexts(page, pageSize, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getTexts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -601,22 +1120,88 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
     const localVarFp = AdminApiFp(configuration)
     return {
         /**
-         * 
-         * @summary Create Quiz
+         * Deletes a question of a text by the given id.
+         * @summary Delete Question
+         * @param {string} textId 
+         * @param {string} questionId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createQuiz(options?: any): AxiosPromise<any> {
-            return localVarFp.createQuiz(options).then((request) => request(axios, basePath));
+        deleteQuestion(textId: string, questionId: string, options?: any): AxiosPromise<Question> {
+            return localVarFp.deleteQuestion(textId, questionId, options).then((request) => request(axios, basePath));
         },
         /**
-         * 
-         * @summary Get Admin Dashboard
+         * Deletes a text by the given id.
+         * @summary Delete Text
+         * @param {string} textId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAdminDashboard(options?: any): AxiosPromise<any> {
-            return localVarFp.getAdminDashboard(options).then((request) => request(axios, basePath));
+        deleteText(textId: string, options?: any): AxiosPromise<Text> {
+            return localVarFp.deleteText(textId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Gets the statistics of the admin.
+         * @summary Get Admin Statistics
+         * @param {string} gameMode 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAdminStatistics(gameMode: string, options?: any): AxiosPromise<AdminStatistics> {
+            return localVarFp.getAdminStatistics(gameMode, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Gets a question of a text by the given id.
+         * @summary Get Question
+         * @param {string} textId 
+         * @param {string} questionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getQuestion(textId: string, questionId: string, options?: any): AxiosPromise<QuestionWithCorrectOption> {
+            return localVarFp.getQuestion(textId, questionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Gets a question statistics of a text by the given id.
+         * @summary Get Question Statistics
+         * @param {string} textId 
+         * @param {string} questionId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getQuestionStatistics(textId: string, questionId: string, options?: any): AxiosPromise<QuestionStatistics> {
+            return localVarFp.getQuestionStatistics(textId, questionId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Gets the questions of a text by the given id.
+         * @summary Get Questions
+         * @param {string} textId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getQuestions(textId: string, options?: any): AxiosPromise<Array<QuestionWithCorrectOption>> {
+            return localVarFp.getQuestions(textId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Gets a text by the given id.
+         * @summary Get Text
+         * @param {string} textId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getText(textId: string, options?: any): AxiosPromise<TextWithQuestions> {
+            return localVarFp.getText(textId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Gets all texts.
+         * @summary Get Texts
+         * @param {number} [page] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTexts(page?: number, pageSize?: number, options?: any): AxiosPromise<Array<Text>> {
+            return localVarFp.getTexts(page, pageSize, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -629,25 +1214,103 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
  */
 export class AdminApi extends BaseAPI {
     /**
-     * 
-     * @summary Create Quiz
+     * Deletes a question of a text by the given id.
+     * @summary Delete Question
+     * @param {string} textId 
+     * @param {string} questionId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public createQuiz(options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).createQuiz(options).then((request) => request(this.axios, this.basePath));
+    public deleteQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).deleteQuestion(textId, questionId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * 
-     * @summary Get Admin Dashboard
+     * Deletes a text by the given id.
+     * @summary Delete Text
+     * @param {string} textId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getAdminDashboard(options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getAdminDashboard(options).then((request) => request(this.axios, this.basePath));
+    public deleteText(textId: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).deleteText(textId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets the statistics of the admin.
+     * @summary Get Admin Statistics
+     * @param {string} gameMode 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getAdminStatistics(gameMode: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getAdminStatistics(gameMode, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets a question of a text by the given id.
+     * @summary Get Question
+     * @param {string} textId 
+     * @param {string} questionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getQuestion(textId, questionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets a question statistics of a text by the given id.
+     * @summary Get Question Statistics
+     * @param {string} textId 
+     * @param {string} questionId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getQuestionStatistics(textId: string, questionId: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getQuestionStatistics(textId, questionId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets the questions of a text by the given id.
+     * @summary Get Questions
+     * @param {string} textId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getQuestions(textId: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getQuestions(textId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets a text by the given id.
+     * @summary Get Text
+     * @param {string} textId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getText(textId: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getText(textId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets all texts.
+     * @summary Get Texts
+     * @param {number} [page] 
+     * @param {number} [pageSize] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getTexts(page?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getTexts(page, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -660,22 +1323,15 @@ export class AdminApi extends BaseAPI {
 export const AuthApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * 
-         * @summary Authenticate User
-         * @param {string} username 
-         * @param {string} password 
-         * @param {GrantType} [grantType] 
-         * @param {string} [scope] 
-         * @param {ClientId} [clientId] 
-         * @param {ClientSecret} [clientSecret] 
+         * User passes their refresh token to get a new access token. TODO: Invalidate refresh token on use.
+         * @summary Get Token
+         * @param {string} refreshToken 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        authenticateUser: async (username: string, password: string, grantType?: GrantType, scope?: string, clientId?: ClientId, clientSecret?: ClientSecret, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'username' is not null or undefined
-            assertParamExists('authenticateUser', 'username', username)
-            // verify required parameter 'password' is not null or undefined
-            assertParamExists('authenticateUser', 'password', password)
+        getToken: async (refreshToken: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'refreshToken' is not null or undefined
+            assertParamExists('getToken', 'refreshToken', refreshToken)
             const localVarPath = `/auth/token`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -687,72 +1343,9 @@ export const AuthApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-            const localVarFormParams = new URLSearchParams();
 
-
-            if (grantType !== undefined) { 
-                localVarFormParams.set('grant_type', grantType as any);
-            }
-    
-            if (username !== undefined) { 
-                localVarFormParams.set('username', username as any);
-            }
-    
-            if (password !== undefined) { 
-                localVarFormParams.set('password', password as any);
-            }
-    
-            if (scope !== undefined) { 
-                localVarFormParams.set('scope', scope as any);
-            }
-    
-            if (clientId !== undefined) { 
-                localVarFormParams.set('client_id', clientId as any);
-            }
-    
-            if (clientSecret !== undefined) { 
-                localVarFormParams.set('client_secret', clientSecret as any);
-            }
-    
-    
-            localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = localVarFormParams.toString();
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @summary Refresh Access Token
-         * @param {any} refreshToken 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        refreshAccessToken: async (refreshToken: any, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'refreshToken' is not null or undefined
-            assertParamExists('refreshAccessToken', 'refreshToken', refreshToken)
-            const localVarPath = `/auth/refresh`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (refreshToken != null) {
-                localVarHeaderParameter['refresh-token'] = typeof refreshToken === 'string'
-                    ? refreshToken
-                    : JSON.stringify(refreshToken);
+            if (refreshToken !== undefined) {
+                localVarQueryParameter['refresh_token'] = refreshToken;
             }
 
 
@@ -777,34 +1370,16 @@ export const AuthApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration)
     return {
         /**
-         * 
-         * @summary Authenticate User
-         * @param {string} username 
-         * @param {string} password 
-         * @param {GrantType} [grantType] 
-         * @param {string} [scope] 
-         * @param {ClientId} [clientId] 
-         * @param {ClientSecret} [clientSecret] 
+         * User passes their refresh token to get a new access token. TODO: Invalidate refresh token on use.
+         * @summary Get Token
+         * @param {string} refreshToken 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async authenticateUser(username: string, password: string, grantType?: GrantType, scope?: string, clientId?: ClientId, clientSecret?: ClientSecret, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.authenticateUser(username, password, grantType, scope, clientId, clientSecret, options);
+        async getToken(refreshToken: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getToken(refreshToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.authenticateUser']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * 
-         * @summary Refresh Access Token
-         * @param {any} refreshToken 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async refreshAccessToken(refreshToken: any, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.refreshAccessToken(refreshToken, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AuthApi.refreshAccessToken']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AuthApi.getToken']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -818,29 +1393,14 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = AuthApiFp(configuration)
     return {
         /**
-         * 
-         * @summary Authenticate User
-         * @param {string} username 
-         * @param {string} password 
-         * @param {GrantType} [grantType] 
-         * @param {string} [scope] 
-         * @param {ClientId} [clientId] 
-         * @param {ClientSecret} [clientSecret] 
+         * User passes their refresh token to get a new access token. TODO: Invalidate refresh token on use.
+         * @summary Get Token
+         * @param {string} refreshToken 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        authenticateUser(username: string, password: string, grantType?: GrantType, scope?: string, clientId?: ClientId, clientSecret?: ClientSecret, options?: any): AxiosPromise<any> {
-            return localVarFp.authenticateUser(username, password, grantType, scope, clientId, clientSecret, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * 
-         * @summary Refresh Access Token
-         * @param {any} refreshToken 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        refreshAccessToken(refreshToken: any, options?: any): AxiosPromise<any> {
-            return localVarFp.refreshAccessToken(refreshToken, options).then((request) => request(axios, basePath));
+        getToken(refreshToken: string, options?: any): AxiosPromise<any> {
+            return localVarFp.getToken(refreshToken, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -853,32 +1413,15 @@ export const AuthApiFactory = function (configuration?: Configuration, basePath?
  */
 export class AuthApi extends BaseAPI {
     /**
-     * 
-     * @summary Authenticate User
-     * @param {string} username 
-     * @param {string} password 
-     * @param {GrantType} [grantType] 
-     * @param {string} [scope] 
-     * @param {ClientId} [clientId] 
-     * @param {ClientSecret} [clientSecret] 
+     * User passes their refresh token to get a new access token. TODO: Invalidate refresh token on use.
+     * @summary Get Token
+     * @param {string} refreshToken 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AuthApi
      */
-    public authenticateUser(username: string, password: string, grantType?: GrantType, scope?: string, clientId?: ClientId, clientSecret?: ClientSecret, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).authenticateUser(username, password, grantType, scope, clientId, clientSecret, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * 
-     * @summary Refresh Access Token
-     * @param {any} refreshToken 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AuthApi
-     */
-    public refreshAccessToken(refreshToken: any, options?: RawAxiosRequestConfig) {
-        return AuthApiFp(this.configuration).refreshAccessToken(refreshToken, options).then((request) => request(this.axios, this.basePath));
+    public getToken(refreshToken: string, options?: RawAxiosRequestConfig) {
+        return AuthApiFp(this.configuration).getToken(refreshToken, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -932,40 +1475,6 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
          */
         getNextText: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/game/texts/next`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Gets a text by the given id.
-         * @summary Get Text
-         * @param {string} textId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getText: async (textId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'textId' is not null or undefined
-            assertParamExists('getText', 'textId', textId)
-            const localVarPath = `/game/texts/{text_id}`
-                .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1068,19 +1577,6 @@ export const GameApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Gets a text by the given id.
-         * @summary Get Text
-         * @param {string} textId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getText(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getText(textId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['GameApi.getText']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
          * Accepts the question answers and other statistics. Returns the results to the answers.
          * @summary Post Answers
          * @param {string} textId 
@@ -1088,7 +1584,7 @@ export const GameApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<QuestionResult>>> {
+        async postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Result>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postAnswers(textId, bodyPostAnswers, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.postAnswers']?.[localVarOperationServerIndex]?.url;
@@ -1124,16 +1620,6 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.getNextText(options).then((request) => request(axios, basePath));
         },
         /**
-         * Gets a text by the given id.
-         * @summary Get Text
-         * @param {string} textId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getText(textId: string, options?: any): AxiosPromise<Text> {
-            return localVarFp.getText(textId, options).then((request) => request(axios, basePath));
-        },
-        /**
          * Accepts the question answers and other statistics. Returns the results to the answers.
          * @summary Post Answers
          * @param {string} textId 
@@ -1141,7 +1627,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, options?: any): AxiosPromise<Array<QuestionResult>> {
+        postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, options?: any): AxiosPromise<Array<Result>> {
             return localVarFp.postAnswers(textId, bodyPostAnswers, options).then((request) => request(axios, basePath));
         },
     };
@@ -1175,18 +1661,6 @@ export class GameApi extends BaseAPI {
      */
     public getNextText(options?: RawAxiosRequestConfig) {
         return GameApiFp(this.configuration).getNextText(options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Gets a text by the given id.
-     * @summary Get Text
-     * @param {string} textId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof GameApi
-     */
-    public getText(textId: string, options?: RawAxiosRequestConfig) {
-        return GameApiFp(this.configuration).getText(textId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1365,6 +1839,101 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Logs in a user. Returns access token and refresh token.
+         * @summary Login User
+         * @param {string} username 
+         * @param {string} password 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loginUser: async (username: string, password: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'username' is not null or undefined
+            assertParamExists('loginUser', 'username', username)
+            // verify required parameter 'password' is not null or undefined
+            assertParamExists('loginUser', 'password', password)
+            const localVarPath = `/users/login`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (username !== undefined) {
+                localVarQueryParameter['username'] = username;
+            }
+
+            if (password !== undefined) {
+                localVarQueryParameter['password'] = password;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Registers a new user.
+         * @summary Register User
+         * @param {string} username 
+         * @param {string} email 
+         * @param {string} password 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        registerUser: async (username: string, email: string, password: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'username' is not null or undefined
+            assertParamExists('registerUser', 'username', username)
+            // verify required parameter 'email' is not null or undefined
+            assertParamExists('registerUser', 'email', email)
+            // verify required parameter 'password' is not null or undefined
+            assertParamExists('registerUser', 'password', password)
+            const localVarPath = `/users/register`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (username !== undefined) {
+                localVarQueryParameter['username'] = username;
+            }
+
+            if (email !== undefined) {
+                localVarQueryParameter['email'] = email;
+            }
+
+            if (password !== undefined) {
+                localVarQueryParameter['password'] = password;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1427,6 +1996,35 @@ export const UserApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserStatistics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * Logs in a user. Returns access token and refresh token.
+         * @summary Login User
+         * @param {string} username 
+         * @param {string} password 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async loginUser(username: string, password: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Token>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.loginUser(username, password, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.loginUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Registers a new user.
+         * @summary Register User
+         * @param {string} username 
+         * @param {string} email 
+         * @param {string} password 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async registerUser(username: string, email: string, password: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserRegistration>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.registerUser(username, email, password, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.registerUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -1476,6 +2074,29 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          */
         getUserStatistics(options?: any): AxiosPromise<UserStatistics> {
             return localVarFp.getUserStatistics(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Logs in a user. Returns access token and refresh token.
+         * @summary Login User
+         * @param {string} username 
+         * @param {string} password 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        loginUser(username: string, password: string, options?: any): AxiosPromise<Token> {
+            return localVarFp.loginUser(username, password, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Registers a new user.
+         * @summary Register User
+         * @param {string} username 
+         * @param {string} email 
+         * @param {string} password 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        registerUser(username: string, email: string, password: string, options?: any): AxiosPromise<UserRegistration> {
+            return localVarFp.registerUser(username, email, password, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1533,6 +2154,33 @@ export class UserApi extends BaseAPI {
      */
     public getUserStatistics(options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).getUserStatistics(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Logs in a user. Returns access token and refresh token.
+     * @summary Login User
+     * @param {string} username 
+     * @param {string} password 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public loginUser(username: string, password: string, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).loginUser(username, password, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Registers a new user.
+     * @summary Register User
+     * @param {string} username 
+     * @param {string} email 
+     * @param {string} password 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public registerUser(username: string, email: string, password: string, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).registerUser(username, email, password, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
