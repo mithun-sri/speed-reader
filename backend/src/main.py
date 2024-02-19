@@ -89,6 +89,8 @@ async def shutdown():
     pass
 
 
+# Making an endpoint to seed the database is a common practice in integration tests:
+# https://docs.cypress.io/guides/references/best-practices#Real-World-Example-1
 # TODO:
 # Protect this endpoint with a secret key.
 # Disable this endpoint in production.
