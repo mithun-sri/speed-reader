@@ -80,7 +80,8 @@ app.add_exception_handler(HistoryNotFoundException, history_not_found_exception_
 async def startup():
     # Save copy of OpenAPI specification.
     with open(f"{config.app_dir}/openapi.json", "w", encoding="utf-8") as file:
-        file.write(json.dumps(app.openapi()))
+        spec = app.openapi()
+        file.write(json.dumps(spec, indent=2))
 
 
 @app.on_event("shutdown")
