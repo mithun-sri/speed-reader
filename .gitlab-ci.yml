@@ -11,6 +11,7 @@ default:
 
 # For Docker-in-Docker used in E2E testing.
 variables:
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_TLS_CERTDIR: "/certs"
 
 .frontend: &frontend
@@ -136,7 +137,7 @@ e2e_test:
     - docker:24.0.5-dind
   script:
     - docker compose up --build -d
-    - docker compose run cypress
+    - docker compose run -T cypress yarn cypress run e2e
 
 deploy_staging_frontend:
   extends: .deploy

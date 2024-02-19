@@ -85,13 +85,14 @@ services:
     ports:
       - 27018:27017
   cypress:
-    image: cypress/included:13.6.4
-    working_dir: /e2e
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.cypress
     environment:
       - FRONTEND_URL=http://frontend-test:8080
       - BACKEND_URL=http://backend-test:8000
     volumes:
-      - ./frontend:/e2e
+      - ./frontend/cypress:/e2e/cypress
     depends_on:
       - frontend
       - backend
