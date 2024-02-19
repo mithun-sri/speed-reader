@@ -1,19 +1,12 @@
 import glob
-import random
 import re
 from typing import Annotated
 
 import typer
 from rich import print
-from rich.progress import track
-from sqlalchemy.orm import Session
 
 from .config import config
-from .database import engine, reset_mongodb_collections, reset_postgres_tables
-from .factories.history import HistoryFactory, ResultFactory
-from .factories.question import QuestionFactory
-from .factories.text import TextFactory
-from .factories.user import UserFactory
+from .database import reset_database, seed_database
 
 app = typer.Typer()
 
@@ -32,51 +25,11 @@ def seed(
         print("❗ [red]This command should not be run in production.")
         typer.confirm("Are you sure you want to continue?", abort=True)
 
-    with Session(engine) as session:
-        print("💣 Clearing PostgreSQL database...")
-        reset_postgres_tables()
+    print("💣 Resetting database..")
+    reset_database()
 
-        print("💣 Clearing MongoDB database...")
-        reset_mongodb_collections()
-
-        print("🌱 Seeding users...")
-        users = []
-        for _ in track(range(10)):
-            user = UserFactory.build()
-            users.append(user)
-            session.add(user)
-
-        print("🌱 Seeding texts and questions...")
-        texts = []
-        for _ in track(range(10)):
-            text = TextFactory.build()
-            questions = QuestionFactory.build_batch(100, text=text)
-            texts.append(text)
-            session.add(text)
-            session.add_all(questions)
-
-        print("🌱 [green]Seeding histories...")
-        for _ in track(range(100)):
-            user = random.choice(users)
-            text = random.choice(texts)
-            questions = random.sample(text.questions, 10)
-            question_ids = [question.id for question in questions]
-            results = [
-                ResultFactory.build(
-                    question_id=question.id,
-                    correct_option=question.correct_option,
-                )
-                for question in questions
-            ]
-            history = HistoryFactory.build(
-                user_id=user.id,
-                text_id=text.id,
-                question_ids=question_ids,
-                results=results,
-            )
-            history.save(force_insert=True)
-
-        session.commit()
+    print("🌱 Seeding database...")
+    seed_database()
 
     print("🌴 [green]Successfully seeded database.")
 

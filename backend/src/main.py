@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import config
-from .database import engine
+from .database import reset_database, seed_database
 from .routers.admin import router as admin_router
 from .routers.auth import router as auth_router
 from .routers.game import router as game_router
@@ -78,9 +78,6 @@ app.add_exception_handler(HistoryNotFoundException, history_not_found_exception_
 
 @app.on_event("startup")
 async def startup():
-    # TODO: This seems to be a dead code
-    engine.connect()
-
     # Save copy of OpenAPI specification.
     with open(f"{config.app_dir}/openapi.json", "w", encoding="utf-8") as file:
         file.write(json.dumps(app.openapi()))
@@ -88,6 +85,14 @@ async def startup():
 
 @app.on_event("shutdown")
 async def shutdown():
-    # TODO: engine.disconnect() does not exist
-    # await engine.disconnect()
     pass
+
+
+# TODO:
+# Protect this endpoint with a secret key
+@app.post("/db/seed")
+async def seed():
+    reset_database()
+    seed_database()
+
+    return {"message": "Database seeded successfully."}
