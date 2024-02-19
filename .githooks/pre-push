@@ -106,7 +106,7 @@ else
 fi
 
 print_info "[10/10] Running end-to-end tests..."
-if ! docker compose run cypress; then
+if ! docker compose run -T cypress; then
     print_error "End-to-end tests failed. Please fix the issue before pushing."
     exit 1
 else
