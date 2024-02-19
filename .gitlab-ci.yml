@@ -9,6 +9,10 @@ stages:
 default:
   tags: [private]
 
+# For Docker-in-Docker used in E2E testing.
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+
 .frontend: &frontend
   image: node:21
   variables:
@@ -129,9 +133,7 @@ e2e_test:
   stage: e2e_test
   only: [137-introduce-integration-testing]
   services:
-    - name: docker:24.0.5-dind
-      variables:
-        DOCKER_TLS_CERTDIR: "/certs"
+    - docker:24.0.5-dind
   script:
     - docker compose up --build -d
     - docker compose run cypress
