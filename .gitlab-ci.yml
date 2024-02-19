@@ -10,8 +10,9 @@ default:
   tags: [private]
 
 # For Docker-in-Docker used in E2E testing.
+# https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4596
 variables:
-  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_CERTDIR: "/certs/${CI_JOB_ID}"
 
 .frontend: &frontend
   image: node:21
@@ -131,9 +132,11 @@ unit_test_backend:
 e2e_test:
   image: docker:24.0.5
   stage: e2e_test
-  only: [master]
+  only: [149-fix-pipeline-caching-issues-for-dind]
   services:
     - docker:24.0.5-dind
+  before_script:
+    - docker info
   script:
     - docker compose up --build -d
     - docker compose run -T cypress yarn cypress run e2e
