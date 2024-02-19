@@ -90,7 +90,7 @@ else
 fi
 
 print_info "[7/8] Running frontend unit tests..."
-# if ! docker compose exec -T frontend yarn test; then
+# if ! docker compose exec -T frontend-test yarn test; then
 #     print_error "Frontend unit tests failed. Please fix the issue before pushing."
 #     exit 1
 # else
@@ -98,11 +98,19 @@ print_info "[7/8] Running frontend unit tests..."
 # fi
 
 print_info "[8/8] Running backend unit tests..."
-if ! docker compose exec -T backend poetry run pytest --verbose --disable-warnings tests; then
+if ! docker compose exec -T backend-test poetry run pytest --verbose --disable-warnings tests; then
     print_error "Backend unit tests failed. Please fix the issue before pushing."
     exit 1
 else
     print_success "Backend unit tests passed!"
+fi
+
+print_info "[9/9] Running end-to-end tests..."
+if ! docker compose run cypress; then
+    print_error "End-to-end tests failed. Please fix the issue before pushing."
+    exit 1
+else
+    print_success "End-to-end tests passed!"
 fi
 
 print_success "All tests passed! Pushing changes..."
