@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
-import Footer from "../../components/Footer/Footer";
 import UserGraph from "../../components/Graph/UserGraph";
 import Header from "../../components/Header/Header";
 import UserTable from "../../components/Table/UserTable";
 import UserDashboardTop from "../../components/User/UserDashboardTop";
 import UserStats from "../../components/User/UserStats";
+import React from "react";
 
 const UserView = () => {
   const userId = "placeholder";
@@ -32,7 +32,7 @@ const UserView = () => {
   }, []);
 
   return (
-    <>
+    <Box sx={{ marginBottom: "40px" }}>
       <Header />
       <Box
         sx={{
@@ -59,8 +59,7 @@ const UserView = () => {
           </Box>
         </PageContainer>
       </Box>
-      <Footer />
-    </>
+    </Box>
   );
 };
 
@@ -89,8 +88,8 @@ const PageContainer: React.FC<{
   <Box
     sx={{
       width: "80%",
-      maxWidth: "1050px",
-      margin: "0 auto",
+      maxWidth: "1900px",
+      margin: "0 0",
       marginTop: size / 15,
     }}
   >

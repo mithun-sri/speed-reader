@@ -51,6 +51,7 @@ const UserData1: React.FC<{
           color: "#FFFFFF",
           fontFamily: "JetBrains Mono, monospace",
           fontWeight: "bolder",
+          maxWidth: "200px",
         }}
       >
         {title}.
@@ -115,11 +116,11 @@ const MinMax: React.FC<{
         flexWrap: "wrap",
       }}
     >
-      <Box sx={{ margin: "5px" }}>
+      <Box sx={{ marginLeft: "10%" }}>
         <_Title text="min"></_Title>
         <_Value val={minVal}></_Value>
       </Box>
-      <Box sx={{ margin: "5px" }}>
+      <Box sx={{ marginRight: "10%" }}>
         <_Title text="max"></_Title>
         <_Value val={maxVal}></_Value>
       </Box>
