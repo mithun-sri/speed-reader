@@ -14,6 +14,7 @@ export const StyledSelect = styled(Select<string>)({
   fontFamily: "JetBrains Mono, monospace",
   color: "white",
   fontWeight: "bolder",
+  fontSize: "25px",
   textAlign: "center",
 });
 
