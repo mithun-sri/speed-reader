@@ -132,7 +132,7 @@ unit_test_backend:
 e2e_test:
   image: docker:24.0.5
   stage: e2e_test
-  only: [149-fix-pipeline-caching-issues-for-dind]
+  only: [master]
   services:
     - docker:24.0.5-dind
   before_script:
