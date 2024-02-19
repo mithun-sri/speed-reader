@@ -16,6 +16,7 @@ const GameProgressBar: React.FC<{
       sx={{
         alignContent: "center",
       }}
+      data-cy="progress-bar"
     >
       <LinearProgress
         variant="determinate"
