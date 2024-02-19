@@ -26,11 +26,11 @@ target_metadata = None
 # ... etc.
 
 # Set the database URL from the environment variable.
-DATABASE_URL = os.environ.get("POSTGRES_URL")
-if not DATABASE_URL:
+POSTGRES_URL = os.environ.get("POSTGRES_URL")
+if not POSTGRES_URL:
     raise ValueError("POSTGRES_URL environment variable is not set")
 
-config.set_main_option("sqlalchemy.url", DATABASE_URL)
+config.set_main_option("sqlalchemy.url", POSTGRES_URL)
 
 
 def run_migrations_offline() -> None:

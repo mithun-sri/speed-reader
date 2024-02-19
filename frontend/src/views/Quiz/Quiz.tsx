@@ -59,7 +59,8 @@ const QuizView = () => {
             averageWpm: 0,
             intervalWpms: [0, 0, 0],
             gameMode: mode,
-            gameSubmode: view,
+            gameSubmode: "word-by-word",
+            summary: true,
           },
           {
             onSuccess: (res: any) => {
@@ -97,6 +98,7 @@ const QuizView = () => {
                     key={optionIndex}
                     onClick={() => modifyQuizAnswer(index, optionIndex)}
                     className={`option ${getOptionClass(index, optionIndex)}`}
+                    data-cy={`question${index}-option${optionIndex}`}
                   >
                     <JetBrainsMonoText
                       text={option}

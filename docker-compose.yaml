@@ -1,33 +1,48 @@
 services:
-  frontend:
+  frontend: &frontend
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend:8000
     volumes:
       - ./frontend/src:/app/src
     ports:
       # Cannot use ports below 1000 (e.g. 80) 
       # as they are previleged ports that require root access.
       - 8080:8080
-  backend:
+  frontend-test:
+    <<: *frontend
+    environment:
+      - REACT_APP_BACKEND_URL=http://backend-test:8000
+    ports:
+      - 8081:8080
+  backend: &backend
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
     environment:
       - POSTGRES_URL=postgresql://postgres:postgres@postgres:5432/default
-      - POSTGRES_TEST_URL=postgresql://postgres:postgres@postgres-test:5432/default
       - MONGO_URL=mongodb://mongo:27017/default
-      - MONGO_TEST_URL=mongodb://mongo-test:27017/default
     volumes:
       - ./backend/src:/app/src
       - ./backend/tests:/app/tests
       - ./backend/migrations:/app/migrations
+      - ./backend/openapi.json:/app/openapi.json
     ports:
       - 8000:8000
     depends_on:
       - postgres
-      - postgres-test
       - mongo
+  backend-test:
+    <<: *backend
+    environment:
+      - POSTGRES_URL=postgresql://postgres:postgres@postgres-test:5432/default
+      - MONGO_URL=mongodb://mongo-test:27017/default
+    ports:
+      - 8001:8000
+    depends_on:
+      - postgres-test
       - mongo-test
   postgres:
     image: postgres:14-alpine
@@ -69,6 +84,18 @@ services:
       - mongodb-test-data:/data/db
     ports:
       - 27018:27017
+  cypress:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.cypress
+    environment:
+      - FRONTEND_URL=http://frontend-test:8080
+      - BACKEND_URL=http://backend-test:8000
+    volumes:
+      - ./frontend/cypress:/e2e/cypress
+    depends_on:
+      - frontend
+      - backend
 volumes:
   postgresql-data:
   postgresql-test-data:

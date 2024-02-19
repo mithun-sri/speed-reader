@@ -29,7 +29,7 @@ async def validation_exception_handler(
     # By default FastAPI does not produce detailed error message.
     logging.error(exc)
     return JSONResponse(
-        content={"status_code": 422, "message": str(exc), "data": None},
+        content={"message": str(exc), "data": None},
         status_code=422,
     )
 

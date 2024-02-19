@@ -2,6 +2,10 @@ FROM node:21
 
 WORKDIR /app
 
+# Install Java for openapi-generator.
+RUN apt update -y && \
+    apt install -y openjdk-17-jre
+
 COPY package.json yarn.lock ./
 RUN yarn install
 

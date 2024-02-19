@@ -140,6 +140,7 @@ const Carousel: React.FC<{
             sx={{
               color: "#D9D9D9",
             }}
+            data-cy="left-arrow"
           >
             <FontAwesomeIcon fontSize={fontSize / 2.3} icon={faCaretLeft} />
           </IconButton>
@@ -151,6 +152,7 @@ const Carousel: React.FC<{
             sx={{
               color: "#D9D9D9",
             }}
+            data-cy="right-arrow"
           >
             <FontAwesomeIcon fontSize={fontSize / 2.3} icon={faCaretRight} />
           </IconButton>

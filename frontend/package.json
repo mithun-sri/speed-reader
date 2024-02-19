@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=21.0.0 <22.0.0",
+    "node": ">=20.0.0 <22.0.0",
     "yarn": ">=1.22.0 <2.0.0"
   },
-  "proxy": "http://backend:8000",
   "dependencies": {
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
@@ -19,11 +18,12 @@
     "@mui/x-charts": "^6.19.3",
     "@tanstack/react-table": "^8.11.8",
     "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
+    "@types/node": "^20.11.19",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "axios": "^1.6.5",
     "framer-motion": "^11.0.3",
+    "http-proxy-middleware": "^2.0.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.12",
@@ -68,6 +68,7 @@
     "@testing-library/user-event": "^13.2.1",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
+    "cypress": "^13.6.4",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.33.2",
     "prettier": "^3.2.4"

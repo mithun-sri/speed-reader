@@ -1,19 +1,3 @@
-import os
-
-# Override database connection strings before importing modules.
-POSTGRES_TEST_URL = os.environ.get("POSTGRES_TEST_URL")
-MONGO_TEST_URL = os.environ.get("MONGO_TEST_URL")
-
-if not POSTGRES_TEST_URL:
-    raise Exception("POSTGRES_TEST_URL environment variable is not set")
-if not MONGO_TEST_URL:
-    raise Exception("MONGO_TEST_URL environment variable is not set")
-
-os.environ["POSTGRES_URL"] = POSTGRES_TEST_URL
-os.environ["MONGO_URL"] = MONGO_TEST_URL
-
-
-# pylint: disable=wrong-import-position
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from mongoengine import get_db
@@ -26,7 +10,6 @@ from src.database import (
     reset_postgres_tables,
 )
 from src.main import app
-from src.models import Base
 from src.services.auth import get_current_user
 
 
