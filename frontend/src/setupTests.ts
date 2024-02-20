@@ -3,3 +3,8 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
+
+// Set seed for faker.
+import { faker } from "@faker-js/faker";
+
+faker.seed(0xdeadbeef);

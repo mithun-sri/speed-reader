@@ -120,8 +120,7 @@ unit_test_frontend:
   extends: .frontend-test
   stage: unit_test
   script:
-    - echo "Testing"
-    # - yarn test
+    - yarn jest --watchAll=false src
 
 unit_test_backend:
   extends: .backend-test

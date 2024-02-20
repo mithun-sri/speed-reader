@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["es6", "dom"],
     "types": ["cypress", "node"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -17,5 +17,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["cypress.config.ts", "cypress", "node_modules"]
 }
