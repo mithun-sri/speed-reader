@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Score from "../Results/Score";
 import AvgWpm from "../Results/AvgWpm";
 import Range from "../Results/Range";
