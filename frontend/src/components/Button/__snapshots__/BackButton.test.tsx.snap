@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Matches snapshot before/after click 1`] = `
+<button
+  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-9kbnz4-MuiButtonBase-root-MuiIconButton-root"
+  disabled={false}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onContextMenu={[Function]}
+  onDragLeave={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchMove={[Function]}
+  onTouchStart={[Function]}
+  tabIndex={0}
+  type="button"
+>
+  &lt;_back
+</button>
+`;
+
+exports[`Matches snapshot before/after click 2`] = `
+<button
+  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-9kbnz4-MuiButtonBase-root-MuiIconButton-root"
+  disabled={false}
+  onBlur={[Function]}
+  onClick={[Function]}
+  onContextMenu={[Function]}
+  onDragLeave={[Function]}
+  onFocus={[Function]}
+  onKeyDown={[Function]}
+  onKeyUp={[Function]}
+  onMouseDown={[Function]}
+  onMouseLeave={[Function]}
+  onMouseUp={[Function]}
+  onTouchEnd={[Function]}
+  onTouchMove={[Function]}
+  onTouchStart={[Function]}
+  tabIndex={0}
+  type="button"
+>
+  &lt;_back
+</button>
+`;
