@@ -6,7 +6,7 @@ import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./StandardMode.css";
 
 import Box from "@mui/material/Box";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
@@ -95,7 +95,7 @@ const StandardModeGameComponent: React.FC<{
   text: string;
   view: StandardView;
 }> = ({ wpm, text, view }) => {
-  let display = null;
+  let display = <HighlightedTextDisplay text={text} wpm={wpm} />;
 
   switch (view) {
     case StandardView.Word: {
@@ -201,6 +201,7 @@ const WordTextDisplay: React.FC<{
   size?: number;
 }> = ({ text, wpm }) => {
   const { incrementCurrentStage } = useGameScreenContext();
+  const { intervalWpms, setIntervalWpms } = useGameContext();
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
@@ -232,8 +233,19 @@ const WordTextDisplay: React.FC<{
   useEffect(() => {
     if (wordIndex === words.length && words.length > 0) {
       incrementCurrentStage();
+      console.log("intervalWpms: ");
+      console.log(intervalWpms);
     }
   }, [wordIndex, words.length]);
+
+  // record WPM every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIntervalWpms([...intervalWpms, curr_wpm]);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [curr_wpm, intervalWpms, setIntervalWpms]);
 
   return (
     <Box>
@@ -274,11 +286,13 @@ export const HighlightedTextDisplay: React.FC<{
   size?: number;
 }> = ({ text, wpm }) => {
   const { incrementCurrentStage } = useGameScreenContext();
+  const { intervalWpms, setIntervalWpms } = useGameContext();
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
   const wordsPerFrame = 30;
   const wordsArray = text.split(" ");
+
   // updates WPM based on keyboard event
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) =>
@@ -307,8 +321,19 @@ export const HighlightedTextDisplay: React.FC<{
   useEffect(() => {
     if (wordIndex === wordsArray.length && wordsArray.length > 0) {
       incrementCurrentStage();
+      console.log("intervalWpms: ");
+      console.log(intervalWpms);
     }
   }, [wordIndex, wordsArray.length]);
+
+  // record WPM every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIntervalWpms([...intervalWpms, curr_wpm]);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [curr_wpm, intervalWpms, setIntervalWpms]);
 
   // calculates which words should be shown on the screen (in the current frame)
   const currentFrameIndex = Math.floor(highlightedIndex / wordsPerFrame);
