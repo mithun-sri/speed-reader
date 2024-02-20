@@ -26,23 +26,30 @@ const Score: React.FC<{
   }, []);
 
   return (
-    <Box>
-      <Box
-        sx={{
-          fontSize: circleWidth / 4.2,
-          fontWeight: "bolder",
-          fontFamily: "JetBrains Mono, monospace",
-          margin: "30px",
-          paddingRight: circleWidth / 14,
-          color: "#FFFFFF",
-        }}
-      >
-        score.
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Box sx={{ marginRight: "12vw", marginBottom: "0.6vw" }}>
+        <Typography
+          sx={{
+            fontSize: circleWidth / 5,
+            fontWeight: "bolder",
+            fontFamily: "JetBrains Mono, monospace",
+            color: "#FFFFFF",
+          }}
+        >
+          score.
+        </Typography>
       </Box>
       <Box sx={{ position: "relative", display: "inline-flex" }}>
         <CircularProgress
           sx={{ color: "#E2B714" }}
-          size={circleWidth}
+          size={circleWidth / 1.2}
           variant="determinate"
           value={score}
         />
@@ -63,7 +70,7 @@ const Score: React.FC<{
             component="div"
             color="#E2B714"
             fontWeight="bolder"
-            fontSize={circleWidth / 3.2}
+            fontSize={circleWidth / 4}
           >{`${Math.round(score)}%`}</Typography>
         </Box>
       </Box>
