@@ -90,12 +90,12 @@ else
 fi
 
 print_info "[8/10] Running frontend unit tests..."
-# if ! docker compose exec -T frontend-test yarn test; then
-#     print_error "Frontend unit tests failed. Please fix the issue before pushing."
-#     exit 1
-# else
-#     print_success "Frontend unit tests passed!"
-# fi
+if ! docker compose exec -T frontend-test yarn jest --watchAll=false src; then
+    print_error "Frontend unit tests failed. Please fix the issue before pushing."
+    exit 1
+else
+    print_success "Frontend unit tests passed!"
+fi
 
 print_info "[9/10] Running backend unit tests..."
 if ! docker compose exec -T backend-test poetry run pytest --verbose --disable-warnings tests; then
