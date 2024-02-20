@@ -11,6 +11,7 @@ from .routers.auth import router as auth_router
 from .routers.game import router as game_router
 from .routers.user import router as user_router
 from .services.exception_handlers import (
+    bad_response_from_openai_exception_handler,
     duplicate_answers_exception_handler,
     email_already_used_exception_handler,
     history_not_found_exception_handler,
@@ -26,6 +27,7 @@ from .services.exception_handlers import (
     validation_exception_handler,
 )
 from .services.exceptions import (
+    BadResponseFromOpenAI,
     DuplicateAnswersException,
     EmailAlreadyUsedException,
     HistoryNotFoundException,
@@ -74,6 +76,7 @@ app.add_exception_handler(NotEnoughQuestionsException, not_enough_questions_exce
 app.add_exception_handler(DuplicateAnswersException, duplicate_answers_exception_handler)  # type: ignore
 app.add_exception_handler(QuestionNotBelongToTextException, question_not_belong_to_text_exception_handler)  # type: ignore
 app.add_exception_handler(HistoryNotFoundException, history_not_found_exception_handler)  # type: ignore
+app.add_exception_handler(BadResponseFromOpenAI, bad_response_from_openai_exception_handler)  # type: ignore
 
 
 @app.on_event("startup")

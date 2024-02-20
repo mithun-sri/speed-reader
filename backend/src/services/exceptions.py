@@ -88,3 +88,9 @@ class HistoryNotFoundException(Exception):
         self.status_code = status.HTTP_404_NOT_FOUND
         self.history_id = history_id
         self.detail = f"History {history_id} not found"
+
+
+class BadResponseFromOpenAI(Exception):
+    def __init__(self) -> None:
+        self.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        self.detail = "Bad response from OpenAI"
