@@ -10,7 +10,9 @@ from .exceptions import (
     EmailAlreadyUsedException,
     HistoryNotFoundException,
     InvalidCredentialsException,
+    InvalidRoleException,
     InvalidTokenException,
+    NotAuthenticatedException,
     NotEnoughAnswersException,
     NotEnoughQuestionsException,
     NoTextAvailableException,
@@ -46,6 +48,16 @@ async def invalid_credentials_exception_handler(
     )
 
 
+async def token_not_found_exception_handler(
+    _request: Request,
+    exc: TokenNotFoundException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": exc.detail},
+    )
+
+
 async def invalid_token_exception_handler(
     _request: Request,
     exc: InvalidTokenException,
@@ -56,13 +68,33 @@ async def invalid_token_exception_handler(
     )
 
 
-async def token_not_found_exception_handler(
+async def not_authenticated_exception_handler(
     _request: Request,
-    exc: TokenNotFoundException,
+    exc: NotAuthenticatedException,
 ):
     return JSONResponse(
         status_code=exc.status_code,
-        content={"message": exc.detail},
+        content={"message": "Oops! You are not authenticated."},
+    )
+
+
+async def already_authenticated_exception_handler(
+    _request: Request,
+    exc: NotAuthenticatedException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": "Oops! You are already authenticated."},
+    )
+
+
+async def invalid_role_exception_handler(
+    _request: Request,
+    exc: InvalidRoleException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": f"Oops! Expected role {exc.detail}."},
     )
 
 
