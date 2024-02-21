@@ -556,10 +556,17 @@
         "parameters": [
           {
             "name": "refresh_token",
-            "in": "query",
-            "required": true,
+            "in": "cookie",
+            "required": false,
             "schema": {
-              "type": "string",
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
               "title": "Refresh Token"
             }
           }
@@ -584,6 +591,33 @@
             }
           }
         }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get Current User",
+        "description": "Gets the current user's information.",
+        "operationId": "get_current_user",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
       }
     },
     "/users/current/statistics": {
@@ -773,43 +807,22 @@
         "summary": "Register User",
         "description": "Registers a new user.",
         "operationId": "register_user",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Username"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_register_user"
+              }
             }
           },
-          {
-            "name": "email",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Email"
-            }
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Password"
-            }
-          }
-        ],
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserRegistration"
-                }
+                "schema": {}
               }
             }
           },
@@ -834,34 +847,22 @@
         "summary": "Login User",
         "description": "Logs in a user. Returns access token and refresh token.",
         "operationId": "login_user",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Username"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_login_user"
+              }
             }
           },
-          {
-            "name": "password",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Password"
-            }
-          }
-        ],
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Token"
-                }
+                "schema": {}
               }
             }
           },
@@ -1100,6 +1101,24 @@
         "type": "object",
         "title": "Body_get_user_available_texts"
       },
+      "Body_login_user": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "Body_login_user"
+      },
       "Body_post_answers": {
         "properties": {
           "answers": {
@@ -1143,6 +1162,29 @@
           "summary"
         ],
         "title": "Body_post_answers"
+      },
+      "Body_register_user": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "email": {
+            "type": "string",
+            "title": "Email"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "email",
+          "password"
+        ],
+        "title": "Body_register_user"
       },
       "HTTPValidationError": {
         "properties": {
@@ -1492,28 +1534,33 @@
         ],
         "title": "TextWithQuestions"
       },
-      "Token": {
+      "User": {
         "properties": {
-          "access_token": {
+          "id": {
             "type": "string",
-            "title": "Access Token"
+            "title": "Id"
           },
-          "refresh_token": {
+          "username": {
             "type": "string",
-            "title": "Refresh Token"
+            "title": "Username"
           },
-          "token_type": {
+          "email": {
             "type": "string",
-            "title": "Token Type"
+            "title": "Email"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
           }
         },
         "type": "object",
         "required": [
-          "access_token",
-          "refresh_token",
-          "token_type"
+          "id",
+          "username",
+          "email",
+          "role"
         ],
-        "title": "Token"
+        "title": "User"
       },
       "UserAvailableTexts": {
         "properties": {
@@ -1545,52 +1592,6 @@
           "total_texts"
         ],
         "title": "UserAvailableTexts"
-      },
-      "UserRegistration": {
-        "properties": {
-          "message": {
-            "type": "string",
-            "title": "Message"
-          },
-          "data": {
-            "$ref": "#/components/schemas/UserResponse"
-          }
-        },
-        "type": "object",
-        "required": [
-          "message",
-          "data"
-        ],
-        "title": "UserRegistration"
-      },
-      "UserResponse": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "username": {
-            "type": "string",
-            "title": "Username"
-          },
-          "email": {
-            "type": "string",
-            "title": "Email"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At"
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "username",
-          "email",
-          "created_at"
-        ],
-        "title": "UserResponse"
       },
       "UserStatistics": {
         "properties": {

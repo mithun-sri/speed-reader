@@ -8,11 +8,38 @@ class InvalidCredentialsException(Exception):
         self.detail = "Invalid credentials"
 
 
+class TokenNotFoundException(Exception):
+    def __init__(self) -> None:
+        self.status_code = status.HTTP_404_NOT_FOUND
+        self.headers = {"WWW-Authenticate": "Bearer"}
+        self.detail = "Token not found"
+
+
 class InvalidTokenException(Exception):
     def __init__(self) -> None:
         self.status_code = status.HTTP_401_UNAUTHORIZED
         self.headers = {"WWW-Authenticate": "Bearer"}
         self.detail = "Invalid token"
+
+
+class NotAuthenticatedException(Exception):
+    def __init__(self) -> None:
+        self.status_code = status.HTTP_401_UNAUTHORIZED
+        self.headers = {"WWW-Authenticate": "Bearer"}
+        self.detail = "Not authenticated"
+
+
+class AlreadyAuthenticatedException(Exception):
+    def __init__(self) -> None:
+        self.status_code = status.HTTP_401_UNAUTHORIZED
+        self.headers = {"WWW-Authenticate": "Bearer"}
+        self.detail = "Already authenticated"
+
+
+class InvalidRoleException(Exception):
+    def __init__(self, role) -> None:
+        self.status_code = status.HTTP_401_UNAUTHORIZED
+        self.detail = f"Expected role {role}"
 
 
 class UserNotFoundException(Exception):
