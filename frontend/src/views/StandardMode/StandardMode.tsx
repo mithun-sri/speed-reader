@@ -1,5 +1,9 @@
 import PropTypes from "prop-types";
-import { GameDifficulty, STANDARD_MODE } from "../../common/constants";
+import {
+  calculateAverageWpm,
+  GameDifficulty,
+  STANDARD_MODE,
+} from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
@@ -201,7 +205,7 @@ const WordTextDisplay: React.FC<{
   size?: number;
 }> = ({ text, wpm }) => {
   const { incrementCurrentStage } = useGameScreenContext();
-  const { intervalWpms, setIntervalWpms } = useGameContext();
+  const { intervalWpms, setIntervalWpms, setAverageWpm } = useGameContext();
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
@@ -232,9 +236,12 @@ const WordTextDisplay: React.FC<{
   // navigate to next screen (quiz) when game ends
   useEffect(() => {
     if (wordIndex === words.length && words.length > 0) {
+      const avg_wpm = calculateAverageWpm(intervalWpms);
+      setAverageWpm(avg_wpm);
+
       incrementCurrentStage();
-      console.log("intervalWpms: ");
-      console.log(intervalWpms);
+
+      console.log("intervalWpms: " + intervalWpms);
     }
   }, [wordIndex, words.length]);
 
@@ -286,7 +293,7 @@ export const HighlightedTextDisplay: React.FC<{
   size?: number;
 }> = ({ text, wpm }) => {
   const { incrementCurrentStage } = useGameScreenContext();
-  const { intervalWpms, setIntervalWpms } = useGameContext();
+  const { intervalWpms, setIntervalWpms, setAverageWpm } = useGameContext();
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
@@ -320,6 +327,9 @@ export const HighlightedTextDisplay: React.FC<{
   // navigate to next screen (quiz) when game ends
   useEffect(() => {
     if (wordIndex === wordsArray.length && wordsArray.length > 0) {
+      const avg_wpm = calculateAverageWpm(intervalWpms);
+      setAverageWpm(avg_wpm);
+
       incrementCurrentStage();
       console.log("intervalWpms: ");
       console.log(intervalWpms);
