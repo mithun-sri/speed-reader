@@ -11,12 +11,16 @@ services:
       # Cannot use ports below 1000 (e.g. 80) 
       # as they are previleged ports that require root access.
       - 8080:8080
+    depends_on:
+      - backend
   frontend-test:
     <<: *frontend
     environment:
       - REACT_APP_BACKEND_URL=http://backend-test:8000
     ports:
       - 8081:8080
+    depends_on:
+      - backend-test
   backend: &backend
     build:
       context: ./backend
@@ -94,8 +98,7 @@ services:
     volumes:
       - ./frontend/cypress:/e2e/cypress
     depends_on:
-      - frontend
-      - backend
+      - frontend-test
 volumes:
   postgresql-data:
   postgresql-test-data:
