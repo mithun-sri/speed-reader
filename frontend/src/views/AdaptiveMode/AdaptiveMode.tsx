@@ -1,11 +1,12 @@
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
+import { calculateAverageWpm } from "../../common/constants";
 import Header from "../../components/Header/Header";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
-import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
+import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const AdaptiveModeView = () => {
   const { wpm, setTextId } = useGameContext();
@@ -53,8 +54,6 @@ const AdaptiveModeTextDisplay: React.FC<{
     return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 15));
   };
 
-  const { incrementCurrentStage } = useGameScreenContext();
-
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -78,14 +77,29 @@ const AdaptiveModeTextDisplay: React.FC<{
   const [nextLineIndex, setNextLineIndex] = useState(0);
   const [lastLineChangeTime, setLastLineChangeTime] = useState(Date.now());
   const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
-  const { setWpm, gazeX } = useGameContext();
+  const { setWpm, gazeX, intervalWpms, setIntervalWpms, setAverageWpm } =
+    useGameContext();
+  const { incrementCurrentStage } = useGameScreenContext();
 
-  // increment stage if game ended
   useEffect(() => {
-    if (highlightedIndex === wordsArray.length - 1) {
+    if (currentLineIndex === nextLineIndex && nextLineIndex !== 0) {
+      const avg_wpm = calculateAverageWpm(intervalWpms);
+      setAverageWpm(avg_wpm);
+
       incrementCurrentStage();
+      console.log("intervalWpms: ");
+      console.log(intervalWpms);
     }
-  }, [highlightedIndex]);
+  }, [nextLineIndex]);
+
+  // record WPM every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIntervalWpms([...intervalWpms, wpm]);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [wpm, intervalWpms, setIntervalWpms]);
 
   useEffect(() => {
     if (

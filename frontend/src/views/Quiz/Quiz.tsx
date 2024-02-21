@@ -11,9 +11,16 @@ import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 
 const QuizView = () => {
   const { incrementCurrentStage } = useGameScreenContext();
-  const { averageWpm, intervalWpms } = useGameContext();
-  const { textId, mode, view, quizAnswers, setQuizAnswers, modifyQuizAnswer } =
-    useGameContext();
+  const {
+    textId,
+    mode,
+    view,
+    quizAnswers,
+    averageWpm,
+    intervalWpms,
+    setQuizAnswers,
+    modifyQuizAnswer,
+  } = useGameContext();
   const { data: questions } = useNextQuestions(textId);
   const nextQuestion = quizAnswers.indexOf(null);
 
