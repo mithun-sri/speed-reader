@@ -7,6 +7,7 @@ from sqlalchemy import select
 from ..database import Session, get_session
 from ..logger import LoggerRoute
 from ..models import User
+from ..services.auth import set_tokens
 from ..services.exceptions import (
     InvalidCredentialsException,
     InvalidTokenException,
@@ -50,19 +51,4 @@ async def get_token(
         raise InvalidCredentialsException()
 
     access_token = create_access_token(data={"sub": user.username})
-
-    response.set_cookie(
-        "refresh_token",
-        refresh_token,
-        secure=True,
-        httponly=True,
-        samesite="strict",
-        path="/api/v1/auth/token",  # TODO: Refactor
-    )
-    response.set_cookie(
-        "access_token",
-        access_token,
-        secure=True,
-        httponly=True,
-        samesite="strict",
-    )
+    set_tokens(response, access_token, refresh_token)
