@@ -1,6 +1,7 @@
 import json
 import os
 from typing import Annotated
+from uuid import uuid4
 
 import openai
 from fastapi import APIRouter, Depends, Query
@@ -292,4 +293,64 @@ async def generate_text(difficulty: str, is_fiction: bool):
             )
             for question_json in response_json["questions"]
         ],
+        summary=response_json["summarised"],
+        source=response_json["gutenberg_link"],
+        fiction=is_fiction,
     )
+
+
+@router.post(
+    "/submit-text",
+    response_model=schemas.Text,
+)
+async def add_text(
+    text: schemas.Text,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Adds a text to the database.
+    """
+
+    # Generate an id for the text
+    text.id = str(uuid4())
+
+    text_ = models.Text(
+        id=text.id,
+        title=text.title,
+        content=text.content,
+        summary=text.summary,
+        source=text.source,
+        fiction=text.fiction,
+        difficulty=text.difficulty,
+        word_count=text.word_count,
+    )
+    session.add(text_)
+    session.commit()
+    return text  # need text id to be returned for questions to be added
+
+
+@router.post(
+    "/submit-questions",
+    response_model=dict[str, str],
+)
+async def submit_questions(
+    questions: list[schemas.QuestionWithCorrectOption],
+    text_id: str,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Adds questions to the database.
+    """
+    text = session.get(models.Text, text_id)
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
+    for question in questions:
+        question_ = models.Question(
+            content=question.content,
+            options=question.options,
+            correct_option=question.correct_option,
+            text=text,
+        )
+        session.add(question_)
+    session.commit()
+    return {"message": "Questions added successfully"}
