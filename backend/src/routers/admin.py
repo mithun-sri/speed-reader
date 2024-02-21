@@ -1,9 +1,9 @@
 import json
 import os
 from typing import Annotated
-from uuid import uuid4
 
 import openai
+import ulid
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -311,8 +311,8 @@ async def add_text(
     Adds a text to the database.
     """
 
-    # Generate an id for the text
-    text.id = str(uuid4())
+    # Generate an id as ulid for the text
+    text.id = str(ulid.new())
 
     text_ = models.Text(
         id=text.id,
