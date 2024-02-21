@@ -1,15 +1,12 @@
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Response
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
-from ..models.user import User
-from ..schemas.token import Token
-from ..schemas.user import UserRegistration, UserResponse
 from ..services.auth import get_current_user
 from ..services.exceptions import HistoryNotFoundException, InvalidCredentialsException
 from ..utils.auth import create_access_token, create_refresh_token
@@ -181,25 +178,28 @@ async def get_history(
 
 @router.post(
     "/register",
-    response_model=UserRegistration,
+    response_model=schemas.User,
 )
 async def register_user(
-    username: str,
-    email: str,
-    password: str,
+    # TODO:
+    # OAuth2 password flow recommends passing credentials
+    # as form data rather than request body.
+    username: Annotated[str, Body()],
+    email: Annotated[str, Body()],
+    password: Annotated[str, Body()],
     session: Annotated[Session, Depends(get_session)],
 ):
     """
     Registers a new user.
     """
-    query_check_username = select(User).filter(User.username == username)
+    query_check_username = select(models.User).filter(models.User.username == username)
     if session.scalars(query_check_username).one_or_none():
         raise HTTPException(status_code=409, detail="Username already used")
-    query_check_email = select(User).filter(User.email == email)
+    query_check_email = select(models.User).filter(models.User.email == email)
     if session.scalars(query_check_email).one_or_none():
         raise HTTPException(status_code=409, detail="Email already used")
 
-    new_user = User(
+    new_user = models.User(
         username=username,
         email=email,
         password=get_password_hash(password),
@@ -207,39 +207,55 @@ async def register_user(
     session.add(new_user)
     session.commit()
 
-    return UserRegistration(
-        message="User registered successfully",
-        data=UserResponse(
-            id=new_user.id,
-            username=new_user.username,
-            email=new_user.email,
-            created_at=new_user.created_at,
-        ),
+    return schemas.User(
+        id=new_user.id,
+        username=new_user.username,
+        email=new_user.email,
     )
 
 
 @router.post(
     "/login",
-    response_model=Token,
+    response_model=schemas.User,
 )
 async def login_user(
-    username: str,
-    password: str,
+    # TODO:
+    # OAuth2 password flow recommends passing credentials
+    # as form data rather than request body.
+    username: Annotated[str, Body()],
+    password: Annotated[str, Body()],
+    response: Response,
     session: Annotated[Session, Depends(get_session)],
 ):
     """
     Logs in a user. Returns access token and refresh token.
     """
-    get_user_query = select(User).filter(User.username == username)
-    user = session.scalars(get_user_query).one_or_none()
+    query = select(models.User).filter(models.User.username == username)
+    user = session.scalars(query).one_or_none()
     if not user or not verify_password(password, user.password):
         raise InvalidCredentialsException()
 
     access_token = create_access_token(data={"sub": user.username})
     refresh_token = create_refresh_token(data={"sub": user.username})
 
-    return Token(
-        access_token=access_token,
-        refresh_token=refresh_token,
-        token_type="bearer",
+    response.set_cookie(
+        "refresh_token",
+        refresh_token,
+        secure=True,
+        httponly=True,
+        samesite="strict",
+        path="/api/v1/auth/token",  # TODO: Refactor
+    )
+    response.set_cookie(
+        "access_token",
+        access_token,
+        secure=True,
+        httponly=True,
+        samesite="strict",
+    )
+
+    return schemas.User(
+        id=user.id,
+        username=user.username,
+        email=user.email,
     )

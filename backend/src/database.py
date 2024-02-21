@@ -36,6 +36,14 @@ except Exception as e:
     logging.error("MongoDB connection failed: %s", e)
 
 
+def get_session():
+    try:
+        with Session(engine) as session:
+            yield session
+    except Exception as e:
+        logging.error("Failed to get PostgreSQL session: %s", e)
+
+
 def reset_postgres_tables():
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
@@ -91,12 +99,3 @@ def seed_database():
             history.save(force_insert=True)
 
         session.commit()
-
-
-# TODO: Move this function into `dependencies.py` together with `get_token` etc.
-def get_session():
-    try:
-        with Session(engine) as session:
-            yield session
-    except Exception as e:
-        logging.error("Failed to get PostgreSQL session: %s", e)

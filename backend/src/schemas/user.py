@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -7,28 +6,10 @@ from .game import Result
 from .text import Text
 
 
-class UserLogin(BaseModel):
-    email: str
-    password: str
-
-
-# TODO: Update fields of `UserResponse` class.
-# TODO: Rename `UserResponse` to `User` - read models in Pydantic are named without any suffix.
-class UserResponse(BaseModel):
+class User(BaseModel):
     id: str
     username: str
     email: str
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
-
-
-# TODO:
-# NO need to return message in response.
-class UserRegistration(BaseModel):
-    message: str
-    data: UserResponse
 
 
 class UserStatistics(BaseModel):
@@ -41,6 +22,13 @@ class UserStatistics(BaseModel):
     average_score: int
 
 
+class UserAvailableTexts(BaseModel):
+    texts: list[Text]
+    page: int
+    page_size: int
+    total_texts: int
+
+
 # TODO: Move the schemas below to where appropriate.
 class TextSort(BaseModel):
     field: str
@@ -50,13 +38,6 @@ class TextSort(BaseModel):
 class TextFilter(BaseModel):
     game_mode: Optional[str] = None
     difficulty: Optional[str] = None
-
-
-class UserAvailableTexts(BaseModel):
-    texts: list[Text]
-    page: int
-    page_size: int
-    total_texts: int
 
 
 class History(BaseModel):
