@@ -8,14 +8,19 @@ from sqlalchemy import select
 from ..database import Session, get_session
 from ..models.user import User
 from ..utils.auth import ACCESS_TOKEN_SECRET_KEY, ALGORITHM
-from .exceptions import InvalidCredentialsException
+from .exceptions import (
+    AlreadyAuthenticatedException,
+    InvalidCredentialsException,
+    InvalidRoleException,
+    NotAuthenticatedException,
+)
 
 TOKEN_URL = "/api/v1/auth/token"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=TOKEN_URL)
 
 
-def set_tokens(
+def set_response_tokens(
     response: Response,
     access_token: str,
     refresh_token: str,
@@ -37,10 +42,10 @@ def set_tokens(
     )
 
 
-def get_current_user(
+def get_current_user_or_none(
     token: Annotated[str, Depends(oauth2_scheme)],
     session: Annotated[Session, Depends(get_session)],
-) -> User:
+) -> User | None:
     payload = jwt.decode(token, ACCESS_TOKEN_SECRET_KEY, algorithms=[ALGORITHM])
     username = payload.get("sub")
     if not username:
@@ -48,7 +53,40 @@ def get_current_user(
 
     query = select(User).filter(User.username == username)
     user = session.scalars(query).one_or_none()
+    return user
+
+
+def get_current_user(
+    user: User | None = Depends(get_current_user_or_none),
+) -> User:
     if not user:
         raise InvalidCredentialsException()
-
     return user
+
+
+def verify_auth(
+    user: Annotated[User, Depends(get_current_user_or_none)],
+):
+    if not user:
+        raise NotAuthenticatedException()
+
+
+def verify_guest(
+    user: Annotated[User | None, Depends(get_current_user_or_none)],
+):
+    if user:
+        raise AlreadyAuthenticatedException()
+
+
+def verify_admin(
+    user: Annotated[User, Depends(get_current_user)],
+):
+    if user.role != "admin":
+        raise InvalidRoleException("admin")
+
+
+def verify_user(
+    user: Annotated[User, Depends(get_current_user)],
+):
+    if user != "user":
+        raise InvalidRoleException("user")

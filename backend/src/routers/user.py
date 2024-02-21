@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
-from ..services.auth import get_current_user, set_tokens
+from ..services.auth import get_current_user, set_response_tokens
 from ..services.exceptions import HistoryNotFoundException, InvalidCredentialsException
 from ..utils.auth import create_access_token, create_refresh_token
 from ..utils.crypt import get_password_hash, verify_password
@@ -239,4 +239,4 @@ async def login_user(
 
     access_token = create_access_token(data={"sub": user.username})
     refresh_token = create_refresh_token(data={"sub": user.username})
-    set_tokens(response, access_token, refresh_token)
+    set_response_tokens(response, access_token, refresh_token)
