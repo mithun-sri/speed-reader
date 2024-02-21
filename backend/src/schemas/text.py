@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from .game import QuestionWithCorrectOption
+from .game import GeneratedQuestion, QuestionWithCorrectOption
 
 
 class Text(BaseModel):
@@ -20,7 +20,7 @@ class GeneratedText(BaseModel):
     content: str
     difficulty: str
     word_count: int
-    questions: list[QuestionWithCorrectOption]
+    questions: list[GeneratedQuestion]
     author: str
     gutenberg_link: str
     summarised: str

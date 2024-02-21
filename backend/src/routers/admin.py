@@ -254,7 +254,7 @@ def build_text_generation_prompt(difficulty: str, is_fiction: bool):
 
 @router.post(
     "/generate-text",
-    response_model=schemas.QuestionWithCorrectOption,
+    response_model=schemas.GeneratedText,
 )
 async def generate_text(difficulty: str, is_fiction: bool):
     if (
@@ -273,7 +273,6 @@ async def generate_text(difficulty: str, is_fiction: bool):
     ) is None:
         raise BadResponseFromOpenAI()
 
-    # TODO: Use summarised text, gutenberg link, author
     response_json = json.loads(response)
     return schemas.GeneratedText(
         title=response_json["title"],
@@ -281,8 +280,7 @@ async def generate_text(difficulty: str, is_fiction: bool):
         difficulty=response_json["difficulty"],
         word_count=len(response_json["extract"].split(" ")),
         questions=[
-            schemas.QuestionWithCorrectOption(
-                id="",
+            schemas.GeneratedQuestion(
                 content=question_json["question"],
                 options=question_json["options"],
                 correct_option=question_json["options"].index(
@@ -293,5 +291,5 @@ async def generate_text(difficulty: str, is_fiction: bool):
         ],
         author=response_json["author"],
         gutenberg_link=response_json["gutenberg_link"],
-        summarised=response_json["summarised"]
+        summarised=response_json["summarised"],
     )
