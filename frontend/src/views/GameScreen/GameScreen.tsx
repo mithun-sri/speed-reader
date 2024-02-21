@@ -49,7 +49,6 @@ const GameView = () => {
 
   let gameView = null;
   if (mode === STANDARD_MODE) {
-    console.log(`wpm is ${wpm}`);
     gameView = <StandardModeGameView wpm={wpm!} mode={view!} />;
   } else if (mode === ADAPTIVE_MODE) {
     gameView = <AdaptiveModeView />;

@@ -24,6 +24,7 @@ from .services.exception_handlers import (
     not_enough_questions_exception_handler,
     question_not_belong_to_text_exception_handler,
     question_not_found_exception_handler,
+    text_already_exists_exception_handler,
     text_not_found_exception_handler,
     token_not_found_exception_handler,
     user_already_exists_exception_handler,
@@ -44,6 +45,7 @@ from .services.exceptions import (
     NoTextAvailableException,
     QuestionNotBelongToTextException,
     QuestionNotFoundException,
+    TextAlreadyExistsException,
     TextNotFoundException,
     TokenNotFoundException,
     UserAlreadyExistsException,
@@ -90,6 +92,7 @@ app.add_exception_handler(DuplicateAnswersException, duplicate_answers_exception
 app.add_exception_handler(QuestionNotBelongToTextException, question_not_belong_to_text_exception_handler)  # type: ignore
 app.add_exception_handler(HistoryNotFoundException, history_not_found_exception_handler)  # type: ignore
 app.add_exception_handler(BadResponseFromOpenAI, bad_response_from_openai_exception_handler)  # type: ignore
+app.add_exception_handler(TextAlreadyExistsException, text_already_exists_exception_handler)  # type: ignore
 
 
 @app.on_event("startup")

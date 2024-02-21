@@ -13,7 +13,11 @@ export const EASY = "Easy";
 export const MED = "Medium";
 export const HARD = "Hard";
 
-export const PATH_STANDARD_MODE_1 = "/mode-standard-1";
-export const PATH_STANDARD_MODE_2 = "/mode-standard-2";
-export const PATH_ADAPTIVE_MODE = "/mode-adaptive";
-export const PATH_SUMMARISED_ADAPTIVE_MODE = "/mode-summarised";
+export function calculateAverageWpm(intervalWpms: number[]) {
+  if (intervalWpms.length === 0) {
+    return 0;
+  }
+
+  const sum = intervalWpms.reduce((acc, currentValue) => acc + currentValue, 0);
+  return Math.ceil(sum / intervalWpms.length);
+}

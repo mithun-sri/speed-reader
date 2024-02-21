@@ -121,3 +121,10 @@ class BadResponseFromOpenAI(Exception):
     def __init__(self) -> None:
         self.status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         self.detail = "Bad response from OpenAI"
+
+
+class TextAlreadyExistsException(Exception):
+    def __init__(self, text_id) -> None:
+        self.status_code = status.HTTP_409_CONFLICT
+        self.detail = "Text already exists"
+        self.text_id = text_id

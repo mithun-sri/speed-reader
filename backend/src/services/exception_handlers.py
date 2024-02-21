@@ -18,6 +18,7 @@ from .exceptions import (
     NoTextAvailableException,
     QuestionNotBelongToTextException,
     QuestionNotFoundException,
+    TextAlreadyExistsException,
     TextNotFoundException,
     TokenNotFoundException,
     UserAlreadyExistsException,
@@ -219,4 +220,14 @@ async def bad_response_from_openai_exception_handler(
     return JSONResponse(
         status_code=exc.status_code,
         content={"message": "Bad response from OpenAI"},
+    )
+
+
+async def text_already_exists_exception_handler(
+    _request: Request,
+    exc: TextAlreadyExistsException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": "Text already exists."},
     )

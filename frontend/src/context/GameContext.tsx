@@ -11,6 +11,10 @@ interface GameContextType {
   setWpm: (wpm: number) => void;
   view: StandardView | null; // TODO: change to GameView when StandardSelect is implemented
   setView: (view: StandardView) => void;
+  averageWpm: number;
+  setAverageWpm: (averageWpm: number) => void;
+  intervalWpms: number[];
+  setIntervalWpms: (intervalWpms: number[]) => void;
   gazeX: number;
   setGazeX: (x: number) => void;
   gazeY: number;
@@ -29,11 +33,17 @@ const GameContext = createContext<GameContextType>({
   setDifficulty: () => {},
 
   // wpm and view are only for STANDARD_MODE
-  wpm: null,
+  wpm: 400,
   setWpm: () => {},
   view: null,
   setView: () => {},
 
+  // store wpm per five seconds
+  averageWpm: 0,
+  setAverageWpm: () => {},
+  // store wpm average for a game after a game ends
+  intervalWpms: [],
+  setIntervalWpms: () => {},
   // gaze_x and gaze_y are only for ADAPTIVE_MODE
   gazeX: 0,
   setGazeX: () => {},
@@ -65,8 +75,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [mode, setMode] = useState<GameMode | null>(null);
   const [difficulty, setDifficulty] = useState<GameDifficulty | null>(null);
-  const [wpm, setWpm] = useState<number | null>(null);
+  const [wpm, setWpm] = useState<number | null>(400);
   const [view, setView] = useState<StandardView | null>(null);
+  const [averageWpm, setAverageWpm] = useState<number>(0);
+  const [intervalWpms, setIntervalWpms] = useState<number[]>([]);
   const [gazeX, setGazeX] = useState<number>(0);
   const [gazeY, setGazeY] = useState<number>(0);
   const [textId, setTextId] = useState<string>("");
@@ -93,6 +105,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         setWpm,
         view,
         setView,
+        averageWpm,
+        setAverageWpm,
+        intervalWpms,
+        setIntervalWpms,
         gazeX,
         setGazeX,
         gazeY,

@@ -11,8 +11,16 @@ import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 
 const QuizView = () => {
   const { incrementCurrentStage } = useGameScreenContext();
-  const { textId, mode, view, quizAnswers, setQuizAnswers, modifyQuizAnswer } =
-    useGameContext();
+  const {
+    textId,
+    mode,
+    view,
+    quizAnswers,
+    averageWpm,
+    intervalWpms,
+    setQuizAnswers,
+    modifyQuizAnswer,
+  } = useGameContext();
   const { data: questions } = useNextQuestions(textId);
   const nextQuestion = quizAnswers.indexOf(null);
 
@@ -56,8 +64,8 @@ const QuizView = () => {
               questionId: questions![questionIndex].id,
               selectedOption: selectedOption!,
             })),
-            averageWpm: 0,
-            intervalWpms: [0, 0, 0],
+            averageWpm: averageWpm,
+            intervalWpms: intervalWpms,
             gameMode: mode,
             gameSubmode: "word-by-word",
             summary: true,
