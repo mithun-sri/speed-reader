@@ -254,7 +254,7 @@ def build_text_generation_prompt(difficulty: str, is_fiction: bool):
 
 @router.post(
     "/generate-text",
-    response_model=schemas.TextWithQuestions,
+    response_model=schemas.QuestionWithCorrectOption,
 )
 async def generate_text(difficulty: str, is_fiction: bool):
     if (
@@ -275,8 +275,7 @@ async def generate_text(difficulty: str, is_fiction: bool):
 
     # TODO: Use summarised text, gutenberg link, author
     response_json = json.loads(response)
-    return schemas.TextWithQuestions(
-        id="",
+    return schemas.GeneratedText(
         title=response_json["title"],
         content=response_json["extract"],
         difficulty=response_json["difficulty"],
@@ -292,4 +291,7 @@ async def generate_text(difficulty: str, is_fiction: bool):
             )
             for question_json in response_json["questions"]
         ],
+        author=response_json["author"],
+        gutenberg_link=response_json["gutenberg_link"],
+        summarised=response_json["summarised"]
     )
