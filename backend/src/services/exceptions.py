@@ -8,6 +8,13 @@ class InvalidCredentialsException(Exception):
         self.detail = "Invalid credentials"
 
 
+class TokenNotFoundException(Exception):
+    def __init__(self) -> None:
+        self.status_code = status.HTTP_404_NOT_FOUND
+        self.headers = {"WWW-Authenticate": "Bearer"}
+        self.detail = "Token not found"
+
+
 class InvalidTokenException(Exception):
     def __init__(self) -> None:
         self.status_code = status.HTTP_401_UNAUTHORIZED

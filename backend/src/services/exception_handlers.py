@@ -17,6 +17,7 @@ from .exceptions import (
     QuestionNotBelongToTextException,
     QuestionNotFoundException,
     TextNotFoundException,
+    TokenNotFoundException,
     UserAlreadyExistsException,
     UserNotFoundException,
 )
@@ -48,6 +49,16 @@ async def invalid_credentials_exception_handler(
 async def invalid_token_exception_handler(
     _request: Request,
     exc: InvalidTokenException,
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"message": exc.detail},
+    )
+
+
+async def token_not_found_exception_handler(
+    _request: Request,
+    exc: TokenNotFoundException,
 ):
     return JSONResponse(
         status_code=exc.status_code,
