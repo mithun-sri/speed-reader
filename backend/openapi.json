@@ -490,6 +490,33 @@
         }
       }
     },
+    "/users/current": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get Current User",
+        "description": "Gets the current user's information.",
+        "operationId": "get_current_user",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
     "/users/current/statistics": {
       "get": {
         "tags": [
@@ -692,9 +719,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
+                "schema": {}
               }
             }
           },
@@ -734,9 +759,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
+                "schema": {}
               }
             }
           },
@@ -1391,13 +1414,18 @@
           "email": {
             "type": "string",
             "title": "Email"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
           }
         },
         "type": "object",
         "required": [
           "id",
           "username",
-          "email"
+          "email",
+          "role"
         ],
         "title": "User"
       },
