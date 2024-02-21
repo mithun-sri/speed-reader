@@ -10,6 +10,7 @@ class User(BaseModel):
     id: str
     username: str
     email: str
+    role: str
 
 
 class UserStatistics(BaseModel):

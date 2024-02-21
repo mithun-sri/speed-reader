@@ -16,6 +16,20 @@ router = APIRouter(prefix="/users", tags=["user"], route_class=LoggerRoute)
 
 
 @router.get(
+    "/current",
+    name="get_current_user",  # TODO: Refactor
+    response_model=schemas.User,
+)
+async def get_current_user_(
+    user: Annotated[models.User, Depends(get_current_user)],
+):
+    """
+    Gets the current user's information.
+    """
+    return user
+
+
+@router.get(
     "/current/statistics",
     response_model=schemas.UserStatistics,
 )
@@ -176,10 +190,7 @@ async def get_history(
     )
 
 
-@router.post(
-    "/register",
-    response_model=schemas.User,
-)
+@router.post("/register")
 async def register_user(
     # TODO:
     # OAuth2 password flow recommends passing credentials
@@ -199,25 +210,16 @@ async def register_user(
     if session.scalars(query_check_email).one_or_none():
         raise HTTPException(status_code=409, detail="Email already used")
 
-    new_user = models.User(
+    user = models.User(
         username=username,
         email=email,
         password=get_password_hash(password),
     )
-    session.add(new_user)
+    session.add(user)
     session.commit()
 
-    return schemas.User(
-        id=new_user.id,
-        username=new_user.username,
-        email=new_user.email,
-    )
 
-
-@router.post(
-    "/login",
-    response_model=schemas.User,
-)
+@router.post("/login")
 async def login_user(
     # TODO:
     # OAuth2 password flow recommends passing credentials
@@ -252,10 +254,4 @@ async def login_user(
         secure=True,
         httponly=True,
         samesite="strict",
-    )
-
-    return schemas.User(
-        id=user.id,
-        username=user.username,
-        email=user.email,
     )
