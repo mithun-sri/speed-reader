@@ -1,12 +1,16 @@
 import PropTypes from "prop-types";
-import { GameDifficulty, STANDARD_MODE } from "../../common/constants";
+import {
+  calculateAverageWpm,
+  GameDifficulty,
+  STANDARD_MODE,
+} from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./StandardMode.css";
 
 import Box from "@mui/material/Box";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
@@ -69,7 +73,7 @@ const StandardModeGameView: React.FC<{
       >
         {showGameScreen ? (
           <StandardModeGameComponent
-            wpm={wpm || 200} // Handle undefined wpm
+            wpm={wpm || 400} // Handle undefined wpm
             text={text.content}
             view={mode || StandardView.Word} // Handle undefined mode
           />
@@ -95,7 +99,7 @@ const StandardModeGameComponent: React.FC<{
   text: string;
   view: StandardView;
 }> = ({ wpm, text, view }) => {
-  let display = null;
+  let display = <HighlightedTextDisplay text={text} wpm={wpm} />;
 
   switch (view) {
     case StandardView.Word: {
@@ -201,6 +205,7 @@ const WordTextDisplay: React.FC<{
   size?: number;
 }> = ({ text, wpm }) => {
   const { incrementCurrentStage } = useGameScreenContext();
+  const { intervalWpms, setIntervalWpms, setAverageWpm } = useGameContext();
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
@@ -228,12 +233,26 @@ const WordTextDisplay: React.FC<{
     };
   }, [text, curr_wpm]);
 
-  // navigate to next screen (quiz) when game ends
+  // calculate avg wpm and navigate to next screen (quiz) when game ends
   useEffect(() => {
     if (wordIndex === words.length && words.length > 0) {
+      const avg_wpm = calculateAverageWpm(intervalWpms);
+      setAverageWpm(avg_wpm);
+
       incrementCurrentStage();
+
+      console.log("intervalWpms: " + intervalWpms);
     }
   }, [wordIndex, words.length]);
+
+  // record WPM every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIntervalWpms([...intervalWpms, curr_wpm]);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [curr_wpm, intervalWpms, setIntervalWpms]);
 
   return (
     <Box>
@@ -274,11 +293,13 @@ export const HighlightedTextDisplay: React.FC<{
   size?: number;
 }> = ({ text, wpm }) => {
   const { incrementCurrentStage } = useGameScreenContext();
+  const { intervalWpms, setIntervalWpms, setAverageWpm } = useGameContext();
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
   const wordsPerFrame = 30;
   const wordsArray = text.split(" ");
+
   // updates WPM based on keyboard event
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) =>
@@ -303,12 +324,26 @@ export const HighlightedTextDisplay: React.FC<{
     };
   }, [text, curr_wpm]);
 
-  // navigate to next screen (quiz) when game ends
+  // calculate avg wpm and navigate to next screen (quiz) when game ends
   useEffect(() => {
     if (wordIndex === wordsArray.length && wordsArray.length > 0) {
+      const avg_wpm = calculateAverageWpm(intervalWpms);
+      setAverageWpm(avg_wpm);
+
       incrementCurrentStage();
+      console.log("intervalWpms: ");
+      console.log(intervalWpms);
     }
   }, [wordIndex, wordsArray.length]);
+
+  // record WPM every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIntervalWpms([...intervalWpms, curr_wpm]);
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [curr_wpm, intervalWpms, setIntervalWpms]);
 
   // calculates which words should be shown on the screen (in the current frame)
   const currentFrameIndex = Math.floor(highlightedIndex / wordsPerFrame);
@@ -381,13 +416,15 @@ const wpmAdjuster = (
 ): void => {
   if (event.code === "ArrowUp") {
     console.log("ArrowUp");
-    setWpm(curr_wpm + 5);
-    console.log(curr_wpm);
+    const new_wpm = curr_wpm + 5;
+    setWpm(new_wpm);
+    console.log(new_wpm);
   }
   if (event.code === "ArrowDown") {
     console.log("ArrowDown");
-    setWpm(Math.max(curr_wpm - 5, 1));
-    console.log(curr_wpm);
+    const new_wpm = Math.max(curr_wpm - 5, 1);
+    setWpm(new_wpm);
+    console.log(new_wpm);
   }
 };
 
