@@ -391,6 +391,160 @@
         }
       }
     },
+    "/admin/generate-text": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Generate Text",
+        "operationId": "generate_text",
+        "parameters": [
+          {
+            "name": "difficulty",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Difficulty"
+            }
+          },
+          {
+            "name": "is_fiction",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "title": "Is Fiction"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextWithQuestions"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/submit-text": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Add Text",
+        "description": "Adds a text to the database.",
+        "operationId": "add_text",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Text"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Text"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/submit-questions": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Submit Questions",
+        "description": "Adds questions to the database.",
+        "operationId": "submit_questions",
+        "parameters": [
+          {
+            "name": "text_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Text Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/QuestionWithCorrectOption"
+                },
+                "title": "Questions"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Submit Questions"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/token": {
       "post": {
         "tags": [
@@ -1202,6 +1356,18 @@
             "type": "string",
             "title": "Content"
           },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fiction": {
+            "type": "boolean",
+            "title": "Fiction"
+          },
           "difficulty": {
             "type": "string",
             "title": "Difficulty"
@@ -1216,6 +1382,9 @@
           "id",
           "title",
           "content",
+          "summary",
+          "source",
+          "fiction",
           "difficulty",
           "word_count"
         ],
@@ -1281,6 +1450,18 @@
             "type": "string",
             "title": "Content"
           },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fiction": {
+            "type": "boolean",
+            "title": "Fiction"
+          },
           "difficulty": {
             "type": "string",
             "title": "Difficulty"
@@ -1302,6 +1483,9 @@
           "id",
           "title",
           "content",
+          "summary",
+          "source",
+          "fiction",
           "difficulty",
           "word_count",
           "questions"
