@@ -43,9 +43,9 @@ async def get_user_statistics(
         {
             "$group": {
                 "_id": user.id,
-                "minWpm": {"$min": "$wpm"},
-                "maxWpm": {"$max": "$wpm"},
-                "avgWpm": {"$avg": "$wpm"},
+                "minWpm": {"$min": "$average_wpm"},
+                "maxWpm": {"$max": "$average_wpm"},
+                "avgWpm": {"$avg": "$average_wpm"},
                 "avgScore": {"$avg": "$score"},
             }
         }
@@ -57,10 +57,10 @@ async def get_user_statistics(
         user_id=user.id,
         username=user.username,
         email=user.email,
-        min_wpm=data["minWpm"],
-        max_wpm=data["maxWpm"],
-        average_wpm=data["avgWpm"],
-        average_score=data["avgScore"],
+        min_wpm=data.get("minWpm", 0),
+        max_wpm=data.get("maxWpm", 0),
+        average_wpm=int(data.get("avgWpm", 0)),
+        average_score=int(data.get("avgScore", 0)),
     )
 
 

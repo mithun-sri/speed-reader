@@ -37,8 +37,8 @@ class HistoryFactory(factory.mongoengine.MongoEngineFactory):
     interval_wpms = factory.List(
         [factory.Faker("random_int", min=1, max=1000) for _ in range(10)]
     )
+    # fmt: off
     score = factory.LazyAttribute(
-        # fmt: off
-        lambda obj: sum(result.correct for result in obj.results) * 100 // len(obj.results)
+        lambda obj: sum(result.correct for result in obj.results) * 100 // max(len(obj.results), 1)
     )
     results = factory.List([factory.RelatedFactory(ResultFactory) for _ in range(10)])
