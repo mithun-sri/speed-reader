@@ -73,7 +73,7 @@ const StandardModeGameView: React.FC<{
       >
         {showGameScreen ? (
           <StandardModeGameComponent
-            wpm={wpm || 200} // Handle undefined wpm
+            wpm={wpm || 400} // Handle undefined wpm
             text={text.content}
             view={mode || StandardView.Word} // Handle undefined mode
           />
@@ -233,7 +233,7 @@ const WordTextDisplay: React.FC<{
     };
   }, [text, curr_wpm]);
 
-  // navigate to next screen (quiz) when game ends
+  // calculate avg wpm and navigate to next screen (quiz) when game ends
   useEffect(() => {
     if (wordIndex === words.length && words.length > 0) {
       const avg_wpm = calculateAverageWpm(intervalWpms);
@@ -324,7 +324,7 @@ export const HighlightedTextDisplay: React.FC<{
     };
   }, [text, curr_wpm]);
 
-  // navigate to next screen (quiz) when game ends
+  // calculate avg wpm and navigate to next screen (quiz) when game ends
   useEffect(() => {
     if (wordIndex === wordsArray.length && wordsArray.length > 0) {
       const avg_wpm = calculateAverageWpm(intervalWpms);
@@ -416,13 +416,15 @@ const wpmAdjuster = (
 ): void => {
   if (event.code === "ArrowUp") {
     console.log("ArrowUp");
-    setWpm(curr_wpm + 5);
-    console.log(curr_wpm);
+    const new_wpm = curr_wpm + 5;
+    setWpm(new_wpm);
+    console.log(new_wpm);
   }
   if (event.code === "ArrowDown") {
     console.log("ArrowDown");
-    setWpm(Math.max(curr_wpm - 5, 1));
-    console.log(curr_wpm);
+    const new_wpm = Math.max(curr_wpm - 5, 1);
+    setWpm(new_wpm);
+    console.log(new_wpm);
   }
 };
 
