@@ -125,6 +125,7 @@ async def post_answers(
         )
 
     # Save the history before returning the results to the question answers.
+    # TODO: Refactor
     score = sum(result.correct for result in results) * 100 // max(len(results), 1)
     history = models.History(
         # TODO:

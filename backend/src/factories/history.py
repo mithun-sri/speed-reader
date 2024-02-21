@@ -39,6 +39,7 @@ class HistoryFactory(factory.mongoengine.MongoEngineFactory):
     )
     # fmt: off
     score = factory.LazyAttribute(
+        # TODO: Refactor
         lambda obj: sum(result.correct for result in obj.results) * 100 // max(len(obj.results), 1)
     )
     results = factory.List([factory.RelatedFactory(ResultFactory) for _ in range(10)])

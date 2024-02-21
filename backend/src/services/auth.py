@@ -88,5 +88,5 @@ def verify_admin(
 def verify_user(
     user: Annotated[User, Depends(get_current_user)],
 ):
-    if user != "user":
+    if user.role != "user":
         raise InvalidRoleException("user")
