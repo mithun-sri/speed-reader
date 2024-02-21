@@ -33,6 +33,7 @@ const Calibration = (props: any) => {
 
     return () => {
       window.removeEventListener("load", handleLoad);
+      props.turnOffCam();
     };
   }, []);
 
