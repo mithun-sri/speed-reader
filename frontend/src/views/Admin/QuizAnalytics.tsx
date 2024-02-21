@@ -74,7 +74,7 @@ const QuizAnalytics: React.FC = () => {
             <Tooltip />
             <Bar dataKey="proportion" barSize={150}>
               {data.map((_, index) => (
-                <Cell fill={index === correctAnswer ? "#379F3B" : "#979797"} />
+                <Cell key={index} fill={index === correctAnswer ? "#379F3B" : "#979797"} />
               ))}
             </Bar>
           </BarChart>
