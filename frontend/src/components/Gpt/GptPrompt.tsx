@@ -1,15 +1,16 @@
 import { Box, MenuItem, SelectChangeEvent, styled } from "@mui/material";
 import { useEffect, useState } from "react";
+import { TextWithQuestions } from "../../api";
 import { StyledFormControl, StyledSelect } from "../Button/DropDownMenu";
 import GptButton from "../Button/GptButton";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
 import JetBrainsMonoText from "../Text/TextComponent";
 
 const GptPrompt: React.FC<{
-  onGenerateResponse: (response: string) => void;
+  onGenerateResponse: (response: TextWithQuestions) => void;
 }> = ({ onGenerateResponse }) => {
   const [diff, setDiff] = useState<string>("easy");
-  const [fiction, setFiction] = useState(false);
+  const [isFiction, setIsFiction] = useState(false);
 
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
@@ -37,13 +38,116 @@ const GptPrompt: React.FC<{
   };
 
   const handleCheckFiction = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFiction(event.target.checked);
+    setIsFiction(event.target.checked);
   };
 
-  const handleGenerateTextButton = () => {
+  const handleGenerateTextButton = async () => {
     // TODO: Make request through GPT endpoint
-    console.log("Button clicked!");
-    onGenerateResponse("TEST RESPONSE");
+
+    try {
+      // const response = await fetch(
+      //   "http://localhost:8000/api/v1/admin/generate-text",
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({ difficulty: diff, is_fiction: isFiction }),
+      //   },
+      // );
+
+      // if (!response.ok) {
+      //   throw new Error("Failed to fetch data from /admin/generate-text");
+      // }
+
+      // TODO: replace dummy response with response from backend
+      const response: TextWithQuestions = {
+        id: "updated ID",
+        title: "The Elements of Style",
+        content:
+          "Vigorous writing is concise. A sentence should contain no unnecessary words, a paragraph no unnecessary sentences, for the same reason that a drawing should have no unnecessary lines and a machine no unnecessary parts. This requires not that the writer make all his sentences short, or that he avoid all detail and treat his subjects only in outline, but that every word tell.",
+        difficulty: "medium",
+        wordCount: 70,
+        questions: [
+          {
+            id: "1",
+            content: "What is the capital of France?",
+            options: ["London", "Paris", "Berlin"],
+            correctOption: 1,
+          },
+          {
+            id: "2",
+            content: "Which planet is known as the Red Planet?",
+            options: ["Venus", "Mars", "Jupiter"],
+            correctOption: 1,
+          },
+          {
+            id: "3",
+            content: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2"],
+            correctOption: 0,
+          },
+          {
+            id: "3",
+            content: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2"],
+            correctOption: 0,
+          },
+          {
+            id: "3",
+            content: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2"],
+            correctOption: 0,
+          },
+          {
+            id: "3",
+            content: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2"],
+            correctOption: 0,
+          },
+          {
+            id: "3",
+            content: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2"],
+            correctOption: 0,
+          },
+          {
+            id: "3",
+            content: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2"],
+            correctOption: 0,
+          },
+          {
+            id: "3",
+            content: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2"],
+            correctOption: 0,
+          },
+          {
+            id: "3",
+            content: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2"],
+            correctOption: 0,
+          },
+          {
+            id: "3",
+            content: "What is the chemical symbol for water?",
+            options: ["H2O", "CO2", "O2"],
+            correctOption: 0,
+          },
+        ],
+        summary: "summarised text here",
+        source: "www.example.com",
+        fiction: false,
+      };
+
+      // const data: TextWithQuestions = await response.json();
+      const data: TextWithQuestions = response;
+      console.log(data);
+      onGenerateResponse(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -88,7 +192,7 @@ const GptPrompt: React.FC<{
               size={fontSize * 0.6}
               color="#FFFFFF"
             />
-            <StyledCheckbox checked={fiction} onChange={handleCheckFiction} />
+            <StyledCheckbox checked={isFiction} onChange={handleCheckFiction} />
           </Box>
         </Box>
         <Box

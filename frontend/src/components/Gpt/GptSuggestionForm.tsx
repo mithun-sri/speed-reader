@@ -1,30 +1,22 @@
 import { Box } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { QuestionWithCorrectOption, Text } from "../../api";
+import { useGptContext } from "../../context/GptContext";
 import GptButton from "../Button/GptButton";
 import GptQuestionFeed from "./GptQuestionFeed";
 import GptSourceInfo from "./GptSourceInfo";
 import GptText from "./GptText";
 
-/** TODO: Change according the GPT response format
- *  source_title
-    text_title
-    content
-    author
-    difficulty
-    fiction
-    link
-    source (how is this different from title?)
-    questions
-    description
-    options
-    description
-    correct_option
-    summary (if non-fiction)
- */
 export interface GptFormData {
-  suggestion1: string;
-  suggestion2: string;
-  suggestion3: string;
+  title: string;
+  content: string;
+  summarised: string;
+  questions: {
+    content: string;
+    options: string[];
+    correctOption: number;
+    selected: boolean;
+  }[];
 }
 
 /**
@@ -34,16 +26,38 @@ export interface GptFormData {
  * QUESTION LIST [DONE]
  * GENERATE 5 MORE QUESTIONS, APPROVE BUTTONS
  */
-const GptSuggestionForm: React.FC<{
-  response: string;
-}> = ({ response }) => {
+const GptSuggestionForm = () => {
+  const { textWithQuestions } = useGptContext();
   const useGptForm = useForm<GptFormData>();
   const { handleSubmit } = useGptForm;
 
-  console.log(response);
+  const onSubmit: SubmitHandler<GptFormData> = (data: GptFormData) => {
+    // Build Text data to submit to server
+    const text: Text = {
+      id: "", // TODO
+      title: data.title,
+      content: data.content,
+      summary: data.summarised,
+      source: textWithQuestions.source,
+      fiction: textWithQuestions.fiction,
+      difficulty: textWithQuestions.difficulty,
+      wordCount: data.content.length,
+    };
+    // Build QuestionWithCorrectOption[] data to submit to server
+    const questions: QuestionWithCorrectOption[] = data.questions
+      .filter((question) => question.selected)
+      .map((question, index) => ({
+        id: index.toString(), // TODO
+        content: question.content,
+        options: question.options,
+        correctOption: question.correctOption,
+      }));
 
-  const onSubmit: SubmitHandler<GptFormData> = (data) => {
+    // TODO: send text and questions to server
+
     console.log(data);
+    console.log(text);
+    console.log(questions);
   };
 
   return (
@@ -57,7 +71,7 @@ const GptSuggestionForm: React.FC<{
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <GptSourceInfo
-          sourceTitle={"The Element Of Style"}
+          sourceTitle={textWithQuestions.title}
           author={"William Strunk Jr."}
           link={"https://example.com"}
         />
@@ -71,8 +85,8 @@ const GptSuggestionForm: React.FC<{
             gap: 5,
           }}
         >
-          <GptButton color={"#4285F4"} label={"generate 3 more questions"} />
-          <GptButton color={"#379F3B"} label={"approve"} />
+          {/* <GptButton color={"#4285F4"} label={"generate 3 more questions"} /> */}
+          <GptButton submit color={"#379F3B"} label={"approve"} />
         </Box>
       </form>
     </Box>
