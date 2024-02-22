@@ -9,6 +9,7 @@ from src.database import (
     reset_mongodb_collections,
     reset_postgres_tables,
 )
+from src.factories.user import UserFactory
 from src.main import app
 from src.services.auth import get_current_user
 
@@ -41,9 +42,19 @@ def app_fixture(session: Session):
     app.dependency_overrides.clear()
 
 
-@fixture(name="client", scope="function")
+@fixture(name="user_client", scope="function")
 # pylint: disable=redefined-outer-name
-def client_fixture(app: FastAPI):
-    app.dependency_overrides[get_current_user] = lambda: None
+def user_client_fixture(app: FastAPI):
+    user = UserFactory.build(role="user")
+    app.dependency_overrides[get_current_user] = lambda: user
+
+    yield TestClient(app)
+
+
+@fixture(name="admin_client", scope="function")
+# pylint: disable=redefined-outer-name
+def admin_client_fixture(app: FastAPI):
+    admin = UserFactory.build(role="admin")
+    app.dependency_overrides[get_current_user] = lambda: admin
 
     yield TestClient(app)
