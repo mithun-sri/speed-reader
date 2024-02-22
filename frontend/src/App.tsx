@@ -8,6 +8,7 @@ import GptView from "./views/Admin/GptView";
 import WebGazerLoader from "./views/Calibration/WebGazerLoader";
 import { GamePage } from "./views/GameScreen/GameScreen";
 import UserView from "./views/User/UserView";
+import AdminAnalytics from "./views/Admin/Analytics";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +36,7 @@ function App() {
               <Route path="/game" element={<GamePage />} />
               <Route path="/calibration" element={<WebGazerLoader />} />
               <Route path="/user" element={<UserView />} />
-              <Route path="/admin" />
+              <Route path="/admin" element={<AdminAnalytics />} />
               <Route path="/gpt" element={<GptView />} />
             </Routes>
           </BrowserRouter>
