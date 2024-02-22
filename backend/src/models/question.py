@@ -17,5 +17,5 @@ class Question(ULIDMixin, TimestampMixin, Base):
     options: Mapped[list[str]] = mapped_column(JSON)
     correct_option: Mapped[int]
 
-    text_id: Mapped[int] = mapped_column(ForeignKey("text.id"), init=False)
+    text_id: Mapped[str] = mapped_column(ForeignKey("text.id"), init=False)
     text: Mapped["Text"] = relationship(back_populates="questions")

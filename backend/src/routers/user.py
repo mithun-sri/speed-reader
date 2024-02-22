@@ -1,21 +1,32 @@
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Response
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
-from ..models.user import User
-from ..schemas.token import Token
-from ..schemas.user import UserRegistration, UserResponse
-from ..services.auth import get_current_user
+from ..services.auth import get_current_user, set_response_tokens
 from ..services.exceptions import HistoryNotFoundException, InvalidCredentialsException
 from ..utils.auth import create_access_token, create_refresh_token
 from ..utils.crypt import get_password_hash, verify_password
 
 router = APIRouter(prefix="/users", tags=["user"], route_class=LoggerRoute)
+
+
+@router.get(
+    "/current",
+    name="get_current_user",  # TODO: Refactor
+    response_model=schemas.User,
+)
+async def get_current_user_(
+    user: Annotated[models.User, Depends(get_current_user)],
+):
+    """
+    Gets the current user's information.
+    """
+    return user
 
 
 @router.get(
@@ -32,9 +43,9 @@ async def get_user_statistics(
         {
             "$group": {
                 "_id": user.id,
-                "minWpm": {"$min": "$wpm"},
-                "maxWpm": {"$max": "$wpm"},
-                "avgWpm": {"$avg": "$wpm"},
+                "minWpm": {"$min": "$average_wpm"},
+                "maxWpm": {"$max": "$average_wpm"},
+                "avgWpm": {"$avg": "$average_wpm"},
                 "avgScore": {"$avg": "$score"},
             }
         }
@@ -46,10 +57,10 @@ async def get_user_statistics(
         user_id=user.id,
         username=user.username,
         email=user.email,
-        min_wpm=data["minWpm"],
-        max_wpm=data["maxWpm"],
-        average_wpm=data["avgWpm"],
-        average_score=data["avgScore"],
+        min_wpm=data.get("minWpm", 0),
+        max_wpm=data.get("maxWpm", 0),
+        average_wpm=int(data.get("avgWpm", 0)),
+        average_score=int(data.get("avgScore", 0)),
     )
 
 
@@ -179,67 +190,53 @@ async def get_history(
     )
 
 
-@router.post(
-    "/register",
-    response_model=UserRegistration,
-)
+@router.post("/register")
 async def register_user(
-    username: str,
-    email: str,
-    password: str,
+    # TODO:
+    # OAuth2 password flow recommends passing credentials
+    # as form data rather than request body.
+    username: Annotated[str, Body()],
+    email: Annotated[str, Body()],
+    password: Annotated[str, Body()],
     session: Annotated[Session, Depends(get_session)],
 ):
     """
     Registers a new user.
     """
-    query_check_username = select(User).filter(User.username == username)
+    query_check_username = select(models.User).filter(models.User.username == username)
     if session.scalars(query_check_username).one_or_none():
         raise HTTPException(status_code=409, detail="Username already used")
-    query_check_email = select(User).filter(User.email == email)
+    query_check_email = select(models.User).filter(models.User.email == email)
     if session.scalars(query_check_email).one_or_none():
         raise HTTPException(status_code=409, detail="Email already used")
 
-    new_user = User(
+    user = models.User(
         username=username,
         email=email,
         password=get_password_hash(password),
     )
-    session.add(new_user)
+    session.add(user)
     session.commit()
 
-    return UserRegistration(
-        message="User registered successfully",
-        data=UserResponse(
-            id=new_user.id,
-            username=new_user.username,
-            email=new_user.email,
-            created_at=new_user.created_at,
-        ),
-    )
 
-
-@router.post(
-    "/login",
-    response_model=Token,
-)
+@router.post("/login")
 async def login_user(
-    username: str,
-    password: str,
+    # TODO:
+    # OAuth2 password flow recommends passing credentials
+    # as form data rather than request body.
+    username: Annotated[str, Body()],
+    password: Annotated[str, Body()],
+    response: Response,
     session: Annotated[Session, Depends(get_session)],
 ):
     """
     Logs in a user. Returns access token and refresh token.
     """
-    get_user_query = select(User).filter(User.username == username)
-    user = session.scalars(get_user_query).one_or_none()
+    query = select(models.User).filter(models.User.username == username)
+    user = session.scalars(query).one_or_none()
     if not user or not verify_password(password, user.password):
         raise InvalidCredentialsException()
 
     access_token = create_access_token(data={"sub": user.username})
     refresh_token = create_refresh_token(data={"sub": user.username})
-
-    return Token(
-        access_token=access_token,
-        refresh_token=refresh_token,
-        token_type="bearer",
-    )
+    set_response_tokens(response, access_token, refresh_token)

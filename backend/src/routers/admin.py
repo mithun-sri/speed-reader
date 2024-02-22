@@ -3,6 +3,7 @@ import os
 from typing import Annotated
 
 import openai
+import ulid
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -34,9 +35,9 @@ async def get_admin_statistics(
         {
             "$group": {
                 "_id": game_mode,
-                "minWpm": {"$min": "$wpm"},
-                "maxWpm": {"$max": "$wpm"},
-                "avgWpm": {"$avg": "$wpm"},
+                "minWpm": {"$min": "$average_wpm"},
+                "maxWpm": {"$max": "$average_wpm"},
+                "avgWpm": {"$avg": "$average_wpm"},
                 "avgScore": {"$avg": "$score"},
             }
         }
@@ -45,10 +46,10 @@ async def get_admin_statistics(
     data = list(data)[0]
 
     return schemas.AdminStatistics(
-        min_wpm=data["minWpm"],
-        max_wpm=data["maxWpm"],
-        average_wpm=data["avgWpm"],
-        average_score=data["avgScore"],
+        min_wpm=data.get("minWpm", 0),
+        max_wpm=data.get("maxWpm", 0),
+        average_wpm=int(data.get("avgWpm", 0)),
+        average_score=int(data.get("avgScore", 0)),
     )
 
 
@@ -204,11 +205,12 @@ async def get_question_statistics(
 
     return schemas.QuestionStatistics(
         question_id=question_id,
-        average_score=data["avgScore"],
+        average_score=int(data.get("avgScore", 0)),
         options=question.options,
         correct_option=question.correct_option,
         selected_options=[
-            result_count * 100 // sum(result_counts) for result_count in result_counts
+            result_count * 100 // max(sum(result_counts), 1)
+            for result_count in result_counts
         ],
     )
 
@@ -217,6 +219,7 @@ OPENAPI_KEY = os.environ.get("OPENAPI_KEY")
 
 
 def build_text_generation_prompt(difficulty: str, is_fiction: bool):
+    # TODO: Use multi-line strings
     return (
         "I want an extract of a text that belongs to the public domain. "
         + f"The text you choose must be {'fiction' if is_fiction else 'non-fiction'}. "
@@ -289,7 +292,65 @@ async def generate_text(difficulty: str, is_fiction: bool):
             )
             for question_json in response_json["questions"]
         ],
+        summary=response_json["summarised"],
+        source=response_json["gutenberg_link"],
         author=response_json["author"],
-        gutenberg_link=response_json["gutenberg_link"],
-        summarised=response_json["summarised"],
+        fiction=is_fiction,
     )
+
+
+@router.post(
+    "/submit-text",
+    response_model=schemas.Text,
+)
+async def add_text(
+    text: schemas.Text,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Adds a text to the database.
+    """
+
+    # Generate an id as ulid for the text
+    text.id = str(ulid.new())
+
+    text_ = models.Text(
+        id=text.id,
+        title=text.title,
+        content=text.content,
+        summary=text.summary,
+        source=text.source,
+        fiction=text.fiction,
+        difficulty=text.difficulty,
+        word_count=text.word_count,
+    )
+    session.add(text_)
+    session.commit()
+    return text  # need text id to be returned for questions to be added
+
+
+@router.post(
+    "/submit-questions",
+    response_model=dict[str, str],
+)
+async def submit_questions(
+    questions: list[schemas.QuestionWithCorrectOption],
+    text_id: str,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Adds questions to the database.
+    """
+    text = session.get(models.Text, text_id)
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
+    for question in questions:
+        question_ = models.Question(
+            content=question.content,
+            options=question.options,
+            correct_option=question.correct_option,
+            text=text,
+        )
+        session.add(question_)
+    session.commit()
+    return {"message": "Questions added successfully"}

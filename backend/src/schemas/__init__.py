@@ -5,5 +5,4 @@
 # rather than `from .schemas import User`.
 from .game import *
 from .text import *
-from .token import *
 from .user import *

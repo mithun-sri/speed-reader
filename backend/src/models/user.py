@@ -10,4 +10,5 @@ class User(ULIDMixin, TimestampMixin, Base):
     username: Mapped[str]
     email: Mapped[str]
     password: Mapped[str]
+    role: Mapped[str] = mapped_column(default="user")
     status: Mapped[str] = mapped_column(default="active")

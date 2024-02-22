@@ -4,10 +4,12 @@ import AdminAnalyticsTop from "../../components/Admin/AnalyticsTop";
 import { Box } from "@mui/material";
 import AnalyticsMode from "../../components/Admin/AnalyticsMode";
 import AdminStatistics from "../../components/Admin/AdminStatistics";
+import EnhancedTable from "../../components/Admin/AdminTextTable";
 
 const AdminAnalytics: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState("mode");
   const [selectedOption, setSelectedOption] = useState("standard");
+
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
   };
@@ -46,11 +48,17 @@ const AdminAnalytics: React.FC = () => {
             justifyItems: "center",
           }}
         >
-          <AnalyticsMode
-            selectedOption={selectedOption}
-            handleOptionClick={handleOptionClick}
-          />
-          <AdminStatistics score={92} avgWpm={234} low={124} high={340} />
+          {selectedValue === "text" ? (
+            <EnhancedTable />
+          ) : (
+            <>
+              <AnalyticsMode
+                selectedOption={selectedOption}
+                handleOptionClick={handleOptionClick}
+              />
+              <AdminStatistics score={92} avgWpm={234} low={124} high={340} />
+            </>
+          )}
         </Box>
       </Box>
     </>
