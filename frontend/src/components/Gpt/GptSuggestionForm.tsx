@@ -47,7 +47,7 @@ const GptSuggestionForm = () => {
     const questions: QuestionWithCorrectOption[] = data.questions
       .filter((question) => question.selected)
       .map((question, index) => ({
-        id: "", // TODO
+        id: index.toString(), // TODO
         content: question.content,
         options: question.options,
         correctOption: question.correctOption,
