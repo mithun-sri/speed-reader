@@ -218,7 +218,6 @@ export default function EnhancedTable() {
   const [orderBy, setOrderBy] = React.useState<keyof Data>("avg");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
-  // const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (
@@ -269,10 +268,6 @@ export default function EnhancedTable() {
     setPage(0);
   };
 
-  // const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setDense(event.target.checked);
-  // };
-
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
 
   const emptyRows =
@@ -288,22 +283,15 @@ export default function EnhancedTable() {
   );
 
   return (
-    <Box sx={{ width: 1200, height: 500, margin: "3vw 0vw 20" }}>
+    <Box sx={{ width: "70vw" }}>
       <Paper
         sx={{
-          width: "100%",
-          height: "100%",
-          mb: 2,
           backgroundColor: "transparent",
           boxShadow: "none",
         }}
       >
         <TableContainer>
-          <Table
-            sx={{ minWidth: 800 }}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-          >
+          <Table aria-labelledby="tableTitle" size="medium">
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -421,7 +409,7 @@ export default function EnhancedTable() {
               {emptyRows > 0 && (
                 <TableRow
                   style={{
-                    height: (dense ? 33 : 53) * emptyRows,
+                    height: 33 * emptyRows,
                   }}
                 >
                   <TableCell colSpan={6} />
@@ -430,16 +418,37 @@ export default function EnhancedTable() {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          sx={{ color: "#fff" }}
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: "#E2B714",
+              margin: "1vh",
+              padding: "1vh",
+              borderRadius: "0.5vh",
+              fontFamily: "JetBrains Mono, monospace",
+              color: "#fff",
+            }}
+          >
+            + Add
+          </Box>
+          <TablePagination
+            sx={{ color: "#fff" }}
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Box>
       </Paper>
     </Box>
   );
