@@ -82,7 +82,7 @@ const AdaptiveModeTextDisplay: React.FC<{
   const { incrementCurrentStage } = useGameScreenContext();
 
   useEffect(() => {
-    if (currentLineIndex === nextLineIndex && nextLineIndex !== 0) {
+    if (highlightedIndex === wordsArray.length - 1 && wordsArray.length > 0) {
       const avg_wpm = calculateAverageWpm(intervalWpms);
       setAverageWpm(avg_wpm);
 
@@ -90,7 +90,7 @@ const AdaptiveModeTextDisplay: React.FC<{
       console.log("intervalWpms: ");
       console.log(intervalWpms);
     }
-  }, [nextLineIndex]);
+  }, [highlightedIndex, wordsArray.length]);
 
   // record WPM every 2.5 seconds
   useEffect(() => {

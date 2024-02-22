@@ -63,6 +63,11 @@
     margin-bottom: 15vh;
 }
 
+.loading-text {
+    text-align: center;
+    padding-top: 20%;
+}
+
 .calibration-in-progress {
     text-align: center;
     margin-bottom: 14vh;

@@ -6,13 +6,13 @@ import {
 } from "../../common/constants";
 import { GameProvider, useGameContext } from "../../context/GameContext";
 import AdaptiveModeView from "../AdaptiveMode/AdaptiveMode";
-import WebGazerLoader from "../Calibration/WebGazerLoader";
 import DiffSelect from "../DiffSelect/DiffSelect";
 import ModeSelectView from "../ModeSelect/ModeSelect";
 import Quiz from "../Quiz/Quiz";
 import ResultsPage from "../Results/ResultsPage";
 import StandardModeGameView from "../StandardMode/StandardMode";
 import StandardSubModeView from "../StandardMode/StandardSubMode";
+import WebGazerCalibration from "../WebGazerCalibration/WebGazerCalibration";
 import WpmView from "../WpmView/WpmView";
 
 export const GameScreenContext = React.createContext<{
@@ -71,7 +71,7 @@ const GameScreen = () => {
     <DiffSelect key={1} />,
     <StandardSelect key={2} />, // to be skipped if mode is not standard
     <WpmSelect key={3} />, // to be skipped if mode is not standard
-    <WebGazerLoader key={4} />, // to be skipped if mode is standard
+    <WebGazerCalibration key={4} />, // to be skipped if mode is standard
     <GameView key={5} />,
     <Quiz key={6} />,
     <ResultsPage key={7} />,
