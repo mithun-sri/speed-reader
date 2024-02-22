@@ -1,10 +1,25 @@
+# TODO: Organise schemas into appropriate modules.
 from pydantic import BaseModel
 
 
-class Question(BaseModel):
+class QuestionBase(BaseModel):
+    content: str
+    options: list[str]
+    correct_option: int
+
+
+class Question(QuestionBase):
+    id: str
+
+
+class QuestionMasked(BaseModel):
     id: str
     content: str
     options: list[str]
+
+
+class QuestionCreate(QuestionBase):
+    pass
 
 
 class Answer(BaseModel):
@@ -17,10 +32,6 @@ class Result(BaseModel):
     correct: bool
     correct_option: int
     selected_option: int
-
-
-class QuestionWithCorrectOption(Question):
-    correct_option: int
 
 
 class QuestionStatistics(BaseModel):
@@ -36,9 +47,3 @@ class AdminStatistics(BaseModel):
     average_wpm: int
     min_wpm: int
     max_wpm: int
-
-
-class GeneratedQuestion(BaseModel):
-    content: str
-    options: list[str]
-    correct_option: int
