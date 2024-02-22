@@ -13,6 +13,7 @@ disable =
     too-many-arguments,
     attribute-defined-outside-init,
     redefined-outer-name,
+    too-many-locals,
     # TODO:
     # Pylint gives false-positive to many of generated attributes are not defined.
     # Ignore `no-member` to supress them as many are checked by mypy too.
