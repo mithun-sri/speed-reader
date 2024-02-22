@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { QuestionWithCorrectOption, Text } from "../../api";
-import { useGptContext } from "../../context/GptContext";
+import { useGenerateText } from "../../hooks/admin";
 import GptButton from "../Button/GptButton";
 import GptQuestionFeed from "./GptQuestionFeed";
 import GptSourceInfo from "./GptSourceInfo";
@@ -26,8 +26,13 @@ export interface GptFormData {
  * QUESTION LIST [DONE]
  * GENERATE 5 MORE QUESTIONS, APPROVE BUTTONS
  */
-const GptSuggestionForm = () => {
-  const { textWithQuestions } = useGptContext();
+const GptSuggestionForm: React.FC<{
+  difficulty: string;
+  isFiction: boolean;
+}> = ({ difficulty, isFiction }) => {
+  const { data: generatedText } = useGenerateText(difficulty, isFiction);
+
+  console.log(generatedText);
   const useGptForm = useForm<GptFormData>();
   const { handleSubmit } = useGptForm;
 
@@ -38,9 +43,9 @@ const GptSuggestionForm = () => {
       title: data.title,
       content: data.content,
       summary: data.summarised,
-      source: textWithQuestions.source,
-      fiction: textWithQuestions.fiction,
-      difficulty: textWithQuestions.difficulty,
+      source: generatedText.source,
+      fiction: generatedText.fiction,
+      difficulty: generatedText.difficulty,
       wordCount: data.content.length,
     };
     // Build QuestionWithCorrectOption[] data to submit to server
@@ -71,12 +76,15 @@ const GptSuggestionForm = () => {
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <GptSourceInfo
-          sourceTitle={textWithQuestions.title}
-          author={"William Strunk Jr."}
-          link={"https://example.com"}
+          sourceTitle={generatedText.title}
+          author={generatedText.author}
+          link={generatedText.source}
         />
-        <GptText useFormReturn={useGptForm} />
-        <GptQuestionFeed useFormReturn={useGptForm} />
+        <GptText useFormReturn={useGptForm} generatedText={generatedText} />
+        <GptQuestionFeed
+          useFormReturn={useGptForm}
+          generatedText={generatedText}
+        />
         <Box
           sx={{
             display: "flex",
