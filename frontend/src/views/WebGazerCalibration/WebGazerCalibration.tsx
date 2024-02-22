@@ -114,7 +114,7 @@ const WebGazerCalibration = () => {
     });
   };
 
-  const handleRestart = async () => {
+  /*const handleRestart = async () => {
     await restartWebGazer();
     document.querySelectorAll(".CalibrationButton").forEach((i) => {
       if (i instanceof HTMLElement) {
@@ -152,7 +152,7 @@ const WebGazerCalibration = () => {
     document
       .getElementById("calibration_in_progress")
       ?.style.setProperty("display", "block");
-  };
+  };*/
 
   return (
     <GameScreenContext.Consumer>
