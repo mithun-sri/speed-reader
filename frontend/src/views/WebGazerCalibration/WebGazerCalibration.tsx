@@ -1,10 +1,13 @@
 import { Box } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
+import { useGameContext } from "../../context/GameContext";
 import { GameScreenContext } from "../GameScreen/GameScreen";
-import "./Calibration.css";
+import "./WebGazerCalibration.css";
 
-const Calibration = (props: any) => {
+const WebGazerCalibration = () => {
+  const { initialiseWebGazer, turnOffWebGazerCam, webGazerInitialised } =
+    useGameContext();
   const canvasRef = useRef(null);
   const [pointCalibrate, setPointCalibrate] = useState(0);
   const [clickCounts, setClickCounts] = useState({
@@ -21,6 +24,7 @@ const Calibration = (props: any) => {
 
   useEffect(() => {
     const handleLoad = () => {
+      initialiseWebGazer();
       canvasSetup();
       docLoad();
     };
@@ -33,7 +37,7 @@ const Calibration = (props: any) => {
 
     return () => {
       window.removeEventListener("load", handleLoad);
-      props.turnOffCam();
+      turnOffWebGazerCam();
     };
   }, []);
 
@@ -42,7 +46,6 @@ const Calibration = (props: any) => {
     document
       .getElementById("calibration_done")
       ?.style.setProperty("display", "none");
-    document.getElementById("Pt5")?.style.setProperty("display", "none");
     document
       .getElementById("calibration_in_progress")
       ?.style.setProperty("display", "block");
@@ -86,14 +89,13 @@ const Calibration = (props: any) => {
         .getElementById("calibration_in_progress")
         ?.style.setProperty("display", "none");
       document.getElementById("Pt5")?.style.removeProperty("display");
-      props.turnOffCam();
+      turnOffWebGazerCam();
     } else if (pointCalibrate >= 9) {
       document.querySelectorAll(".CalibrationButton").forEach((i) => {
         if (i instanceof HTMLElement) {
           i.style.setProperty("display", "none");
         }
       });
-      document.getElementById("Pt5")?.style.removeProperty("display");
       document
         .getElementById("calibration_done")
         ?.style.setProperty("display", "block");
@@ -108,8 +110,8 @@ const Calibration = (props: any) => {
     });
   };
 
-  const handleRestart = async () => {
-    await props.restartWebgazerMethod();
+  /*const handleRestart = async () => {
+    await restartWebGazer();
     document.querySelectorAll(".CalibrationButton").forEach((i) => {
       if (i instanceof HTMLElement) {
         i.style.setProperty("background-color", "#D1D0C5");
@@ -146,7 +148,7 @@ const Calibration = (props: any) => {
     document
       .getElementById("calibration_in_progress")
       ?.style.setProperty("display", "block");
-  };
+  };*/
 
   return (
     <GameScreenContext.Consumer>
@@ -160,45 +162,66 @@ const Calibration = (props: any) => {
             style={{ cursor: "crosshair" }}
           />
 
-          <div className="calibrationDiv">
-            {Object.keys(clickCounts).map((pointId) => {
-              const validPointId = pointId as keyof typeof clickCounts;
-
-              return (
-                <button
-                  key={pointId}
-                  className="CalibrationButton"
-                  id={pointId}
-                  onClick={() => {
-                    incPointClick(document.getElementById(pointId));
-                  }}
-                  disabled={clickCounts[validPointId] >= 5}
-                  style={{
-                    opacity: (0.2 * (clickCounts[validPointId] + 1)).toString(),
-                    backgroundColor:
-                      clickCounts[validPointId] >= 5 ? "#E2B714" : "#D1D0C5",
-                  }}
-                />
-              );
-            })}
-          </div>
-
-          <div id="calibration_in_progress" className="calibration-in-progress">
-            <div className="in_progress_text">
+          {!webGazerInitialised && (
+            <div className="loading-text">
               <JetBrainsMonoText
-                text={"Calibration in progress."}
+                text={"Loading..."}
                 size={35}
                 color="#D1D0C5"
               />
             </div>
-            <div className="instructions_text">
-              <JetBrainsMonoText
-                text={"Stare at each circle and click until it turns yellow."}
-                size={25}
-                color="#D1D0C5"
-              />
+          )}
+
+          {webGazerInitialised && (
+            <div className="calibrationDiv">
+              {Object.keys(clickCounts).map((pointId) => {
+                const validPointId = pointId as keyof typeof clickCounts;
+
+                return (
+                  <button
+                    key={pointId}
+                    className="CalibrationButton"
+                    id={pointId}
+                    onClick={() => {
+                      incPointClick(document.getElementById(pointId));
+                    }}
+                    disabled={clickCounts[validPointId] >= 5}
+                    style={{
+                      opacity: (
+                        0.2 *
+                        (clickCounts[validPointId] + 1)
+                      ).toString(),
+                      backgroundColor:
+                        clickCounts[validPointId] >= 5 ? "#E2B714" : "#D1D0C5",
+                      display: pointId === "Pt5" ? "none" : "block",
+                    }}
+                  />
+                );
+              })}
             </div>
-          </div>
+          )}
+
+          {webGazerInitialised && (
+            <div
+              id="calibration_in_progress"
+              className="calibration-in-progress"
+            >
+              <div className="in_progress_text">
+                <JetBrainsMonoText
+                  text={"Calibration in progress."}
+                  size={35}
+                  color="#D1D0C5"
+                />
+              </div>
+              <div className="instructions_text">
+                <JetBrainsMonoText
+                  text={"Stare at each circle and click until it turns yellow."}
+                  size={25}
+                  color="#D1D0C5"
+                />
+              </div>
+            </div>
+          )}
 
           <div id="calibration_done" className="calibration-done">
             <JetBrainsMonoText
@@ -221,20 +244,10 @@ const Calibration = (props: any) => {
               Start
             </Box>
           </div>
-
-          {/* Temporary button for ease of testing */}
-          <button
-            type="button"
-            id="restart_calibration"
-            className="top-button"
-            onClick={handleRestart}
-          >
-            Recalibrate
-          </button>
         </div>
       )}
     </GameScreenContext.Consumer>
   );
 };
 
-export default Calibration;
+export default WebGazerCalibration;

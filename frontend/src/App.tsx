@@ -5,7 +5,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthApi } from "./api";
 import GptView from "./views/Admin/GptView";
-import WebGazerLoader from "./views/Calibration/WebGazerLoader";
 import { GamePage } from "./views/GameScreen/GameScreen";
 import UserView from "./views/User/UserView";
 import AdminAnalytics from "./views/Admin/Analytics";
@@ -34,7 +33,6 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/game" />} />
               <Route path="/game" element={<GamePage />} />
-              <Route path="/calibration" element={<WebGazerLoader />} />
               <Route path="/user" element={<UserView />} />
               <Route path="/admin" element={<AdminAnalytics />} />
               <Route path="/gpt" element={<GptView />} />
