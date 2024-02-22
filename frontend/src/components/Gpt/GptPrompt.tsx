@@ -136,6 +136,9 @@ const GptPrompt: React.FC<{
             correctOption: 0,
           },
         ],
+        summary: "summarised text here",
+        source: "www.example.com",
+        fiction: false,
       };
 
       // const data: TextWithQuestions = await response.json();

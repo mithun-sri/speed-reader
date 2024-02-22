@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { QuestionWithCorrectOption, Text } from "../../api";
 import { useGptContext } from "../../context/GptContext";
 import GptButton from "../Button/GptButton";
 import GptQuestionFeed from "./GptQuestionFeed";
@@ -30,8 +31,33 @@ const GptSuggestionForm = () => {
   const useGptForm = useForm<GptFormData>();
   const { handleSubmit } = useGptForm;
 
-  const onSubmit: SubmitHandler<GptFormData> = (data) => {
+  const onSubmit: SubmitHandler<GptFormData> = (data: GptFormData) => {
+    // Build Text data to submit to server
+    const text: Text = {
+      id: "", // TODO
+      title: data.title,
+      content: data.content,
+      summary: data.summarised,
+      source: textWithQuestions.source,
+      fiction: textWithQuestions.fiction,
+      difficulty: textWithQuestions.difficulty,
+      wordCount: data.content.length,
+    };
+    // Build QuestionWithCorrectOption[] data to submit to server
+    const questions: QuestionWithCorrectOption[] = data.questions
+      .filter((question) => question.selected)
+      .map((question, index) => ({
+        id: "", // TODO
+        content: question.content,
+        options: question.options,
+        correctOption: question.correctOption,
+      }));
+
+    // TODO: send text and questions to server
+
     console.log(data);
+    console.log(text);
+    console.log(questions);
   };
 
   return (
@@ -59,7 +85,7 @@ const GptSuggestionForm = () => {
             gap: 5,
           }}
         >
-          <GptButton color={"#4285F4"} label={"generate 3 more questions"} />
+          {/* <GptButton color={"#4285F4"} label={"generate 3 more questions"} /> */}
           <GptButton submit color={"#379F3B"} label={"approve"} />
         </Box>
       </form>

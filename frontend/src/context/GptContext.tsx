@@ -14,6 +14,9 @@ const GptContext = createContext<GptContextType>({
     difficulty: "medium",
     wordCount: 0,
     questions: [],
+    summary: "Default summary",
+    source: "Default source",
+    fiction: false,
   },
   updateContextValue: () => {},
 });
@@ -36,6 +39,9 @@ export const GptProvider: React.FC<{
     difficulty: "medium",
     wordCount: 0,
     questions: [],
+    summary: "Default summary",
+    source: "Default source",
+    fiction: false,
   };
   const [contextValue, setContextValue] =
     useState<TextWithQuestions>(initialContextValue);
