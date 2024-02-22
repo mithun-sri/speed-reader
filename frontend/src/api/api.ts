@@ -241,6 +241,92 @@ export interface GameSubmode {
 /**
  * 
  * @export
+ * @interface GeneratedQuestion
+ */
+export interface GeneratedQuestion {
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedQuestion
+     */
+    content: string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof GeneratedQuestion
+     */
+    options: Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof GeneratedQuestion
+     */
+    correctOption: number;
+}
+/**
+ * 
+ * @export
+ * @interface GeneratedText
+ */
+export interface GeneratedText {
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedText
+     */
+    title: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedText
+     */
+    content: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedText
+     */
+    summary: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedText
+     */
+    source: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof GeneratedText
+     */
+    fiction: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedText
+     */
+    difficulty: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof GeneratedText
+     */
+    wordCount: number;
+    /**
+     * 
+     * @type {Array<GeneratedQuestion>}
+     * @memberof GeneratedText
+     */
+    questions: Array<GeneratedQuestion>;
+    /**
+     * 
+     * @type {string}
+     * @memberof GeneratedText
+     */
+    author: string;
+}
+/**
+ * 
+ * @export
  * @interface HTTPValidationError
  */
 export interface HTTPValidationError {
@@ -1215,7 +1301,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async generateText(difficulty: string, isFiction: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestions>> {
+        async generateText(difficulty: string, isFiction: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GeneratedText>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.generateText(difficulty, isFiction, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.generateText']?.[localVarOperationServerIndex]?.url;
@@ -1365,7 +1451,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        generateText(difficulty: string, isFiction: boolean, options?: any): AxiosPromise<TextWithQuestions> {
+        generateText(difficulty: string, isFiction: boolean, options?: any): AxiosPromise<GeneratedText> {
             return localVarFp.generateText(difficulty, isFiction, options).then((request) => request(axios, basePath));
         },
         /**
