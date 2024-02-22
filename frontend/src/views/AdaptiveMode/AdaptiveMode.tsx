@@ -99,7 +99,7 @@ const AdaptiveModeTextDisplay: React.FC<{
     }, 2500);
 
     return () => clearInterval(interval);
-  }, [wpm, intervalWpms, setIntervalWpms]);
+  }, [wpm, intervalWpms]);
 
   useEffect(() => {
     if (
