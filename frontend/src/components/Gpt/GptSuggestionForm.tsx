@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { QuestionWithCorrectOption, Text } from "../../api";
+import { Question, Text } from "../../api";
 import { useGptContext } from "../../context/GptContext";
 import GptButton from "../Button/GptButton";
 import GptQuestionFeed from "./GptQuestionFeed";
@@ -43,8 +43,8 @@ const GptSuggestionForm = () => {
       difficulty: textWithQuestions.difficulty,
       wordCount: data.content.length,
     };
-    // Build QuestionWithCorrectOption[] data to submit to server
-    const questions: QuestionWithCorrectOption[] = data.questions
+    // Build Question[] data to submit to server
+    const questions: Question[] = data.questions
       .filter((question) => question.selected)
       .map((question, index) => ({
         id: index.toString(), // TODO
