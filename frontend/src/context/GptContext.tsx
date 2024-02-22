@@ -6,7 +6,17 @@ interface GptContextType {
   updateContextValue: (newValue: Partial<TextWithQuestions>) => void;
 }
 
-const GptContext = createContext<GptContextType | null>(null);
+const GptContext = createContext<GptContextType>({
+  textWithQuestions: {
+    id: "defaultId",
+    title: "Default Title",
+    content: "Default Content",
+    difficulty: "medium",
+    wordCount: 0,
+    questions: [],
+  },
+  updateContextValue: () => {},
+});
 
 export const useGptContext = () => {
   const context = useContext(GptContext);
@@ -36,7 +46,10 @@ export const GptProvider: React.FC<{
 
   return (
     <GptContext.Provider
-      value={{ textWithQuestions: contextValue, updateContextValue }}
+      value={{
+        textWithQuestions: contextValue,
+        updateContextValue,
+      }}
     >
       {children}
     </GptContext.Provider>

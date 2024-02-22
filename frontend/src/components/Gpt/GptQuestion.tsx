@@ -1,8 +1,11 @@
 import { Box } from "@mui/material";
+import { UseFormReturn } from "react-hook-form";
+import { QuestionWithCorrectOption } from "../../api";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
 import CheckboxGroup from "./CheckboxGroup";
+import { GptFormData } from "./GptSuggestionForm";
 
 const containerStyles = {
   width: "100%",
@@ -12,7 +15,13 @@ const containerStyles = {
   padding: "30px 50px", // Vertical, Horizontal
 };
 
-const GptQuestion = () => {
+const GptQuestion: React.FC<{
+  question: QuestionWithCorrectOption;
+  questionNum: number;
+  useFormReturn: UseFormReturn<GptFormData>;
+}> = ({ question, questionNum, useFormReturn }) => {
+  const { register } = useFormReturn;
+
   const questionContainerStyles = {
     display: "flex",
     flexDirection: "column",
@@ -39,13 +48,19 @@ const GptQuestion = () => {
         }}
       >
         <JetBrainsMonoText text={"Select Question"} size={20} color={"white"} />
-        <StyledCheckbox />
+        <StyledCheckbox {...register(`questions.${questionNum}.selected`)} />
       </Box>
       <Box sx={questionContainerStyles}>
         <Box sx={{ paddingLeft: "10px" }}>
           <JetBrainsMonoText text={"Question"} size={25} color={"white"} />
         </Box>
-        <StyledTextField multiline sx={{ width: "100%" }} rows={3} />
+        <StyledTextField
+          multiline
+          sx={{ width: "100%" }}
+          rows={3}
+          defaultValue={question.content}
+          {...register(`questions.${questionNum}.content`)}
+        />
       </Box>
       <Box
         sx={{
@@ -60,11 +75,20 @@ const GptQuestion = () => {
           <Box sx={{ paddingLeft: "10px" }}>
             <JetBrainsMonoText text={"Answers"} size={25} color={"white"} />
           </Box>
-          <StyledTextField sx={{ width: "100%" }} />
-          <StyledTextField sx={{ width: "100%" }} />
-          <StyledTextField sx={{ width: "100%" }} />
+          {question.options.map((option, index) => (
+            <StyledTextField
+              key={index}
+              sx={{ width: "100%" }}
+              defaultValue={option}
+              {...register(`questions.${questionNum}.options.${index}`)}
+            />
+          ))}
         </Box>
-        <CheckboxGroup defaultValue={1} />
+        <CheckboxGroup
+          defaultValue={question.correctOption}
+          questionNum={questionNum}
+          useFormReturn={useFormReturn}
+        />
       </Box>
     </Box>
   );

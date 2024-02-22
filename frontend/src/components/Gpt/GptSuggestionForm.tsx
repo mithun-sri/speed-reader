@@ -1,30 +1,21 @@
 import { Box } from "@mui/material";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useGptContext } from "../../context/GptContext";
 import GptButton from "../Button/GptButton";
 import GptQuestionFeed from "./GptQuestionFeed";
 import GptSourceInfo from "./GptSourceInfo";
 import GptText from "./GptText";
 
-/** TODO: Change according the GPT response format
- *  source_title
-    text_title
-    content
-    author
-    difficulty
-    fiction
-    link
-    source (how is this different from title?)
-    questions
-    description
-    options
-    description
-    correct_option
-    summary (if non-fiction)
- */
 export interface GptFormData {
-  suggestion1: string;
-  suggestion2: string;
-  suggestion3: string;
+  title: string;
+  content: string;
+  summarised: string;
+  questions: {
+    content: string;
+    options: string[];
+    correctOption: number;
+    selected: boolean;
+  }[];
 }
 
 /**
@@ -34,13 +25,10 @@ export interface GptFormData {
  * QUESTION LIST [DONE]
  * GENERATE 5 MORE QUESTIONS, APPROVE BUTTONS
  */
-const GptSuggestionForm: React.FC<{
-  response: string;
-}> = ({ response }) => {
+const GptSuggestionForm = () => {
+  const { textWithQuestions } = useGptContext();
   const useGptForm = useForm<GptFormData>();
   const { handleSubmit } = useGptForm;
-
-  console.log(response);
 
   const onSubmit: SubmitHandler<GptFormData> = (data) => {
     console.log(data);
@@ -57,7 +45,7 @@ const GptSuggestionForm: React.FC<{
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <GptSourceInfo
-          sourceTitle={"The Element Of Style"}
+          sourceTitle={textWithQuestions.title}
           author={"William Strunk Jr."}
           link={"https://example.com"}
         />
@@ -72,7 +60,7 @@ const GptSuggestionForm: React.FC<{
           }}
         >
           <GptButton color={"#4285F4"} label={"generate 3 more questions"} />
-          <GptButton color={"#379F3B"} label={"approve"} />
+          <GptButton submit color={"#379F3B"} label={"approve"} />
         </Box>
       </form>
     </Box>

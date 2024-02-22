@@ -4,16 +4,20 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import React, { useState } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { GptFormData } from "./GptSuggestionForm";
 
-const CheckboxGroup: React.FC<{ defaultValue?: number }> = ({
-  defaultValue,
-}) => {
-  const [selectedValue, setSelectedValue] = useState<string | undefined>(
-    defaultValue !== undefined ? defaultValue.toString() : undefined,
-  );
+const CheckboxGroup: React.FC<{
+  defaultValue: number;
+  questionNum: number;
+  useFormReturn: UseFormReturn<GptFormData>;
+}> = ({ defaultValue, questionNum, useFormReturn }) => {
+  const { register } = useFormReturn;
+
+  const [selectedValue, setSelectedValue] = useState<number>(defaultValue);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedValue(event.target.value);
+    setSelectedValue(parseInt(event.target.value));
   };
 
   return (
@@ -35,12 +39,27 @@ const CheckboxGroup: React.FC<{ defaultValue?: number }> = ({
       <RadioGroup
         aria-label="options"
         name="options"
-        value={selectedValue || ""}
+        value={selectedValue}
         onChange={handleChange}
       >
-        <FormControlLabel value="0" control={<StyledRadio />} label="" />
-        <FormControlLabel value="1" control={<StyledRadio />} label="" />
-        <FormControlLabel value="2" control={<StyledRadio />} label="" />
+        <FormControlLabel
+          value={0}
+          control={<StyledRadio />}
+          label=""
+          {...register(`questions.${questionNum}.correctOption` as const)}
+        />
+        <FormControlLabel
+          value={1}
+          control={<StyledRadio />}
+          label=""
+          {...register(`questions.${questionNum}.correctOption` as const)}
+        />
+        <FormControlLabel
+          value={2}
+          control={<StyledRadio />}
+          label=""
+          {...register(`questions.${questionNum}.correctOption` as const)}
+        />
       </RadioGroup>
     </FormControl>
   );

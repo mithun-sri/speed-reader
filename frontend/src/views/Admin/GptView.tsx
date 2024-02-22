@@ -1,16 +1,18 @@
 import { Box } from "@mui/material";
 import { useState } from "react";
+import { TextWithQuestions } from "../../api";
 import GptPrompt from "../../components/Gpt/GptPrompt";
 import GptSuggestionForm from "../../components/Gpt/GptSuggestionForm";
 import Header from "../../components/Header/Header";
+import { GptProvider, useGptContext } from "../../context/GptContext";
 
-const GptView = () => {
-  const [generatedResponse, setGeneratedResponse] = useState<string>("");
+const GptForm = () => {
+  const { updateContextValue } = useGptContext();
   const [showResponse, setShowResponse] = useState<boolean>(false);
 
-  const handleGenerateResponse = (response: string) => {
+  const handleGenerateResponse = (gpt_response: TextWithQuestions) => {
     console.log("GptView: handleGenerateResponse");
-    setGeneratedResponse(response);
+    updateContextValue(gpt_response);
     setShowResponse(true);
   };
 
@@ -35,14 +37,18 @@ const GptView = () => {
       <Box sx={containerStyles}>
         <Box sx={innerContainerStyles}>
           <GptPrompt onGenerateResponse={handleGenerateResponse} />
-          {showResponse ? (
-            <GptSuggestionForm response={generatedResponse} />
-          ) : (
-            <></>
-          )}
+          {showResponse ? <GptSuggestionForm /> : <></>}
         </Box>
       </Box>
     </>
+  );
+};
+
+const GptView = () => {
+  return (
+    <GptProvider>
+      <GptForm />
+    </GptProvider>
   );
 };
 
