@@ -466,6 +466,24 @@ export interface Text {
      * @type {string}
      * @memberof Text
      */
+    summary: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
+    source: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof Text
+     */
+    fiction: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
     difficulty: string;
     /**
      * 
@@ -536,6 +554,24 @@ export interface TextWithQuestions {
      * @memberof TextWithQuestions
      */
     content: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestions
+     */
+    summary: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestions
+     */
+    source: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TextWithQuestions
+     */
+    fiction: boolean;
     /**
      * 
      * @type {string}
@@ -705,6 +741,42 @@ export interface ValidationErrorLocInner {
  */
 export const AdminApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
+        /**
+         * Adds a text to the database.
+         * @summary Add Text
+         * @param {Text} text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addText: async (text: Text, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'text' is not null or undefined
+            assertParamExists('addText', 'text', text)
+            const localVarPath = `/admin/submit-text`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(text, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
         /**
          * Deletes a question of a text by the given id.
          * @summary Delete Question
@@ -1042,6 +1114,49 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * Adds questions to the database.
+         * @summary Submit Questions
+         * @param {string} textId 
+         * @param {Array<QuestionWithCorrectOption>} questionWithCorrectOption 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitQuestions: async (textId: string, questionWithCorrectOption: Array<QuestionWithCorrectOption>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textId' is not null or undefined
+            assertParamExists('submitQuestions', 'textId', textId)
+            // verify required parameter 'questionWithCorrectOption' is not null or undefined
+            assertParamExists('submitQuestions', 'questionWithCorrectOption', questionWithCorrectOption)
+            const localVarPath = `/admin/submit-questions`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (textId !== undefined) {
+                localVarQueryParameter['text_id'] = textId;
+            }
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(questionWithCorrectOption, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -1052,6 +1167,19 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
 export const AdminApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = AdminApiAxiosParamCreator(configuration)
     return {
+        /**
+         * Adds a text to the database.
+         * @summary Add Text
+         * @param {Text} text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async addText(text: Text, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.addText(text, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.addText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
         /**
          * Deletes a question of a text by the given id.
          * @summary Delete Question
@@ -1174,6 +1302,20 @@ export const AdminApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getTexts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
+        /**
+         * Adds questions to the database.
+         * @summary Submit Questions
+         * @param {string} textId 
+         * @param {Array<QuestionWithCorrectOption>} questionWithCorrectOption 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async submitQuestions(textId: string, questionWithCorrectOption: Array<QuestionWithCorrectOption>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.submitQuestions(textId, questionWithCorrectOption, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.submitQuestions']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
     }
 };
 
@@ -1184,6 +1326,16 @@ export const AdminApiFp = function(configuration?: Configuration) {
 export const AdminApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
     const localVarFp = AdminApiFp(configuration)
     return {
+        /**
+         * Adds a text to the database.
+         * @summary Add Text
+         * @param {Text} text 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        addText(text: Text, options?: any): AxiosPromise<Text> {
+            return localVarFp.addText(text, options).then((request) => request(axios, basePath));
+        },
         /**
          * Deletes a question of a text by the given id.
          * @summary Delete Question
@@ -1279,6 +1431,17 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
         getTexts(page?: number, pageSize?: number, options?: any): AxiosPromise<Array<Text>> {
             return localVarFp.getTexts(page, pageSize, options).then((request) => request(axios, basePath));
         },
+        /**
+         * Adds questions to the database.
+         * @summary Submit Questions
+         * @param {string} textId 
+         * @param {Array<QuestionWithCorrectOption>} questionWithCorrectOption 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        submitQuestions(textId: string, questionWithCorrectOption: Array<QuestionWithCorrectOption>, options?: any): AxiosPromise<{ [key: string]: string; }> {
+            return localVarFp.submitQuestions(textId, questionWithCorrectOption, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -1289,6 +1452,18 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
  * @extends {BaseAPI}
  */
 export class AdminApi extends BaseAPI {
+    /**
+     * Adds a text to the database.
+     * @summary Add Text
+     * @param {Text} text 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public addText(text: Text, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).addText(text, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * Deletes a question of a text by the given id.
      * @summary Delete Question
@@ -1400,6 +1575,19 @@ export class AdminApi extends BaseAPI {
      */
     public getTexts(page?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
         return AdminApiFp(this.configuration).getTexts(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Adds questions to the database.
+     * @summary Submit Questions
+     * @param {string} textId 
+     * @param {Array<QuestionWithCorrectOption>} questionWithCorrectOption 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public submitQuestions(textId: string, questionWithCorrectOption: Array<QuestionWithCorrectOption>, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).submitQuestions(textId, questionWithCorrectOption, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
