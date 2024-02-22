@@ -36,3 +36,9 @@ class AdminStatistics(BaseModel):
     average_wpm: int
     min_wpm: int
     max_wpm: int
+
+
+class GeneratedQuestion(BaseModel):
+    content: str
+    options: list[str]
+    correct_option: int
