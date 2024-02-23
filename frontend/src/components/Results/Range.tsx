@@ -90,8 +90,8 @@ const Range: React.FC<RangeProps> = ({ low, high }) => {
           marginTop: "2vh",
           backgroundColor: "#646669",
           position: "relative",
-          height: "2vh", 
-          borderRadius: "10px", 
+          height: "2vh",
+          borderRadius: "10px",
         }}
       >
         <Box
@@ -104,7 +104,6 @@ const Range: React.FC<RangeProps> = ({ low, high }) => {
             height: "100%",
             borderRadius: "10px",
           }}
-          
         ></Box>
       </Box>
     </Box>
