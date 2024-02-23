@@ -8,6 +8,8 @@ interface RangeProps {
 
 const Range: React.FC<RangeProps> = ({ low, high }) => {
   const [fontSize, setFontSize] = useState(window.innerWidth / 30);
+  const innerBoxWidth = ((Math.min(high, 1000) - low) / (1000 - 1)) * 100;
+  const leftPadding = ((low - 1) / (1000 - 1)) * 100;
 
   useEffect(() => {
     const handleResize = () => {
@@ -58,6 +60,7 @@ const Range: React.FC<RangeProps> = ({ low, high }) => {
             }}
           >
             <Box>max</Box>
+            <Box sx={{ margin: "15px" }}></Box>
             <Box>min</Box>
           </Box>
           <Box
@@ -66,6 +69,7 @@ const Range: React.FC<RangeProps> = ({ low, high }) => {
             }}
           >
             <Box>{high}</Box>
+            <Box sx={{ margin: "15px" }}></Box>
             <Box>{low}</Box>
           </Box>
           <Box
@@ -75,16 +79,32 @@ const Range: React.FC<RangeProps> = ({ low, high }) => {
             }}
           >
             <Box>wpm.</Box>
+            <Box sx={{ margin: "15px" }}></Box>
             <Box>wpm.</Box>
           </Box>
         </Box>
       </Box>
       <Box
         sx={{
-          backgroundColor: "#fff",
+          width: "35vw",
+          marginTop: "2vh",
+          backgroundColor: "#646669",
+          position: "relative",
+          height: "2vh",
+          borderRadius: "10px",
         }}
       >
-        ddwwdwdddddddddddddddddddddddddddddddddddddddddd
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: `${leftPadding}%`,
+            backgroundColor: "#E2B714",
+            width: `${innerBoxWidth}%`,
+            height: "100%",
+            borderRadius: "10px",
+          }}
+        ></Box>
       </Box>
     </Box>
   );
