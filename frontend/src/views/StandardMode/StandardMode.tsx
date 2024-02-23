@@ -27,6 +27,9 @@ const StandardModeGameView: React.FC<{
   mode?: StandardView;
   difficulty?: GameDifficulty;
 }> = ({ wpm, mode }) => {
+  // When GPT get next text is set up use the following instead
+  //const { data: text } = summarised ? useNextSummarisedText() : useNextText();
+  //const { setTextId, summarised } = useGameContext();
   const { data: text } = useNextText();
   const { setTextId } = useGameContext();
   const [showGameScreen, setShowGameScreen] = useState(false);
