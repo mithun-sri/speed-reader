@@ -28,8 +28,9 @@ const ModeSelectView = () => {
   // setMode according to the selected index from options
   useEffect(() => {
     if (valueFromCarousel >= 0 && valueFromCarousel < options.length) {
-      setMode(options[valueFromCarousel]);
-      incrementCurrentStage(); // Go to the next view in GameScreen
+      const new_mode = options[valueFromCarousel];
+      setMode(new_mode);
+      incrementCurrentStage(new_mode); // Go to the next view in GameScreen
     }
   }, [valueFromCarousel, setMode]);
 
