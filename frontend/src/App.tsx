@@ -28,7 +28,7 @@ axios.interceptors.response.use(undefined, async (error) => {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Suspense fallback={<LinearProgressFallback/>}>
+      <Suspense fallback={<LinearProgressFallback />}>
         <ErrorBoundary fallback={<div>Something went wrong</div>}>
           <BrowserRouter>
             <Routes>
