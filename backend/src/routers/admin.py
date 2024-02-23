@@ -219,13 +219,13 @@ The questions must all be answerable just from reading the extract.
 Each question should have four options with one correct option. 
 I also want a summary of the provided text if it is non-fiction.
 The JSON must follow the format:
-{
+{{
     "title": <string>,
     "extract": <string>,
     "author": <string>,
     "gutenberg_link": <string>,
     "questions": [
-        {
+        {{
             "question": <string>,
             "options": [
                 <string>,
@@ -234,11 +234,11 @@ The JSON must follow the format:
                 <string>
             ],
             "correct_option": <string>
-        },
+        }},
         ...
     ],
     "summarised": <string>
-}
+}}
 Your response must only contain the JSON answer and nothing else.
 """
 
@@ -272,19 +272,19 @@ async def generate_text(difficulty: str, fiction: bool):
     return schemas.TextCreateWithQuestions(
         title=text["title"],
         content=text["extract"],
-        difficulty=text["difficulty"],
+        difficulty=difficulty,
+        fiction=fiction,
         word_count=len(text["extract"].split(" ")),
         questions=[
             schemas.QuestionCreate(
-                content=text["question"],
-                options=text["options"],
+                content=question["question"],
+                options=question["options"],
                 correct_option=question["options"].index(question["correct_option"]),
             )
             for question in text["questions"]
         ],
         summary=text["summarised"],
         source=text["gutenberg_link"],
-        fiction=fiction,
     )
 
 
