@@ -401,12 +401,6 @@ export interface QuestionStatistics {
     'question_id': string;
     /**
      * 
-     * @type {number}
-     * @memberof QuestionStatistics
-     */
-    'average_score': number;
-    /**
-     * 
      * @type {Array<string>}
      * @memberof QuestionStatistics
      */

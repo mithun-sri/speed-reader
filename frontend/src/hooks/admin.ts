@@ -1,6 +1,5 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { AxiosResponse } from "axios";
-import { AdminApi, QuestionWithCorrectOption, Text } from "../api";
+import { AdminApi, TextCreateWithQuestions } from "../api";
 
 const adminApi = new AdminApi();
 
@@ -17,30 +16,8 @@ export function useGenerateText(difficulty: string, isFiction: boolean) {
   });
 }
 
-export function useAddText() {
+export function useApproveText() {
   return useMutation({
-    mutationFn: (text: Text) => adminApi.addText(text),
+    mutationFn: (text: TextCreateWithQuestions) => adminApi.approveText(text),
   });
-}
-
-export function useSubmitQuestions() {
-  return useMutation({
-    mutationFn: submitQuestions,
-  });
-}
-
-interface SubmitQuestionsParams {
-  textId: string;
-  questions: QuestionWithCorrectOption[];
-}
-
-type SubmitQuestionsResponse = AxiosResponse;
-
-// Define the submitQuestions function
-async function submitQuestions({
-  textId,
-  questions,
-}: SubmitQuestionsParams): Promise<SubmitQuestionsResponse> {
-  // Call adminApi.submitQuestions and return the response
-  return adminApi.submitQuestions(textId, questions);
 }

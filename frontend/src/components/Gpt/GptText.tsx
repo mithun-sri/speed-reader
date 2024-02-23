@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
-import { GeneratedText } from "../../api";
+import { TextCreateWithQuestions } from "../../api";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
 import { GptFormData } from "./GptSuggestionForm";
 
 const GptText: React.FC<{
   useFormReturn: UseFormReturn<GptFormData>;
-  generatedText: GeneratedText;
+  generatedText: TextCreateWithQuestions;
 }> = ({ useFormReturn, generatedText }) => {
   const { register } = useFormReturn;
 

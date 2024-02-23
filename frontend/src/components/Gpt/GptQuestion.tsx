@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
-import { Question } from "../../api";
+import { QuestionCreate } from "../../api";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
@@ -16,7 +16,7 @@ const containerStyles = {
 };
 
 const GptQuestion: React.FC<{
-  question: Question;
+  question: QuestionCreate;
   questionNum: number;
   useFormReturn: UseFormReturn<GptFormData>;
 }> = ({ question, questionNum, useFormReturn }) => {
