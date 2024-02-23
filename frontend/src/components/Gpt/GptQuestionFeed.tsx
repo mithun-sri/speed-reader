@@ -1,16 +1,13 @@
 import { Box } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
-import { QuestionWithCorrectOption } from "../../api";
-import { useGptContext } from "../../context/GptContext";
+import { GeneratedQuestion, GeneratedText } from "../../api";
 import GptQuestion from "./GptQuestion";
 import { GptFormData } from "./GptSuggestionForm";
 
 const GptQuestionFeed: React.FC<{
   useFormReturn: UseFormReturn<GptFormData>;
-}> = ({ useFormReturn }) => {
-  const { textWithQuestions } = useGptContext();
-  const _useFormReturn = useFormReturn; // temporary unused var
-
+  generatedText: GeneratedText;
+}> = ({ useFormReturn, generatedText }) => {
   const responseContainerStyles = {
     display: "flex",
     flexDirection: "column",
@@ -19,8 +16,7 @@ const GptQuestionFeed: React.FC<{
     gap: 4,
   };
 
-  const questionSuggestions: QuestionWithCorrectOption[] =
-    textWithQuestions.questions;
+  const questionSuggestions: GeneratedQuestion[] = generatedText.questions;
 
   return (
     <Box sx={responseContainerStyles}>
