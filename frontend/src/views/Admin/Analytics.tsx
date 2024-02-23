@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Header from "../../components/Header/Header";
-import AdminAnalyticsTop from "../../components/Admin/AnalyticsTop";
 import { Box } from "@mui/material";
-import EnhancedTable from "../../components/Admin/AdminTextTable";
+import React, { useState } from "react";
 import AdminAnalyticsBox from "../../components/Admin/AdminAnalyticsBox";
+import EnhancedTable from "../../components/Admin/AdminTextTable";
+import AdminAnalyticsTop from "../../components/Admin/AnalyticsTop";
+import Header from "../../components/Header/Header";
 import { getAdminStatistics } from "../../hooks/admin";
 
 const AdminAnalytics: React.FC = () => {
@@ -12,7 +12,10 @@ const AdminAnalytics: React.FC = () => {
   // TODO: Read user input.
   const isSummary = true;
 
-  const { data: adminStatistics } = getAdminStatistics(selectedOption, isSummary);
+  const { data: adminStatistics } = getAdminStatistics(
+    selectedOption,
+    isSummary,
+  );
   console.log(adminStatistics);
   const handleSelectChange = (newValue: string) => {
     setSelectedValue(newValue);
