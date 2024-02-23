@@ -47,3 +47,11 @@ def client_fixture(app: FastAPI):
     app.dependency_overrides[get_current_user] = lambda: None
 
     yield TestClient(app)
+
+
+@fixture(name="admin_client", scope="function")
+# pylint: disable=redefined-outer-name
+def admin_client_fixture(app: FastAPI):
+    app.dependency_overrides[get_current_user] = lambda: None
+
+    yield TestClient(app)
