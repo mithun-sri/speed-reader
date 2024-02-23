@@ -12,21 +12,21 @@ from src.factories.user import UserFactory
 class TestGetNextText:
     def test_returns_404_when_text_table_is_empty(
         self,
-        client: TestClient,
+        user_client: TestClient,
     ):
-        response = client.get("/api/v1/game/texts/next")
+        response = user_client.get("/game/texts/next")
         assert response.status_code == 404
 
     def test_returns_text(
         self,
-        client: TestClient,
+        user_client: TestClient,
         session: Session,
     ):
         text = TextFactory.build()
         session.add(text)
         session.commit()
 
-        response = client.get("/api/v1/game/texts/next")
+        response = user_client.get("/game/texts/next")
         assert response.status_code == 200
 
         response_body = response.json()
@@ -36,7 +36,7 @@ class TestGetNextText:
 class TextGetText:
     def test_returns_404_when_no_text_matches_id(
         self,
-        client: TestClient,
+        user_client: TestClient,
         session: Session,
     ):
         text = TextFactory.build()
@@ -44,7 +44,7 @@ class TextGetText:
         session.commit()
 
         new_text_id = str(ulid.new())
-        response = client.get(f"/api/v1/game/texts/{new_text_id}")
+        response = user_client.get(f"/game/texts/{new_text_id}")
         assert response.status_code == 404
 
     def test_returns_requested_text(
@@ -57,14 +57,14 @@ class TextGetText:
         session.commit()
 
         text = texts[3]
-        response = client.get(f"/api/v1/game/texts/{text.id}")
+        response = client.get(f"/game/texts/{text.id}")
         assert response.status_code == 200
 
 
 class TestGetQuestions:
     def test_returns_all_questions_for_the_text(
         self,
-        client: TestClient,
+        user_client: TestClient,
         session: Session,
     ):
         text = TextFactory.build()
@@ -73,7 +73,7 @@ class TestGetQuestions:
         session.add_all(questions)
         session.commit()
 
-        response = client.get(f"/api/v1/game/texts/{text.id}/questions/next")
+        response = user_client.get(f"/game/texts/{text.id}/questions/next")
         assert response.status_code == 200
 
         response_body = response.json()
@@ -111,10 +111,10 @@ class TestPostAnswers:
 
     def test_returns_404_if_question_does_not_exist(
         self,
-        client: TestClient,
+        user_client: TestClient,
     ):
-        response = client.post(
-            f"/api/v1/game/texts/{self.text.id}/answers",
+        response = user_client.post(
+            f"/game/texts/{self.text.id}/answers",
             json={
                 "answers": [
                     schemas.Answer(
@@ -134,7 +134,7 @@ class TestPostAnswers:
 
     def test_returns_400_if_questions_do_not_match_text_id(
         self,
-        client: TestClient,
+        user_client: TestClient,
         session: Session,
     ):
         new_text = TextFactory.build()
@@ -143,8 +143,8 @@ class TestPostAnswers:
         session.add_all(new_questions)
         session.commit()
 
-        response = client.post(
-            f"/api/v1/game/texts/{self.text.id}/answers",
+        response = user_client.post(
+            f"/game/texts/{self.text.id}/answers",
             json={
                 "answers": [
                     schemas.Answer(
@@ -164,10 +164,10 @@ class TestPostAnswers:
 
     def test_returns_results_and_correct_answers(
         self,
-        client: TestClient,
+        user_client: TestClient,
     ):
-        response = client.post(
-            f"/api/v1/game/texts/{self.text.id}/answers",
+        response = user_client.post(
+            f"/game/texts/{self.text.id}/answers",
             json={
                 "answers": [
                     schemas.Answer(

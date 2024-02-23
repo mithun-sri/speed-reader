@@ -217,7 +217,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/QuestionWithCorrectOption"
+                    "$ref": "#/components/schemas/Question"
                   },
                   "title": "Response Get Questions"
                 }
@@ -271,7 +271,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/QuestionWithCorrectOption"
+                  "$ref": "#/components/schemas/Question"
                 }
               }
             }
@@ -409,12 +409,12 @@
             }
           },
           {
-            "name": "is_fiction",
+            "name": "fiction",
             "in": "query",
             "required": true,
             "schema": {
               "type": "boolean",
-              "title": "Is Fiction"
+              "title": "Fiction"
             }
           }
         ],
@@ -424,7 +424,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GeneratedText"
+                  "$ref": "#/components/schemas/TextCreateWithQuestions"
                 }
               }
             }
@@ -442,19 +442,19 @@
         }
       }
     },
-    "/admin/submit-text": {
+    "/admin/approve-text": {
       "post": {
         "tags": [
           "admin"
         ],
-        "summary": "Add Text",
+        "summary": "Approve Text",
         "description": "Adds a text to the database.",
-        "operationId": "add_text",
+        "operationId": "approve_text",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Text"
+                "$ref": "#/components/schemas/TextCreateWithQuestions"
               }
             }
           },
@@ -466,68 +466,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Text"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/admin/submit-questions": {
-      "post": {
-        "tags": [
-          "admin"
-        ],
-        "summary": "Submit Questions",
-        "description": "Adds questions to the database.",
-        "operationId": "submit_questions",
-        "parameters": [
-          {
-            "name": "text_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Text Id"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/QuestionWithCorrectOption"
-                },
-                "title": "Questions"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  },
-                  "title": "Response Submit Questions"
+                  "$ref": "#/components/schemas/TextWithQuestions"
                 }
               }
             }
@@ -885,7 +824,7 @@
           "game"
         ],
         "summary": "Get Next Text",
-        "description": "Gets the next text that the user has not attempted before.\nNOTE:\nThe current implementation returns a random text,\nregardless of which texts the user has seen.",
+        "description": "Gets the next text that the user has not attempted before.\nTODO:\nThe current implementation returns a random text,\nregardless of which texts the user has seen.",
         "operationId": "get_next_text",
         "responses": {
           "200": {
@@ -907,7 +846,7 @@
           "game"
         ],
         "summary": "Get Next Questions",
-        "description": "Gets next 10 questions that the user has not attempted before.\nNOTE:\nThe current implementation returns 10 random questions for the given text,\nregardless of which questions the user has seen.",
+        "description": "Gets next 10 questions that the user has not attempted before.\nTODO:\nThe current implementation returns 10 random questions for the given text,\nregardless of which questions the user has seen.",
         "operationId": "get_next_questions",
         "parameters": [
           {
@@ -928,7 +867,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Question"
+                    "$ref": "#/components/schemas/QuestionMasked"
                   },
                   "title": "Response Get Next Questions"
                 }
@@ -1186,88 +1125,6 @@
         ],
         "title": "Body_register_user"
       },
-      "GeneratedQuestion": {
-        "properties": {
-          "content": {
-            "type": "string",
-            "title": "Content"
-          },
-          "options": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Options"
-          },
-          "correct_option": {
-            "type": "integer",
-            "title": "Correct Option"
-          }
-        },
-        "type": "object",
-        "required": [
-          "content",
-          "options",
-          "correct_option"
-        ],
-        "title": "GeneratedQuestion"
-      },
-      "GeneratedText": {
-        "properties": {
-          "title": {
-            "type": "string",
-            "title": "Title"
-          },
-          "content": {
-            "type": "string",
-            "title": "Content"
-          },
-          "summary": {
-            "type": "string",
-            "title": "Summary"
-          },
-          "source": {
-            "type": "string",
-            "title": "Source"
-          },
-          "fiction": {
-            "type": "boolean",
-            "title": "Fiction"
-          },
-          "difficulty": {
-            "type": "string",
-            "title": "Difficulty"
-          },
-          "word_count": {
-            "type": "integer",
-            "title": "Word Count"
-          },
-          "questions": {
-            "items": {
-              "$ref": "#/components/schemas/GeneratedQuestion"
-            },
-            "type": "array",
-            "title": "Questions"
-          },
-          "author": {
-            "type": "string",
-            "title": "Author"
-          }
-        },
-        "type": "object",
-        "required": [
-          "title",
-          "content",
-          "summary",
-          "source",
-          "fiction",
-          "difficulty",
-          "word_count",
-          "questions",
-          "author"
-        ],
-        "title": "GeneratedText"
-      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -1344,6 +1201,63 @@
       },
       "Question": {
         "properties": {
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "options": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Options"
+          },
+          "correct_option": {
+            "type": "integer",
+            "title": "Correct Option"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "options",
+          "correct_option",
+          "id"
+        ],
+        "title": "Question"
+      },
+      "QuestionCreate": {
+        "properties": {
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "options": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Options"
+          },
+          "correct_option": {
+            "type": "integer",
+            "title": "Correct Option"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "options",
+          "correct_option"
+        ],
+        "title": "QuestionCreate"
+      },
+      "QuestionMasked": {
+        "properties": {
           "id": {
             "type": "string",
             "title": "Id"
@@ -1366,7 +1280,7 @@
           "content",
           "options"
         ],
-        "title": "Question"
+        "title": "QuestionMasked"
       },
       "QuestionStatistics": {
         "properties": {
@@ -1402,37 +1316,6 @@
         ],
         "title": "QuestionStatistics"
       },
-      "QuestionWithCorrectOption": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "content": {
-            "type": "string",
-            "title": "Content"
-          },
-          "options": {
-            "items": {
-              "type": "string"
-            },
-            "type": "array",
-            "title": "Options"
-          },
-          "correct_option": {
-            "type": "integer",
-            "title": "Correct Option"
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "content",
-          "options",
-          "correct_option"
-        ],
-        "title": "QuestionWithCorrectOption"
-      },
       "Result": {
         "properties": {
           "question_id": {
@@ -1463,10 +1346,6 @@
       },
       "Text": {
         "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
           "title": {
             "type": "string",
             "title": "Title"
@@ -1494,20 +1373,75 @@
           "word_count": {
             "type": "integer",
             "title": "Word Count"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
           }
         },
         "type": "object",
         "required": [
-          "id",
           "title",
           "content",
           "summary",
           "source",
           "fiction",
           "difficulty",
-          "word_count"
+          "word_count",
+          "id"
         ],
         "title": "Text"
+      },
+      "TextCreateWithQuestions": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fiction": {
+            "type": "boolean",
+            "title": "Fiction"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty"
+          },
+          "word_count": {
+            "type": "integer",
+            "title": "Word Count"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionCreate"
+            },
+            "type": "array",
+            "title": "Questions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "content",
+          "summary",
+          "source",
+          "fiction",
+          "difficulty",
+          "word_count",
+          "questions"
+        ],
+        "title": "TextCreateWithQuestions"
       },
       "TextFilter": {
         "properties": {
@@ -1557,10 +1491,6 @@
       },
       "TextWithQuestions": {
         "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
           "title": {
             "type": "string",
             "title": "Title"
@@ -1589,9 +1519,13 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
           "questions": {
             "items": {
-              "$ref": "#/components/schemas/QuestionWithCorrectOption"
+              "$ref": "#/components/schemas/Question"
             },
             "type": "array",
             "title": "Questions"
@@ -1599,7 +1533,6 @@
         },
         "type": "object",
         "required": [
-          "id",
           "title",
           "content",
           "summary",
@@ -1607,6 +1540,7 @@
           "fiction",
           "difficulty",
           "word_count",
+          "id",
           "questions"
         ],
         "title": "TextWithQuestions"

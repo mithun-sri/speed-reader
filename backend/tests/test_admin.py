@@ -48,7 +48,7 @@ class TestGetAdminStatistics:
     def test_calculates_statistics_correctly(self, admin_client: TestClient):
         game_mode = "standard"  # TODO: Randomise game_mode
         response = admin_client.get(
-            "/api/v1/admin/statistics",
+            "/admin/statistics",
             params={"game_mode": game_mode},
         )
         assert response.status_code == 200
@@ -78,7 +78,7 @@ class TestGetTexts:
         session.commit()
 
     def test_get_all_texts(self, admin_client: TestClient):
-        response = admin_client.get("/api/v1/admin/texts")
+        response = admin_client.get("/admin/texts")
         assert response.status_code == 200
 
         data = response.json()
@@ -97,7 +97,7 @@ class TestGetText:
         session.commit()
 
     def test_get_text_by_id(self, admin_client: TestClient):
-        response = admin_client.get(f"/api/v1/admin/texts/{self.text.id}")
+        response = admin_client.get(f"/admin/texts/{self.text.id}")
         assert response.status_code == 200
 
         data = response.json()
@@ -118,7 +118,7 @@ class TestDeleteText:
         session.commit()
 
     def test_delete_text_by_id(self, admin_client: TestClient, session: Session):
-        response = admin_client.delete(f"/api/v1/admin/texts/{self.text.id}")
+        response = admin_client.delete(f"/admin/texts/{self.text.id}")
         assert response.status_code == 200
 
         assert session.get(models.Text, self.text.id) is None
@@ -137,7 +137,7 @@ class TestGetQuestions:
         session.commit()
 
     def test_get_all_questions(self, admin_client: TestClient):
-        response = admin_client.get(f"/api/v1/admin/texts/{self.text.id}/questions")
+        response = admin_client.get(f"/admin/texts/{self.text.id}/questions")
         assert response.status_code == 200
 
         data = response.json()
@@ -161,7 +161,7 @@ class TestGetQuestion:
 
     def test_get_question_by_id(self, admin_client: TestClient):
         response = admin_client.get(
-            f"/api/v1/admin/texts/{self.text.id}/questions/{self.question.id}"
+            f"/admin/texts/{self.text.id}/questions/{self.question.id}"
         )
         assert response.status_code == 200
 
@@ -186,7 +186,7 @@ class TestDeleteQuestion:
 
     def test_delete_question_by_id(self, admin_client: TestClient, session: Session):
         response = admin_client.delete(
-            f"/api/v1/admin/texts/{self.text.id}/questions/{self.question.id}"
+            f"/admin/texts/{self.text.id}/questions/{self.question.id}"
         )
         assert response.status_code == 200
 
@@ -225,7 +225,7 @@ class TestGetQuestionStatistics:
 
     def test_calculates_statistics_correctly(self, admin_client: TestClient):
         response = admin_client.get(
-            f"/api/v1/admin/texts/{self.text.id}/questions/{self.question.id}/statistics"
+            f"/admin/texts/{self.text.id}/questions/{self.question.id}/statistics"
         )
         assert response.status_code == 200
 

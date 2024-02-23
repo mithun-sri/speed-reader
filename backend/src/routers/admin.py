@@ -3,7 +3,6 @@ import os
 from typing import Annotated
 
 import openai
-import ulid
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -111,7 +110,7 @@ async def delete_text(
 
 @router.get(
     "/texts/{text_id}/questions",
-    response_model=list[schemas.QuestionWithCorrectOption],
+    response_model=list[schemas.Question],
 )
 async def get_questions(
     text_id: str,
@@ -127,7 +126,7 @@ async def get_questions(
 
 @router.get(
     "/texts/{text_id}/questions/{question_id}",
-    response_model=schemas.QuestionWithCorrectOption,
+    response_model=schemas.Question,
 )
 async def get_question(
     text_id: str,
@@ -208,142 +207,119 @@ async def get_question_statistics(
     )
 
 
+def build_text_generation_prompt(difficulty: str, fiction: bool):
+    return f"""
+I want an extract of a text that belongs to the public domain. 
+The text you choose must be {'fiction' if fiction else 'non-fiction'}. 
+The text you choose must have a reading difficulty of {difficulty} (you can judge this). 
+For this text, return to me in JSON format, the title, an extract from the text larger than 500 words, 
+author, a link to the Gutenberg project if it exists, 
+and a list of 10 questions to test how well someone has understood the extract after reading it. 
+The questions must all be answerable just from reading the extract. 
+Each question should have four options with one correct option. 
+I also want a summary of the provided text if it is non-fiction.
+The JSON must follow the format:
+{{
+    "title": <string>,
+    "extract": <string>,
+    "author": <string>,
+    "gutenberg_link": <string>,
+    "questions": [
+        {{
+            "question": <string>,
+            "options": [
+                <string>,
+                <string>,
+                <string>,
+                <string>
+            ],
+            "correct_option": <string>
+        }},
+        ...
+    ],
+    "summarised": <string>
+}}
+Your response must only contain the JSON answer and nothing else.
+"""
+
+
 OPENAPI_KEY = os.environ.get("OPENAPI_KEY")
-
-
-def build_text_generation_prompt(difficulty: str, is_fiction: bool):
-    # TODO: Use multi-line strings
-    return (
-        "I want an extract of a text that belongs to the public domain. "
-        + f"The text you choose must be {'fiction' if is_fiction else 'non-fiction'}. "
-        + f"The text you choose must have a reading difficulty of {difficulty} (you can judge this). "
-        + "For this text, return to me in JSON format, the title, an extract from the text larger than 500 words, "
-        + "author, a link to the Gutenberg project if it exists, "
-        + "and a list of 10 questions to test how well someone has understood the extract after reading it. "
-        + "The questions must all be answerable just from reading the extract. "
-        + "Each question should have four options with one correct option. "
-        + "I also want a summary of the provided text if it is non-fiction.\n"
-        + "The JSON must follow the format:\n"
-        + "{\n"
-        + '    "title": <string>,\n'
-        + '    "extract": <string>,\n'
-        + '    "author": <string>,\n'
-        + '    "gutenberg_link": <string>,\n'
-        + '    "questions": [\n'
-        + "        {"
-        + '            "question": <string>,\n'
-        + '            "options": [\n'
-        + "                <string>,\n"
-        + "                <string>,\n"
-        + "                <string>,\n"
-        + "                <string>\n"
-        + "            ],\n"
-        + '            "correct_option": <string>\n'
-        + "        },\n"
-        + "        ...\n"
-        + "    ],\n"
-        + '    "summarised": <string>\n'
-        + "}\n"
-        + "Your response must only contain the JSON answer and nothing else."
-    )
 
 
 @router.post(
     "/generate-text",
-    response_model=schemas.GeneratedText,
+    response_model=schemas.TextCreateWithQuestions,
 )
-async def generate_text(difficulty: str, is_fiction: bool):
-    if (
-        response := openai.OpenAI(api_key=OPENAPI_KEY)
+async def generate_text(difficulty: str, fiction: bool):
+    response = (
+        openai.OpenAI(api_key=OPENAPI_KEY)
         .chat.completions.create(
             model="gpt-4",
             messages=[
                 {
                     "role": "user",
-                    "content": build_text_generation_prompt(difficulty, is_fiction),
+                    "content": build_text_generation_prompt(difficulty, fiction),
                 }
             ],
         )
         .choices[0]
         .message.content
-    ) is None:
+    )
+    if not response:
         raise BadResponseFromOpenAI()
 
-    response_json = json.loads(response)
-    return schemas.GeneratedText(
-        title=response_json["title"],
-        content=response_json["extract"],
+    text = json.loads(response)
+    return schemas.TextCreateWithQuestions(
+        title=text["title"],
+        content=text["extract"],
         difficulty=difficulty,
-        word_count=len(response_json["extract"].split(" ")),
+        fiction=fiction,
+        word_count=len(text["extract"].split(" ")),
         questions=[
-            schemas.GeneratedQuestion(
-                content=question_json["question"],
-                options=question_json["options"],
-                correct_option=question_json["options"].index(
-                    question_json["correct_option"]
-                ),
+            schemas.QuestionCreate(
+                content=question["question"],
+                options=question["options"],
+                correct_option=question["options"].index(question["correct_option"]),
             )
-            for question_json in response_json["questions"]
+            for question in text["questions"]
         ],
-        summary=response_json["summarised"],
-        source=response_json["gutenberg_link"],
-        author=response_json["author"],
-        fiction=is_fiction,
+        summary=text["summarised"],
+        source=text["gutenberg_link"],
     )
 
 
 @router.post(
-    "/submit-text",
-    response_model=schemas.Text,
+    "/approve-text",
+    response_model=schemas.TextWithQuestions,
 )
-async def add_text(
-    text: schemas.Text,
+async def approve_text(
+    text_data: schemas.TextCreateWithQuestions,
     session: Annotated[Session, Depends(get_session)],
 ):
     """
     Adds a text to the database.
     """
 
-    # Generate an id as ulid for the text
-    text.id = str(ulid.new())
-
-    text_ = models.Text(
-        id=text.id,
-        title=text.title,
-        content=text.content,
-        summary=text.summary,
-        source=text.source,
-        fiction=text.fiction,
-        difficulty=text.difficulty,
-        word_count=text.word_count,
+    text = models.Text(
+        title=text_data.title,
+        content=text_data.content,
+        summary=text_data.summary,
+        source=text_data.source,
+        fiction=text_data.fiction,
+        difficulty=text_data.difficulty,
+        word_count=text_data.word_count,
     )
-    session.add(text_)
-    session.commit()
-    return text  # need text id to be returned for questions to be added
-
-
-@router.post(
-    "/submit-questions",
-    response_model=dict[str, str],
-)
-async def submit_questions(
-    questions: list[schemas.QuestionWithCorrectOption],
-    text_id: str,
-    session: Annotated[Session, Depends(get_session)],
-):
-    """
-    Adds questions to the database.
-    """
-    text = session.get(models.Text, text_id)
-    if not text:
-        raise TextNotFoundException(text_id=text_id)
-    for question in questions:
-        question_ = models.Question(
+    questions = [
+        models.Question(
+            text=text,
             content=question.content,
             options=question.options,
             correct_option=question.correct_option,
-            text=text,
         )
-        session.add(question_)
+        for question in text_data.questions
+    ]
+    session.add(text)
+    session.add_all(questions)
     session.commit()
-    return {"message": "Questions added successfully"}
+
+    return text
