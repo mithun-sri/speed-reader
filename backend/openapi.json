@@ -22,15 +22,6 @@
               "type": "string",
               "title": "Game Mode"
             }
-          },
-          {
-            "name": "is_summary",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "boolean",
-              "title": "Is Summary"
-            }
           }
         ],
         "responses": {
@@ -1260,6 +1251,13 @@
             "type": "string",
             "title": "Id"
           },
+          "percentages": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Percentages"
+          },
           "accuracy": {
             "type": "integer",
             "title": "Accuracy"
@@ -1271,6 +1269,7 @@
           "options",
           "correct_option",
           "id",
+          "percentages",
           "accuracy"
         ],
         "title": "QuestionWithStatistics"

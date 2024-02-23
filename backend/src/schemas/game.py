@@ -20,6 +20,7 @@ class QuestionMasked(BaseModel):
 
 
 class QuestionWithStatistics(Question):
+    percentages: list[int]
     accuracy: int
 
 

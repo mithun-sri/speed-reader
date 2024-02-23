@@ -26,17 +26,13 @@ router = APIRouter(prefix="/admin", tags=["admin"], route_class=LoggerRoute)
 )
 async def get_admin_statistics(
     game_mode: Annotated[str, Query()],
-    is_summary: Annotated[bool, Query()],
 ):
     """
     Gets the statistics of the admin.
     """
     pipeline = [
         {
-            "$match": {
-                "game_mode": game_mode,
-                "summary": is_summary,
-            },
+            "$match": {"game_mode": game_mode},
         },
         {
             "$group": {
@@ -147,6 +143,7 @@ async def get_text(
     item = models.History.objects().aggregate(pipeline)
     item = next(item, {})
 
+    # TODO: Avoid duplicate code.
     return schemas.TextWithQuestionsAndStatistics(
         id=text.id,
         title=text.title,
@@ -216,7 +213,11 @@ async def get_questions(
         {
             "$group": {
                 "_id": "$results.question_id",
-                "averageAcc": {"$avg": {"$cond": ["$results.correct", 1, 0]}},
+                # fmt: off
+                "avgOption0": {"$avg": {"$cond": [{"$eq": ["$results.selected_option", 0]}, 1, 0]}},
+                "avgOption1": {"$avg": {"$cond": [{"$eq": ["$results.selected_option", 1]}, 1, 0]}},
+                "avgOption2": {"$avg": {"$cond": [{"$eq": ["$results.selected_option", 2]}, 1, 0]}},
+                "avgAcc": {"$avg": {"$cond": [{"$eq": ["$results.correct", True]}, 1, 0]}},
             }
         },
     ]
@@ -231,7 +232,8 @@ async def get_questions(
             content=question.content,
             options=question.options,
             correct_option=question.correct_option,
-            accuracy=int(item.get("averageAcc", 0) * 100),
+            percentages=[int(item.get(f"avgOption{i}", 0) * 100) for i in range(3)],
+            accuracy=int(item.get("avgAcc", 0) * 100),
         )
         questions_with_stats.append(question_with_stats)
 
@@ -266,7 +268,12 @@ async def get_question(
         {
             "$group": {
                 "_id": None,
-                "averageAcc": {"$avg": {"$cond": ["$results.correct", 1, 0]}},
+                # TODO: Avoid duplicate code.
+                # fmt: off
+                "avgOption0": {"$avg": {"$cond": [{"$eq": ["$results.selected_option", 0]}, 1, 0]}},
+                "avgOption1": {"$avg": {"$cond": [{"$eq": ["$results.selected_option", 1]}, 1, 0]}},
+                "avgOption2": {"$avg": {"$cond": [{"$eq": ["$results.selected_option", 2]}, 1, 0]}},
+                "avgAcc": {"$avg": {"$cond": [{"$eq": ["$results.correct", True]}, 1, 0]}},
             }
         },
     ]
@@ -278,7 +285,8 @@ async def get_question(
         content=question.content,
         options=question.options,
         correct_option=question.correct_option,
-        accuracy=int(item.get("averageAcc", 0) * 100),
+        percentages=[int(item.get(f"avgOption{i}", 0) * 100) for i in range(3)],
+        accuracy=int(item.get("avgAcc", 0) * 100),
     )
 
 
