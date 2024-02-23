@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import {
   ADAPTIVE_MODE,
   STANDARD_MODE,
-  SUMMARISED_ADAPTIVE_MODE,
+  SUMMARISED_MODE,
 } from "../../common/constants";
 import { GameProvider, useGameContext } from "../../context/GameContext";
 import AdaptiveModeView from "../AdaptiveMode/AdaptiveMode";
@@ -52,7 +52,7 @@ const GameView = () => {
     gameView = <StandardModeGameView wpm={wpm!} mode={view!} />;
   } else if (mode === ADAPTIVE_MODE) {
     gameView = <AdaptiveModeView />;
-  } else if (mode === SUMMARISED_ADAPTIVE_MODE) {
+  } else if (mode === SUMMARISED_MODE) {
     gameView = <div> SUMMARISED ADAPTIVE MODE. </div>;
   } else {
     console.log("Error rendering Game view.");

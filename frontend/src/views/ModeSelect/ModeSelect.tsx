@@ -4,7 +4,7 @@ import {
   ADAPTIVE_MODE,
   GameMode,
   STANDARD_MODE,
-  SUMMARISED_ADAPTIVE_MODE,
+  SUMMARISED_MODE,
 } from "../../common/constants";
 import Carousel from "../../components/Carousel/Carousel";
 import Footer from "../../components/Footer/Footer";
@@ -18,11 +18,7 @@ const ModeSelectView = () => {
   const { mode, setMode } = useGameContext();
   const [valueFromCarousel, setValueFromCarousel] = useState<number>(-1); // To retrieve selected index from Carousel
 
-  const options: GameMode[] = [
-    STANDARD_MODE,
-    ADAPTIVE_MODE,
-    SUMMARISED_ADAPTIVE_MODE,
-  ];
+  const options: GameMode[] = [STANDARD_MODE, ADAPTIVE_MODE, SUMMARISED_MODE];
 
   // Callback function to handle the selected index form the Carousel
   const handleValueFromCarousel = (value: number) => {
