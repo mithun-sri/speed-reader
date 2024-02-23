@@ -1,12 +1,46 @@
 import { Box, IconButton } from "@mui/material";
-import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import BackButton from "../../components/Button/BackButton";
 
 const SummarizedSubMode: React.FC = () => {
+  // const { decrementCurrentStage } = useGameScreenContext();
+  const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  useEffect(() => {
+    function handleResize() {
+      setFontSize(calculateFontSize());
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  function calculateFontSize() {
+    const windowWidth = window.innerWidth;
+    const minFontSize = 40;
+    const maxFontSize = 200;
+
+    const calculatedFontSize = Math.min(
+      maxFontSize,
+      Math.max(minFontSize, windowWidth / 6),
+    );
+
+    return calculatedFontSize;
+  }
+
+  // Need to add once GameContext issue fixed
+  const handleBackButton = () => {};
+
   return (
     <>
       <Header />
+      <Box sx={{ marginLeft: "7vw", marginTop: "35px", marginBottom: "0px" }}>
+        <BackButton label="mode" handleClick={handleBackButton} />
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -14,15 +48,14 @@ const SummarizedSubMode: React.FC = () => {
           justifyContent: "center",
           alignItems: "center",
           textAlign: "center",
-          height: "65vh",
         }}
       >
         <Box
           sx={{
-            fontSize: "2vw",
-            fontWeight: "bolder",
             fontFamily: "JetBrains Mono, monospace",
-            marginBottom: "3vw",
+            fontWeight: "bolder",
+            paddingTop: "20px",
+            fontSize: fontSize / 6.3,
             color: "#D1D0C5",
           }}
         >
@@ -35,6 +68,7 @@ const SummarizedSubMode: React.FC = () => {
             justifyContent: "center",
             alignContent: "center",
             textAlign: "center",
+            height: "40vh",
           }}
         >
           <IconButton
@@ -71,7 +105,6 @@ const SummarizedSubMode: React.FC = () => {
           </IconButton>
         </Box>
       </Box>
-      <Footer />
     </>
   );
 };

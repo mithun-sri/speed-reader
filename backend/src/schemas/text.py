@@ -1,30 +1,30 @@
+# TODO: Organise schemas into appropriate modules.
 from pydantic import BaseModel
 
-from .game import GeneratedQuestion, QuestionWithCorrectOption
+from .game import Question, QuestionCreate
 
 
-class Text(BaseModel):
-    id: str
+class TextBase(BaseModel):
     title: str
     content: str
     summary: str
     source: str
-    fiction: bool
+    fiction: bool  # TODO: Rename to `is_fiction`
     difficulty: str
     word_count: int
+
+
+class Text(TextBase):
+    id: str
 
 
 class TextWithQuestions(Text):
-    questions: list[QuestionWithCorrectOption]
+    questions: list[Question]
 
 
-class GeneratedText(BaseModel):
-    title: str
-    content: str
-    summary: str
-    source: str
-    fiction: bool
-    difficulty: str
-    word_count: int
-    questions: list[GeneratedQuestion]
-    author: str
+class TextCreate(TextBase):
+    pass
+
+
+class TextCreateWithQuestions(TextCreate):
+    questions: list[QuestionCreate]

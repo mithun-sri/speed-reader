@@ -1,7 +1,6 @@
 import random
 from typing import Annotated
 
-import ulid
 from fastapi import APIRouter, Body, Depends
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -32,7 +31,7 @@ async def get_next_text(
 ):
     """
     Gets the next text that the user has not attempted before.
-    NOTE:
+    TODO:
     The current implementation returns a random text,
     regardless of which texts the user has seen.
     """
@@ -51,7 +50,7 @@ NUM_QUESTIONS_PER_GAME = 10
 
 @router.get(
     "/texts/{text_id}/questions/next",
-    response_model=list[schemas.Question],
+    response_model=list[schemas.QuestionMasked],
 )
 async def get_next_questions(
     text_id: str,
@@ -59,7 +58,7 @@ async def get_next_questions(
 ):
     """
     Gets next 10 questions that the user has not attempted before.
-    NOTE:
+    TODO:
     The current implementation returns 10 random questions for the given text,
     regardless of which questions the user has seen.
     """
@@ -88,7 +87,7 @@ async def post_answers(
     game_mode: Annotated[str, Body()],
     game_submode: Annotated[str, Body()],
     summary: Annotated[bool, Body()],
-    _user: Annotated[models.User, Depends(get_current_user)],
+    user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ):
     """
@@ -128,10 +127,7 @@ async def post_answers(
     # TODO: Refactor
     score = sum(result.correct for result in results) * 100 // max(len(results), 1)
     history = models.History(
-        # TODO:
-        # Uncomment the following line once `get_current_user` is implemented.
-        # user_id=user.id,
-        user_id=str(ulid.new()),
+        user_id=user.id,
         text_id=text_id,
         question_ids=question_ids,
         game_mode=game_mode,

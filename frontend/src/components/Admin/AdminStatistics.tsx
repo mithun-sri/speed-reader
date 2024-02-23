@@ -11,7 +11,7 @@ interface AdminStatisticsProps {
   high: number;
 }
 
-const AdminStatistics: React.FC<AdminStatisticsProps> = ({
+const AdminStatisticsComp: React.FC<AdminStatisticsProps> = ({
   score,
   avgWpm,
   low,
@@ -34,4 +34,4 @@ const AdminStatistics: React.FC<AdminStatisticsProps> = ({
   );
 };
 
-export default AdminStatistics;
+export default AdminStatisticsComp;

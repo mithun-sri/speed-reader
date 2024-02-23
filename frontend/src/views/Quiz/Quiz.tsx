@@ -63,8 +63,8 @@ const QuizView = () => {
         postAnswers.mutate(
           {
             answers: quizAnswers.map((selectedOption, questionIndex) => ({
-              questionId: questions![questionIndex].id,
-              selectedOption: selectedOption!,
+              question_id: questions![questionIndex].id,
+              selected_option: selectedOption!,
             })),
             averageWpm: averageWpm,
             intervalWpms: intervalWpms,

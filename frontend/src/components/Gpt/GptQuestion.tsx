@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
-import { QuestionWithCorrectOption } from "../../api";
+import { QuestionCreate } from "../../api";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
@@ -16,7 +16,7 @@ const containerStyles = {
 };
 
 const GptQuestion: React.FC<{
-  question: QuestionWithCorrectOption;
+  question: QuestionCreate;
   questionNum: number;
   useFormReturn: UseFormReturn<GptFormData>;
 }> = ({ question, questionNum, useFormReturn }) => {
@@ -85,7 +85,7 @@ const GptQuestion: React.FC<{
           ))}
         </Box>
         <CheckboxGroup
-          defaultValue={question.correctOption}
+          defaultValue={question.correct_option}
           questionNum={questionNum}
           useFormReturn={useFormReturn}
         />

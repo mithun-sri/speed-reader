@@ -34,25 +34,25 @@ export interface AdminStatistics {
      * @type {number}
      * @memberof AdminStatistics
      */
-    averageScore: number;
+    'average_score': number;
     /**
      * 
      * @type {number}
      * @memberof AdminStatistics
      */
-    averageWpm: number;
+    'average_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof AdminStatistics
      */
-    minWpm: number;
+    'min_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof AdminStatistics
      */
-    maxWpm: number;
+    'max_wpm': number;
 }
 /**
  * 
@@ -65,13 +65,13 @@ export interface Answer {
      * @type {string}
      * @memberof Answer
      */
-    questionId: string;
+    'question_id': string;
     /**
      * 
      * @type {number}
      * @memberof Answer
      */
-    selectedOption: number;
+    'selected_option': number;
 }
 /**
  * 
@@ -84,13 +84,13 @@ export interface BodyGetUserAvailableTexts {
      * @type {BodyGetUserAvailableTextsTextFilter}
      * @memberof BodyGetUserAvailableTexts
      */
-    textFilter?: BodyGetUserAvailableTextsTextFilter;
+    'text_filter'?: BodyGetUserAvailableTextsTextFilter;
     /**
      * 
      * @type {BodyGetUserAvailableTextsTextSort}
      * @memberof BodyGetUserAvailableTexts
      */
-    textSort?: BodyGetUserAvailableTextsTextSort;
+    'text_sort'?: BodyGetUserAvailableTextsTextSort;
 }
 /**
  * 
@@ -103,13 +103,13 @@ export interface BodyGetUserAvailableTextsTextFilter {
      * @type {GameMode}
      * @memberof BodyGetUserAvailableTextsTextFilter
      */
-    gameMode?: GameMode;
+    'game_mode'?: GameMode;
     /**
      * 
      * @type {Difficulty}
      * @memberof BodyGetUserAvailableTextsTextFilter
      */
-    difficulty?: Difficulty;
+    'difficulty'?: Difficulty;
 }
 /**
  * 
@@ -122,13 +122,13 @@ export interface BodyGetUserAvailableTextsTextSort {
      * @type {any}
      * @memberof BodyGetUserAvailableTextsTextSort
      */
-    field: any;
+    'field': any;
     /**
      * 
      * @type {any}
      * @memberof BodyGetUserAvailableTextsTextSort
      */
-    ascending?: any;
+    'ascending'?: any;
 }
 /**
  * 
@@ -141,13 +141,13 @@ export interface BodyLoginUser {
      * @type {string}
      * @memberof BodyLoginUser
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof BodyLoginUser
      */
-    password: string;
+    'password': string;
 }
 /**
  * 
@@ -160,37 +160,37 @@ export interface BodyPostAnswers {
      * @type {Array<Answer>}
      * @memberof BodyPostAnswers
      */
-    answers: Array<Answer>;
+    'answers': Array<Answer>;
     /**
      * 
      * @type {number}
      * @memberof BodyPostAnswers
      */
-    averageWpm: number;
+    'average_wpm': number;
     /**
      * 
      * @type {Array<number>}
      * @memberof BodyPostAnswers
      */
-    intervalWpms: Array<number>;
+    'interval_wpms': Array<number>;
     /**
      * 
      * @type {string}
      * @memberof BodyPostAnswers
      */
-    gameMode: string;
+    'game_mode': string;
     /**
      * 
      * @type {string}
      * @memberof BodyPostAnswers
      */
-    gameSubmode: string;
+    'game_submode': string;
     /**
      * 
      * @type {boolean}
      * @memberof BodyPostAnswers
      */
-    summary: boolean;
+    'summary': boolean;
 }
 /**
  * 
@@ -203,19 +203,19 @@ export interface BodyRegisterUser {
      * @type {string}
      * @memberof BodyRegisterUser
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof BodyRegisterUser
      */
-    email: string;
+    'email': string;
     /**
      * 
      * @type {string}
      * @memberof BodyRegisterUser
      */
-    password: string;
+    'password': string;
 }
 /**
  * 
@@ -249,7 +249,7 @@ export interface HTTPValidationError {
      * @type {Array<ValidationError>}
      * @memberof HTTPValidationError
      */
-    detail?: Array<ValidationError>;
+    'detail'?: Array<ValidationError>;
 }
 /**
  * 
@@ -262,49 +262,49 @@ export interface History {
      * @type {string}
      * @memberof History
      */
-    textId: string;
+    'text_id': string;
     /**
      * 
      * @type {string}
      * @memberof History
      */
-    gameMode: string;
+    'game_mode': string;
     /**
      * 
      * @type {GameSubmode}
      * @memberof History
      */
-    gameSubmode: GameSubmode;
+    'game_submode': GameSubmode;
     /**
      * 
      * @type {boolean}
      * @memberof History
      */
-    summary: boolean;
+    'summary': boolean;
     /**
      * 
      * @type {number}
      * @memberof History
      */
-    averageWpm: number;
+    'average_wpm': number;
     /**
      * 
      * @type {Array<number>}
      * @memberof History
      */
-    intervalWpms: Array<number>;
+    'interval_wpms': Array<number>;
     /**
      * 
      * @type {number}
      * @memberof History
      */
-    score: number;
+    'score': number;
     /**
      * 
      * @type {Array<Result>}
      * @memberof History
      */
-    results: Array<Result>;
+    'results': Array<Result>;
 }
 /**
  * 
@@ -317,19 +317,75 @@ export interface Question {
      * @type {string}
      * @memberof Question
      */
-    id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Question
-     */
-    content: string;
+    'content': string;
     /**
      * 
      * @type {Array<string>}
      * @memberof Question
      */
-    options: Array<string>;
+    'options': Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof Question
+     */
+    'correct_option': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Question
+     */
+    'id': string;
+}
+/**
+ * 
+ * @export
+ * @interface QuestionCreate
+ */
+export interface QuestionCreate {
+    /**
+     * 
+     * @type {string}
+     * @memberof QuestionCreate
+     */
+    'content': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof QuestionCreate
+     */
+    'options': Array<string>;
+    /**
+     * 
+     * @type {number}
+     * @memberof QuestionCreate
+     */
+    'correct_option': number;
+}
+/**
+ * 
+ * @export
+ * @interface QuestionMasked
+ */
+export interface QuestionMasked {
+    /**
+     * 
+     * @type {string}
+     * @memberof QuestionMasked
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof QuestionMasked
+     */
+    'content': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof QuestionMasked
+     */
+    'options': Array<string>;
 }
 /**
  * 
@@ -342,62 +398,25 @@ export interface QuestionStatistics {
      * @type {string}
      * @memberof QuestionStatistics
      */
-    questionId: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof QuestionStatistics
-     */
-    averageScore: number;
+    'question_id': string;
     /**
      * 
      * @type {Array<string>}
      * @memberof QuestionStatistics
      */
-    options: Array<string>;
+    'options': Array<string>;
     /**
      * 
      * @type {number}
      * @memberof QuestionStatistics
      */
-    correctOption: number;
+    'correct_option': number;
     /**
      * 
      * @type {Array<number>}
      * @memberof QuestionStatistics
      */
-    selectedOptions: Array<number>;
-}
-/**
- * 
- * @export
- * @interface QuestionWithCorrectOption
- */
-export interface QuestionWithCorrectOption {
-    /**
-     * 
-     * @type {string}
-     * @memberof QuestionWithCorrectOption
-     */
-    id: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof QuestionWithCorrectOption
-     */
-    content: string;
-    /**
-     * 
-     * @type {Array<string>}
-     * @memberof QuestionWithCorrectOption
-     */
-    options: Array<string>;
-    /**
-     * 
-     * @type {number}
-     * @memberof QuestionWithCorrectOption
-     */
-    correctOption: number;
+    'selected_options': Array<number>;
 }
 /**
  * 
@@ -417,25 +436,25 @@ export interface Result {
      * @type {string}
      * @memberof Result
      */
-    questionId: string;
+    'question_id': string;
     /**
      * 
      * @type {boolean}
      * @memberof Result
      */
-    correct: boolean;
+    'correct': boolean;
     /**
      * 
      * @type {number}
      * @memberof Result
      */
-    correctOption: number;
+    'correct_option': number;
     /**
      * 
      * @type {number}
      * @memberof Result
      */
-    selectedOption: number;
+    'selected_option': number;
 }
 /**
  * 
@@ -448,49 +467,104 @@ export interface Text {
      * @type {string}
      * @memberof Text
      */
-    id: string;
+    'title': string;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
-    title: string;
+    'content': string;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
-    content: string;
+    'summary': string;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
-    summary: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof Text
-     */
-    source: string;
+    'source': string;
     /**
      * 
      * @type {boolean}
      * @memberof Text
      */
-    fiction: boolean;
+    'fiction': boolean;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
-    difficulty: string;
+    'difficulty': string;
     /**
      * 
      * @type {number}
      * @memberof Text
      */
-    wordCount: number;
+    'word_count': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
+    'id': string;
+}
+/**
+ * 
+ * @export
+ * @interface TextCreateWithQuestions
+ */
+export interface TextCreateWithQuestions {
+    /**
+     * 
+     * @type {string}
+     * @memberof TextCreateWithQuestions
+     */
+    'title': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextCreateWithQuestions
+     */
+    'content': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextCreateWithQuestions
+     */
+    'summary': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextCreateWithQuestions
+     */
+    'source': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TextCreateWithQuestions
+     */
+    'fiction': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextCreateWithQuestions
+     */
+    'difficulty': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextCreateWithQuestions
+     */
+    'word_count': number;
+    /**
+     * 
+     * @type {Array<QuestionCreate>}
+     * @memberof TextCreateWithQuestions
+     */
+    'questions': Array<QuestionCreate>;
 }
 /**
  * 
@@ -503,13 +577,13 @@ export interface TextFilter {
      * @type {GameMode}
      * @memberof TextFilter
      */
-    gameMode?: GameMode;
+    'game_mode'?: GameMode;
     /**
      * 
      * @type {Difficulty}
      * @memberof TextFilter
      */
-    difficulty?: Difficulty;
+    'difficulty'?: Difficulty;
 }
 /**
  * 
@@ -522,13 +596,13 @@ export interface TextSort {
      * @type {string}
      * @memberof TextSort
      */
-    field: string;
+    'field': string;
     /**
      * 
      * @type {boolean}
      * @memberof TextSort
      */
-    ascending?: boolean;
+    'ascending'?: boolean;
 }
 /**
  * 
@@ -541,55 +615,55 @@ export interface TextWithQuestions {
      * @type {string}
      * @memberof TextWithQuestions
      */
-    id: string;
+    'title': string;
     /**
      * 
      * @type {string}
      * @memberof TextWithQuestions
      */
-    title: string;
+    'content': string;
     /**
      * 
      * @type {string}
      * @memberof TextWithQuestions
      */
-    content: string;
+    'summary': string;
     /**
      * 
      * @type {string}
      * @memberof TextWithQuestions
      */
-    summary: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof TextWithQuestions
-     */
-    source: string;
+    'source': string;
     /**
      * 
      * @type {boolean}
      * @memberof TextWithQuestions
      */
-    fiction: boolean;
+    'fiction': boolean;
     /**
      * 
      * @type {string}
      * @memberof TextWithQuestions
      */
-    difficulty: string;
+    'difficulty': string;
     /**
      * 
      * @type {number}
      * @memberof TextWithQuestions
      */
-    wordCount: number;
+    'word_count': number;
     /**
      * 
-     * @type {Array<QuestionWithCorrectOption>}
+     * @type {string}
      * @memberof TextWithQuestions
      */
-    questions: Array<QuestionWithCorrectOption>;
+    'id': string;
+    /**
+     * 
+     * @type {Array<Question>}
+     * @memberof TextWithQuestions
+     */
+    'questions': Array<Question>;
 }
 /**
  * 
@@ -602,25 +676,25 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    email: string;
+    'email': string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    role: string;
+    'role': string;
 }
 /**
  * 
@@ -633,25 +707,25 @@ export interface UserAvailableTexts {
      * @type {Array<Text>}
      * @memberof UserAvailableTexts
      */
-    texts: Array<Text>;
+    'texts': Array<Text>;
     /**
      * 
      * @type {number}
      * @memberof UserAvailableTexts
      */
-    page: number;
+    'page': number;
     /**
      * 
      * @type {number}
      * @memberof UserAvailableTexts
      */
-    pageSize: number;
+    'page_size': number;
     /**
      * 
      * @type {number}
      * @memberof UserAvailableTexts
      */
-    totalTexts: number;
+    'total_texts': number;
 }
 /**
  * 
@@ -664,43 +738,43 @@ export interface UserStatistics {
      * @type {string}
      * @memberof UserStatistics
      */
-    userId: string;
+    'user_id': string;
     /**
      * 
      * @type {string}
      * @memberof UserStatistics
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof UserStatistics
      */
-    email: string;
+    'email': string;
     /**
      * 
      * @type {number}
      * @memberof UserStatistics
      */
-    minWpm: number;
+    'min_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof UserStatistics
      */
-    maxWpm: number;
+    'max_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof UserStatistics
      */
-    averageWpm: number;
+    'average_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof UserStatistics
      */
-    averageScore: number;
+    'average_score': number;
 }
 /**
  * 
@@ -713,19 +787,19 @@ export interface ValidationError {
      * @type {Array<ValidationErrorLocInner>}
      * @memberof ValidationError
      */
-    loc: Array<ValidationErrorLocInner>;
+    'loc': Array<ValidationErrorLocInner>;
     /**
      * 
      * @type {string}
      * @memberof ValidationError
      */
-    msg: string;
+    'msg': string;
     /**
      * 
      * @type {string}
      * @memberof ValidationError
      */
-    type: string;
+    'type': string;
 }
 /**
  * 
@@ -743,15 +817,15 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * Adds a text to the database.
-         * @summary Add Text
-         * @param {Text} text 
+         * @summary Approve Text
+         * @param {TextCreateWithQuestions} textCreateWithQuestions 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addText: async (text: Text, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'text' is not null or undefined
-            assertParamExists('addText', 'text', text)
-            const localVarPath = `/admin/submit-text`;
+        approveText: async (textCreateWithQuestions: TextCreateWithQuestions, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textCreateWithQuestions' is not null or undefined
+            assertParamExists('approveText', 'textCreateWithQuestions', textCreateWithQuestions)
+            const localVarPath = `/admin/approve-text`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -770,7 +844,7 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(text, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(textCreateWithQuestions, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -853,15 +927,15 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * 
          * @summary Generate Text
          * @param {string} difficulty 
-         * @param {boolean} isFiction 
+         * @param {boolean} fiction 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        generateText: async (difficulty: string, isFiction: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        generateText: async (difficulty: string, fiction: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'difficulty' is not null or undefined
             assertParamExists('generateText', 'difficulty', difficulty)
-            // verify required parameter 'isFiction' is not null or undefined
-            assertParamExists('generateText', 'isFiction', isFiction)
+            // verify required parameter 'fiction' is not null or undefined
+            assertParamExists('generateText', 'fiction', fiction)
             const localVarPath = `/admin/generate-text`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -878,8 +952,8 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['difficulty'] = difficulty;
             }
 
-            if (isFiction !== undefined) {
-                localVarQueryParameter['is_fiction'] = isFiction;
+            if (fiction !== undefined) {
+                localVarQueryParameter['fiction'] = fiction;
             }
 
 
@@ -1114,49 +1188,6 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * Adds questions to the database.
-         * @summary Submit Questions
-         * @param {string} textId 
-         * @param {Array<QuestionWithCorrectOption>} questionWithCorrectOption 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        submitQuestions: async (textId: string, questionWithCorrectOption: Array<QuestionWithCorrectOption>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'textId' is not null or undefined
-            assertParamExists('submitQuestions', 'textId', textId)
-            // verify required parameter 'questionWithCorrectOption' is not null or undefined
-            assertParamExists('submitQuestions', 'questionWithCorrectOption', questionWithCorrectOption)
-            const localVarPath = `/admin/submit-questions`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (textId !== undefined) {
-                localVarQueryParameter['text_id'] = textId;
-            }
-
-
-    
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(questionWithCorrectOption, localVarRequestOptions, configuration)
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -1169,15 +1200,15 @@ export const AdminApiFp = function(configuration?: Configuration) {
     return {
         /**
          * Adds a text to the database.
-         * @summary Add Text
-         * @param {Text} text 
+         * @summary Approve Text
+         * @param {TextCreateWithQuestions} textCreateWithQuestions 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async addText(text: Text, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.addText(text, options);
+        async approveText(textCreateWithQuestions: TextCreateWithQuestions, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestions>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.approveText(textCreateWithQuestions, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.addText']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.approveText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1211,12 +1242,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * 
          * @summary Generate Text
          * @param {string} difficulty 
-         * @param {boolean} isFiction 
+         * @param {boolean} fiction 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async generateText(difficulty: string, isFiction: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestions>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.generateText(difficulty, isFiction, options);
+        async generateText(difficulty: string, fiction: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextCreateWithQuestions>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.generateText(difficulty, fiction, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.generateText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1242,7 +1273,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuestionWithCorrectOption>> {
+        async getQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Question>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestion(textId, questionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestion']?.[localVarOperationServerIndex]?.url;
@@ -1269,7 +1300,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getQuestions(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<QuestionWithCorrectOption>>> {
+        async getQuestions(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Question>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestions(textId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestions']?.[localVarOperationServerIndex]?.url;
@@ -1302,20 +1333,6 @@ export const AdminApiFp = function(configuration?: Configuration) {
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getTexts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
-        /**
-         * Adds questions to the database.
-         * @summary Submit Questions
-         * @param {string} textId 
-         * @param {Array<QuestionWithCorrectOption>} questionWithCorrectOption 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async submitQuestions(textId: string, questionWithCorrectOption: Array<QuestionWithCorrectOption>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.submitQuestions(textId, questionWithCorrectOption, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.submitQuestions']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
     }
 };
 
@@ -1328,13 +1345,13 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
     return {
         /**
          * Adds a text to the database.
-         * @summary Add Text
-         * @param {Text} text 
+         * @summary Approve Text
+         * @param {TextCreateWithQuestions} textCreateWithQuestions 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        addText(text: Text, options?: any): AxiosPromise<Text> {
-            return localVarFp.addText(text, options).then((request) => request(axios, basePath));
+        approveText(textCreateWithQuestions: TextCreateWithQuestions, options?: any): AxiosPromise<TextWithQuestions> {
+            return localVarFp.approveText(textCreateWithQuestions, options).then((request) => request(axios, basePath));
         },
         /**
          * Deletes a question of a text by the given id.
@@ -1361,12 +1378,12 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * 
          * @summary Generate Text
          * @param {string} difficulty 
-         * @param {boolean} isFiction 
+         * @param {boolean} fiction 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        generateText(difficulty: string, isFiction: boolean, options?: any): AxiosPromise<TextWithQuestions> {
-            return localVarFp.generateText(difficulty, isFiction, options).then((request) => request(axios, basePath));
+        generateText(difficulty: string, fiction: boolean, options?: any): AxiosPromise<TextCreateWithQuestions> {
+            return localVarFp.generateText(difficulty, fiction, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the statistics of the admin.
@@ -1386,7 +1403,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuestion(textId: string, questionId: string, options?: any): AxiosPromise<QuestionWithCorrectOption> {
+        getQuestion(textId: string, questionId: string, options?: any): AxiosPromise<Question> {
             return localVarFp.getQuestion(textId, questionId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1407,7 +1424,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuestions(textId: string, options?: any): AxiosPromise<Array<QuestionWithCorrectOption>> {
+        getQuestions(textId: string, options?: any): AxiosPromise<Array<Question>> {
             return localVarFp.getQuestions(textId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1431,17 +1448,6 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
         getTexts(page?: number, pageSize?: number, options?: any): AxiosPromise<Array<Text>> {
             return localVarFp.getTexts(page, pageSize, options).then((request) => request(axios, basePath));
         },
-        /**
-         * Adds questions to the database.
-         * @summary Submit Questions
-         * @param {string} textId 
-         * @param {Array<QuestionWithCorrectOption>} questionWithCorrectOption 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        submitQuestions(textId: string, questionWithCorrectOption: Array<QuestionWithCorrectOption>, options?: any): AxiosPromise<{ [key: string]: string; }> {
-            return localVarFp.submitQuestions(textId, questionWithCorrectOption, options).then((request) => request(axios, basePath));
-        },
     };
 };
 
@@ -1454,14 +1460,14 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
 export class AdminApi extends BaseAPI {
     /**
      * Adds a text to the database.
-     * @summary Add Text
-     * @param {Text} text 
+     * @summary Approve Text
+     * @param {TextCreateWithQuestions} textCreateWithQuestions 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public addText(text: Text, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).addText(text, options).then((request) => request(this.axios, this.basePath));
+    public approveText(textCreateWithQuestions: TextCreateWithQuestions, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).approveText(textCreateWithQuestions, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1493,13 +1499,13 @@ export class AdminApi extends BaseAPI {
      * 
      * @summary Generate Text
      * @param {string} difficulty 
-     * @param {boolean} isFiction 
+     * @param {boolean} fiction 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public generateText(difficulty: string, isFiction: boolean, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).generateText(difficulty, isFiction, options).then((request) => request(this.axios, this.basePath));
+    public generateText(difficulty: string, fiction: boolean, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).generateText(difficulty, fiction, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1575,19 +1581,6 @@ export class AdminApi extends BaseAPI {
      */
     public getTexts(page?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
         return AdminApiFp(this.configuration).getTexts(page, pageSize, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Adds questions to the database.
-     * @summary Submit Questions
-     * @param {string} textId 
-     * @param {Array<QuestionWithCorrectOption>} questionWithCorrectOption 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AdminApi
-     */
-    public submitQuestions(textId: string, questionWithCorrectOption: Array<QuestionWithCorrectOption>, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).submitQuestions(textId, questionWithCorrectOption, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1806,7 +1799,7 @@ export class DefaultApi extends BaseAPI {
 export const GameApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. NOTE: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {*} [options] Override http request option.
@@ -1840,7 +1833,7 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * Gets the next text that the user has not attempted before. NOTE: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
          * @summary Get Next Text
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1924,20 +1917,20 @@ export const GameApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = GameApiAxiosParamCreator(configuration)
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. NOTE: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNextQuestions(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Question>>> {
+        async getNextQuestions(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<QuestionMasked>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getNextQuestions(textId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.getNextQuestions']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Gets the next text that the user has not attempted before. NOTE: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
          * @summary Get Next Text
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -1973,17 +1966,17 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = GameApiFp(configuration)
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. NOTE: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextQuestions(textId: string, options?: any): AxiosPromise<Array<Question>> {
+        getNextQuestions(textId: string, options?: any): AxiosPromise<Array<QuestionMasked>> {
             return localVarFp.getNextQuestions(textId, options).then((request) => request(axios, basePath));
         },
         /**
-         * Gets the next text that the user has not attempted before. NOTE: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
          * @summary Get Next Text
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -2013,7 +2006,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
  */
 export class GameApi extends BaseAPI {
     /**
-     * Gets next 10 questions that the user has not attempted before. NOTE: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+     * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
      * @summary Get Next Questions
      * @param {string} textId 
      * @param {*} [options] Override http request option.
@@ -2025,7 +2018,7 @@ export class GameApi extends BaseAPI {
     }
 
     /**
-     * Gets the next text that the user has not attempted before. NOTE: The current implementation returns a random text, regardless of which texts the user has seen.
+     * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
      * @summary Get Next Text
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

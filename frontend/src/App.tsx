@@ -5,10 +5,10 @@ import { ErrorBoundary } from "react-error-boundary";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthApi } from "./api";
 import GptView from "./views/Admin/GptView";
-import WebGazerLoader from "./views/Calibration/WebGazerLoader";
 import { GamePage } from "./views/GameScreen/GameScreen";
 import UserView from "./views/User/UserView";
 import AdminAnalytics from "./views/Admin/Analytics";
+import LinearProgressFallback from "./components/LoadingBar/LinearProgressFallback";
 
 const queryClient = new QueryClient();
 
@@ -28,13 +28,12 @@ axios.interceptors.response.use(undefined, async (error) => {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LinearProgressFallback />}>
         <ErrorBoundary fallback={<div>Something went wrong</div>}>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Navigate to="/game" />} />
               <Route path="/game" element={<GamePage />} />
-              <Route path="/calibration" element={<WebGazerLoader />} />
               <Route path="/user" element={<UserView />} />
               <Route path="/admin" element={<AdminAnalytics />} />
               <Route path="/gpt" element={<GptView />} />

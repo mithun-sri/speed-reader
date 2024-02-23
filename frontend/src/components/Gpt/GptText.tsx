@@ -1,14 +1,14 @@
 import { Box } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
-import { useGptContext } from "../../context/GptContext";
+import { TextCreateWithQuestions } from "../../api";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
 import { GptFormData } from "./GptSuggestionForm";
 
 const GptText: React.FC<{
   useFormReturn: UseFormReturn<GptFormData>;
-}> = ({ useFormReturn }) => {
-  const { textWithQuestions } = useGptContext();
+  generatedText: TextCreateWithQuestions;
+}> = ({ useFormReturn, generatedText }) => {
   const { register } = useFormReturn;
 
   const containerStyles = {
@@ -35,7 +35,7 @@ const GptText: React.FC<{
           <JetBrainsMonoText text={"Text Title"} size={25} color={"white"} />
         </Box>
         <StyledTextField
-          defaultValue={textWithQuestions.title}
+          defaultValue={generatedText.title}
           {...register("title")}
         />
       </Box>
@@ -46,7 +46,7 @@ const GptText: React.FC<{
         <StyledTextField
           multiline
           rows={5}
-          defaultValue={textWithQuestions.content}
+          defaultValue={generatedText.content}
           {...register("content")}
         />
       </Box>
@@ -57,7 +57,7 @@ const GptText: React.FC<{
         <StyledTextField
           multiline
           rows={3}
-          defaultValue={textWithQuestions.content} // to change to textWithQuestions.summarised
+          defaultValue={generatedText.content} // to change to textWithQuestions.summarised
           {...register("summarised")}
         />
       </Box>
