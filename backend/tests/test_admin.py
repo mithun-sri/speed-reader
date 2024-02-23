@@ -47,26 +47,19 @@ class TestGetAdminStatistics:
 
     def test_calculates_statistics_correctly(self, admin_client: TestClient):
         game_mode = "standard"  # TODO: Randomise game_mode
-        is_summary = random.choice([True, False])
         response = admin_client.get(
             "/admin/statistics",
-            params={
-                "game_mode": game_mode,
-                "is_summary": is_summary,
-            },
+            params={"game_mode": game_mode},
         )
         assert response.status_code == 200
 
         histories = [
-            history
-            for history in self.histories
-            if history.game_mode == game_mode and history.summary == is_summary
+            history for history in self.histories if history.game_mode == game_mode
         ]
         min_wpm = min(history.average_wpm for history in histories)
         max_wpm = max(history.average_wpm for history in histories)
-        average_wpm = sum(history.average_wpm for history in histories) // len(
-            histories
-        )
+        # fmt: off
+        average_wpm = sum(history.average_wpm for history in histories) // len(histories)
         average_score = sum(history.score for history in histories) // len(histories)
 
         data = response.json()
