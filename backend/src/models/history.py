@@ -67,7 +67,9 @@ class History(Document):
     question_ids = ListField(StringField(), required=True)
     game_mode = StringField(required=True)
     game_submode = StringField(required=True)
-    summary = BooleanField(required=True)  # Can only be True if text is non-fiction
+    # TODO: Rename to `is_summary`
+    # Can only be True if text is non-fiction.
+    summary = BooleanField(required=True)
     average_wpm = IntField(required=True)
     interval_wpms = ListField(IntField(), required=True)
     score = IntField(required=True)

@@ -16,6 +16,7 @@ class Text(ULIDMixin, TimestampMixin, Base):
     content: Mapped[str]
     summary: Mapped[str]
     source: Mapped[str]
+    # TODO: Rename to `is_fiction`
     fiction: Mapped[bool]
     word_count: Mapped[int]
     difficulty: Mapped[str]

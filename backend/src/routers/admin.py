@@ -26,11 +26,18 @@ router = APIRouter(prefix="/admin", tags=["admin"], route_class=LoggerRoute)
 )
 async def get_admin_statistics(
     game_mode: Annotated[str, Query()],
+    is_summary: Annotated[bool, Query()],
 ):
     """
     Gets the statistics of the admin.
     """
     pipeline = [
+        {
+            "$match": {
+                "game_mode": game_mode,
+                "summary": is_summary,
+            },
+        },
         {
             "$group": {
                 "_id": None,
@@ -39,9 +46,9 @@ async def get_admin_statistics(
                 "avgWpm": {"$avg": "$average_wpm"},
                 "avgScore": {"$avg": "$score"},
             }
-        }
+        },
     ]
-    data = models.History.objects(game_mode=game_mode).aggregate(pipeline)
+    data = models.History.objects().aggregate(pipeline)
     data = list(data)[0]
 
     return schemas.AdminStatistics(
@@ -54,7 +61,7 @@ async def get_admin_statistics(
 
 @router.get(
     "/texts",
-    response_model=list[schemas.Text],
+    response_model=list[schemas.TextWithStatistics],
 )
 async def get_texts(
     *,
@@ -67,12 +74,52 @@ async def get_texts(
     """
     query = select(models.Text).offset((page - 1) * page_size).limit(page_size)
     texts = session.scalars(query).all()
-    return texts
+
+    pipeline = [
+        {
+            "$match": {
+                "text_id": {"$in": [text.id for text in texts]},
+            },
+        },
+        {
+            "$group": {
+                "_id": "$text_id",
+                "minWpm": {"$min": "$average_wpm"},
+                "maxWpm": {"$max": "$average_wpm"},
+                "avgWpm": {"$avg": "$average_wpm"},
+                "avgScore": {"$avg": "$score"},
+            }
+        },
+    ]
+    data = models.History.objects().aggregate(pipeline)
+    data = list(data)
+    # Convert to a dictionary for faster access.
+    data = {item["id"]: item for item in data}
+
+    texts_with_stats = []
+    for text in texts:
+        item = data[text.id]
+        text_with_stats = schemas.TextWithStatistics(
+            id=text.id,
+            title=text.title,
+            content=text.content,
+            summary=text.summary,
+            source=text.source,
+            fiction=text.fiction,
+            difficulty=text.difficulty,
+            word_count=text.word_count,
+            min_wpm=item.get("minWpm", 0),
+            max_wpm=item.get("maxWpm", 0),
+            average_wpm=int(item.get("avgWpm", 0)),
+            average_score=int(item.get("avgScore", 0)),
+        )
+        texts_with_stats.append(text_with_stats)
+    return texts_with_stats
 
 
 @router.get(
     "/texts/{text_id}",
-    response_model=schemas.TextWithQuestions,
+    response_model=schemas.TextWithQuestionsAndStatistics,
 )
 async def get_text(
     text_id: str,
@@ -85,7 +132,46 @@ async def get_text(
     if not text:
         raise TextNotFoundException(text_id=text_id)
 
-    return text
+    pipeline = [
+        {
+            "$match": {"text_id": text_id},
+        },
+        {
+            "$group": {
+                "_id": "$text_id",
+                "minWpm": {"$min": "$average_wpm"},
+                "maxWpm": {"$max": "$average_wpm"},
+                "avgWpm": {"$avg": "$average_wpm"},
+                "avgScore": {"$avg": "$score"},
+            }
+        },
+    ]
+    data = models.History.objects().aggregate(pipeline)
+    data = list(data)[0]
+
+    return schemas.TextWithQuestionsAndStatistics(
+        id=text.id,
+        title=text.title,
+        content=text.content,
+        summary=text.summary,
+        source=text.source,
+        fiction=text.fiction,
+        difficulty=text.difficulty,
+        word_count=text.word_count,
+        min_wpm=data.get("minWpm", 0),
+        max_wpm=data.get("maxWpm", 0),
+        average_wpm=int(data.get("avgWpm", 0)),
+        average_score=int(data.get("avgScore", 0)),
+        questions=[
+            schemas.Question(
+                id=question.id,
+                content=question.content,
+                options=question.options,
+                correct_option=question.correct_option,
+            )
+            for question in text.questions
+        ],
+    )
 
 
 @router.delete(
@@ -110,7 +196,7 @@ async def delete_text(
 
 @router.get(
     "/texts/{text_id}/questions",
-    response_model=list[schemas.Question],
+    response_model=list[schemas.QuestionWithStatistics],
 )
 async def get_questions(
     text_id: str,
@@ -121,12 +207,44 @@ async def get_questions(
     """
     query = select(models.Question).filter_by(text_id=text_id)
     questions = session.scalars(query).all()
-    return questions
+
+    pipeline = [
+        {
+            "$unwind": "$results",
+        },
+        {
+            "$match": {"text_id": text_id},
+        },
+        {
+            "$group": {
+                "_id": "$results.question_id",
+                "averageAcc": {"$avg": {"$cond": ["$results.correct", 1, 0]}},
+            }
+        },
+    ]
+    data = models.History.objects().aggregate(pipeline)
+    data = list(data)
+    # Convert to a dictionary for faster access.
+    data = {item["id"]: item for item in data}
+
+    questions_with_stats = []
+    for question in questions:
+        item = data[question.id]
+        question_with_stats = schemas.QuestionWithStatistics(
+            id=question.id,
+            content=question.content,
+            options=question.options,
+            correct_option=question.correct_option,
+            accuracy=int(item.get("averageAcc", 0) * 100),
+        )
+        questions_with_stats.append(question_with_stats)
+
+    return questions_with_stats
 
 
 @router.get(
     "/texts/{text_id}/questions/{question_id}",
-    response_model=schemas.Question,
+    response_model=schemas.QuestionWithStatistics,
 )
 async def get_question(
     text_id: str,
@@ -142,7 +260,30 @@ async def get_question(
     if question.text_id != text_id:
         raise QuestionNotBelongToTextException(question_id=question_id, text_id=text_id)
 
-    return question
+    pipeline = [
+        {
+            "$unwind": "$results",
+        },
+        {
+            "$match": {"results.question_id": question_id},
+        },
+        {
+            "$group": {
+                "_id": None,
+                "averageAcc": {"$avg": {"$cond": ["$results.correct", 1, 0]}},
+            }
+        },
+    ]
+    data = models.History.objects().aggregate(pipeline)
+    data = list(data)[0]
+
+    return schemas.QuestionWithStatistics(
+        id=question.id,
+        content=question.content,
+        options=question.options,
+        correct_option=question.correct_option,
+        accuracy=int(data.get("averageAcc", 0) * 100),
+    )
 
 
 @router.delete(
@@ -166,45 +307,6 @@ async def delete_question(
     session.delete(question)
     session.commit()
     return question
-
-
-@router.get(
-    "/texts/{text_id}/questions/{question_id}/statistics",
-    response_model=schemas.QuestionStatistics,
-)
-async def get_question_statistics(
-    text_id: str,
-    question_id: str,
-    session: Annotated[Session, Depends(get_session)],
-):
-    """
-    Gets a question statistics of a text by the given id.
-    """
-    question = session.get(models.Question, question_id)
-    if not question:
-        raise QuestionNotFoundException(question_id=question_id)
-    if question.text_id != text_id:
-        raise QuestionNotBelongToTextException(question_id=question_id, text_id=text_id)
-
-    result_counts = []
-    for option in range(len(question.options)):
-        result_count = models.History.objects(
-            results__elemMatch={
-                "question_id": question_id,
-                "selected_option": option,
-            }
-        ).count()
-        result_counts.append(result_count)
-
-    return schemas.QuestionStatistics(
-        question_id=question_id,
-        options=question.options,
-        correct_option=question.correct_option,
-        selected_options=[
-            result_count * 100 // max(sum(result_counts), 1)
-            for result_count in result_counts
-        ],
-    )
 
 
 def build_text_generation_prompt(difficulty: str, fiction: bool):
