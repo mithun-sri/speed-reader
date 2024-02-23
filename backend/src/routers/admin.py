@@ -48,14 +48,14 @@ async def get_admin_statistics(
             }
         },
     ]
-    data = models.History.objects().aggregate(pipeline)
-    data = list(data)[0]
+    item = models.History.objects().aggregate(pipeline)
+    item = next(item, {})
 
     return schemas.AdminStatistics(
-        min_wpm=data.get("minWpm", 0),
-        max_wpm=data.get("maxWpm", 0),
-        average_wpm=int(data.get("avgWpm", 0)),
-        average_score=int(data.get("avgScore", 0)),
+        min_wpm=item.get("minWpm", 0),
+        max_wpm=item.get("maxWpm", 0),
+        average_wpm=int(item.get("avgWpm", 0)),
+        average_score=int(item.get("avgScore", 0)),
     )
 
 
@@ -91,14 +91,12 @@ async def get_texts(
             }
         },
     ]
-    data = models.History.objects().aggregate(pipeline)
-    data = list(data)
-    # Convert to a dictionary for faster access.
-    data = {item["id"]: item for item in data}
+    items = models.History.objects().aggregate(pipeline)
+    items = {item["_id"]: item for item in items}
 
     texts_with_stats = []
     for text in texts:
-        item = data[text.id]
+        item = items.get(text.id, {})
         text_with_stats = schemas.TextWithStatistics(
             id=text.id,
             title=text.title,
@@ -146,8 +144,8 @@ async def get_text(
             }
         },
     ]
-    data = models.History.objects().aggregate(pipeline)
-    data = list(data)[0]
+    item = models.History.objects().aggregate(pipeline)
+    item = next(item, {})
 
     return schemas.TextWithQuestionsAndStatistics(
         id=text.id,
@@ -158,10 +156,10 @@ async def get_text(
         fiction=text.fiction,
         difficulty=text.difficulty,
         word_count=text.word_count,
-        min_wpm=data.get("minWpm", 0),
-        max_wpm=data.get("maxWpm", 0),
-        average_wpm=int(data.get("avgWpm", 0)),
-        average_score=int(data.get("avgScore", 0)),
+        min_wpm=item.get("minWpm", 0),
+        max_wpm=item.get("maxWpm", 0),
+        average_wpm=int(item.get("avgWpm", 0)),
+        average_score=int(item.get("avgScore", 0)),
         questions=[
             schemas.Question(
                 id=question.id,
@@ -222,14 +220,12 @@ async def get_questions(
             }
         },
     ]
-    data = models.History.objects().aggregate(pipeline)
-    data = list(data)
-    # Convert to a dictionary for faster access.
-    data = {item["id"]: item for item in data}
+    items = models.History.objects().aggregate(pipeline)
+    items = {item["_id"]: item for item in items}
 
     questions_with_stats = []
     for question in questions:
-        item = data[question.id]
+        item = items.get(question.id, {})
         question_with_stats = schemas.QuestionWithStatistics(
             id=question.id,
             content=question.content,
@@ -274,15 +270,15 @@ async def get_question(
             }
         },
     ]
-    data = models.History.objects().aggregate(pipeline)
-    data = list(data)[0]
+    item = models.History.objects().aggregate(pipeline)
+    item = next(item, {})
 
     return schemas.QuestionWithStatistics(
         id=question.id,
         content=question.content,
         options=question.options,
         correct_option=question.correct_option,
-        accuracy=int(data.get("averageAcc", 0) * 100),
+        accuracy=int(item.get("averageAcc", 0) * 100),
     )
 
 
