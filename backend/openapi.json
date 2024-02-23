@@ -424,7 +424,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TextWithQuestions"
+                  "$ref": "#/components/schemas/GeneratedText"
                 }
               }
             }
@@ -1185,6 +1185,88 @@
           "password"
         ],
         "title": "Body_register_user"
+      },
+      "GeneratedQuestion": {
+        "properties": {
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "options": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Options"
+          },
+          "correct_option": {
+            "type": "integer",
+            "title": "Correct Option"
+          }
+        },
+        "type": "object",
+        "required": [
+          "content",
+          "options",
+          "correct_option"
+        ],
+        "title": "GeneratedQuestion"
+      },
+      "GeneratedText": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fiction": {
+            "type": "boolean",
+            "title": "Fiction"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty"
+          },
+          "word_count": {
+            "type": "integer",
+            "title": "Word Count"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/GeneratedQuestion"
+            },
+            "type": "array",
+            "title": "Questions"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "content",
+          "summary",
+          "source",
+          "fiction",
+          "difficulty",
+          "word_count",
+          "questions",
+          "author"
+        ],
+        "title": "GeneratedText"
       },
       "HTTPValidationError": {
         "properties": {
