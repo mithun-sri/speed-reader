@@ -15,10 +15,12 @@ const QuizView = () => {
     textId,
     mode,
     view,
+    summarised,
     quizAnswers,
     averageWpm,
     intervalWpms,
     setQuizAnswers,
+    setQuizResults,
     modifyQuizAnswer,
   } = useGameContext();
   const { data: questions } = useNextQuestions(textId);
@@ -67,16 +69,20 @@ const QuizView = () => {
             average_wpm: averageWpm,
             interval_wpms: intervalWpms,
             game_mode: mode,
-            game_submode: "word-by-word",
-            summary: true,
+            game_submode: view.toString(),
+            summary: summarised,
           },
           {
             onSuccess: (res: any) => {
               console.log("Answers posted successfully: ", res?.data);
+              setQuizResults(res?.data);
               incrementCurrentStage();
             },
             onError: (err: any) => {
               console.error("Failed to post answers: ", err);
+              document
+                .getElementById("post-answers-error")
+                ?.style.setProperty("display", "block");
             },
           },
         );
@@ -102,18 +108,41 @@ const QuizView = () => {
               />
               <div className="options-container">
                 {question.options.map((option: any, optionIndex: any) => (
-                  <div
+                  <IconButton
                     key={optionIndex}
+                    sx={{
+                      fontFamily: "JetBrains Mono, monospace",
+                      color: "#FEFAD4",
+                      fontSize: 25,
+                      fontWeight: "bolder",
+                    }}
                     onClick={() => modifyQuizAnswer(index, optionIndex)}
-                    className={`option ${getOptionClass(index, optionIndex)}`}
                     data-cy={`question${index}-option${optionIndex}`}
                   >
-                    <JetBrainsMonoText
-                      text={option}
-                      size={25}
-                      color="#FEFAD4   "
-                    />
-                  </div>
+                    <Box
+                      sx={{
+                        border: "4px solid #646669",
+                        borderRadius: "30px",
+                        background: "#E2B714",
+                        width: "100%",
+                        padding: "21px",
+                        margin: "7px 0",
+                        cursor: "pointer",
+                        transition: "background-color 0.1s, border-color 0.1s",
+                        "&:hover": {
+                          background: "#a6850f",
+                          borderColor: "#646669",
+                        },
+                        "&.selected": {
+                          background: "#a6850f",
+                          borderColor: "#646669",
+                        },
+                      }}
+                      className={getOptionClass(index, optionIndex)}
+                    >
+                      {option}
+                    </Box>
+                  </IconButton>
                 ))}
               </div>
             </div>
@@ -121,28 +150,43 @@ const QuizView = () => {
         </div>
       </div>
       {allQuestionsAnswered && (
-        <IconButton
-          id="submit"
-          sx={{
-            fontFamily: "JetBrains Mono, monospace",
-            color: "#FFFFFF",
-          }}
-        >
+        <Box>
           <Box
+            id="post-answers-error"
             sx={{
-              border: "10px solid #646669",
-              borderRadius: "30px",
-              background: "#E2B714",
-              padding: "10px 60px 10px 60px",
-              fontWeight: "bolder",
-              fontSize: 35,
-              cursor: "pointer",
+              display: "none",
+              marginBottom: "20px",
             }}
-            onClick={moveToResults}
           >
-            Submit
+            <JetBrainsMonoText
+              text={"Error submitting answers, please try again."}
+              size={25}
+              color="#ff5c33"
+            />
           </Box>
-        </IconButton>
+          <IconButton
+            id="submit"
+            sx={{
+              fontFamily: "JetBrains Mono, monospace",
+              color: "#FFFFFF",
+            }}
+          >
+            <Box
+              sx={{
+                border: "10px solid #646669",
+                borderRadius: "30px",
+                background: "#E2B714",
+                padding: "10px 60px 10px 60px",
+                fontWeight: "bolder",
+                fontSize: 35,
+                cursor: "pointer",
+              }}
+              onClick={moveToResults}
+            >
+              Submit
+            </Box>
+          </IconButton>
+        </Box>
       )}
       <Footer />
     </div>

@@ -5,6 +5,8 @@ import { StandardView } from "../views/StandardMode/StandardMode";
 interface GameContextType {
   mode: GameMode | null;
   setMode: (mode: GameMode) => void;
+  summarised: boolean;
+  setSummarised: (summarised: boolean) => void;
   difficulty: GameDifficulty | null;
   setDifficulty: (difficulty: GameDifficulty | null) => void;
   wpm: number | null;
@@ -29,12 +31,16 @@ interface GameContextType {
   setTextId: (textid: string) => void;
   quizAnswers: (number | null)[];
   setQuizAnswers: (answers: (number | null)[]) => void;
+  quizResults: any;
+  setQuizResults: (results: any) => void;
   modifyQuizAnswer: (index: number, answer: number | null) => void;
 }
 
 const GameContext = createContext<GameContextType>({
   mode: null,
   setMode: () => {},
+  summarised: false,
+  setSummarised: () => {},
   difficulty: null,
   setDifficulty: () => {},
 
@@ -70,6 +76,8 @@ const GameContext = createContext<GameContextType>({
 
   quizAnswers: [],
   setQuizAnswers: () => {},
+  quizResults: [],
+  setQuizResults: () => {},
   modifyQuizAnswer: () => {},
 });
 
@@ -89,6 +97,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [mode, setMode] = useState<GameMode | null>(null);
+  const [summarised, setSummarised] = useState<boolean>(false);
   const [difficulty, setDifficulty] = useState<GameDifficulty | null>(null);
   const [wpm, setWpm] = useState<number | null>(400);
   const [view, setView] = useState<StandardView | null>(null);
@@ -100,6 +109,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [gazeY, setGazeY] = useState<number>(0);
   const [textId, setTextId] = useState<string>("");
   const [quizAnswers, setQuizAnswers] = useState<(number | null)[]>([]);
+  const [quizResults, setQuizResults] = useState<any>([]);
 
   const initialiseWebGazer = () => {
     if (
@@ -190,6 +200,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         mode,
         setMode,
+        summarised,
+        setSummarised,
         difficulty,
         setDifficulty,
         wpm,
@@ -214,6 +226,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         setTextId,
         quizAnswers,
         setQuizAnswers,
+        quizResults,
+        setQuizResults,
         modifyQuizAnswer,
       }}
     >
