@@ -18,6 +18,7 @@ class ResultFactory(factory.mongoengine.MongoEngineFactory):
     correct = factory.LazyAttribute(
         lambda obj: obj.correct_option == obj.selected_option
     )
+    # TODO: Extract 2 to a constant
     correct_option = factory.Faker("random_int", min=0, max=2)
     selected_option = factory.Faker("random_int", min=0, max=2)
 
