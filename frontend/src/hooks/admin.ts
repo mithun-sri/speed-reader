@@ -16,7 +16,9 @@ export function getQuestionStatistics(textId: string, questionId: string) {
   return useSuspenseQuery({
     queryKey: ["question-statistics", textId, questionId],
     queryFn: () =>
-      adminApi.getQuestionStatistics(textId, questionId).then((res) => res.data),
+      adminApi
+        .getQuestionStatistics(textId, questionId)
+        .then((res) => res.data),
     gcTime: 0,
   });
 }
