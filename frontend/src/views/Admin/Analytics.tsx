@@ -9,13 +9,8 @@ import { getAdminStatistics } from "../../hooks/admin";
 const AdminAnalytics: React.FC = () => {
   const [selectedValue, setSelectedValue] = useState("mode");
   const [selectedOption, setSelectedOption] = useState("standard");
-  // TODO: Read user input.
-  const isSummary = true;
 
-  const { data: adminStatistics } = getAdminStatistics(
-    selectedOption,
-    isSummary,
-  );
+  const { data: adminStatistics } = getAdminStatistics(selectedOption);
   console.log(adminStatistics);
   const handleSelectChange = (newValue: string) => {
     setSelectedValue(newValue);
