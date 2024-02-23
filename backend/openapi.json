@@ -86,7 +86,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Text"
+                    "$ref": "#/components/schemas/TextWithStatistics"
                   },
                   "title": "Response Get Texts"
                 }
@@ -131,7 +131,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TextWithQuestions"
+                  "$ref": "#/components/schemas/TextWithQuestionsAndStatistics"
                 }
               }
             }
@@ -217,7 +217,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Question"
+                    "$ref": "#/components/schemas/QuestionWithStatistics"
                   },
                   "title": "Response Get Questions"
                 }
@@ -271,7 +271,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Question"
+                  "$ref": "#/components/schemas/QuestionWithStatistics"
                 }
               }
             }
@@ -322,58 +322,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Question"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/admin/texts/{text_id}/questions/{question_id}/statistics": {
-      "get": {
-        "tags": [
-          "admin"
-        ],
-        "summary": "Get Question Statistics",
-        "description": "Gets a question statistics of a text by the given id.",
-        "operationId": "get_question_statistics",
-        "parameters": [
-          {
-            "name": "text_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Text Id"
-            }
-          },
-          {
-            "name": "question_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Question Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QuestionStatistics"
                 }
               }
             }
@@ -1282,11 +1230,11 @@
         ],
         "title": "QuestionMasked"
       },
-      "QuestionStatistics": {
+      "QuestionWithStatistics": {
         "properties": {
-          "question_id": {
+          "content": {
             "type": "string",
-            "title": "Question Id"
+            "title": "Content"
           },
           "options": {
             "items": {
@@ -1299,22 +1247,32 @@
             "type": "integer",
             "title": "Correct Option"
           },
-          "selected_options": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "percentages": {
             "items": {
               "type": "integer"
             },
             "type": "array",
-            "title": "Selected Options"
+            "title": "Percentages"
+          },
+          "accuracy": {
+            "type": "integer",
+            "title": "Accuracy"
           }
         },
         "type": "object",
         "required": [
-          "question_id",
+          "content",
           "options",
           "correct_option",
-          "selected_options"
+          "id",
+          "percentages",
+          "accuracy"
         ],
-        "title": "QuestionStatistics"
+        "title": "QuestionWithStatistics"
       },
       "Result": {
         "properties": {
@@ -1544,6 +1502,150 @@
           "questions"
         ],
         "title": "TextWithQuestions"
+      },
+      "TextWithQuestionsAndStatistics": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fiction": {
+            "type": "boolean",
+            "title": "Fiction"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty"
+          },
+          "word_count": {
+            "type": "integer",
+            "title": "Word Count"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/Question"
+            },
+            "type": "array",
+            "title": "Questions"
+          },
+          "min_wpm": {
+            "type": "integer",
+            "title": "Min Wpm"
+          },
+          "max_wpm": {
+            "type": "integer",
+            "title": "Max Wpm"
+          },
+          "average_wpm": {
+            "type": "integer",
+            "title": "Average Wpm"
+          },
+          "average_score": {
+            "type": "integer",
+            "title": "Average Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "content",
+          "summary",
+          "source",
+          "fiction",
+          "difficulty",
+          "word_count",
+          "id",
+          "questions",
+          "min_wpm",
+          "max_wpm",
+          "average_wpm",
+          "average_score"
+        ],
+        "title": "TextWithQuestionsAndStatistics"
+      },
+      "TextWithStatistics": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "fiction": {
+            "type": "boolean",
+            "title": "Fiction"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty"
+          },
+          "word_count": {
+            "type": "integer",
+            "title": "Word Count"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "min_wpm": {
+            "type": "integer",
+            "title": "Min Wpm"
+          },
+          "max_wpm": {
+            "type": "integer",
+            "title": "Max Wpm"
+          },
+          "average_wpm": {
+            "type": "integer",
+            "title": "Average Wpm"
+          },
+          "average_score": {
+            "type": "integer",
+            "title": "Average Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "content",
+          "summary",
+          "source",
+          "fiction",
+          "difficulty",
+          "word_count",
+          "id",
+          "min_wpm",
+          "max_wpm",
+          "average_wpm",
+          "average_score"
+        ],
+        "title": "TextWithStatistics"
       },
       "User": {
         "properties": {

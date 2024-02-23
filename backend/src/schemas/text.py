@@ -22,6 +22,21 @@ class TextWithQuestions(Text):
     questions: list[Question]
 
 
+class TextWithStatistics(Text):
+    min_wpm: int
+    max_wpm: int
+    average_wpm: int
+    average_score: int
+
+
+# TODO: Duplicate
+class TextWithQuestionsAndStatistics(TextWithQuestions):
+    min_wpm: int
+    max_wpm: int
+    average_wpm: int
+    average_score: int
+
+
 class TextCreate(TextBase):
     pass
 

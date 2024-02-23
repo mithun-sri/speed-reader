@@ -12,10 +12,16 @@ class Question(QuestionBase):
     id: str
 
 
+# TODO: Maybe rename to `QuestionWithoutCorrectOption`?
 class QuestionMasked(BaseModel):
     id: str
     content: str
     options: list[str]
+
+
+class QuestionWithStatistics(Question):
+    percentages: list[int]
+    accuracy: int
 
 
 class QuestionCreate(QuestionBase):

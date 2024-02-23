@@ -3,11 +3,11 @@ import { AdminApi, TextCreateWithQuestions } from "../api";
 
 const adminApi = new AdminApi();
 
-export function getAdminStatistics(gameMode: string) {
+export function getAdminStatistics(gameMode: string, isSummary: boolean) {
   return useSuspenseQuery({
     queryKey: ["admin-statistics", gameMode],
     queryFn: () =>
-      adminApi.getAdminStatistics(gameMode).then((res) => res.data),
+      adminApi.getAdminStatistics(gameMode, isSummary).then((res) => res.data),
     gcTime: 0,
   });
 }

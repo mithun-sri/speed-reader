@@ -15,9 +15,9 @@ class User(BaseModel):
 
 
 class UserStatistics(BaseModel):
-    user_id: str
-    username: str
-    email: str
+    user_id: str  # TODO: Is this necessary?
+    username: str  # TODO: Is this necessary?
+    email: str  # TODO: Is this necessary?
     min_wpm: int
     max_wpm: int
     average_wpm: int

@@ -41,6 +41,9 @@ async def get_user_statistics(
     """
     pipeline = [
         {
+            "$match": {"user_id": user.id},
+        },
+        {
             "$group": {
                 "_id": user.id,
                 "minWpm": {"$min": "$average_wpm"},
@@ -48,19 +51,19 @@ async def get_user_statistics(
                 "avgWpm": {"$avg": "$average_wpm"},
                 "avgScore": {"$avg": "$score"},
             }
-        }
+        },
     ]
-    data = models.History.objects(user_id=user.id).aggregate(pipeline)
-    data = list(data)[0]
+    item = models.History.objects().aggregate(pipeline)
+    item = next(item, {})
 
     return schemas.UserStatistics(
         user_id=user.id,
         username=user.username,
         email=user.email,
-        min_wpm=data.get("minWpm", 0),
-        max_wpm=data.get("maxWpm", 0),
-        average_wpm=int(data.get("avgWpm", 0)),
-        average_score=int(data.get("avgScore", 0)),
+        min_wpm=item.get("minWpm", 0),
+        max_wpm=item.get("maxWpm", 0),
+        average_wpm=int(item.get("avgWpm", 0)),
+        average_score=int(item.get("avgScore", 0)),
     )
 
 

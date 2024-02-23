@@ -78,7 +78,7 @@ def seed_database():
             session.add(text)
             session.add_all(questions)
 
-        for _ in track(range(100)):
+        for _ in track(range(1000)):
             user = random.choice(users)
             text = random.choice(texts)
             questions = random.sample(text.questions, 10)

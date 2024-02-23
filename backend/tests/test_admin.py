@@ -53,10 +53,12 @@ class TestGetAdminStatistics:
         )
         assert response.status_code == 200
 
-        # fmt: off
-        histories = [history for history in self.histories if history.game_mode == game_mode]
+        histories = [
+            history for history in self.histories if history.game_mode == game_mode
+        ]
         min_wpm = min(history.average_wpm for history in histories)
         max_wpm = max(history.average_wpm for history in histories)
+        # fmt: off
         average_wpm = sum(history.average_wpm for history in histories) // len(histories)
         average_score = sum(history.score for history in histories) // len(histories)
 
@@ -82,7 +84,7 @@ class TestGetTexts:
         assert response.status_code == 200
 
         data = response.json()
-        assert len(data) == 10
+        assert len(data) == len(self.texts)
         assert set(text["id"] for text in data) == set(text.id for text in self.texts)
 
 
@@ -141,7 +143,7 @@ class TestGetQuestions:
         assert response.status_code == 200
 
         data = response.json()
-        assert len(data) == 10
+        assert len(data) == len(self.questions)
         # fmt: off
         assert set(question["id"] for question in data) \
             == set(question.id for question in self.questions)
@@ -192,53 +194,3 @@ class TestDeleteQuestion:
 
         assert session.get(models.Question, self.question.id) is None
         assert session.get(models.Text, self.text.id) is not None
-
-
-class TestGetQuestionStatistics:
-    @pytest.fixture(autouse=True)
-    def setup_fixture(
-        self,
-        session: Session,
-    ):
-        self.users = UserFactory.build_batch(10)
-        self.text = TextFactory.build()
-        self.question = QuestionFactory.build(text=self.text)
-        session.add_all(self.users)
-        session.add(self.text)
-        session.add(self.question)
-        session.commit()
-
-        self.histories = []
-        for user in self.users:
-            result = ResultFactory.build(
-                question_id=self.question.id,
-                correct_option=random.randint(0, 2),
-            )
-            history = HistoryFactory.build(
-                user_id=user.id,
-                text_id=self.text.id,
-                question_ids=[self.question.id],
-                results=[result],
-            )
-            history.save(force_insert=True)
-            self.histories.append(history)
-
-    def test_calculates_statistics_correctly(self, admin_client: TestClient):
-        response = admin_client.get(
-            f"/admin/texts/{self.text.id}/questions/{self.question.id}/statistics"
-        )
-        assert response.status_code == 200
-
-        result_counts = []
-        for option in range(len(self.question.options)):
-            result_count = 0
-            for history in self.histories:
-                if any(result.selected_option == option for result in history.results):
-                    result_count += 1
-            result_counts.append(result_count)
-
-        data = response.json()
-        assert data["selected_options"] == [
-            result_count * 100 // max(sum(result_counts), 1)
-            for result_count in result_counts
-        ]
