@@ -48,7 +48,7 @@ const AnalyticsMode: React.FC<AnalyticsModeProps> = ({
         sx={{
           flex: 1,
           padding: "3px 15px",
-          margin: 0.5,
+          margin: 0.6,
           color: selectedOption === "standard" ? "white" : "#D1D0C5",
           fontWeight: selectedOption === "standard" ? "bolder" : "regular",
           backgroundColor:
@@ -63,26 +63,9 @@ const AnalyticsMode: React.FC<AnalyticsModeProps> = ({
       </Box>
       <Box
         sx={{
-          flex: 3,
-          padding: "3px 15px",
-          margin: 0.5,
-          color: selectedOption === "summarized" ? "white" : "#D1D0C5",
-          fontWeight: selectedOption === "summarized" ? "bolder" : "regular",
-          backgroundColor:
-            selectedOption === "summarized" ? "#E2B714" : "transparent",
-          borderRadius: 40,
-          textAlign: "center",
-          cursor: "pointer",
-        }}
-        onClick={() => handleOptionClick("summarized")}
-      >
-        summarized adpative
-      </Box>
-      <Box
-        sx={{
           flex: 1,
           padding: "3px 15px",
-          margin: 0.5,
+          margin: 0.6,
           color: selectedOption === "adaptive" ? "white" : "#D1D0C5",
           fontWeight: selectedOption === "adaptive" ? "bolder" : "regular",
           backgroundColor:
