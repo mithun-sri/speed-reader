@@ -273,7 +273,7 @@ async def generate_text(difficulty: str, is_fiction: bool):
     return schemas.GeneratedText(
         title=response_json["title"],
         content=response_json["extract"],
-        difficulty=response_json["difficulty"],
+        difficulty=difficulty,
         word_count=len(response_json["extract"].split(" ")),
         questions=[
             schemas.GeneratedQuestion(
