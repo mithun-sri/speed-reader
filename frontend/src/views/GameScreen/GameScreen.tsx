@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import {
   ADAPTIVE_MODE,
+  GameMode,
   STANDARD_MODE,
   SUMMARISED_MODE,
 } from "../../common/constants";
@@ -17,7 +18,7 @@ import WpmView from "../WpmView/WpmView";
 
 export const GameScreenContext = React.createContext<{
   currentStage: number;
-  incrementCurrentStage: () => void;
+  incrementCurrentStage: (modeArg?: GameMode) => void;
   decrementCurrentStage: () => void;
 }>({
   currentStage: 0,
@@ -83,12 +84,13 @@ const GameScreen = () => {
   const CALIBRATION_STAGE = 4;
   const GAME_STAGE = 5;
 
-  const incrementCurrentStage = () => {
+  const incrementCurrentStage = (modeArg?: GameMode) => {
     const newStage = currentStage + 1;
-
-    if (mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
+    const _mode = modeArg === undefined ? mode : modeArg;
+    console.log("mode is: " + _mode);
+    if (_mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
       setCurrentStage(CALIBRATION_STAGE);
-    } else if (mode === STANDARD_MODE && newStage === CALIBRATION_STAGE) {
+    } else if (_mode === STANDARD_MODE && newStage === CALIBRATION_STAGE) {
       setCurrentStage(GAME_STAGE);
     } else {
       setCurrentStage(newStage);
