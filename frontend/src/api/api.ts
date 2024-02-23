@@ -34,25 +34,25 @@ export interface AdminStatistics {
      * @type {number}
      * @memberof AdminStatistics
      */
-    averageScore: number;
+    'average_score': number;
     /**
      * 
      * @type {number}
      * @memberof AdminStatistics
      */
-    averageWpm: number;
+    'average_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof AdminStatistics
      */
-    minWpm: number;
+    'min_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof AdminStatistics
      */
-    maxWpm: number;
+    'max_wpm': number;
 }
 /**
  * 
@@ -65,13 +65,13 @@ export interface Answer {
      * @type {string}
      * @memberof Answer
      */
-    questionId: string;
+    'question_id': string;
     /**
      * 
      * @type {number}
      * @memberof Answer
      */
-    selectedOption: number;
+    'selected_option': number;
 }
 /**
  * 
@@ -84,13 +84,13 @@ export interface BodyGetUserAvailableTexts {
      * @type {BodyGetUserAvailableTextsTextFilter}
      * @memberof BodyGetUserAvailableTexts
      */
-    textFilter?: BodyGetUserAvailableTextsTextFilter;
+    'text_filter'?: BodyGetUserAvailableTextsTextFilter;
     /**
      * 
      * @type {BodyGetUserAvailableTextsTextSort}
      * @memberof BodyGetUserAvailableTexts
      */
-    textSort?: BodyGetUserAvailableTextsTextSort;
+    'text_sort'?: BodyGetUserAvailableTextsTextSort;
 }
 /**
  * 
@@ -103,13 +103,13 @@ export interface BodyGetUserAvailableTextsTextFilter {
      * @type {GameMode}
      * @memberof BodyGetUserAvailableTextsTextFilter
      */
-    gameMode?: GameMode;
+    'game_mode'?: GameMode;
     /**
      * 
      * @type {Difficulty}
      * @memberof BodyGetUserAvailableTextsTextFilter
      */
-    difficulty?: Difficulty;
+    'difficulty'?: Difficulty;
 }
 /**
  * 
@@ -122,13 +122,13 @@ export interface BodyGetUserAvailableTextsTextSort {
      * @type {any}
      * @memberof BodyGetUserAvailableTextsTextSort
      */
-    field: any;
+    'field': any;
     /**
      * 
      * @type {any}
      * @memberof BodyGetUserAvailableTextsTextSort
      */
-    ascending?: any;
+    'ascending'?: any;
 }
 /**
  * 
@@ -141,13 +141,13 @@ export interface BodyLoginUser {
      * @type {string}
      * @memberof BodyLoginUser
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof BodyLoginUser
      */
-    password: string;
+    'password': string;
 }
 /**
  * 
@@ -160,37 +160,37 @@ export interface BodyPostAnswers {
      * @type {Array<Answer>}
      * @memberof BodyPostAnswers
      */
-    answers: Array<Answer>;
+    'answers': Array<Answer>;
     /**
      * 
      * @type {number}
      * @memberof BodyPostAnswers
      */
-    averageWpm: number;
+    'average_wpm': number;
     /**
      * 
      * @type {Array<number>}
      * @memberof BodyPostAnswers
      */
-    intervalWpms: Array<number>;
+    'interval_wpms': Array<number>;
     /**
      * 
      * @type {string}
      * @memberof BodyPostAnswers
      */
-    gameMode: string;
+    'game_mode': string;
     /**
      * 
      * @type {string}
      * @memberof BodyPostAnswers
      */
-    gameSubmode: string;
+    'game_submode': string;
     /**
      * 
      * @type {boolean}
      * @memberof BodyPostAnswers
      */
-    summary: boolean;
+    'summary': boolean;
 }
 /**
  * 
@@ -203,19 +203,19 @@ export interface BodyRegisterUser {
      * @type {string}
      * @memberof BodyRegisterUser
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof BodyRegisterUser
      */
-    email: string;
+    'email': string;
     /**
      * 
      * @type {string}
      * @memberof BodyRegisterUser
      */
-    password: string;
+    'password': string;
 }
 /**
  * 
@@ -249,19 +249,19 @@ export interface GeneratedQuestion {
      * @type {string}
      * @memberof GeneratedQuestion
      */
-    content: string;
+    'content': string;
     /**
      * 
      * @type {Array<string>}
      * @memberof GeneratedQuestion
      */
-    options: Array<string>;
+    'options': Array<string>;
     /**
      * 
      * @type {number}
      * @memberof GeneratedQuestion
      */
-    correctOption: number;
+    'correct_option': number;
 }
 /**
  * 
@@ -274,55 +274,55 @@ export interface GeneratedText {
      * @type {string}
      * @memberof GeneratedText
      */
-    title: string;
+    'title': string;
     /**
      * 
      * @type {string}
      * @memberof GeneratedText
      */
-    content: string;
+    'content': string;
     /**
      * 
      * @type {string}
      * @memberof GeneratedText
      */
-    summary: string;
+    'summary': string;
     /**
      * 
      * @type {string}
      * @memberof GeneratedText
      */
-    source: string;
+    'source': string;
     /**
      * 
      * @type {boolean}
      * @memberof GeneratedText
      */
-    fiction: boolean;
+    'fiction': boolean;
     /**
      * 
      * @type {string}
      * @memberof GeneratedText
      */
-    difficulty: string;
+    'difficulty': string;
     /**
      * 
      * @type {number}
      * @memberof GeneratedText
      */
-    word_count: number;
+    'word_count': number;
     /**
      * 
      * @type {Array<GeneratedQuestion>}
      * @memberof GeneratedText
      */
-    questions: Array<GeneratedQuestion>;
+    'questions': Array<GeneratedQuestion>;
     /**
      * 
      * @type {string}
      * @memberof GeneratedText
      */
-    author: string;
+    'author': string;
 }
 /**
  * 
@@ -335,7 +335,7 @@ export interface HTTPValidationError {
      * @type {Array<ValidationError>}
      * @memberof HTTPValidationError
      */
-    detail?: Array<ValidationError>;
+    'detail'?: Array<ValidationError>;
 }
 /**
  * 
@@ -348,49 +348,49 @@ export interface History {
      * @type {string}
      * @memberof History
      */
-    textId: string;
+    'text_id': string;
     /**
      * 
      * @type {string}
      * @memberof History
      */
-    gameMode: string;
+    'game_mode': string;
     /**
      * 
      * @type {GameSubmode}
      * @memberof History
      */
-    gameSubmode: GameSubmode;
+    'game_submode': GameSubmode;
     /**
      * 
      * @type {boolean}
      * @memberof History
      */
-    summary: boolean;
+    'summary': boolean;
     /**
      * 
      * @type {number}
      * @memberof History
      */
-    averageWpm: number;
+    'average_wpm': number;
     /**
      * 
      * @type {Array<number>}
      * @memberof History
      */
-    intervalWpms: Array<number>;
+    'interval_wpms': Array<number>;
     /**
      * 
      * @type {number}
      * @memberof History
      */
-    score: number;
+    'score': number;
     /**
      * 
      * @type {Array<Result>}
      * @memberof History
      */
-    results: Array<Result>;
+    'results': Array<Result>;
 }
 /**
  * 
@@ -403,19 +403,19 @@ export interface Question {
      * @type {string}
      * @memberof Question
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof Question
      */
-    content: string;
+    'content': string;
     /**
      * 
      * @type {Array<string>}
      * @memberof Question
      */
-    options: Array<string>;
+    'options': Array<string>;
 }
 /**
  * 
@@ -428,31 +428,31 @@ export interface QuestionStatistics {
      * @type {string}
      * @memberof QuestionStatistics
      */
-    questionId: string;
+    'question_id': string;
     /**
      * 
      * @type {number}
      * @memberof QuestionStatistics
      */
-    averageScore: number;
+    'average_score': number;
     /**
      * 
      * @type {Array<string>}
      * @memberof QuestionStatistics
      */
-    options: Array<string>;
+    'options': Array<string>;
     /**
      * 
      * @type {number}
      * @memberof QuestionStatistics
      */
-    correctOption: number;
+    'correct_option': number;
     /**
      * 
      * @type {Array<number>}
      * @memberof QuestionStatistics
      */
-    selectedOptions: Array<number>;
+    'selected_options': Array<number>;
 }
 /**
  * 
@@ -465,25 +465,25 @@ export interface QuestionWithCorrectOption {
      * @type {string}
      * @memberof QuestionWithCorrectOption
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof QuestionWithCorrectOption
      */
-    content: string;
+    'content': string;
     /**
      * 
      * @type {Array<string>}
      * @memberof QuestionWithCorrectOption
      */
-    options: Array<string>;
+    'options': Array<string>;
     /**
      * 
      * @type {number}
      * @memberof QuestionWithCorrectOption
      */
-    correctOption: number;
+    'correct_option': number;
 }
 /**
  * 
@@ -503,25 +503,25 @@ export interface Result {
      * @type {string}
      * @memberof Result
      */
-    questionId: string;
+    'question_id': string;
     /**
      * 
      * @type {boolean}
      * @memberof Result
      */
-    correct: boolean;
+    'correct': boolean;
     /**
      * 
      * @type {number}
      * @memberof Result
      */
-    correctOption: number;
+    'correct_option': number;
     /**
      * 
      * @type {number}
      * @memberof Result
      */
-    selectedOption: number;
+    'selected_option': number;
 }
 /**
  * 
@@ -534,49 +534,49 @@ export interface Text {
      * @type {string}
      * @memberof Text
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
-    title: string;
+    'title': string;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
-    content: string;
+    'content': string;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
-    summary: string;
+    'summary': string;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
-    source: string;
+    'source': string;
     /**
      * 
      * @type {boolean}
      * @memberof Text
      */
-    fiction: boolean;
+    'fiction': boolean;
     /**
      * 
      * @type {string}
      * @memberof Text
      */
-    difficulty: string;
+    'difficulty': string;
     /**
      * 
      * @type {number}
      * @memberof Text
      */
-    word_count: number;
+    'word_count': number;
 }
 /**
  * 
@@ -589,13 +589,13 @@ export interface TextFilter {
      * @type {GameMode}
      * @memberof TextFilter
      */
-    gameMode?: GameMode;
+    'game_mode'?: GameMode;
     /**
      * 
      * @type {Difficulty}
      * @memberof TextFilter
      */
-    difficulty?: Difficulty;
+    'difficulty'?: Difficulty;
 }
 /**
  * 
@@ -608,13 +608,13 @@ export interface TextSort {
      * @type {string}
      * @memberof TextSort
      */
-    field: string;
+    'field': string;
     /**
      * 
      * @type {boolean}
      * @memberof TextSort
      */
-    ascending?: boolean;
+    'ascending'?: boolean;
 }
 /**
  * 
@@ -627,55 +627,55 @@ export interface TextWithQuestions {
      * @type {string}
      * @memberof TextWithQuestions
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof TextWithQuestions
      */
-    title: string;
+    'title': string;
     /**
      * 
      * @type {string}
      * @memberof TextWithQuestions
      */
-    content: string;
+    'content': string;
     /**
      * 
      * @type {string}
      * @memberof TextWithQuestions
      */
-    summary: string;
+    'summary': string;
     /**
      * 
      * @type {string}
      * @memberof TextWithQuestions
      */
-    source: string;
+    'source': string;
     /**
      * 
      * @type {boolean}
      * @memberof TextWithQuestions
      */
-    fiction: boolean;
+    'fiction': boolean;
     /**
      * 
      * @type {string}
      * @memberof TextWithQuestions
      */
-    difficulty: string;
+    'difficulty': string;
     /**
      * 
      * @type {number}
      * @memberof TextWithQuestions
      */
-    word_count: number;
+    'word_count': number;
     /**
      * 
      * @type {Array<QuestionWithCorrectOption>}
      * @memberof TextWithQuestions
      */
-    questions: Array<QuestionWithCorrectOption>;
+    'questions': Array<QuestionWithCorrectOption>;
 }
 /**
  * 
@@ -688,25 +688,25 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    id: string;
+    'id': string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    email: string;
+    'email': string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    role: string;
+    'role': string;
 }
 /**
  * 
@@ -719,25 +719,25 @@ export interface UserAvailableTexts {
      * @type {Array<Text>}
      * @memberof UserAvailableTexts
      */
-    texts: Array<Text>;
+    'texts': Array<Text>;
     /**
      * 
      * @type {number}
      * @memberof UserAvailableTexts
      */
-    page: number;
+    'page': number;
     /**
      * 
      * @type {number}
      * @memberof UserAvailableTexts
      */
-    pageSize: number;
+    'page_size': number;
     /**
      * 
      * @type {number}
      * @memberof UserAvailableTexts
      */
-    totalTexts: number;
+    'total_texts': number;
 }
 /**
  * 
@@ -750,43 +750,43 @@ export interface UserStatistics {
      * @type {string}
      * @memberof UserStatistics
      */
-    userId: string;
+    'user_id': string;
     /**
      * 
      * @type {string}
      * @memberof UserStatistics
      */
-    username: string;
+    'username': string;
     /**
      * 
      * @type {string}
      * @memberof UserStatistics
      */
-    email: string;
+    'email': string;
     /**
      * 
      * @type {number}
      * @memberof UserStatistics
      */
-    minWpm: number;
+    'min_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof UserStatistics
      */
-    maxWpm: number;
+    'max_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof UserStatistics
      */
-    averageWpm: number;
+    'average_wpm': number;
     /**
      * 
      * @type {number}
      * @memberof UserStatistics
      */
-    averageScore: number;
+    'average_score': number;
 }
 /**
  * 
@@ -799,19 +799,19 @@ export interface ValidationError {
      * @type {Array<ValidationErrorLocInner>}
      * @memberof ValidationError
      */
-    loc: Array<ValidationErrorLocInner>;
+    'loc': Array<ValidationErrorLocInner>;
     /**
      * 
      * @type {string}
      * @memberof ValidationError
      */
-    msg: string;
+    'msg': string;
     /**
      * 
      * @type {string}
      * @memberof ValidationError
      */
-    type: string;
+    'type': string;
 }
 /**
  * 

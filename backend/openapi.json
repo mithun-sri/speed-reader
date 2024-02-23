@@ -1199,7 +1199,7 @@
             "type": "array",
             "title": "Options"
           },
-          "correctOption": {
+          "correct_option": {
             "type": "integer",
             "title": "Correct Option"
           }
