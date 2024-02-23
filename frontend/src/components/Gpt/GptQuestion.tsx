@@ -85,7 +85,7 @@ const GptQuestion: React.FC<{
           ))}
         </Box>
         <CheckboxGroup
-          defaultValue={question.correctOption}
+          defaultValue={question.correct_option}
           questionNum={questionNum}
           useFormReturn={useFormReturn}
         />

@@ -61,13 +61,13 @@ const QuizView = () => {
         postAnswers.mutate(
           {
             answers: quizAnswers.map((selectedOption, questionIndex) => ({
-              questionId: questions![questionIndex].id,
-              selectedOption: selectedOption!,
+              question_id: questions![questionIndex].id,
+              selected_option: selectedOption!,
             })),
-            averageWpm: averageWpm,
-            intervalWpms: intervalWpms,
-            gameMode: mode,
-            gameSubmode: "word-by-word",
+            average_wpm: averageWpm,
+            interval_wpms: intervalWpms,
+            game_mode: mode,
+            game_submode: "word-by-word",
             summary: true,
           },
           {

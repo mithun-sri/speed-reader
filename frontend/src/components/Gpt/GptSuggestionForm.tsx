@@ -41,7 +41,7 @@ const GptSuggestionForm = () => {
       source: textWithQuestions.source,
       fiction: textWithQuestions.fiction,
       difficulty: textWithQuestions.difficulty,
-      wordCount: data.content.length,
+      word_count: data.content.length,
     };
     // Build Question[] data to submit to server
     const questions: Question[] = data.questions
@@ -50,7 +50,7 @@ const GptSuggestionForm = () => {
         id: index.toString(), // TODO
         content: question.content,
         options: question.options,
-        correctOption: question.correctOption,
+        correct_option: question.correctOption,
       }));
 
     // TODO: send text and questions to server
