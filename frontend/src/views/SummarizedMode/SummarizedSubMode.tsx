@@ -1,10 +1,20 @@
 import { Box, IconButton } from "@mui/material";
-import Header from "../../components/Header/Header";
 import React, { useEffect, useState } from "react";
+import {
+  ADAPTIVE_MODE,
+  GameMode,
+  STANDARD_MODE,
+  SUMMARISED_MODE,
+} from "../../common/constants";
 import BackButton from "../../components/Button/BackButton";
+import Header from "../../components/Header/Header";
+import { useGameContext } from "../../context/GameContext";
+import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const SummarizedSubMode: React.FC = () => {
-  // const { decrementCurrentStage } = useGameScreenContext();
+  const { incrementCurrentStage, decrementCurrentStage } =
+    useGameScreenContext();
+  const { setMode, setSummarised } = useGameContext();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -32,8 +42,17 @@ const SummarizedSubMode: React.FC = () => {
     return calculatedFontSize;
   }
 
-  // Need to add once GameContext issue fixed
-  const handleBackButton = () => {};
+  function setSummarisedSubMode(submode: GameMode) {
+    setSummarised(true);
+    setMode(submode);
+    incrementCurrentStage();
+  }
+
+  const handleBackButton = () => {
+    setSummarised(false);
+    setMode(SUMMARISED_MODE);
+    decrementCurrentStage();
+  };
 
   return (
     <>
@@ -82,6 +101,7 @@ const SummarizedSubMode: React.FC = () => {
             }}
             disableFocusRipple
             disableRipple
+            onClick={setSummarisedSubMode.bind(this, STANDARD_MODE)}
           >
             <Box>
               Standard <br /> Mode
@@ -98,6 +118,7 @@ const SummarizedSubMode: React.FC = () => {
             }}
             disableFocusRipple
             disableRipple
+            onClick={setSummarisedSubMode.bind(this, ADAPTIVE_MODE)}
           >
             <Box>
               Adaptive <br /> Mode

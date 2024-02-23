@@ -1,18 +1,18 @@
+import { Box } from "@mui/material";
 import React from "react";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  Cell,
 } from "recharts";
-import Header from "../../components/Header/Header";
-import { Box } from "@mui/material";
 import QuizAnalyticsTop from "../../components/Admin/QuizAnalyticsTop";
 import QuizScore from "../../components/Admin/QuizScore";
-import { getQuestionStatistics } from "../../hooks/admin";
+import Header from "../../components/Header/Header";
+import { getQuestion } from "../../hooks/admin";
 
 interface QuizAnalyticsProps {
   textId: string;
@@ -23,24 +23,21 @@ const QuizAnalytics: React.FC<QuizAnalyticsProps> = ({
   textId,
   questionId,
 }) => {
-  const { data: questionStatistics } = getQuestionStatistics(
-    textId,
-    questionId,
-  );
+  const { data: question } = getQuestion(textId, questionId);
 
   const formatTick = (tick: number) => {
     return `${tick}%`;
   };
 
-  const data = questionStatistics.options.map((option, index) => {
+  const data = question.options.map((option, index) => {
     return {
       question: option,
-      proportion: questionStatistics.selected_options[index],
+      proportion: question.percentages[index],
     };
   });
 
-  const correctAnswer = questionStatistics.correct_option;
-  const avgScore = Math.max(...questionStatistics.selected_options);
+  const correctAnswer = question.correct_option;
+  const avgScore = Math.max(...question.percentages);
 
   return (
     <>

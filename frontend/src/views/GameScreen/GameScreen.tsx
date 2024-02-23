@@ -13,6 +13,7 @@ import Quiz from "../Quiz/Quiz";
 import ResultsPage from "../Results/ResultsPage";
 import StandardModeGameView from "../StandardMode/StandardMode";
 import StandardSubModeView from "../StandardMode/StandardSubMode";
+import SummarisedSubMode from "../SummarizedMode/SummarizedSubMode";
 import WebGazerCalibration from "../WebGazerCalibration/WebGazerCalibration";
 import WpmView from "../WpmView/WpmView";
 
@@ -53,8 +54,6 @@ const GameView = () => {
     gameView = <StandardModeGameView wpm={wpm!} mode={view!} />;
   } else if (mode === ADAPTIVE_MODE) {
     gameView = <AdaptiveModeView />;
-  } else if (mode === SUMMARISED_MODE) {
-    gameView = <div> SUMMARISED ADAPTIVE MODE. </div>;
   } else {
     console.log("Error rendering Game view.");
     throw new Error("Invalid or null mode. Please use one of GameMode");
@@ -64,31 +63,36 @@ const GameView = () => {
 };
 
 const GameScreen = () => {
-  const { mode } = useGameContext();
+  const { mode, summarised } = useGameContext();
   const [currentStage, setCurrentStage] = useState(0);
 
   const stages = [
     <ModeSelectView key={0} />,
-    <DiffSelect key={1} />,
-    <StandardSelect key={2} />, // to be skipped if mode is not standard
-    <WpmSelect key={3} />, // to be skipped if mode is not standard
-    <WebGazerCalibration key={4} />, // to be skipped if mode is standard
-    <GameView key={5} />,
-    <Quiz key={6} />,
-    <ResultsPage key={7} />,
+    <SummarisedSubMode key={1} />,
+    <DiffSelect key={2} />,
+    <StandardSelect key={3} />, // to be skipped if mode is not standard
+    <WpmSelect key={4} />, // to be skipped if mode is not standard
+    <WebGazerCalibration key={5} />, // to be skipped if mode is standard
+    <GameView key={6} />,
+    <Quiz key={7} />,
+    <ResultsPage key={8} />,
   ];
 
-  const DIFF_SELECT_STAGE = 1;
-  const STANDARD_SELECT_STAGE = 2;
-  const WPM_SELECT_STAGE = 3;
-  const CALIBRATION_STAGE = 4;
-  const GAME_STAGE = 5;
+  const MODE_SELECT_STAGE = 0;
+  const SUMMARISED_SUB_MODE_STAGE = 1;
+  const DIFF_SELECT_STAGE = 2;
+  const STANDARD_SELECT_STAGE = 3;
+  const WPM_SELECT_STAGE = 4;
+  const CALIBRATION_STAGE = 5;
+  const GAME_STAGE = 6;
 
   const incrementCurrentStage = (modeArg?: GameMode) => {
     const newStage = currentStage + 1;
     const _mode = modeArg === undefined ? mode : modeArg;
     console.log("mode is: " + _mode);
-    if (_mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
+    if (_mode !== SUMMARISED_MODE && newStage === SUMMARISED_SUB_MODE_STAGE) {
+      setCurrentStage(DIFF_SELECT_STAGE);
+    } else if (_mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
       setCurrentStage(CALIBRATION_STAGE);
     } else if (_mode === STANDARD_MODE && newStage === CALIBRATION_STAGE) {
       setCurrentStage(GAME_STAGE);
@@ -100,7 +104,9 @@ const GameScreen = () => {
   const decrementCurrentStage = () => {
     const newStage = currentStage - 1;
 
-    if (mode !== STANDARD_MODE && newStage === WPM_SELECT_STAGE) {
+    if (!summarised && newStage === SUMMARISED_SUB_MODE_STAGE) {
+      setCurrentStage(MODE_SELECT_STAGE);
+    } else if (mode !== STANDARD_MODE && newStage === WPM_SELECT_STAGE) {
       setCurrentStage(DIFF_SELECT_STAGE);
     } else if (mode === STANDARD_MODE && newStage === CALIBRATION_STAGE) {
       setCurrentStage(WPM_SELECT_STAGE);
