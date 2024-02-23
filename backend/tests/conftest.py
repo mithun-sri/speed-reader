@@ -48,7 +48,7 @@ def user_client_fixture(app: FastAPI):
     user = UserFactory.build(role="user")
     app.dependency_overrides[get_current_user] = lambda: user
 
-    yield TestClient(app)
+    yield TestClient(app, base_url="http://localhost:8000/api/v1")
 
 
 @fixture(name="admin_client", scope="function")
@@ -57,4 +57,4 @@ def admin_client_fixture(app: FastAPI):
     admin = UserFactory.build(role="admin")
     app.dependency_overrides[get_current_user] = lambda: admin
 
-    yield TestClient(app)
+    yield TestClient(app, base_url="http://localhost:8000/api/v1")

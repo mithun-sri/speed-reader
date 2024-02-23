@@ -14,7 +14,7 @@ class TestGetNextText:
         self,
         user_client: TestClient,
     ):
-        response = user_client.get("/api/v1/game/texts/next")
+        response = user_client.get("/game/texts/next")
         assert response.status_code == 404
 
     def test_returns_text(
@@ -26,7 +26,7 @@ class TestGetNextText:
         session.add(text)
         session.commit()
 
-        response = user_client.get("/api/v1/game/texts/next")
+        response = user_client.get("/game/texts/next")
         assert response.status_code == 200
 
         response_body = response.json()
@@ -44,7 +44,7 @@ class TextGetText:
         session.commit()
 
         new_text_id = str(ulid.new())
-        response = user_client.get(f"/api/v1/game/texts/{new_text_id}")
+        response = user_client.get(f"/game/texts/{new_text_id}")
         assert response.status_code == 404
 
     def test_returns_requested_text(
@@ -57,7 +57,7 @@ class TextGetText:
         session.commit()
 
         text = texts[3]
-        response = client.get(f"/api/v1/game/texts/{text.id}")
+        response = client.get(f"/game/texts/{text.id}")
         assert response.status_code == 200
 
 
@@ -73,7 +73,7 @@ class TestGetQuestions:
         session.add_all(questions)
         session.commit()
 
-        response = user_client.get(f"/api/v1/game/texts/{text.id}/questions/next")
+        response = user_client.get(f"/game/texts/{text.id}/questions/next")
         assert response.status_code == 200
 
         response_body = response.json()
@@ -114,7 +114,7 @@ class TestPostAnswers:
         user_client: TestClient,
     ):
         response = user_client.post(
-            f"/api/v1/game/texts/{self.text.id}/answers",
+            f"/game/texts/{self.text.id}/answers",
             json={
                 "answers": [
                     schemas.Answer(
@@ -144,7 +144,7 @@ class TestPostAnswers:
         session.commit()
 
         response = user_client.post(
-            f"/api/v1/game/texts/{self.text.id}/answers",
+            f"/game/texts/{self.text.id}/answers",
             json={
                 "answers": [
                     schemas.Answer(
@@ -167,7 +167,7 @@ class TestPostAnswers:
         user_client: TestClient,
     ):
         response = user_client.post(
-            f"/api/v1/game/texts/{self.text.id}/answers",
+            f"/game/texts/{self.text.id}/answers",
             json={
                 "answers": [
                     schemas.Answer(
