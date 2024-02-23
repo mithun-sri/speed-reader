@@ -310,7 +310,7 @@ export interface GeneratedText {
      * @type {number}
      * @memberof GeneratedText
      */
-    wordCount: number;
+    word_count: number;
     /**
      * 
      * @type {Array<GeneratedQuestion>}
@@ -576,7 +576,7 @@ export interface Text {
      * @type {number}
      * @memberof Text
      */
-    wordCount: number;
+    word_count: number;
 }
 /**
  * 
@@ -669,7 +669,7 @@ export interface TextWithQuestions {
      * @type {number}
      * @memberof TextWithQuestions
      */
-    wordCount: number;
+    word_count: number;
     /**
      * 
      * @type {Array<QuestionWithCorrectOption>}
