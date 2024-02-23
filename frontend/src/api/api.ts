@@ -390,33 +390,39 @@ export interface QuestionMasked {
 /**
  * 
  * @export
- * @interface QuestionStatistics
+ * @interface QuestionWithStatistics
  */
-export interface QuestionStatistics {
+export interface QuestionWithStatistics {
     /**
      * 
      * @type {string}
-     * @memberof QuestionStatistics
+     * @memberof QuestionWithStatistics
      */
-    'question_id': string;
+    'content': string;
     /**
      * 
      * @type {Array<string>}
-     * @memberof QuestionStatistics
+     * @memberof QuestionWithStatistics
      */
     'options': Array<string>;
     /**
      * 
      * @type {number}
-     * @memberof QuestionStatistics
+     * @memberof QuestionWithStatistics
      */
     'correct_option': number;
     /**
      * 
-     * @type {Array<number>}
-     * @memberof QuestionStatistics
+     * @type {string}
+     * @memberof QuestionWithStatistics
      */
-    'selected_options': Array<number>;
+    'id': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof QuestionWithStatistics
+     */
+    'accuracy': number;
 }
 /**
  * 
@@ -664,6 +670,170 @@ export interface TextWithQuestions {
      * @memberof TextWithQuestions
      */
     'questions': Array<Question>;
+}
+/**
+ * 
+ * @export
+ * @interface TextWithQuestionsAndStatistics
+ */
+export interface TextWithQuestionsAndStatistics {
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'title': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'content': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'summary': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'source': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'fiction': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'difficulty': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'word_count': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'id': string;
+    /**
+     * 
+     * @type {Array<Question>}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'questions': Array<Question>;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'min_wpm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'max_wpm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'average_wpm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'average_score': number;
+}
+/**
+ * 
+ * @export
+ * @interface TextWithStatistics
+ */
+export interface TextWithStatistics {
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithStatistics
+     */
+    'title': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithStatistics
+     */
+    'content': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithStatistics
+     */
+    'summary': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithStatistics
+     */
+    'source': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof TextWithStatistics
+     */
+    'fiction': boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithStatistics
+     */
+    'difficulty': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithStatistics
+     */
+    'word_count': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithStatistics
+     */
+    'id': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithStatistics
+     */
+    'min_wpm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithStatistics
+     */
+    'max_wpm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithStatistics
+     */
+    'average_wpm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextWithStatistics
+     */
+    'average_score': number;
 }
 /**
  * 
@@ -971,12 +1141,15 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * Gets the statistics of the admin.
          * @summary Get Admin Statistics
          * @param {string} gameMode 
+         * @param {boolean} isSummary 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAdminStatistics: async (gameMode: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAdminStatistics: async (gameMode: string, isSummary: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'gameMode' is not null or undefined
             assertParamExists('getAdminStatistics', 'gameMode', gameMode)
+            // verify required parameter 'isSummary' is not null or undefined
+            assertParamExists('getAdminStatistics', 'isSummary', isSummary)
             const localVarPath = `/admin/statistics`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -991,6 +1164,10 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
 
             if (gameMode !== undefined) {
                 localVarQueryParameter['game_mode'] = gameMode;
+            }
+
+            if (isSummary !== undefined) {
+                localVarQueryParameter['is_summary'] = isSummary;
             }
 
 
@@ -1018,44 +1195,6 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             // verify required parameter 'questionId' is not null or undefined
             assertParamExists('getQuestion', 'questionId', questionId)
             const localVarPath = `/admin/texts/{text_id}/questions/{question_id}`
-                .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)))
-                .replace(`{${"question_id"}}`, encodeURIComponent(String(questionId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Gets a question statistics of a text by the given id.
-         * @summary Get Question Statistics
-         * @param {string} textId 
-         * @param {string} questionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getQuestionStatistics: async (textId: string, questionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'textId' is not null or undefined
-            assertParamExists('getQuestionStatistics', 'textId', textId)
-            // verify required parameter 'questionId' is not null or undefined
-            assertParamExists('getQuestionStatistics', 'questionId', questionId)
-            const localVarPath = `/admin/texts/{text_id}/questions/{question_id}/statistics`
                 .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)))
                 .replace(`{${"question_id"}}`, encodeURIComponent(String(questionId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1256,11 +1395,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * Gets the statistics of the admin.
          * @summary Get Admin Statistics
          * @param {string} gameMode 
+         * @param {boolean} isSummary 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAdminStatistics(gameMode: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminStatistics>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminStatistics(gameMode, options);
+        async getAdminStatistics(gameMode: string, isSummary: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminStatistics(gameMode, isSummary, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getAdminStatistics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1273,24 +1413,10 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Question>> {
+        async getQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuestionWithStatistics>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestion(textId, questionId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestion']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-        /**
-         * Gets a question statistics of a text by the given id.
-         * @summary Get Question Statistics
-         * @param {string} textId 
-         * @param {string} questionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getQuestionStatistics(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuestionStatistics>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestionStatistics(textId, questionId, options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestionStatistics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -1300,7 +1426,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getQuestions(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Question>>> {
+        async getQuestions(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<QuestionWithStatistics>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestions(textId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestions']?.[localVarOperationServerIndex]?.url;
@@ -1313,7 +1439,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getText(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestions>> {
+        async getText(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestionsAndStatistics>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getText(textId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getText']?.[localVarOperationServerIndex]?.url;
@@ -1327,7 +1453,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTexts(page?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Text>>> {
+        async getTexts(page?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TextWithStatistics>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getTexts(page, pageSize, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getTexts']?.[localVarOperationServerIndex]?.url;
@@ -1389,11 +1515,12 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * Gets the statistics of the admin.
          * @summary Get Admin Statistics
          * @param {string} gameMode 
+         * @param {boolean} isSummary 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAdminStatistics(gameMode: string, options?: any): AxiosPromise<AdminStatistics> {
-            return localVarFp.getAdminStatistics(gameMode, options).then((request) => request(axios, basePath));
+        getAdminStatistics(gameMode: string, isSummary: boolean, options?: any): AxiosPromise<AdminStatistics> {
+            return localVarFp.getAdminStatistics(gameMode, isSummary, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets a question of a text by the given id.
@@ -1403,19 +1530,8 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuestion(textId: string, questionId: string, options?: any): AxiosPromise<Question> {
+        getQuestion(textId: string, questionId: string, options?: any): AxiosPromise<QuestionWithStatistics> {
             return localVarFp.getQuestion(textId, questionId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Gets a question statistics of a text by the given id.
-         * @summary Get Question Statistics
-         * @param {string} textId 
-         * @param {string} questionId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getQuestionStatistics(textId: string, questionId: string, options?: any): AxiosPromise<QuestionStatistics> {
-            return localVarFp.getQuestionStatistics(textId, questionId, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the questions of a text by the given id.
@@ -1424,7 +1540,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuestions(textId: string, options?: any): AxiosPromise<Array<Question>> {
+        getQuestions(textId: string, options?: any): AxiosPromise<Array<QuestionWithStatistics>> {
             return localVarFp.getQuestions(textId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1434,7 +1550,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getText(textId: string, options?: any): AxiosPromise<TextWithQuestions> {
+        getText(textId: string, options?: any): AxiosPromise<TextWithQuestionsAndStatistics> {
             return localVarFp.getText(textId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -1445,7 +1561,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTexts(page?: number, pageSize?: number, options?: any): AxiosPromise<Array<Text>> {
+        getTexts(page?: number, pageSize?: number, options?: any): AxiosPromise<Array<TextWithStatistics>> {
             return localVarFp.getTexts(page, pageSize, options).then((request) => request(axios, basePath));
         },
     };
@@ -1512,12 +1628,13 @@ export class AdminApi extends BaseAPI {
      * Gets the statistics of the admin.
      * @summary Get Admin Statistics
      * @param {string} gameMode 
+     * @param {boolean} isSummary 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getAdminStatistics(gameMode: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getAdminStatistics(gameMode, options).then((request) => request(this.axios, this.basePath));
+    public getAdminStatistics(gameMode: string, isSummary: boolean, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getAdminStatistics(gameMode, isSummary, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1531,19 +1648,6 @@ export class AdminApi extends BaseAPI {
      */
     public getQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig) {
         return AdminApiFp(this.configuration).getQuestion(textId, questionId, options).then((request) => request(this.axios, this.basePath));
-    }
-
-    /**
-     * Gets a question statistics of a text by the given id.
-     * @summary Get Question Statistics
-     * @param {string} textId 
-     * @param {string} questionId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof AdminApi
-     */
-    public getQuestionStatistics(textId: string, questionId: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getQuestionStatistics(textId, questionId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
