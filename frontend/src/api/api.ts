@@ -419,6 +419,12 @@ export interface QuestionWithStatistics {
     'id': string;
     /**
      * 
+     * @type {Array<number>}
+     * @memberof QuestionWithStatistics
+     */
+    'percentages': Array<number>;
+    /**
+     * 
      * @type {number}
      * @memberof QuestionWithStatistics
      */
@@ -1141,15 +1147,12 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * Gets the statistics of the admin.
          * @summary Get Admin Statistics
          * @param {string} gameMode 
-         * @param {boolean} isSummary 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAdminStatistics: async (gameMode: string, isSummary: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAdminStatistics: async (gameMode: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'gameMode' is not null or undefined
             assertParamExists('getAdminStatistics', 'gameMode', gameMode)
-            // verify required parameter 'isSummary' is not null or undefined
-            assertParamExists('getAdminStatistics', 'isSummary', isSummary)
             const localVarPath = `/admin/statistics`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1164,10 +1167,6 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
 
             if (gameMode !== undefined) {
                 localVarQueryParameter['game_mode'] = gameMode;
-            }
-
-            if (isSummary !== undefined) {
-                localVarQueryParameter['is_summary'] = isSummary;
             }
 
 
@@ -1395,12 +1394,11 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * Gets the statistics of the admin.
          * @summary Get Admin Statistics
          * @param {string} gameMode 
-         * @param {boolean} isSummary 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAdminStatistics(gameMode: string, isSummary: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminStatistics>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminStatistics(gameMode, isSummary, options);
+        async getAdminStatistics(gameMode: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminStatistics(gameMode, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getAdminStatistics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1515,12 +1513,11 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * Gets the statistics of the admin.
          * @summary Get Admin Statistics
          * @param {string} gameMode 
-         * @param {boolean} isSummary 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAdminStatistics(gameMode: string, isSummary: boolean, options?: any): AxiosPromise<AdminStatistics> {
-            return localVarFp.getAdminStatistics(gameMode, isSummary, options).then((request) => request(axios, basePath));
+        getAdminStatistics(gameMode: string, options?: any): AxiosPromise<AdminStatistics> {
+            return localVarFp.getAdminStatistics(gameMode, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets a question of a text by the given id.
@@ -1628,13 +1625,12 @@ export class AdminApi extends BaseAPI {
      * Gets the statistics of the admin.
      * @summary Get Admin Statistics
      * @param {string} gameMode 
-     * @param {boolean} isSummary 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getAdminStatistics(gameMode: string, isSummary: boolean, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getAdminStatistics(gameMode, isSummary, options).then((request) => request(this.axios, this.basePath));
+    public getAdminStatistics(gameMode: string, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getAdminStatistics(gameMode, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
