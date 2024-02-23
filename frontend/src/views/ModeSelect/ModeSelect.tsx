@@ -39,12 +39,12 @@ const ModeSelectView = () => {
       <Header />
       <Box sx={{ marginTop: "85px" }} />
       <header className="ModeSelect-header">
-          <Carousel
-            title="choose game mode."
-            options={options}
-            returnSelectedIndex={handleValueFromCarousel}
-            defaultIdx={mode !== null ? options.indexOf(mode) : undefined}
-          />
+        <Carousel
+          title="choose game mode."
+          options={options}
+          returnSelectedIndex={handleValueFromCarousel}
+          defaultIdx={mode !== null ? options.indexOf(mode) : undefined}
+        />
         <Footer />
       </header>
     </div>

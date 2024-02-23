@@ -62,23 +62,23 @@ const StandardSubModeView = () => {
       </Box>
       <motion.div
         initial="hidden"
-        animate={'visible'}
+        animate={"visible"}
         variants={fadeInVariants}
         transition={{ duration: 1.5 }}
       >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <WordByWordPreview text={previewText} />
-        <Box sx={{ width: "5vw" }} />
-        <HighlightWordsPreview text={previewText} />
-        <Box sx={{ width: "5vw" }} />
-        <PeripheralPreview text={previewText} />
-      </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <WordByWordPreview text={previewText} />
+          <Box sx={{ width: "5vw" }} />
+          <HighlightWordsPreview text={previewText} />
+          <Box sx={{ width: "5vw" }} />
+          <PeripheralPreview text={previewText} />
+        </Box>
       </motion.div>
     </Box>
   );
