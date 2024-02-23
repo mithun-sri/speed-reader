@@ -31,7 +31,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Suspense fallback={<LinearProgressFallback />}>
-        <ErrorBoundary fallback={<ServerError/>}>
+        <ErrorBoundary fallback={<ServerError />}>
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Navigate to="/game" />} />
@@ -39,7 +39,7 @@ function App() {
               <Route path="/user" element={<Login />} />
               <Route path="/admin" element={<AdminAnalytics />} />
               <Route path="/gpt" element={<GptView />} />
-              <Route path="*" element={<NotFound/>} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </ErrorBoundary>

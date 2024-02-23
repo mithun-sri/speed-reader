@@ -1,6 +1,6 @@
-import { Box } from '@mui/material';
-import JetBrainsMonoText from '../Text/TextComponent';
-import React, { useEffect } from 'react';
+import { Box } from "@mui/material";
+import JetBrainsMonoText from "../Text/TextComponent";
+import React, { useEffect } from "react";
 
 const ServerError = () => {
   const text = "Oops, something went wrong on our end.";
@@ -8,7 +8,9 @@ const ServerError = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setHighlightedIndex((prev) => (prev + 1) >= text.split(" ").length ? text.split(" ").length : prev + 1);
+      setHighlightedIndex((prev) =>
+        prev + 1 >= text.split(" ").length ? text.split(" ").length : prev + 1,
+      );
     }, 300);
 
     return () => clearInterval(interval);
@@ -17,39 +19,46 @@ const ServerError = () => {
   return (
     <Box
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
       }}
     >
       <Box>
-        <JetBrainsMonoText text="500" size={window.innerWidth / 10} color="#E2B714"></JetBrainsMonoText>
+        <JetBrainsMonoText
+          text="500"
+          size={window.innerWidth / 10}
+          color="#E2B714"
+        ></JetBrainsMonoText>
       </Box>
-      <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '1em'}}>
+      <Box
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: "1em",
+        }}
+      >
         {text.split(" ").map((word, index) => (
-            <Box
+          <Box
             component="span"
             key={index}
             sx={{
-                margin: "0.4em",
+              margin: "0.4em",
             }}
-            >
+          >
             <JetBrainsMonoText
-                text={word}
-                size={window.innerWidth / 50}
-                color={
-                index <= highlightedIndex
-                    ? "#E2B714"
-                    : "#646669"
-                }
+              text={word}
+              size={window.innerWidth / 50}
+              color={index <= highlightedIndex ? "#E2B714" : "#646669"}
             ></JetBrainsMonoText>
-            </Box>
+          </Box>
         ))}
       </Box>
     </Box>
   );
-}
+};
 
 export default ServerError;
