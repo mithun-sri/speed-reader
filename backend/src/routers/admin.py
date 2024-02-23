@@ -33,7 +33,7 @@ async def get_admin_statistics(
     pipeline = [
         {
             "$group": {
-                "_id": game_mode,
+                "_id": None,
                 "minWpm": {"$min": "$average_wpm"},
                 "maxWpm": {"$max": "$average_wpm"},
                 "avgWpm": {"$avg": "$average_wpm"},
@@ -186,12 +186,6 @@ async def get_question_statistics(
     if question.text_id != text_id:
         raise QuestionNotBelongToTextException(question_id=question_id, text_id=text_id)
 
-    pipeline = [
-        {"$group": {"_id": None, "avgScore": {"$avg": "$score"}}},
-    ]
-    data = models.History.objects().aggregate(pipeline)
-    data = list(data)[0]
-
     result_counts = []
     for option in range(len(question.options)):
         result_count = models.History.objects(
@@ -204,7 +198,6 @@ async def get_question_statistics(
 
     return schemas.QuestionStatistics(
         question_id=question_id,
-        average_score=int(data.get("avgScore", 0)),
         options=question.options,
         correct_option=question.correct_option,
         selected_options=[

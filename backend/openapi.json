@@ -1288,10 +1288,6 @@
             "type": "string",
             "title": "Question Id"
           },
-          "average_score": {
-            "type": "integer",
-            "title": "Average Score"
-          },
           "options": {
             "items": {
               "type": "string"
@@ -1314,7 +1310,6 @@
         "type": "object",
         "required": [
           "question_id",
-          "average_score",
           "options",
           "correct_option",
           "selected_options"

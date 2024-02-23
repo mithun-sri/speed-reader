@@ -36,7 +36,6 @@ class Result(BaseModel):
 
 class QuestionStatistics(BaseModel):
     question_id: str
-    average_score: int
     options: list[str]
     correct_option: int
     selected_options: list[int]

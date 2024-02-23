@@ -11,13 +11,12 @@ const CheckboxGroup: React.FC<{
   defaultValue: number;
   questionNum: number;
   useFormReturn: UseFormReturn<GptFormData>;
-}> = ({ defaultValue, questionNum, useFormReturn }) => {
+}> = ({ defaultValue = 0, questionNum, useFormReturn }) => {
   const { register } = useFormReturn;
-
   const [selectedValue, setSelectedValue] = useState<number>(defaultValue);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedValue(parseInt(event.target.value));
+    setSelectedValue(Number(event.target.value));
   };
 
   return (
