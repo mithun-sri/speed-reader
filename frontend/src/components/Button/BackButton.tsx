@@ -43,7 +43,7 @@ const BackButton: React.FC<{
         fontSize: fontSize / 6.8,
       }}
     >
-      {`<_${buttonText}`}
+      {`< ${buttonText}`}
     </IconButton>
   );
 };

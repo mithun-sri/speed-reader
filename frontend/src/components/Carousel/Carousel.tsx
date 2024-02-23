@@ -4,6 +4,7 @@ import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import clickAudio from "../../common/audio";
+import { motion } from "framer-motion";
 
 const Carousel: React.FC<{
   title?: string;
@@ -76,8 +77,20 @@ const Carousel: React.FC<{
     endIndex > options.length - 1 ? "" : options[endIndex],
   ];
 
+  const fadeInOutVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+  const [fadeOut, setFadeOut] = useState(false);
+
   return (
     <Box>
+      <motion.div
+        initial="hidden"
+        animate={fadeOut ? 'hidden' : 'visible'}
+        variants={fadeInOutVariants}
+        transition={{ duration: 1.5 }}
+      >
       <Box
         sx={{
           fontFamily: "JetBrains Mono, monospace",
@@ -107,6 +120,7 @@ const Carousel: React.FC<{
               <Box
                 onClick={() => {
                   clickAudio.play();
+                  setFadeOut(true);
                   returnSelectedIndex(currentIndex); // Return index of selected carousel item
                 }}
                 sx={{
@@ -158,6 +172,7 @@ const Carousel: React.FC<{
           </IconButton>
         </Box>
       </Box>
+      </motion.div>
     </Box>
   );
 };
