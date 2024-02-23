@@ -12,20 +12,35 @@ import Header from "../../components/Header/Header";
 import { Box } from "@mui/material";
 import QuizAnalyticsTop from "../../components/Admin/QuizAnalyticsTop";
 import QuizScore from "../../components/Admin/QuizScore";
+import { getQuestionStatistics } from "../../hooks/admin";
 
-const QuizAnalytics: React.FC = () => {
+interface QuizAnalyticsProps {
+  textId: string;
+  questionId: string;
+}
+
+const QuizAnalytics: React.FC<QuizAnalyticsProps> = ({
+  textId,
+  questionId,
+}) => {
+  const { data: questionStatistics } = getQuestionStatistics(
+    textId,
+    questionId,
+  );
+
   const formatTick = (tick: number) => {
     return `${tick}%`;
   };
 
-  // Make request to client
-  const data = [
-    { question: "he was a chic", proportion: 72 },
-    { question: "he was hungry", proportion: 10 },
-    { question: "he was not hun", proportion: 18 },
-  ];
-  const correctAnswer = 0;
-  const avgScore = 72;
+  const data = questionStatistics.options.map((option, index) => {
+    return {
+      question: option,
+      proportion: questionStatistics.selected_options[index],
+    };
+  });
+
+  const correctAnswer = questionStatistics.correct_option;
+  const avgScore = Math.max(...questionStatistics.selected_options);
 
   return (
     <>

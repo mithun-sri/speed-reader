@@ -12,6 +12,17 @@ export function getAdminStatistics(gameMode: string) {
   });
 }
 
+export function getQuestionStatistics(textId: string, questionId: string) {
+  return useSuspenseQuery({
+    queryKey: ["question-statistics", textId, questionId],
+    queryFn: () =>
+      adminApi
+        .getQuestionStatistics(textId, questionId)
+        .then((res) => res.data),
+    gcTime: 0,
+  });
+}
+
 // Define the hook function
 export function useGenerateText(difficulty: string, isFiction: boolean) {
   return useSuspenseQuery({
