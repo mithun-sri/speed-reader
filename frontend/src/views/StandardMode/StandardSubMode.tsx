@@ -6,6 +6,7 @@ import HighlightWordsPreview from "../../components/Preview/HighlightWords";
 import PeripheralPreview from "../../components/Preview/Peripheral";
 import WordByWordPreview from "../../components/Preview/WordByWord";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
+import { motion } from "framer-motion";
 
 const StandardSubModeView = () => {
   const { decrementCurrentStage } = useGameScreenContext();
@@ -33,6 +34,11 @@ const StandardSubModeView = () => {
     };
   }, []);
 
+  const fadeInVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
     <Box>
       <Header />
@@ -54,19 +60,26 @@ const StandardSubModeView = () => {
       >
         choose your view.
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
+      <motion.div
+        initial="hidden"
+        animate={"visible"}
+        variants={fadeInVariants}
+        transition={{ duration: 1.5 }}
       >
-        <WordByWordPreview text={previewText} />
-        <Box sx={{ width: "5vw" }} />
-        <HighlightWordsPreview text={previewText} />
-        <Box sx={{ width: "5vw" }} />
-        <PeripheralPreview text={previewText} />
-      </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <WordByWordPreview text={previewText} />
+          <Box sx={{ width: "5vw" }} />
+          <HighlightWordsPreview text={previewText} />
+          <Box sx={{ width: "5vw" }} />
+          <PeripheralPreview text={previewText} />
+        </Box>
+      </motion.div>
     </Box>
   );
 };

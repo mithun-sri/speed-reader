@@ -4,6 +4,7 @@ import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import clickAudio from "../../common/audio";
+import { motion } from "framer-motion";
 
 const Carousel: React.FC<{
   title?: string;
@@ -76,88 +77,102 @@ const Carousel: React.FC<{
     endIndex > options.length - 1 ? "" : options[endIndex],
   ];
 
+  const fadeInOutVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+  const [fadeOut, setFadeOut] = useState(false);
+
   return (
     <Box>
-      <Box
-        sx={{
-          fontFamily: "JetBrains Mono, monospace",
-          fontWeight: "bolder",
-          paddingTop: "20px",
-          fontSize: fontSize / 6.3,
-          color: "#D1D0C5",
-        }}
+      <motion.div
+        initial="hidden"
+        animate={fadeOut ? "hidden" : "visible"}
+        variants={fadeInOutVariants}
+        transition={{ duration: 1.5 }}
       >
-        {title !== undefined ? title : "choose."}
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          fontFamily: "JetBrains Mono, monospace",
-          alignItems: "center",
-          flexDirection: "row",
-          fontWeight: "bold",
-          marginTop: fontSize / 35,
-          marginBottom: fontSize / 50,
-          height: fontSize,
-        }}
-      >
-        {visibleOptions.map((option, index) => (
-          <Box key={index} style={index === 1 ? centerBoxStyle : boxStyle}>
-            {index === 1 ? (
-              <Box
-                onClick={() => {
-                  clickAudio.play();
-                  returnSelectedIndex(currentIndex); // Return index of selected carousel item
-                }}
-                sx={{
-                  color: "inherit",
-                  cursor: "pointer",
-                }}
-              >
-                {option}
-              </Box>
-            ) : (
-              option
-            )}
+        <Box
+          sx={{
+            fontFamily: "JetBrains Mono, monospace",
+            fontWeight: "bolder",
+            paddingTop: "20px",
+            fontSize: fontSize / 6.3,
+            color: "#D1D0C5",
+          }}
+        >
+          {title !== undefined ? title : "choose."}
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            fontFamily: "JetBrains Mono, monospace",
+            alignItems: "center",
+            flexDirection: "row",
+            fontWeight: "bold",
+            marginTop: fontSize / 35,
+            marginBottom: fontSize / 50,
+            height: fontSize,
+          }}
+        >
+          {visibleOptions.map((option, index) => (
+            <Box key={index} style={index === 1 ? centerBoxStyle : boxStyle}>
+              {index === 1 ? (
+                <Box
+                  onClick={() => {
+                    clickAudio.play();
+                    setFadeOut(true);
+                    returnSelectedIndex(currentIndex); // Return index of selected carousel item
+                  }}
+                  sx={{
+                    color: "inherit",
+                    cursor: "pointer",
+                  }}
+                >
+                  {option}
+                </Box>
+              ) : (
+                option
+              )}
+            </Box>
+          ))}
+        </Box>
+        <Box
+          sx={{
+            marginTop: fontSize / 50,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+            fontFamily: "JetBrainsMono, monospace",
+            textAlign: "center",
+          }}
+        >
+          <Box sx={{ margin: `${fontSize / 8}px` }}>
+            <IconButton
+              onClick={handleLeftArrowClick}
+              disabled={currentIndex === 0}
+              sx={{
+                color: "#D9D9D9",
+              }}
+              data-cy="left-arrow"
+            >
+              <FontAwesomeIcon fontSize={fontSize / 2.3} icon={faCaretLeft} />
+            </IconButton>
           </Box>
-        ))}
-      </Box>
-      <Box
-        sx={{
-          marginTop: fontSize / 50,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "row",
-          fontFamily: "JetBrainsMono, monospace",
-          textAlign: "center",
-        }}
-      >
-        <Box sx={{ margin: `${fontSize / 8}px` }}>
-          <IconButton
-            onClick={handleLeftArrowClick}
-            disabled={currentIndex === 0}
-            sx={{
-              color: "#D9D9D9",
-            }}
-            data-cy="left-arrow"
-          >
-            <FontAwesomeIcon fontSize={fontSize / 2.3} icon={faCaretLeft} />
-          </IconButton>
+          <Box sx={{ margin: `${fontSize / 8}px` }}>
+            <IconButton
+              onClick={handleRightArrowClick}
+              disabled={currentIndex === options.length - 1}
+              sx={{
+                color: "#D9D9D9",
+              }}
+              data-cy="right-arrow"
+            >
+              <FontAwesomeIcon fontSize={fontSize / 2.3} icon={faCaretRight} />
+            </IconButton>
+          </Box>
         </Box>
-        <Box sx={{ margin: `${fontSize / 8}px` }}>
-          <IconButton
-            onClick={handleRightArrowClick}
-            disabled={currentIndex === options.length - 1}
-            sx={{
-              color: "#D9D9D9",
-            }}
-            data-cy="right-arrow"
-          >
-            <FontAwesomeIcon fontSize={fontSize / 2.3} icon={faCaretRight} />
-          </IconButton>
-        </Box>
-      </Box>
+      </motion.div>
     </Box>
   );
 };

@@ -10,6 +10,7 @@ import BackButton from "../../components/Button/BackButton";
 import Header from "../../components/Header/Header";
 import { useGameContext } from "../../context/GameContext";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
+import { motion } from "framer-motion";
 
 const SummarizedSubMode: React.FC = () => {
   const { incrementCurrentStage, decrementCurrentStage } =
@@ -54,6 +55,11 @@ const SummarizedSubMode: React.FC = () => {
     decrementCurrentStage();
   };
 
+  const fadeInVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+  };
+
   return (
     <>
       <Header />
@@ -80,51 +86,58 @@ const SummarizedSubMode: React.FC = () => {
         >
           choose submode.
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignContent: "center",
-            textAlign: "center",
-            height: "40vh",
-          }}
+        <motion.div
+          initial="hidden"
+          animate={"visible"}
+          variants={fadeInVariants}
+          transition={{ duration: 1.5 }}
         >
-          <IconButton
+          <Box
             sx={{
-              fontWeight: "bolder",
-              fontFamily: "JetBrains Mono, monospace",
-              color: "#646669",
-              fontSize: "3.6vw",
-              padding: "0px 5vw",
-              "&:hover": { color: "#E2B714" },
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignContent: "center",
+              textAlign: "center",
+              height: "40vh",
             }}
-            disableFocusRipple
-            disableRipple
-            onClick={setSummarisedSubMode.bind(this, STANDARD_MODE)}
           >
-            <Box>
-              Standard <br /> Mode
-            </Box>
-          </IconButton>
-          <IconButton
-            sx={{
-              fontWeight: "bolder",
-              fontFamily: "JetBrains Mono, monospace",
-              color: "#646669",
-              fontSize: "3.6vw",
-              padding: "0px 5vw",
-              "&:hover": { color: "#E2B714" },
-            }}
-            disableFocusRipple
-            disableRipple
-            onClick={setSummarisedSubMode.bind(this, ADAPTIVE_MODE)}
-          >
-            <Box>
-              Adaptive <br /> Mode
-            </Box>
-          </IconButton>
-        </Box>
+            <IconButton
+              sx={{
+                fontWeight: "bolder",
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#646669",
+                fontSize: "3.6vw",
+                padding: "0px 5vw",
+                "&:hover": { color: "#E2B714" },
+              }}
+              disableFocusRipple
+              disableRipple
+              onClick={setSummarisedSubMode.bind(this, STANDARD_MODE)}
+            >
+              <Box>
+                Standard <br /> Mode
+              </Box>
+            </IconButton>
+            <IconButton
+              sx={{
+                fontWeight: "bolder",
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#646669",
+                fontSize: "3.6vw",
+                padding: "0px 5vw",
+                "&:hover": { color: "#E2B714" },
+              }}
+              disableFocusRipple
+              disableRipple
+              onClick={setSummarisedSubMode.bind(this, ADAPTIVE_MODE)}
+            >
+              <Box>
+                Adaptive <br /> Mode
+              </Box>
+            </IconButton>
+          </Box>
+        </motion.div>
       </Box>
     </>
   );

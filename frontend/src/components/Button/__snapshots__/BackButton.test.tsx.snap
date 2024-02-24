@@ -20,7 +20,7 @@ exports[`Matches snapshot before/after click 1`] = `
   tabIndex={0}
   type="button"
 >
-  &lt;_back
+  &lt; back
 </button>
 `;
 
@@ -44,6 +44,6 @@ exports[`Matches snapshot before/after click 2`] = `
   tabIndex={0}
   type="button"
 >
-  &lt;_back
+  &lt; back
 </button>
 `;
