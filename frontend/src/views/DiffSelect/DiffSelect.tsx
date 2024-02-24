@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { EASY, GameDifficulty, HARD, MED } from "../../common/constants";
 import BackButton from "../../components/Button/BackButton";
 import Carousel from "../../components/Carousel/Carousel";
-import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { useGameContext } from "../../context/GameContext";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
@@ -60,7 +59,6 @@ const DiffSelect = () => {
             difficulty !== null ? options.indexOf(difficulty) : undefined
           }
         />
-        <Footer />
       </Box>
     </Box>
   );
