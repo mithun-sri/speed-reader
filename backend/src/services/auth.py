@@ -1,8 +1,8 @@
 from typing import Annotated
 
-from fastapi import Depends, Response
+from fastapi import Cookie, Depends, Response
 from fastapi.security import OAuth2PasswordBearer
-from jose import jwt
+from jose import JWTError, jwt
 from sqlalchemy import select
 
 from ..database import Session, get_session
@@ -10,9 +10,11 @@ from ..models.user import User
 from ..utils.auth import ACCESS_TOKEN_SECRET_KEY, ALGORITHM
 from .exceptions import (
     AlreadyAuthenticatedException,
-    InvalidCredentialsException,
     InvalidRoleException,
+    InvalidTokenException,
     NotAuthenticatedException,
+    TokenNotFoundException,
+    UserNotFoundException,
 )
 
 TOKEN_URL = "/api/v1/auth/token"
@@ -43,13 +45,25 @@ def set_response_tokens(
 
 
 def get_current_user_or_none(
-    token: Annotated[str, Depends(oauth2_scheme)],
+    *,
+    access_token: Annotated[str | None, Cookie()] = None,
     session: Annotated[Session, Depends(get_session)],
 ) -> User | None:
-    payload = jwt.decode(token, ACCESS_TOKEN_SECRET_KEY, algorithms=[ALGORITHM])
+    if not access_token:
+        raise TokenNotFoundException()
+
+    try:
+        payload = jwt.decode(
+            access_token,
+            ACCESS_TOKEN_SECRET_KEY,
+            algorithms=[ALGORITHM],
+        )
+    except JWTError:
+        raise InvalidTokenException()
+
     username = payload.get("sub")
     if not username:
-        raise InvalidCredentialsException()
+        raise InvalidTokenException()
 
     query = select(User).filter(User.username == username)
     user = session.scalars(query).one_or_none()
@@ -57,10 +71,14 @@ def get_current_user_or_none(
 
 
 def get_current_user(
-    user: User | None = Depends(get_current_user_or_none),
+    *,
+    access_token: Annotated[str | None, Cookie()] = None,
+    session: Annotated[Session, Depends(get_session)],
 ) -> User:
+    user = get_current_user_or_none(access_token=access_token, session=session)
     if not user:
-        raise InvalidCredentialsException()
+        # TODO: Raise proper exception.
+        raise UserNotFoundException(user_id=None)
     return user
 
 
@@ -72,10 +90,16 @@ def verify_auth(
 
 
 def verify_guest(
-    user: Annotated[User | None, Depends(get_current_user_or_none)],
+    *,
+    access_token: Annotated[str | None, Cookie()] = None,
+    session: Annotated[Session, Depends(get_session)],
 ):
-    if user:
+    try:
+        # If it successfully gets user then raise exception.
+        get_current_user(access_token=access_token, session=session)
         raise AlreadyAuthenticatedException()
+    except Exception:
+        pass
 
 
 def verify_admin(
