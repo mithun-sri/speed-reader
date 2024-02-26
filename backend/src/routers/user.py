@@ -263,3 +263,18 @@ async def login_user(
     access_token = create_access_token(data={"sub": user.username})
     refresh_token = create_refresh_token(data={"sub": user.username})
     set_response_tokens(response, access_token, refresh_token)
+
+
+@router.post(
+    "/logout",
+    dependencies=[Security(verify_auth)],
+)
+async def logout_user(
+    response: Response,
+):
+    """
+    Logs out a user. Invalidates the refresh token.
+    TODO:
+    Blacklist the refresh token.
+    """
+    set_response_tokens(response, "", "")
