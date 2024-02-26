@@ -1,4 +1,3 @@
-# TODO: No need to put this file under `utils/security` directory i.e. move to `utils/`.
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
