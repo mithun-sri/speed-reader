@@ -9,6 +9,7 @@ beforeEach(() => {
     username: "hpotter",
     password: "vingardiumleviosa",
   });
+  cy.makeCookiesInsecure();
 });
 
 describe("game spec", () => {

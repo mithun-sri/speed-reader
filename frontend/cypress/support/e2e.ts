@@ -37,6 +37,8 @@ declare global {
         username: string;
         password: string;
       }): Chainable<undefined>;
+
+      makeCookiesInsecure(): Chainable<undefined>;
     }
   }
 }
@@ -61,5 +63,24 @@ Cypress.Commands.add("loginUser", (data) => {
       "Content-Type": "application/json",
     },
     body: data,
+  });
+});
+
+// NOTE:
+// Cypress fails to send secure cookies when run inside Docker container.
+// This is a temporary workaround to make cookies insecure.
+// https://github.com/cypress-io/cypress/issues/18690
+Cypress.Commands.add("makeCookiesInsecure", () => {
+  cy.getCookies().then((cookies) => {
+    const secureCookies = cookies.filter(({ secure }) => !!secure);
+    for (const secureCookie of secureCookies) {
+      cy.clearCookie(secureCookie.name);
+      cy.setCookie(secureCookie.name, secureCookie.value, {
+        ...secureCookie,
+        secure: false,
+        sameSite: undefined,
+      });
+    }
+    cy.reload();
   });
 });
