@@ -1,5 +1,8 @@
+import json
 import random
+from typing import List
 
+import openai
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
@@ -194,3 +197,82 @@ class TestDeleteQuestion:
 
         assert session.get(models.Question, self.question.id) is None
         assert session.get(models.Text, self.text.id) is not None
+
+
+class MockChatCompletionMessage:
+    content: str = json.dumps(
+        {
+            "title": "test title",
+            "extract": "test extract",
+            "author": "test author",
+            "gutenberg_link": "test link",
+            "questions": [
+                {
+                    "question": "test question",
+                    "options": [
+                        "test option 0",
+                        "test option 1",
+                        "test option 2",
+                        "test option 3",
+                    ],
+                    "correct_option": "test option 2",
+                }
+            ],
+            "summarised": "test summary",
+        }
+    )
+
+
+class MockChoice:
+    message: MockChatCompletionMessage = MockChatCompletionMessage()
+
+
+class MockChatCompletion:
+    choices: List[MockChoice] = [MockChoice()]
+
+
+class MockCompletions:
+
+    def create(self, *args, **kwargs):
+        _ = args, kwargs
+        return MockChatCompletion()
+
+
+class MockChat:
+    completions = MockCompletions()
+
+
+class MockOpenAI:
+    chat = MockChat()
+
+    def __init__(self, *args, **kwargs):
+        _ = args, kwargs
+
+
+class TestGenerateText:
+
+    def test_generate_text(self, monkeypatch, admin_client: TestClient):
+        monkeypatch.setattr(openai, "OpenAI", MockOpenAI)
+        response = admin_client.post(
+            "/admin/generate-text?difficulty=easy&fiction=false"
+        )
+        assert response.status_code == 200
+        data = response.json()
+        assert data["title"] == "test title"
+        assert data["content"] == "test extract"
+        assert data["difficulty"] == "easy"
+        assert data["fiction"] is False
+        assert data["word_count"] == 2
+
+        assert len(data["questions"]) == 1
+        data_question = data["questions"][0]
+        assert data_question["content"] == "test question"
+        assert data_question["options"] == [
+            "test option 0",
+            "test option 1",
+            "test option 2",
+            "test option 3",
+        ]
+        assert data_question["correct_option"] == 2
+        assert data["summary"] == "test summary"
+        assert data["source"] == "test link"
