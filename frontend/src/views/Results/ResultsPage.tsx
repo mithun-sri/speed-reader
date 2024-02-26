@@ -17,7 +17,7 @@ import {
 const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
   notPlayAgain,
 }) => {
-  const { averageWpm, intervalWpms, quizContent, quizAnswers } =
+  const { averageWpm, intervalWpms, quizContent, quizAnswers, quizResults } =
     useGameContext();
 
   const wpmData = intervalWpms.map((wpm, index) => ({ index, wpm }));
@@ -168,8 +168,8 @@ const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
               questionNumber={index + 1}
               question={question.content}
               questions={question.options}
-              correctAnswer={0}
-              userAnswer={quizAnswers[index] ?? 0}
+              correctAnswer={quizResults[index].correct_option}
+              userAnswer={quizResults[index].selected_option}
             />
           ))}
           {!notPlayAgain ? <ResultsBottom /> : null}
