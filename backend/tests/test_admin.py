@@ -241,7 +241,7 @@ class TestGenerateText:
 
         monkeypatch.setattr(openai.resources.Completions, "create", mock_gpt)
         response = admin_client.post(
-            "/admin/generate-text", json={"difficulty": "easy", "fiction": False}
+            "/admin/generate-text?difficulty=easy&fiction=false"
         )
         assert response.status_code == 200
         data = response.json()
@@ -269,6 +269,6 @@ class TestGenerateText:
 
         monkeypatch.setattr(openai.resources.Completions, "create", mock_gpt)
         response = admin_client.post(
-            "/admin/generate-text", json={"difficulty": "easy", "fiction": False}
+            "/admin/generate-text?difficulty=easy&fiction=false"
         )
         assert response.status_code == 500
