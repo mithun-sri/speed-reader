@@ -1,5 +1,4 @@
 import { Box, IconButton } from "@mui/material";
-import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./Quiz.css";
@@ -190,7 +189,6 @@ const QuizView = () => {
           </IconButton>
         </Box>
       )}
-      <Footer />
     </div>
   );
 };
