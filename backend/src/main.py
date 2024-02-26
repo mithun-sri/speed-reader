@@ -1,6 +1,6 @@
 import json
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Security
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -10,6 +10,7 @@ from .routers.admin import router as admin_router
 from .routers.auth import router as auth_router
 from .routers.game import router as game_router
 from .routers.user import router as user_router
+from .services.auth import verify_testing
 from .services.exception_handlers import (
     already_authenticated_exception_handler,
     bad_response_from_openai_exception_handler,
@@ -110,10 +111,10 @@ async def shutdown():
 
 # Making an endpoint to seed the database is a common practice in integration tests:
 # https://docs.cypress.io/guides/references/best-practices#Real-World-Example-1
-# TODO:
-# Protect this endpoint with a secret key.
-# Disable this endpoint in production.
-@app.post("/testing/db/seed")
+@app.post(
+    "/testing/db/seed",
+    dependencies=[Security(verify_testing)],
+)
 async def seed():
     reset_database()
     seed_database()

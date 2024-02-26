@@ -1,7 +1,8 @@
+import secrets
 from typing import Annotated
 
-from fastapi import Cookie, Depends, Response
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Cookie, Depends, HTTPException, Response, status
+from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
 from jose import JWTError, jwt
 from sqlalchemy import select
 
@@ -20,6 +21,7 @@ from .exceptions import (
 TOKEN_URL = "/api/v1/auth/token"
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=TOKEN_URL)
+basic_scheme = HTTPBasic()
 
 
 def set_response_tokens(
@@ -114,3 +116,26 @@ def verify_user(
 ):
     if user.role != "user":
         raise InvalidRoleException("user")
+
+
+# TODO:
+# Move keys to GitLab CI/CD secrets
+TESTING_USERNAME = b"admin"
+TESTING_PASSWORD = b"sAzGmYEoi4#Y9jX3oue#U59Fg^p&%D55"
+
+
+def verify_testing(credentials: Annotated[HTTPBasicCredentials, Depends(basic_scheme)]):
+    is_correct_username = secrets.compare_digest(
+        credentials.username.encode("utf8"),
+        TESTING_USERNAME,
+    )
+    is_correct_password = secrets.compare_digest(
+        credentials.password.encode("utf8"),
+        TESTING_PASSWORD,
+    )
+    if not (is_correct_username and is_correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
