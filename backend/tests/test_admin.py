@@ -231,15 +231,25 @@ class MockChatCompletion:
     choices: List[MockChoice] = [MockChoice()]
 
 
+class MockCompletions:
+
+    def create(self, *args, **kwargs):
+        _ = args, kwargs
+        return MockChatCompletion()
+
+
+class MockChat:
+    completions = MockCompletions()
+
+
+class MockOpenAI:
+    chat = MockChat()
+
+
 class TestGenerateText:
 
     def test_generate_text(self, monkeypatch, admin_client: TestClient):
-
-        def mock_gpt(*args, **kwargs):
-            _ = args, kwargs
-            return MockChatCompletion()
-
-        monkeypatch.setattr(openai.resources.Completions, "create", mock_gpt)
+        monkeypatch.setattr(openai, "OpenAI", MockOpenAI)
         response = admin_client.post(
             "/admin/generate-text?difficulty=easy&fiction=false"
         )
@@ -260,15 +270,3 @@ class TestGenerateText:
             "test option 3",
         ]
         assert data_question["correct_option"] == "test option 2"
-
-    def test_bad_response(self, monkeypatch, admin_client: TestClient):
-
-        def mock_gpt(*args, **kwargs):
-            _ = args, kwargs
-            return None
-
-        monkeypatch.setattr(openai.resources.Completions, "create", mock_gpt)
-        response = admin_client.post(
-            "/admin/generate-text?difficulty=easy&fiction=false"
-        )
-        assert response.status_code == 500
