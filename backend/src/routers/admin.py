@@ -3,13 +3,14 @@ import os
 from typing import Annotated
 
 import openai
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Security
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
+from ..services.auth import verify_admin
 from ..services.exceptions import (
     BadResponseFromOpenAI,
     QuestionNotBelongToTextException,
@@ -17,7 +18,12 @@ from ..services.exceptions import (
     TextNotFoundException,
 )
 
-router = APIRouter(prefix="/admin", tags=["admin"], route_class=LoggerRoute)
+router = APIRouter(
+    prefix="/admin",
+    tags=["admin"],
+    route_class=LoggerRoute,
+    dependencies=[Security(verify_admin)],
+)
 
 
 @router.get(

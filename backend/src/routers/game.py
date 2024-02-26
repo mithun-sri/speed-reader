@@ -1,14 +1,14 @@
 import random
 from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, Security
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
-from ..services.auth import get_current_user
+from ..services.auth import get_current_user, verify_auth
 from ..services.exceptions import (
     DuplicateAnswersException,
     NotEnoughAnswersException,
@@ -19,7 +19,12 @@ from ..services.exceptions import (
     TextNotFoundException,
 )
 
-router = APIRouter(prefix="/game", tags=["game"], route_class=LoggerRoute)
+router = APIRouter(
+    prefix="/game",
+    tags=["game"],
+    route_class=LoggerRoute,
+    dependencies=[Security(verify_auth)],
+)
 
 
 @router.get(
