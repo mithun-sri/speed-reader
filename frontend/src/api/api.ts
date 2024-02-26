@@ -26,6 +26,13 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface AccessToken
+ */
+export interface AccessToken {
+}
+/**
+ * 
+ * @export
  * @interface AdminStatistics
  */
 export interface AdminStatistics {
@@ -995,10 +1002,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * Adds a text to the database.
          * @summary Approve Text
          * @param {TextCreateWithQuestions} textCreateWithQuestions 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        approveText: async (textCreateWithQuestions: TextCreateWithQuestions, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        approveText: async (textCreateWithQuestions: TextCreateWithQuestions, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'textCreateWithQuestions' is not null or undefined
             assertParamExists('approveText', 'textCreateWithQuestions', textCreateWithQuestions)
             const localVarPath = `/admin/approve-text`;
@@ -1032,10 +1040,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * @summary Delete Question
          * @param {string} textId 
          * @param {string} questionId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteQuestion: async (textId: string, questionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteQuestion: async (textId: string, questionId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'textId' is not null or undefined
             assertParamExists('deleteQuestion', 'textId', textId)
             // verify required parameter 'questionId' is not null or undefined
@@ -1069,10 +1078,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * Deletes a text by the given id.
          * @summary Delete Text
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteText: async (textId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteText: async (textId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'textId' is not null or undefined
             assertParamExists('deleteText', 'textId', textId)
             const localVarPath = `/admin/texts/{text_id}`
@@ -1104,10 +1114,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * @summary Generate Text
          * @param {string} difficulty 
          * @param {boolean} fiction 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        generateText: async (difficulty: string, fiction: boolean, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        generateText: async (difficulty: string, fiction: boolean, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'difficulty' is not null or undefined
             assertParamExists('generateText', 'difficulty', difficulty)
             // verify required parameter 'fiction' is not null or undefined
@@ -1147,10 +1158,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * Gets the statistics of the admin.
          * @summary Get Admin Statistics
          * @param {string} gameMode 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAdminStatistics: async (gameMode: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAdminStatistics: async (gameMode: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'gameMode' is not null or undefined
             assertParamExists('getAdminStatistics', 'gameMode', gameMode)
             const localVarPath = `/admin/statistics`;
@@ -1185,10 +1197,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * @summary Get Question
          * @param {string} textId 
          * @param {string} questionId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuestion: async (textId: string, questionId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getQuestion: async (textId: string, questionId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'textId' is not null or undefined
             assertParamExists('getQuestion', 'textId', textId)
             // verify required parameter 'questionId' is not null or undefined
@@ -1222,10 +1235,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * Gets the questions of a text by the given id.
          * @summary Get Questions
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuestions: async (textId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getQuestions: async (textId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'textId' is not null or undefined
             assertParamExists('getQuestions', 'textId', textId)
             const localVarPath = `/admin/texts/{text_id}/questions`
@@ -1256,10 +1270,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * Gets a text by the given id.
          * @summary Get Text
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getText: async (textId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getText: async (textId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'textId' is not null or undefined
             assertParamExists('getText', 'textId', textId)
             const localVarPath = `/admin/texts/{text_id}`
@@ -1291,10 +1306,11 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
          * @summary Get Texts
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTexts: async (page?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getTexts: async (page?: number, pageSize?: number, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/admin/texts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1340,11 +1356,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * Adds a text to the database.
          * @summary Approve Text
          * @param {TextCreateWithQuestions} textCreateWithQuestions 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async approveText(textCreateWithQuestions: TextCreateWithQuestions, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestions>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.approveText(textCreateWithQuestions, options);
+        async approveText(textCreateWithQuestions: TextCreateWithQuestions, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestions>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.approveText(textCreateWithQuestions, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.approveText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1354,11 +1371,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @summary Delete Question
          * @param {string} textId 
          * @param {string} questionId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Question>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteQuestion(textId, questionId, options);
+        async deleteQuestion(textId: string, questionId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Question>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteQuestion(textId, questionId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.deleteQuestion']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1367,11 +1385,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * Deletes a text by the given id.
          * @summary Delete Text
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteText(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteText(textId, options);
+        async deleteText(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteText(textId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.deleteText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1381,11 +1400,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @summary Generate Text
          * @param {string} difficulty 
          * @param {boolean} fiction 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async generateText(difficulty: string, fiction: boolean, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextCreateWithQuestions>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.generateText(difficulty, fiction, options);
+        async generateText(difficulty: string, fiction: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextCreateWithQuestions>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.generateText(difficulty, fiction, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.generateText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1394,11 +1414,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * Gets the statistics of the admin.
          * @summary Get Admin Statistics
          * @param {string} gameMode 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAdminStatistics(gameMode: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminStatistics>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminStatistics(gameMode, options);
+        async getAdminStatistics(gameMode: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AdminStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAdminStatistics(gameMode, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getAdminStatistics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1408,11 +1429,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @summary Get Question
          * @param {string} textId 
          * @param {string} questionId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuestionWithStatistics>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestion(textId, questionId, options);
+        async getQuestion(textId: string, questionId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<QuestionWithStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestion(textId, questionId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestion']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1421,11 +1443,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * Gets the questions of a text by the given id.
          * @summary Get Questions
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getQuestions(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<QuestionWithStatistics>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestions(textId, options);
+        async getQuestions(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<QuestionWithStatistics>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getQuestions(textId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getQuestions']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1434,11 +1457,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * Gets a text by the given id.
          * @summary Get Text
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getText(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestionsAndStatistics>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getText(textId, options);
+        async getText(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestionsAndStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getText(textId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1448,11 +1472,12 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @summary Get Texts
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTexts(page?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TextWithStatistics>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getTexts(page, pageSize, options);
+        async getTexts(page?: number, pageSize?: number, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<TextWithStatistics>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTexts(page, pageSize, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.getTexts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1471,95 +1496,104 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * Adds a text to the database.
          * @summary Approve Text
          * @param {TextCreateWithQuestions} textCreateWithQuestions 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        approveText(textCreateWithQuestions: TextCreateWithQuestions, options?: any): AxiosPromise<TextWithQuestions> {
-            return localVarFp.approveText(textCreateWithQuestions, options).then((request) => request(axios, basePath));
+        approveText(textCreateWithQuestions: TextCreateWithQuestions, accessToken?: AccessToken, options?: any): AxiosPromise<TextWithQuestions> {
+            return localVarFp.approveText(textCreateWithQuestions, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Deletes a question of a text by the given id.
          * @summary Delete Question
          * @param {string} textId 
          * @param {string} questionId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteQuestion(textId: string, questionId: string, options?: any): AxiosPromise<Question> {
-            return localVarFp.deleteQuestion(textId, questionId, options).then((request) => request(axios, basePath));
+        deleteQuestion(textId: string, questionId: string, accessToken?: AccessToken, options?: any): AxiosPromise<Question> {
+            return localVarFp.deleteQuestion(textId, questionId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Deletes a text by the given id.
          * @summary Delete Text
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteText(textId: string, options?: any): AxiosPromise<Text> {
-            return localVarFp.deleteText(textId, options).then((request) => request(axios, basePath));
+        deleteText(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
+            return localVarFp.deleteText(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Generate Text
          * @param {string} difficulty 
          * @param {boolean} fiction 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        generateText(difficulty: string, fiction: boolean, options?: any): AxiosPromise<TextCreateWithQuestions> {
-            return localVarFp.generateText(difficulty, fiction, options).then((request) => request(axios, basePath));
+        generateText(difficulty: string, fiction: boolean, accessToken?: AccessToken, options?: any): AxiosPromise<TextCreateWithQuestions> {
+            return localVarFp.generateText(difficulty, fiction, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the statistics of the admin.
          * @summary Get Admin Statistics
          * @param {string} gameMode 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAdminStatistics(gameMode: string, options?: any): AxiosPromise<AdminStatistics> {
-            return localVarFp.getAdminStatistics(gameMode, options).then((request) => request(axios, basePath));
+        getAdminStatistics(gameMode: string, accessToken?: AccessToken, options?: any): AxiosPromise<AdminStatistics> {
+            return localVarFp.getAdminStatistics(gameMode, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets a question of a text by the given id.
          * @summary Get Question
          * @param {string} textId 
          * @param {string} questionId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuestion(textId: string, questionId: string, options?: any): AxiosPromise<QuestionWithStatistics> {
-            return localVarFp.getQuestion(textId, questionId, options).then((request) => request(axios, basePath));
+        getQuestion(textId: string, questionId: string, accessToken?: AccessToken, options?: any): AxiosPromise<QuestionWithStatistics> {
+            return localVarFp.getQuestion(textId, questionId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the questions of a text by the given id.
          * @summary Get Questions
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getQuestions(textId: string, options?: any): AxiosPromise<Array<QuestionWithStatistics>> {
-            return localVarFp.getQuestions(textId, options).then((request) => request(axios, basePath));
+        getQuestions(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<Array<QuestionWithStatistics>> {
+            return localVarFp.getQuestions(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets a text by the given id.
          * @summary Get Text
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getText(textId: string, options?: any): AxiosPromise<TextWithQuestionsAndStatistics> {
-            return localVarFp.getText(textId, options).then((request) => request(axios, basePath));
+        getText(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<TextWithQuestionsAndStatistics> {
+            return localVarFp.getText(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets all texts.
          * @summary Get Texts
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTexts(page?: number, pageSize?: number, options?: any): AxiosPromise<Array<TextWithStatistics>> {
-            return localVarFp.getTexts(page, pageSize, options).then((request) => request(axios, basePath));
+        getTexts(page?: number, pageSize?: number, accessToken?: AccessToken, options?: any): AxiosPromise<Array<TextWithStatistics>> {
+            return localVarFp.getTexts(page, pageSize, accessToken, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1575,12 +1609,13 @@ export class AdminApi extends BaseAPI {
      * Adds a text to the database.
      * @summary Approve Text
      * @param {TextCreateWithQuestions} textCreateWithQuestions 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public approveText(textCreateWithQuestions: TextCreateWithQuestions, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).approveText(textCreateWithQuestions, options).then((request) => request(this.axios, this.basePath));
+    public approveText(textCreateWithQuestions: TextCreateWithQuestions, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).approveText(textCreateWithQuestions, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1588,24 +1623,26 @@ export class AdminApi extends BaseAPI {
      * @summary Delete Question
      * @param {string} textId 
      * @param {string} questionId 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public deleteQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).deleteQuestion(textId, questionId, options).then((request) => request(this.axios, this.basePath));
+    public deleteQuestion(textId: string, questionId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).deleteQuestion(textId, questionId, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Deletes a text by the given id.
      * @summary Delete Text
      * @param {string} textId 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public deleteText(textId: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).deleteText(textId, options).then((request) => request(this.axios, this.basePath));
+    public deleteText(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).deleteText(textId, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1613,24 +1650,26 @@ export class AdminApi extends BaseAPI {
      * @summary Generate Text
      * @param {string} difficulty 
      * @param {boolean} fiction 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public generateText(difficulty: string, fiction: boolean, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).generateText(difficulty, fiction, options).then((request) => request(this.axios, this.basePath));
+    public generateText(difficulty: string, fiction: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).generateText(difficulty, fiction, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Gets the statistics of the admin.
      * @summary Get Admin Statistics
      * @param {string} gameMode 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getAdminStatistics(gameMode: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getAdminStatistics(gameMode, options).then((request) => request(this.axios, this.basePath));
+    public getAdminStatistics(gameMode: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getAdminStatistics(gameMode, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1638,36 +1677,39 @@ export class AdminApi extends BaseAPI {
      * @summary Get Question
      * @param {string} textId 
      * @param {string} questionId 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getQuestion(textId: string, questionId: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getQuestion(textId, questionId, options).then((request) => request(this.axios, this.basePath));
+    public getQuestion(textId: string, questionId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getQuestion(textId, questionId, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Gets the questions of a text by the given id.
      * @summary Get Questions
      * @param {string} textId 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getQuestions(textId: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getQuestions(textId, options).then((request) => request(this.axios, this.basePath));
+    public getQuestions(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getQuestions(textId, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Gets a text by the given id.
      * @summary Get Text
      * @param {string} textId 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getText(textId: string, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getText(textId, options).then((request) => request(this.axios, this.basePath));
+    public getText(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getText(textId, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1675,12 +1717,13 @@ export class AdminApi extends BaseAPI {
      * @summary Get Texts
      * @param {number} [page] 
      * @param {number} [pageSize] 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminApi
      */
-    public getTexts(page?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
-        return AdminApiFp(this.configuration).getTexts(page, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public getTexts(page?: number, pageSize?: number, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getTexts(page, pageSize, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1902,10 +1945,11 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
          * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
          * @summary Get Next Questions
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextQuestions: async (textId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getNextQuestions: async (textId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'textId' is not null or undefined
             assertParamExists('getNextQuestions', 'textId', textId)
             const localVarPath = `/game/texts/{text_id}/questions/next`
@@ -1935,10 +1979,11 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
          * @summary Get Next Text
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getNextText: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/game/texts/next`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1967,10 +2012,11 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
          * @summary Post Answers
          * @param {string} textId 
          * @param {BodyPostAnswers} bodyPostAnswers 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postAnswers: async (textId: string, bodyPostAnswers: BodyPostAnswers, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        postAnswers: async (textId: string, bodyPostAnswers: BodyPostAnswers, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'textId' is not null or undefined
             assertParamExists('postAnswers', 'textId', textId)
             // verify required parameter 'bodyPostAnswers' is not null or undefined
@@ -1987,10 +2033,6 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            // authentication OAuth2PasswordBearer required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2PasswordBearer", [], configuration)
 
 
     
@@ -2020,11 +2062,12 @@ export const GameApiFp = function(configuration?: Configuration) {
          * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
          * @summary Get Next Questions
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNextQuestions(textId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<QuestionMasked>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextQuestions(textId, options);
+        async getNextQuestions(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<QuestionMasked>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextQuestions(textId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.getNextQuestions']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2032,11 +2075,12 @@ export const GameApiFp = function(configuration?: Configuration) {
         /**
          * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
          * @summary Get Next Text
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNextText(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(options);
+        async getNextText(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.getNextText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2046,11 +2090,12 @@ export const GameApiFp = function(configuration?: Configuration) {
          * @summary Post Answers
          * @param {string} textId 
          * @param {BodyPostAnswers} bodyPostAnswers 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Result>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.postAnswers(textId, bodyPostAnswers, options);
+        async postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Result>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postAnswers(textId, bodyPostAnswers, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.postAnswers']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2069,31 +2114,34 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
          * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
          * @summary Get Next Questions
          * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextQuestions(textId: string, options?: any): AxiosPromise<Array<QuestionMasked>> {
-            return localVarFp.getNextQuestions(textId, options).then((request) => request(axios, basePath));
+        getNextQuestions(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<Array<QuestionMasked>> {
+            return localVarFp.getNextQuestions(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
          * @summary Get Next Text
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText(options?: any): AxiosPromise<Text> {
-            return localVarFp.getNextText(options).then((request) => request(axios, basePath));
+        getNextText(accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
+            return localVarFp.getNextText(accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Accepts the question answers and other statistics. Returns the results to the answers.
          * @summary Post Answers
          * @param {string} textId 
          * @param {BodyPostAnswers} bodyPostAnswers 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, options?: any): AxiosPromise<Array<Result>> {
-            return localVarFp.postAnswers(textId, bodyPostAnswers, options).then((request) => request(axios, basePath));
+        postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, accessToken?: AccessToken, options?: any): AxiosPromise<Array<Result>> {
+            return localVarFp.postAnswers(textId, bodyPostAnswers, accessToken, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2109,23 +2157,25 @@ export class GameApi extends BaseAPI {
      * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
      * @summary Get Next Questions
      * @param {string} textId 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GameApi
      */
-    public getNextQuestions(textId: string, options?: RawAxiosRequestConfig) {
-        return GameApiFp(this.configuration).getNextQuestions(textId, options).then((request) => request(this.axios, this.basePath));
+    public getNextQuestions(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return GameApiFp(this.configuration).getNextQuestions(textId, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
      * @summary Get Next Text
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GameApi
      */
-    public getNextText(options?: RawAxiosRequestConfig) {
-        return GameApiFp(this.configuration).getNextText(options).then((request) => request(this.axios, this.basePath));
+    public getNextText(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return GameApiFp(this.configuration).getNextText(accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2133,12 +2183,13 @@ export class GameApi extends BaseAPI {
      * @summary Post Answers
      * @param {string} textId 
      * @param {BodyPostAnswers} bodyPostAnswers 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GameApi
      */
-    public postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, options?: RawAxiosRequestConfig) {
-        return GameApiFp(this.configuration).postAnswers(textId, bodyPostAnswers, options).then((request) => request(this.axios, this.basePath));
+    public postAnswers(textId: string, bodyPostAnswers: BodyPostAnswers, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return GameApiFp(this.configuration).postAnswers(textId, bodyPostAnswers, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2153,10 +2204,11 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Gets the current user\'s information.
          * @summary Get Current User
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCurrentUser: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getCurrentUser: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/current`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2168,10 +2220,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            // authentication OAuth2PasswordBearer required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2PasswordBearer", [], configuration)
 
 
     
@@ -2187,10 +2235,11 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Gets the history of games played by the user.
          * @summary Get Histories
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getHistories: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getHistories: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/current/results`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2202,10 +2251,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            // authentication OAuth2PasswordBearer required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2PasswordBearer", [], configuration)
 
 
     
@@ -2222,10 +2267,11 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * Gets the history of games played by the user.
          * @summary Get History
          * @param {string} historyId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getHistory: async (historyId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getHistory: async (historyId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'historyId' is not null or undefined
             assertParamExists('getHistory', 'historyId', historyId)
             const localVarPath = `/users/current/results/{history_id}`
@@ -2240,10 +2286,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            // authentication OAuth2PasswordBearer required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2PasswordBearer", [], configuration)
 
 
     
@@ -2261,11 +2303,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @summary Get User Available Texts
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {AccessToken} [accessToken] 
          * @param {BodyGetUserAvailableTexts} [bodyGetUserAvailableTexts] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserAvailableTexts: async (page?: number, pageSize?: number, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserAvailableTexts: async (page?: number, pageSize?: number, accessToken?: AccessToken, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/current/available_texts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2277,10 +2320,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            // authentication OAuth2PasswordBearer required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2PasswordBearer", [], configuration)
 
             if (page !== undefined) {
                 localVarQueryParameter['page'] = page;
@@ -2307,10 +2346,11 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserStatistics: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/current/statistics`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2322,10 +2362,6 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            // authentication OAuth2PasswordBearer required
-            // oauth required
-            await setOAuthToObject(localVarHeaderParameter, "OAuth2PasswordBearer", [], configuration)
 
 
     
@@ -2342,10 +2378,11 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * Logs in a user. Returns access token and refresh token.
          * @summary Login User
          * @param {BodyLoginUser} bodyLoginUser 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        loginUser: async (bodyLoginUser: BodyLoginUser, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        loginUser: async (bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'bodyLoginUser' is not null or undefined
             assertParamExists('loginUser', 'bodyLoginUser', bodyLoginUser)
             const localVarPath = `/users/login`;
@@ -2378,10 +2415,11 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * Registers a new user.
          * @summary Register User
          * @param {BodyRegisterUser} bodyRegisterUser 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        registerUser: async (bodyRegisterUser: BodyRegisterUser, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        registerUser: async (bodyRegisterUser: BodyRegisterUser, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'bodyRegisterUser' is not null or undefined
             assertParamExists('registerUser', 'bodyRegisterUser', bodyRegisterUser)
             const localVarPath = `/users/register`;
@@ -2423,11 +2461,12 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Gets the current user\'s information.
          * @summary Get Current User
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getCurrentUser(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrentUser(options);
+        async getCurrentUser(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<User>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrentUser(accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getCurrentUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2435,11 +2474,12 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Gets the history of games played by the user.
          * @summary Get Histories
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getHistories(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<History>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getHistories(options);
+        async getHistories(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<History>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getHistories(accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getHistories']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2448,11 +2488,12 @@ export const UserApiFp = function(configuration?: Configuration) {
          * Gets the history of games played by the user.
          * @summary Get History
          * @param {string} historyId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getHistory(historyId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<History>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getHistory(historyId, options);
+        async getHistory(historyId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<History>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getHistory(historyId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getHistory']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2462,12 +2503,13 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @summary Get User Available Texts
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {AccessToken} [accessToken] 
          * @param {BodyGetUserAvailableTexts} [bodyGetUserAvailableTexts] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserAvailableTexts(page?: number, pageSize?: number, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserAvailableTexts>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserAvailableTexts(page, pageSize, bodyGetUserAvailableTexts, options);
+        async getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserAvailableTexts>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserAvailableTexts(page, pageSize, accessToken, bodyGetUserAvailableTexts, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserAvailableTexts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2475,11 +2517,12 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserStatistics(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics(options);
+        async getUserStatistics(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics(accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserStatistics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2488,11 +2531,12 @@ export const UserApiFp = function(configuration?: Configuration) {
          * Logs in a user. Returns access token and refresh token.
          * @summary Login User
          * @param {BodyLoginUser} bodyLoginUser 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async loginUser(bodyLoginUser: BodyLoginUser, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.loginUser(bodyLoginUser, options);
+        async loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.loginUser(bodyLoginUser, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.loginUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2501,11 +2545,12 @@ export const UserApiFp = function(configuration?: Configuration) {
          * Registers a new user.
          * @summary Register User
          * @param {BodyRegisterUser} bodyRegisterUser 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async registerUser(bodyRegisterUser: BodyRegisterUser, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.registerUser(bodyRegisterUser, options);
+        async registerUser(bodyRegisterUser: BodyRegisterUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.registerUser(bodyRegisterUser, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.registerUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2523,71 +2568,78 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Gets the current user\'s information.
          * @summary Get Current User
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCurrentUser(options?: any): AxiosPromise<User> {
-            return localVarFp.getCurrentUser(options).then((request) => request(axios, basePath));
+        getCurrentUser(accessToken?: AccessToken, options?: any): AxiosPromise<User> {
+            return localVarFp.getCurrentUser(accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the history of games played by the user.
          * @summary Get Histories
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getHistories(options?: any): AxiosPromise<Array<History>> {
-            return localVarFp.getHistories(options).then((request) => request(axios, basePath));
+        getHistories(accessToken?: AccessToken, options?: any): AxiosPromise<Array<History>> {
+            return localVarFp.getHistories(accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the history of games played by the user.
          * @summary Get History
          * @param {string} historyId 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getHistory(historyId: string, options?: any): AxiosPromise<History> {
-            return localVarFp.getHistory(historyId, options).then((request) => request(axios, basePath));
+        getHistory(historyId: string, accessToken?: AccessToken, options?: any): AxiosPromise<History> {
+            return localVarFp.getHistory(historyId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the texts not read by the user. Returns the texts paginated and sorted/filtered by the given parameters.
          * @summary Get User Available Texts
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {AccessToken} [accessToken] 
          * @param {BodyGetUserAvailableTexts} [bodyGetUserAvailableTexts] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserAvailableTexts(page?: number, pageSize?: number, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options?: any): AxiosPromise<UserAvailableTexts> {
-            return localVarFp.getUserAvailableTexts(page, pageSize, bodyGetUserAvailableTexts, options).then((request) => request(axios, basePath));
+        getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options?: any): AxiosPromise<UserAvailableTexts> {
+            return localVarFp.getUserAvailableTexts(page, pageSize, accessToken, bodyGetUserAvailableTexts, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics(options?: any): AxiosPromise<UserStatistics> {
-            return localVarFp.getUserStatistics(options).then((request) => request(axios, basePath));
+        getUserStatistics(accessToken?: AccessToken, options?: any): AxiosPromise<UserStatistics> {
+            return localVarFp.getUserStatistics(accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Logs in a user. Returns access token and refresh token.
          * @summary Login User
          * @param {BodyLoginUser} bodyLoginUser 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        loginUser(bodyLoginUser: BodyLoginUser, options?: any): AxiosPromise<any> {
-            return localVarFp.loginUser(bodyLoginUser, options).then((request) => request(axios, basePath));
+        loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
+            return localVarFp.loginUser(bodyLoginUser, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Registers a new user.
          * @summary Register User
          * @param {BodyRegisterUser} bodyRegisterUser 
+         * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        registerUser(bodyRegisterUser: BodyRegisterUser, options?: any): AxiosPromise<any> {
-            return localVarFp.registerUser(bodyRegisterUser, options).then((request) => request(axios, basePath));
+        registerUser(bodyRegisterUser: BodyRegisterUser, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
+            return localVarFp.registerUser(bodyRegisterUser, accessToken, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -2602,35 +2654,38 @@ export class UserApi extends BaseAPI {
     /**
      * Gets the current user\'s information.
      * @summary Get Current User
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getCurrentUser(options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getCurrentUser(options).then((request) => request(this.axios, this.basePath));
+    public getCurrentUser(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getCurrentUser(accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Gets the history of games played by the user.
      * @summary Get Histories
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getHistories(options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getHistories(options).then((request) => request(this.axios, this.basePath));
+    public getHistories(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getHistories(accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Gets the history of games played by the user.
      * @summary Get History
      * @param {string} historyId 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getHistory(historyId: string, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getHistory(historyId, options).then((request) => request(this.axios, this.basePath));
+    public getHistory(historyId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getHistory(historyId, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2638,48 +2693,52 @@ export class UserApi extends BaseAPI {
      * @summary Get User Available Texts
      * @param {number} [page] 
      * @param {number} [pageSize] 
+     * @param {AccessToken} [accessToken] 
      * @param {BodyGetUserAvailableTexts} [bodyGetUserAvailableTexts] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserAvailableTexts(page?: number, pageSize?: number, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getUserAvailableTexts(page, pageSize, bodyGetUserAvailableTexts, options).then((request) => request(this.axios, this.basePath));
+    public getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUserAvailableTexts(page, pageSize, accessToken, bodyGetUserAvailableTexts, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Gets the statistics based on the user\'s game history.
      * @summary Get User Statistics
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserStatistics(options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getUserStatistics(options).then((request) => request(this.axios, this.basePath));
+    public getUserStatistics(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUserStatistics(accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Logs in a user. Returns access token and refresh token.
      * @summary Login User
      * @param {BodyLoginUser} bodyLoginUser 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public loginUser(bodyLoginUser: BodyLoginUser, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).loginUser(bodyLoginUser, options).then((request) => request(this.axios, this.basePath));
+    public loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).loginUser(bodyLoginUser, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Registers a new user.
      * @summary Register User
      * @param {BodyRegisterUser} bodyRegisterUser 
+     * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public registerUser(bodyRegisterUser: BodyRegisterUser, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).registerUser(bodyRegisterUser, options).then((request) => request(this.axios, this.basePath));
+    public registerUser(bodyRegisterUser: BodyRegisterUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).registerUser(bodyRegisterUser, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
