@@ -13,11 +13,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { ADAPTIVE_MODE } from "../../common/constants";
 
 const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
   notPlayAgain,
 }) => {
-  const { averageWpm, intervalWpms, quizContent, quizAnswers } =
+  const { averageWpm, intervalWpms, mode, quizContent, quizResults } =
     useGameContext();
 
   const wpmData = intervalWpms.map((wpm, index) => ({ index, wpm }));
@@ -133,23 +134,29 @@ const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
               </Box>
             </Box>
           </Box>
-          <Box
-            sx={{ display: "flex", justifyContent: "center", marginTop: "5vh" }}
-          >
-            <ResponsiveContainer width="70%" height={300}>
-              <LineChart data={wpmData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="index" type="number" />
-                <YAxis />
-                <Line
-                  type="monotone"
-                  dataKey="wpm"
-                  stroke="#E2B714"
-                  activeDot={{ r: 8 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </Box>
+          {mode === ADAPTIVE_MODE && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "5vh",
+              }}
+            >
+              <ResponsiveContainer width="70%" height={300}>
+                <LineChart data={wpmData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="index" type="number" />
+                  <YAxis />
+                  <Line
+                    type="monotone"
+                    dataKey="wpm"
+                    stroke="#E2B714"
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </Box>
+          )}
           <Box
             sx={{
               textAlign: "center",
@@ -168,8 +175,8 @@ const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
               questionNumber={index + 1}
               question={question.content}
               questions={question.options}
-              correctAnswer={0}
-              userAnswer={quizAnswers[index] ?? 0}
+              correctAnswer={quizResults[index].correct_option}
+              userAnswer={quizResults[index].selected_option}
             />
           ))}
           {!notPlayAgain ? <ResultsBottom /> : null}
