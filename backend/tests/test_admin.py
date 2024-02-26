@@ -239,7 +239,7 @@ class TestGenerateText:
             _ = args, kwargs
             return MockChatCompletion()
 
-        monkeypatch.setattr(openai.resources.Completions.create, "home", mock_gpt)
+        monkeypatch.setattr(openai.resources.Completions, "create", mock_gpt)
         response = admin_client.get("/admin/generate-text")
         assert response.status_code == 200
         data = response.json()
@@ -265,6 +265,6 @@ class TestGenerateText:
             _ = args, kwargs
             return None
 
-        monkeypatch.setattr(openai.resources.Completions.create, "home", mock_gpt)
+        monkeypatch.setattr(openai.resources.Completions, "create", mock_gpt)
         response = admin_client.get("/admin/generate-text")
         assert response.status_code == 500
