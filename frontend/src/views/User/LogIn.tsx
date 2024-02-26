@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BodyLoginUser } from "../../api";
 import Header from "../../components/Header/Header";
 import { useLoginUser } from "../../hooks/users";
@@ -108,6 +108,21 @@ const Login: React.FC = () => {
             >
               log in.
             </Button>
+            <Link
+              to="/signup"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <Box
+                sx={{
+                  color: "#fff",
+                  fontSize: "0.7vw",
+                  fontFamily: "JetBrains Mono, monospace",
+                  fontWeight: "bolder",
+                }}
+              >
+                New to Speed Reader?
+              </Box>
+            </Link>
           </Box>
         </Box>
       </Box>

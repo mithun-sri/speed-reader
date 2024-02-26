@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { GameDifficulty, GameMode } from "../common/constants";
 import { StandardView } from "../views/StandardMode/StandardMode";
+import { QuestionMasked } from "../api";
 
 interface GameContextType {
   mode: GameMode | null;
@@ -34,6 +35,8 @@ interface GameContextType {
   quizResults: any;
   setQuizResults: (results: any) => void;
   modifyQuizAnswer: (index: number, answer: number | null) => void;
+  quizContent: QuestionMasked[] | null;
+  setQuizContent: (questionMasked: QuestionMasked[]) => void;
 }
 
 const GameContext = createContext<GameContextType>({
@@ -79,6 +82,10 @@ const GameContext = createContext<GameContextType>({
   quizResults: [],
   setQuizResults: () => {},
   modifyQuizAnswer: () => {},
+
+  // Question Content and Options
+  quizContent: null,
+  setQuizContent: () => {},
 });
 
 export const useGameContext = () => {
@@ -110,6 +117,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [textId, setTextId] = useState<string>("");
   const [quizAnswers, setQuizAnswers] = useState<(number | null)[]>([]);
   const [quizResults, setQuizResults] = useState<any>([]);
+  const [quizContent, setQuizContent] = useState<QuestionMasked[] | null>([]);
 
   const initialiseWebGazer = () => {
     if (
@@ -229,6 +237,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         quizResults,
         setQuizResults,
         modifyQuizAnswer,
+        quizContent,
+        setQuizContent,
       }}
     >
       {children}

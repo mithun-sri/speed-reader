@@ -22,6 +22,7 @@ const QuizView = () => {
     setQuizAnswers,
     setQuizResults,
     modifyQuizAnswer,
+    setQuizContent,
   } = useGameContext();
   const { data: questions } = useNextQuestions(textId);
   const nextQuestion = quizAnswers.indexOf(null);
@@ -29,6 +30,7 @@ const QuizView = () => {
   useEffect(() => {
     if (questions) {
       setQuizAnswers(new Array(questions.length).fill(null));
+      setQuizContent(questions);
     }
   }, [questions]);
 

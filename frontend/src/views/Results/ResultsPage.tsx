@@ -4,9 +4,24 @@ import ResultsBottom from "../../components/Results/ResultsBottom";
 import Score from "../../components/Results/Score";
 import Header from "../../components/Header/Header";
 import { useEffect, useState } from "react";
-import UserData from "../../components/User/UserData";
+import { useGameContext } from "../../context/GameContext";
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts";
 
-const ResultsPage: React.FC<{ playAgain?: boolean }> = ({ playAgain }) => {
+const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
+  notPlayAgain,
+}) => {
+  const { averageWpm, intervalWpms, quizContent, quizAnswers } =
+    useGameContext();
+
+  const wpmData = intervalWpms.map((wpm, index) => ({ index, wpm }));
+
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 35;
@@ -28,8 +43,6 @@ const ResultsPage: React.FC<{ playAgain?: boolean }> = ({ playAgain }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  // Make request to backend
 
   return (
     <>
@@ -61,17 +74,82 @@ const ResultsPage: React.FC<{ playAgain?: boolean }> = ({ playAgain }) => {
         >
           <Box
             sx={{
-              margin: "0px 10%",
+              margin: "3vh 10%",
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "space-around",
               flexDirection: "row",
               alignItems: "center",
             }}
           >
             <Score score={65} />
-            <UserData title="average wpm." value="20" size={fontSize} />
+            <Box
+              sx={{
+                width: "20vw",
+                fontFamily: "JetBrains Mono, monospace",
+                fontWeight: "bolder",
+                color: "#fff",
+              }}
+            >
+              <Box
+                sx={{
+                  fontSize: "3vw",
+                }}
+              >
+                average wpm.
+              </Box>
+              <Box
+                sx={{
+                  fontSize: "4vw",
+                  color: "#E2B714",
+                  marginBottom: "2vh",
+                  paddingLeft: "10vw",
+                }}
+              >
+                {averageWpm}
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  fontSize: "2vw",
+                  marginBottom: "1vh",
+                }}
+              >
+                <Box>min.</Box>
+                <Box>max.</Box>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  fontSize: "2.3vw",
+                  color: "#E2B714",
+                }}
+              >
+                <Box>{Math.min(...intervalWpms)}</Box>
+                <Box>{Math.max(...intervalWpms)}</Box>
+              </Box>
+            </Box>
           </Box>
-          {/* iterate over response from server and render QuestionAnswer */}
+          <Box
+            sx={{ display: "flex", justifyContent: "center", marginTop: "5vh" }}
+          >
+            <ResponsiveContainer width="70%" height={300}>
+              <LineChart data={wpmData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="index" type="number" />
+                <YAxis />
+                <Line
+                  type="monotone"
+                  dataKey="wpm"
+                  stroke="#E2B714"
+                  activeDot={{ r: 8 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Box>
           <Box
             sx={{
               textAlign: "center",
@@ -79,30 +157,22 @@ const ResultsPage: React.FC<{ playAgain?: boolean }> = ({ playAgain }) => {
               fontWeight: "bolder",
               fontFamily: "JetBrains Mono, monospace",
               color: "#fff",
-              margin: "20px",
+              marginTop: "5vh",
             }}
           >
             Questions
           </Box>
-          <QuestionAnswer
-            questionNumber={1}
-            question={"Why did the chicken cross the road?"}
-            questions={["he was hungry", "he was not hungry", "he was hungry"]}
-            correctAnswer={0}
-            userAnswer={2}
-          />
-          <QuestionAnswer
-            questionNumber={2}
-            question={"Why did the chicken not cross the road?"}
-            questions={[
-              "he was hungry",
-              "he was very very not hungry",
-              "he was hungry",
-            ]}
-            correctAnswer={1}
-            userAnswer={1}
-          />
-          {playAgain ? <ResultsBottom /> : null}
+          {quizContent?.map((question, index) => (
+            <QuestionAnswer
+              key={question.id}
+              questionNumber={index + 1}
+              question={question.content}
+              questions={question.options}
+              correctAnswer={0}
+              userAnswer={quizAnswers[index] ?? 0}
+            />
+          ))}
+          {!notPlayAgain ? <ResultsBottom /> : null}
         </Box>
       </Box>
     </>
