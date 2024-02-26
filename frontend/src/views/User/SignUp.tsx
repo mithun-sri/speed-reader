@@ -1,9 +1,10 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { BodyRegisterUser } from "../../api";
 import Header from "../../components/Header/Header";
+import StyledTextField from "../../components/Textbox/StyledTextField";
 import { useRegisterUser } from "../../hooks/users";
 
 const SignUp: React.FC = () => {
@@ -74,7 +75,7 @@ const SignUp: React.FC = () => {
               gap: 5,
             }}
           >
-            <TextField
+            <StyledTextField
               fullWidth
               type="text"
               {...register("username", {
@@ -83,7 +84,7 @@ const SignUp: React.FC = () => {
               placeholder="username"
             />
 
-            <TextField
+            <StyledTextField
               fullWidth
               type="email"
               {...register("email", {
@@ -93,7 +94,7 @@ const SignUp: React.FC = () => {
               placeholder="email"
             />
 
-            <TextField
+            <StyledTextField
               fullWidth
               type="password"
               {...register("password", {
@@ -118,6 +119,25 @@ const SignUp: React.FC = () => {
             >
               Sign Up.
             </Button>
+            <Link
+              to="/login"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <Box
+                sx={{
+                  color: "#fff",
+                  fontSize: fontSize * 0.6,
+                  fontFamily: "JetBrains Mono, monospace",
+                  fontWeight: "bolder",
+                  textDecoration: "underline",
+                  "&:hover": {
+                    color: "#E2B714",
+                  },
+                }}
+              >
+                Back to log in.
+              </Box>
+            </Link>
           </Box>
         </Box>
       </Box>
