@@ -28,6 +28,7 @@ services:
     environment:
       - POSTGRES_URL=postgresql://postgres:postgres@postgres:5432/default
       - MONGO_URL=mongodb://mongo:27017/default
+      - OPENAPI_KEY=${OPENAPI_KEY}
     volumes:
       - ./backend/src:/app/src
       - ./backend/tests:/app/tests
@@ -43,6 +44,7 @@ services:
     environment:
       - POSTGRES_URL=postgresql://postgres:postgres@postgres-test:5432/default
       - MONGO_URL=mongodb://mongo-test:27017/default
+      - OPENAPI_KEY=${OPENAPI_KEY}
     ports:
       - 8001:8000
     depends_on:

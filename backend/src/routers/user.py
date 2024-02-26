@@ -1,24 +1,34 @@
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query, Response
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Response, Security
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
 from ..database import get_session
 from ..logger import LoggerRoute
-from ..services.auth import get_current_user, set_response_tokens
+from ..services.auth import (
+    get_current_user,
+    set_response_tokens,
+    verify_auth,
+    verify_guest,
+)
 from ..services.exceptions import HistoryNotFoundException, InvalidCredentialsException
 from ..utils.auth import create_access_token, create_refresh_token
 from ..utils.crypt import get_password_hash, verify_password
 
-router = APIRouter(prefix="/users", tags=["user"], route_class=LoggerRoute)
+router = APIRouter(
+    prefix="/users",
+    tags=["user"],
+    route_class=LoggerRoute,
+)
 
 
 @router.get(
     "/current",
-    name="get_current_user",  # TODO: Refactor
+    name="get_current_user",  # TODO: Refactor naming
     response_model=schemas.User,
+    dependencies=[Security(verify_auth)],  # TODO: Extract to router
 )
 async def get_current_user_(
     user: Annotated[models.User, Depends(get_current_user)],
@@ -32,6 +42,7 @@ async def get_current_user_(
 @router.get(
     "/current/statistics",
     response_model=schemas.UserStatistics,
+    dependencies=[Security(verify_auth)],
 )
 async def get_user_statistics(
     user: Annotated[models.User, Depends(get_current_user)],
@@ -70,6 +81,7 @@ async def get_user_statistics(
 @router.get(
     "/current/available_texts",
     response_model=schemas.UserAvailableTexts,
+    dependencies=[Security(verify_auth)],
 )
 async def get_user_available_texts(
     *,
@@ -125,6 +137,7 @@ async def get_user_available_texts(
 @router.get(
     "/current/results",
     response_model=list[schemas.History],
+    dependencies=[Security(verify_auth)],
 )
 async def get_histories(
     user: Annotated[models.User, Depends(get_current_user)],
@@ -161,6 +174,7 @@ async def get_histories(
 @router.get(
     "/current/results/{history_id}",
     response_model=schemas.History,
+    dependencies=[Security(verify_auth)],
 )
 async def get_history(
     history_id: str,
@@ -193,7 +207,10 @@ async def get_history(
     )
 
 
-@router.post("/register")
+@router.post(
+    "/register",
+    dependencies=[Security(verify_guest)],
+)
 async def register_user(
     # TODO:
     # OAuth2 password flow recommends passing credentials
@@ -222,7 +239,10 @@ async def register_user(
     session.commit()
 
 
-@router.post("/login")
+@router.post(
+    "/login",
+    dependencies=[Security(verify_guest)],
+)
 async def login_user(
     # TODO:
     # OAuth2 password flow recommends passing credentials

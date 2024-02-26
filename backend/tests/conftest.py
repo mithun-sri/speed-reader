@@ -11,7 +11,13 @@ from src.database import (
 )
 from src.factories.user import UserFactory
 from src.main import app
-from src.services.auth import get_current_user
+from src.services.auth import (
+    get_current_user,
+    verify_admin,
+    verify_auth,
+    verify_guest,
+    verify_user,
+)
 
 
 # Set auto-use to True to make sure Postgres tables are recreated
@@ -35,6 +41,8 @@ def mongodb_fixture():
 
 @fixture(name="app", scope="function")
 def app_fixture(session: Session):
+    app.dependency_overrides[verify_auth] = lambda: None
+    app.dependency_overrides[verify_guest] = lambda: None
     app.dependency_overrides[get_session] = lambda: session
 
     yield app
@@ -46,6 +54,8 @@ def app_fixture(session: Session):
 # pylint: disable=redefined-outer-name
 def user_client_fixture(app: FastAPI):
     user = UserFactory.build(role="user")
+
+    app.dependency_overrides[verify_user] = lambda: None
     app.dependency_overrides[get_current_user] = lambda: user
 
     yield TestClient(app, base_url="http://localhost:8000/api/v1")
@@ -55,6 +65,8 @@ def user_client_fixture(app: FastAPI):
 # pylint: disable=redefined-outer-name
 def admin_client_fixture(app: FastAPI):
     admin = UserFactory.build(role="admin")
+
+    app.dependency_overrides[verify_admin] = lambda: None
     app.dependency_overrides[get_current_user] = lambda: admin
 
     yield TestClient(app, base_url="http://localhost:8000/api/v1")

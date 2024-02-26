@@ -15,9 +15,16 @@ from ..services.exceptions import (
 )
 from ..utils.auth import ALGORITHM, REFRESH_TOKEN_SECRET_KEY, create_access_token
 
-router = APIRouter(prefix="/auth", tags=["auth"], route_class=LoggerRoute)
+router = APIRouter(
+    prefix="/auth",
+    tags=["auth"],
+    route_class=LoggerRoute,
+)
 
 
+# NOTE:
+# Do not add `verify_auth` to the dependencies otherwise it will fail
+# if access token is invalid regardless of whether refresh token is still valid.
 @router.post("/token")
 async def get_token(
     *,

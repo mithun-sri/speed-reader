@@ -71,6 +71,7 @@ class History(Document):
     # Can only be True if text is non-fiction.
     summary = BooleanField(required=True)
     average_wpm = IntField(required=True)
-    interval_wpms = ListField(IntField(), required=True)
+    # TODO: Temporarily set to `required=False` to accept empty list.
+    interval_wpms = ListField(IntField(), required=False)
     score = IntField(required=True)
     results = ListField(EmbeddedDocumentField(Result), required=True)

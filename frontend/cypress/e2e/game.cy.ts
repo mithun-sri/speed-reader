@@ -1,5 +1,15 @@
 beforeEach(() => {
   cy.task("seedDatabase");
+  cy.registerUser({
+    email: "hpotter@example.com",
+    username: "hpotter",
+    password: "vingardiumleviosa",
+  });
+  cy.loginUser({
+    username: "hpotter",
+    password: "vingardiumleviosa",
+  });
+  cy.makeCookiesInsecure();
 });
 
 describe("game spec", () => {
@@ -29,5 +39,8 @@ describe("game spec", () => {
 
     // Submit the answers and statistics.
     cy.contains("Submit").click();
+
+    // Check the results.
+    cy.contains("Results");
   });
 });
