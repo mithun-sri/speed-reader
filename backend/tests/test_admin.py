@@ -1,5 +1,8 @@
+import json
 import random
+from typing import List
 
+import openai
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
@@ -194,3 +197,74 @@ class TestDeleteQuestion:
 
         assert session.get(models.Question, self.question.id) is None
         assert session.get(models.Text, self.text.id) is not None
+
+
+class MockChatCompletionMessage:
+    content: str = json.dumps(
+        {
+            "title": "test title",
+            "extract": "test extract",
+            "author": "test author",
+            "gutenberg_link": "test link",
+            "questions": [
+                {
+                    "question": "test question",
+                    "options": [
+                        "test option 0",
+                        "test option 1",
+                        "test option 2",
+                        "test option 3",
+                    ],
+                    "correct_option": "test option 2",
+                }
+            ],
+            "summarised": "test summary",
+        }
+    )
+
+
+class MockChoice:
+    message: MockChatCompletionMessage = MockChatCompletionMessage()
+
+
+class MockChatCompletion:
+    choices: List[MockChoice] = [MockChoice()]
+
+
+class TestGenerateText:
+
+    def test_generate_text(self, monkeypatch, admin_client: TestClient):
+
+        def mock_gpt(*args, **kwargs):
+            _ = args, kwargs
+            return MockChatCompletion()
+
+        monkeypatch.setattr(openai.OpenAI.chat.completions.create, "home", mock_gpt)
+        response = admin_client.get("/admin/generate-text")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["title"] == "test title"
+        assert data["extract"] == "test extract"
+        assert data["author"] == "test author"
+        assert data["gutenberg_link"] == "test link"
+        assert data["summarised"] == "test summary"
+        assert len(data["questions"]) == 1
+        data_question = data["questions"]
+        assert data_question["question"] == "test question"
+        assert data_question["options"] == [
+            "test option 0",
+            "test option 1",
+            "test option 2",
+            "test option 3",
+        ]
+        assert data_question["correct_option"] == "test option 2"
+
+    def test_bad_response(self, monkeypatch, admin_client: TestClient):
+
+        def mock_gpt(*args, **kwargs):
+            _ = args, kwargs
+            return None
+
+        monkeypatch.setattr(openai.OpenAI.chat.completions.create, "home", mock_gpt)
+        response = admin_client.get("/admin/generate-text")
+        assert response.status_code == 500
