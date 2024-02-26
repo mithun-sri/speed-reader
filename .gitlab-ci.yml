@@ -131,7 +131,9 @@ unit_test_backend:
 e2e_test:
   image: docker:24.0.5
   stage: e2e_test
-  only: [master]
+  only:
+    - master
+    - tags
   services:
     - docker:24.0.5-dind
   before_script:
@@ -144,7 +146,8 @@ deploy_staging_frontend:
   # Need to make sure backend app is deployed
   # otherwise network alias speed-reader-backend.web cannot be resolved.
   needs: [deploy_staging_backend]
-  only: [master]
+  only:
+    - master
   variables:
     BRANCH: master
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-frontend
@@ -152,7 +155,8 @@ deploy_staging_frontend:
 
 deploy_staging_backend:
   extends: .deploy
-  only: [master]
+  only:
+    - master
   variables:
     BRANCH: master
     GIT_REMOTE_URL: $STAGING_URL/speed-reader-backend
@@ -161,7 +165,8 @@ deploy_staging_backend:
 deploy_prod_frontend:
   extends: .deploy
   needs: [deploy_prod_backend]
-  only: [tags]
+  only:
+    - tags
   except: [branches]
   variables:
     BRANCH: master
@@ -170,7 +175,8 @@ deploy_prod_frontend:
 
 deploy_prod_backend:
   extends: .deploy
-  only: [tags]
+  only:
+    - tags
   except: [branches]
   variables:
     BRANCH: master
