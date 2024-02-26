@@ -57,3 +57,16 @@ export function useLoginUser() {
     },
   });
 }
+
+export function useLogout() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => userApi.logoutUser(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users", "current"],
+      });
+    },
+  });
+}
