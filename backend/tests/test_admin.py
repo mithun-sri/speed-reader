@@ -245,6 +245,9 @@ class MockChat:
 class MockOpenAI:
     chat = MockChat()
 
+    def __init__(self, *args, **kwargs):
+        _ = args, kwargs
+
 
 class TestGenerateText:
 
