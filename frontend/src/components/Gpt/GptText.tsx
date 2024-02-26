@@ -57,7 +57,7 @@ const GptText: React.FC<{
         <StyledTextField
           multiline
           rows={3}
-          defaultValue={generatedText.content} // to change to textWithQuestions.summarised
+          defaultValue={generatedText.summary}
           {...register("summarised")}
         />
       </Box>

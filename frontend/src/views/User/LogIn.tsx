@@ -1,9 +1,10 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { BodyLoginUser } from "../../api";
 import Header from "../../components/Header/Header";
+import StyledTextField from "../../components/Textbox/StyledTextField";
 import { useLoginUser } from "../../hooks/users";
 
 const Login: React.FC = () => {
@@ -74,7 +75,7 @@ const Login: React.FC = () => {
               gap: 5,
             }}
           >
-            <TextField
+            <StyledTextField
               fullWidth
               type="text"
               {...register("username", {
@@ -83,7 +84,7 @@ const Login: React.FC = () => {
               placeholder="username"
             />
 
-            <TextField
+            <StyledTextField
               fullWidth
               type="password"
               {...register("password", {
@@ -115,9 +116,13 @@ const Login: React.FC = () => {
               <Box
                 sx={{
                   color: "#fff",
-                  fontSize: "0.7vw",
+                  fontSize: fontSize * 0.6,
                   fontFamily: "JetBrains Mono, monospace",
                   fontWeight: "bolder",
+                  textDecoration: "underline",
+                  "&:hover": {
+                    color: "#E2B714",
+                  },
                 }}
               >
                 New to Speed Reader?
