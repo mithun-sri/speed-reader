@@ -14,7 +14,52 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+/* eslint-disable */
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Custom command to select DOM element by data-cy attribute.
+       * @example cy.dataCy('greeting')
+       */
+      registerUser(data: {
+        email: string;
+        username: string;
+        password: string;
+      }): Chainable<undefined>;
+
+      loginUser(data: {
+        username: string;
+        password: string;
+      }): Chainable<undefined>;
+    }
+  }
+}
+/* eslint-enable */
+
+Cypress.Commands.add("registerUser", (data) => {
+  cy.request({
+    method: "POST",
+    url: "/api/v1/users/register",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: data,
+  });
+});
+
+Cypress.Commands.add("loginUser", (data) => {
+  cy.request({
+    method: "POST",
+    url: "/api/v1/users/login",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: data,
+  });
+});
