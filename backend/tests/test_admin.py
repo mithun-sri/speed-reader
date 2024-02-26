@@ -259,17 +259,20 @@ class TestGenerateText:
         assert response.status_code == 200
         data = response.json()
         assert data["title"] == "test title"
-        assert data["extract"] == "test extract"
-        assert data["author"] == "test author"
-        assert data["gutenberg_link"] == "test link"
-        assert data["summarised"] == "test summary"
+        assert data["content"] == "test extract"
+        assert data["difficulty"] == "easy"
+        assert data["fiction"] == False
+        assert data["word_count"] == 2
+
         assert len(data["questions"]) == 1
         data_question = data["questions"]
-        assert data_question["question"] == "test question"
+        assert data_question["content"] == "test question"
         assert data_question["options"] == [
             "test option 0",
             "test option 1",
             "test option 2",
             "test option 3",
         ]
-        assert data_question["correct_option"] == "test option 2"
+        assert data_question["correct_option"] == 2
+        assert data["summary"] == "test summary"
+        assert data["source"] == "test link"
