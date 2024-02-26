@@ -261,11 +261,11 @@ class TestGenerateText:
         assert data["title"] == "test title"
         assert data["content"] == "test extract"
         assert data["difficulty"] == "easy"
-        assert data["fiction"] == False
+        assert data["fiction"] is False
         assert data["word_count"] == 2
 
         assert len(data["questions"]) == 1
-        data_question = data["questions"]
+        data_question = data["questions"][0]
         assert data_question["content"] == "test question"
         assert data_question["options"] == [
             "test option 0",
