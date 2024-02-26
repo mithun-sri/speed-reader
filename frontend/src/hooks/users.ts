@@ -3,6 +3,7 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { BodyLoginUser, BodyRegisterUser, UserApi } from "../api";
 
 const userApi = new UserApi();
@@ -14,9 +15,11 @@ export function useAuth() {
       userApi
         .getCurrentUser()
         .then((res) => res.data)
-        .catch((error) => {
-          if (error.status === 401 || error.status === 404)
+        .catch((error: AxiosError) => {
+          console.log("error");
+          if (error.response && [401, 404].includes(error.response?.status)) {
             return Promise.resolve(null);
+          }
           return Promise.reject(error);
         }),
     // Checking login status every 10 minutes.
