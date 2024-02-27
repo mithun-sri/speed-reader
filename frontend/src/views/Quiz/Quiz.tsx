@@ -171,6 +171,7 @@ const QuizView = () => {
               fontFamily: "JetBrains Mono, monospace",
               color: "#FFFFFF",
             }}
+            onClick={moveToResults}
           >
             <Box
               sx={{
@@ -182,7 +183,6 @@ const QuizView = () => {
                 fontSize: 35,
                 cursor: "pointer",
               }}
-              onClick={moveToResults}
             >
               Submit
             </Box>

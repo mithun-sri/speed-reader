@@ -76,7 +76,7 @@ const StandardModeGameView: React.FC<{
       >
         {showGameScreen ? (
           <StandardModeGameComponent
-            wpm={wpm || 400} // Handle undefined wpm
+            wpm={wpm || 200} // Handle undefined wpm
             text={text.content}
             view={mode || StandardView.Word} // Handle undefined mode
           />
