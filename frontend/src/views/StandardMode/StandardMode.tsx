@@ -419,13 +419,13 @@ const wpmAdjuster = (
 ): void => {
   if (event.code === "ArrowUp") {
     console.log("ArrowUp");
-    const new_wpm = curr_wpm + 5;
+    const new_wpm = curr_wpm + 10;
     setWpm(new_wpm);
     console.log(new_wpm);
   }
   if (event.code === "ArrowDown") {
     console.log("ArrowDown");
-    const new_wpm = Math.max(curr_wpm - 5, 1);
+    const new_wpm = Math.max(curr_wpm - 10, 1);
     setWpm(new_wpm);
     console.log(new_wpm);
   }
