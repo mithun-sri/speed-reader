@@ -12,12 +12,14 @@ import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 import DifficultyBox from "../Difficulty/DifficultyBox";
+import { getTexts } from "../../hooks/admin";
+import { TextWithStatistics } from "../../api";
 
 interface Data {
   id: number;
   text_id: string;
   text_title: string;
-  mode: string;
+  fiction: string;
   difficulty: string;
   avg: number;
   min: number;
@@ -25,49 +27,22 @@ interface Data {
   accuracy: number;
 }
 
-function createData(
-  id: number,
-  text_id: string,
-  text_title: string,
-  mode: string,
-  difficulty: string,
-  avg: number,
-  min: number,
-  max: number,
-  accuracy: number,
-): Data {
-  return {
-    id,
-    text_id,
-    text_title,
-    mode,
-    difficulty,
-    avg,
-    min,
-    max,
-    accuracy,
-  };
-}
 
-const rows = [
-  createData(
-    1,
-    "1",
-    "From Homeless To Harvard",
-    "standard",
-    "easy",
-    85,
-    70,
-    95,
-    75,
-  ),
-  createData(2, "2", "Val Helsing", "standard", "med", 78, 65, 85, 82),
-  createData(3, "3", "Gone With The Wind", "standard", "hard", 90, 80, 95, 68),
-  createData(4, "4", "Val Helsing 2", "standard", "med", 78, 65, 85, 82),
-  createData(5, "5", "Val Helsing 3", "standard", "med", 78, 65, 85, 82),
-  createData(6, "6", "Val Helsing 4", "standard", "med", 78, 65, 85, 82),
-  // Add more rows as needed
-];
+function transformTextWithStatistics(textsWithStatistics: TextWithStatistics[]): Data[] {
+  return textsWithStatistics.map((text, index) => {
+    return {
+      id: index,
+      text_id: text.id,
+      text_title: text.title,
+      fiction: text.fiction ? 'fiction' : 'non-fiction',
+      difficulty: text.difficulty,
+      avg: text.average_wpm,
+      min: text.min_wpm,
+      max: text.max_wpm,
+      accuracy: text.average_score
+    };
+  });
+}
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -220,6 +195,9 @@ export default function EnhancedTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const { data: texts } = getTexts();
+  const rows = transformTextWithStatistics(texts);
+
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof Data,
@@ -352,7 +330,7 @@ export default function EnhancedTable() {
                         fontFamily: "JetBrains Mono, monospace",
                       }}
                     >
-                      {row.mode}
+                      {row.fiction}
                     </TableCell>
                     <TableCell
                       align="center"
