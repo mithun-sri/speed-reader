@@ -1,21 +1,11 @@
 import { Box, IconButton } from "@mui/material";
-import { useLogout } from "../../hooks/users";
 
 const LogOut: React.FC<{
   fontSize: number;
-}> = ({ fontSize }) => {
-  const logoutMutation = useLogout();
-
-  const handleLogoutClick = async () => {
-    try {
-      await logoutMutation.mutateAsync();
-    } catch (error) {
-      console.error("Error logging out:", error);
-    }
-  };
-
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}> = ({ fontSize, onClick }) => {
   return (
-    <IconButton onClick={handleLogoutClick}>
+    <IconButton onClick={onClick}>
       <Box
         sx={{
           fontFamily: "JetBrains Mono, monospace",

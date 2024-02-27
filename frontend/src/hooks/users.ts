@@ -58,7 +58,7 @@ export function useLoginUser() {
   });
 }
 
-export function useLogout() {
+export function useLogoutUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
