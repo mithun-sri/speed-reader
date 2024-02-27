@@ -213,6 +213,11 @@ const WordTextDisplay: React.FC<{
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
 
+  // initialize intervalWpms list with initial wpm on component first render
+  useEffect(() => {
+    setIntervalWpms([wpm]);
+  }, []);
+
   // updates WPM based on keyboard event
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) =>
@@ -302,6 +307,11 @@ export const HighlightedTextDisplay: React.FC<{
   const [curr_wpm, setWpm] = useState(wpm);
   const wordsPerFrame = 30;
   const wordsArray = text.split(" ");
+
+  // initialize intervalWpms list with initial wpm on component first render
+  useEffect(() => {
+    setIntervalWpms([wpm]);
+  }, []);
 
   // updates WPM based on keyboard event
   useEffect(() => {
