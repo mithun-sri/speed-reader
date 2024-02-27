@@ -27,19 +27,20 @@ interface Data {
   accuracy: number;
 }
 
-
-function transformTextWithStatistics(textsWithStatistics: TextWithStatistics[]): Data[] {
+function transformTextWithStatistics(
+  textsWithStatistics: TextWithStatistics[],
+): Data[] {
   return textsWithStatistics.map((text, index) => {
     return {
       id: index,
       text_id: text.id,
       text_title: text.title,
-      fiction: text.fiction ? 'fiction' : 'non-fiction',
+      fiction: text.fiction ? "fiction" : "non-fiction",
       difficulty: text.difficulty,
       avg: text.average_wpm,
       min: text.min_wpm,
       max: text.max_wpm,
-      accuracy: text.average_score
+      accuracy: text.average_score,
     };
   });
 }
