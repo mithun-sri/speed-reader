@@ -13,6 +13,15 @@ export function getAdminStatistics(gameMode: string) {
   });
 }
 
+export function getTexts(page?: number, pageSize?: number) {
+  return useSuspenseQuery({
+    queryKey: ["texts-statistics"],
+    queryFn: () =>
+      adminApi.getTexts(page, pageSize).then((res) => res.data),
+    gcTime: 0,
+  });
+}
+
 export function getQuestion(textId: string, questionId: string) {
   return useSuspenseQuery({
     queryKey: ["question-statistics", textId, questionId],
