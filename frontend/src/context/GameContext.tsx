@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
+import { QuestionMasked } from "../api";
 import { GameDifficulty, GameMode } from "../common/constants";
 import { StandardView } from "../views/StandardMode/StandardMode";
-import { QuestionMasked } from "../api";
 
 interface GameContextType {
   mode: GameMode | null;
@@ -48,7 +48,7 @@ const GameContext = createContext<GameContextType>({
   setDifficulty: () => {},
 
   // wpm and view are only for STANDARD_MODE
-  wpm: 400,
+  wpm: 200,
   setWpm: () => {},
   view: null,
   setView: () => {},
@@ -106,7 +106,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [mode, setMode] = useState<GameMode | null>(null);
   const [summarised, setSummarised] = useState<boolean>(false);
   const [difficulty, setDifficulty] = useState<GameDifficulty | null>(null);
-  const [wpm, setWpm] = useState<number | null>(400);
+  const [wpm, setWpm] = useState<number | null>(200);
   const [view, setView] = useState<StandardView | null>(null);
   const [averageWpm, setAverageWpm] = useState<number>(0);
   const [intervalWpms, setIntervalWpms] = useState<number[]>([]);

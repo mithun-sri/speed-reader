@@ -111,7 +111,7 @@ function SpeedSlider() {
         </Box>
         <PrettoSlider
           valueLabelDisplay="auto"
-          defaultValue={400}
+          defaultValue={200}
           onChange={onSliderChange}
           marks={false}
           min={100}

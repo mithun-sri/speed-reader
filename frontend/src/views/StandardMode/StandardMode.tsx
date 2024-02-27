@@ -76,7 +76,7 @@ const StandardModeGameView: React.FC<{
       >
         {showGameScreen ? (
           <StandardModeGameComponent
-            wpm={wpm || 400} // Handle undefined wpm
+            wpm={wpm || 200} // Handle undefined wpm
             text={text.content}
             view={mode || StandardView.Word} // Handle undefined mode
           />
@@ -213,6 +213,11 @@ const WordTextDisplay: React.FC<{
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
 
+  // initialize intervalWpms list with initial wpm on component first render
+  useEffect(() => {
+    setIntervalWpms([wpm]);
+  }, []);
+
   // updates WPM based on keyboard event
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) =>
@@ -302,6 +307,11 @@ export const HighlightedTextDisplay: React.FC<{
   const [curr_wpm, setWpm] = useState(wpm);
   const wordsPerFrame = 30;
   const wordsArray = text.split(" ");
+
+  // initialize intervalWpms list with initial wpm on component first render
+  useEffect(() => {
+    setIntervalWpms([wpm]);
+  }, []);
 
   // updates WPM based on keyboard event
   useEffect(() => {
@@ -419,13 +429,13 @@ const wpmAdjuster = (
 ): void => {
   if (event.code === "ArrowUp") {
     console.log("ArrowUp");
-    const new_wpm = curr_wpm + 5;
+    const new_wpm = curr_wpm + 10;
     setWpm(new_wpm);
     console.log(new_wpm);
   }
   if (event.code === "ArrowDown") {
     console.log("ArrowDown");
-    const new_wpm = Math.max(curr_wpm - 5, 1);
+    const new_wpm = Math.max(curr_wpm - 10, 1);
     setWpm(new_wpm);
     console.log(new_wpm);
   }
