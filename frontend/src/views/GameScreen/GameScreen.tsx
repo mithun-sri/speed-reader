@@ -21,10 +21,12 @@ export const GameScreenContext = React.createContext<{
   currentStage: number;
   incrementCurrentStage: (modeArg?: GameMode) => void;
   decrementCurrentStage: () => void;
+  playAgain: () => void;
 }>({
   currentStage: 0,
   incrementCurrentStage: () => {},
   decrementCurrentStage: () => {},
+  playAgain: () => {},
 });
 
 export const useGameScreenContext = () => {
@@ -115,12 +117,17 @@ const GameScreen = () => {
     }
   };
 
+  const playAgain = () => {
+    setCurrentStage(GAME_STAGE);
+  };
+
   return (
     <GameScreenContext.Provider
       value={{
         currentStage,
         incrementCurrentStage,
         decrementCurrentStage,
+        playAgain,
       }}
     >
       {stages[currentStage]}

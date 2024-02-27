@@ -14,6 +14,7 @@ import {
   YAxis,
 } from "recharts";
 import { ADAPTIVE_MODE } from "../../common/constants";
+import { Result } from "../../api";
 
 const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
   notPlayAgain,
@@ -32,6 +33,18 @@ const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
   };
 
   const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  function calculateScore(results: Result[]): number {
+    let score = 0;
+    results.forEach((result) => {
+      if (result.correct_option === result.selected_option) {
+        score++;
+      }
+    });
+    return score;
+  }
+
+  const score = calculateScore(quizResults);
 
   useEffect(() => {
     function handleResize() {
@@ -82,7 +95,7 @@ const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
               alignItems: "center",
             }}
           >
-            <Score score={65} />
+            <Score score={score} />
             <Box
               sx={{
                 width: "20vw",

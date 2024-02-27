@@ -1,12 +1,14 @@
 import { faArrowRotateRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, IconButton } from "@mui/material";
+import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
 
 const PlayAgain: React.FC<{
   fontSize: number;
 }> = ({ fontSize }) => {
+  const { playAgain } = useGameScreenContext();
   return (
-    <IconButton sx={{ padding: 0, width: fontSize * 8 }}>
+    <IconButton sx={{ padding: 0, width: fontSize * 8 }} onClick={playAgain}>
       <Box
         sx={{
           display: "flex",
