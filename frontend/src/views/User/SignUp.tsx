@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BodyRegisterUser } from "../../api";
 import Header from "../../components/Header/Header";
 import StyledTextField from "../../components/Textbox/StyledTextField";
+import { useSnack } from "../../context/SnackContext";
 import { useRegisterUser } from "../../hooks/users";
 
 const SignUp: React.FC = () => {
@@ -38,6 +39,7 @@ const SignUp: React.FC = () => {
 
   const registerUser = useRegisterUser();
   const navigate = useNavigate();
+  const { showSnack } = useSnack();
 
   const onSubmit = (data: BodyRegisterUser) => {
     registerUser.mutate(data, {
@@ -45,8 +47,7 @@ const SignUp: React.FC = () => {
         navigate("/login");
       },
       onError: () => {
-        // TODO: Handle registration error.
-        console.error("Error registering user");
+        showSnack("Failed to register");
       },
     });
   };
