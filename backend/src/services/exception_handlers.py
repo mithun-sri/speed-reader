@@ -45,6 +45,10 @@ async def invalid_credentials_exception_handler(
 ):
     return JSONResponse(
         status_code=exc.status_code,
+        # TODO:
+        # Provide both detail and message for each exception.
+        # Detail will be used to handle the error programmatically in the frontend,
+        # while message will be displayed to the user.
         content={"message": "Oops! The provided credentials are invalid."},
     )
 
@@ -55,7 +59,7 @@ async def token_not_found_exception_handler(
 ):
     return JSONResponse(
         status_code=exc.status_code,
-        content={"message": exc.detail},
+        content={"detail": exc.detail},
     )
 
 
@@ -65,7 +69,7 @@ async def invalid_token_exception_handler(
 ):
     return JSONResponse(
         status_code=exc.status_code,
-        content={"message": exc.detail},
+        content={"detail": exc.detail},
     )
 
 
