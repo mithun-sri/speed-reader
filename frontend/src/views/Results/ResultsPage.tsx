@@ -41,7 +41,7 @@ const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
         score++;
       }
     });
-    return score;
+    return score * 10;
   }
 
   const score = calculateScore(quizResults);
