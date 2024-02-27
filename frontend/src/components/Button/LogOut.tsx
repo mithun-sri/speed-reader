@@ -2,9 +2,10 @@ import { Box, IconButton } from "@mui/material";
 
 const LogOut: React.FC<{
   fontSize: number;
-}> = ({ fontSize }) => {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}> = ({ fontSize, onClick }) => {
   return (
-    <IconButton>
+    <IconButton onClick={onClick}>
       <Box
         sx={{
           fontFamily: "JetBrains Mono, monospace",
