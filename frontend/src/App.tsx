@@ -16,6 +16,7 @@ import { GamePage } from "./views/GameScreen/GameScreen";
 import Login from "./views/User/LogIn";
 import SignUp from "./views/User/SignUp";
 import UserView from "./views/User/UserView";
+import AvailableTexts from "./views/AvailableTexts/AvailableTexts";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +51,7 @@ function App() {
                 <Route path="/" element={<Navigate to="/game" />} />
                 <Route path="/game" element={<GamePage />} />
                 <Route path="/user" element={<UserView />} />
+                <Route path="/available-texts" element={<AvailableTexts />} />
                 <Route path="/gpt" element={<GptView />} />
                 <Route element={<AdminRoute fallback="/login" />}>
                   <Route path="/admin" element={<AdminAnalytics />} />

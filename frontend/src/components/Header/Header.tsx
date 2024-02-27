@@ -4,6 +4,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/system";
@@ -81,26 +82,32 @@ const Header = () => {
         </IconButton>
       </Link>
       <Box sx={{ display: "flex", alignItems: "center" }}>
-        <IconButton
-          style={{
-            fontSize: iconSize / 1.8,
-            marginRight: "15px",
-          }}
-        >
-          <FontAwesomeIcon icon={faFileLines} color="#D1D0C5" />
-        </IconButton>
-        <IconButton
-          style={{
-            fontSize: iconSize / 1.8,
-            marginRight: iconSize / 1.2,
-            marginLeft: "10px",
-            color: "#D1D0C5",
-          }}
-          component={Link}
-          to="/user"
-        >
-          <FontAwesomeIcon icon={faUser} color="#E2B714" />
-        </IconButton>
+        <Tooltip title="Available texts">
+          <IconButton
+            style={{
+              fontSize: iconSize / 1.8,
+              marginRight: "15px",
+            }}
+            component={Link}
+            to="/available-texts"
+          >
+            <FontAwesomeIcon icon={faFileLines} color="#D1D0C5" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="User dashboard">
+          <IconButton
+            style={{
+              fontSize: iconSize / 1.8,
+              marginRight: iconSize / 1.2,
+              marginLeft: "10px",
+              color: "#D1D0C5",
+            }}
+            component={Link}
+            to="/user"
+          >
+            <FontAwesomeIcon icon={faUser} color="#E2B714" />
+          </IconButton>
+        </Tooltip>
       </Box>
     </HeaderContainer>
   );

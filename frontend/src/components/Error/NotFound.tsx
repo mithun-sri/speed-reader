@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import JetBrainsMonoText from "../Text/TextComponent";
 import React, { useEffect } from "react";
+import Header from "../Header/Header";
 
 const NotFound = () => {
   const text = "The page you are looking for does not exist.";
@@ -26,6 +27,7 @@ const NotFound = () => {
         height: "100vh",
       }}
     >
+      <Header />
       <Box>
         <JetBrainsMonoText
           text="404"

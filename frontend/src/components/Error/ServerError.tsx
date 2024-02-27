@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import JetBrainsMonoText from "../Text/TextComponent";
 import React, { useEffect } from "react";
+import Header from "../Header/Header";
 
 const ServerError = () => {
   const text = "Oops, something went wrong on our end.";
@@ -26,6 +27,7 @@ const ServerError = () => {
         height: "100vh",
       }}
     >
+      <Header />
       <Box>
         <JetBrainsMonoText
           text="500"
