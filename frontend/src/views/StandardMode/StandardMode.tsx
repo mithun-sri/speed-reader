@@ -11,6 +11,7 @@ import "./StandardMode.css";
 
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
+import BlurBox from "../../components/Blur/Blur";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
@@ -212,6 +213,7 @@ const WordTextDisplay: React.FC<{
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
+  const [isPaused, setPaused] = useState(false);
 
   // initialize intervalWpms list with initial wpm on component first render
   useEffect(() => {
@@ -220,12 +222,17 @@ const WordTextDisplay: React.FC<{
 
   // updates WPM based on keyboard event
   useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) =>
-      wpmAdjuster(event, curr_wpm, setWpm);
+    const keyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === " ") {
+        setPaused((prevPaused) => !prevPaused);
+      } else {
+        wpmAdjuster(event, curr_wpm, setWpm);
+      }
+    };
     window.addEventListener("keydown", keyDownHandler);
 
     return () => window.removeEventListener("keydown", keyDownHandler);
-  }, [curr_wpm]);
+  }, [curr_wpm, isPaused]);
 
   // updates which word to be shown
   useEffect(() => {
@@ -233,13 +240,15 @@ const WordTextDisplay: React.FC<{
     setWords(wordsArray);
 
     const interval = setInterval(() => {
-      setWordIndex((prevIndex) => prevIndex + 1);
+      if (!isPaused) {
+        setWordIndex((prevIndex) => prevIndex + 1);
+      }
     }, 60000 / curr_wpm); // Word change every (60000 / wpm) milliseconds
 
     return () => {
       clearInterval(interval);
     };
-  }, [text, curr_wpm]);
+  }, [text, curr_wpm, isPaused]);
 
   // calculate avg wpm and navigate to next screen (quiz) when game ends
   useEffect(() => {
@@ -256,14 +265,17 @@ const WordTextDisplay: React.FC<{
   // record WPM every 2.5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setIntervalWpms([...intervalWpms, curr_wpm]);
+      if (!isPaused) {
+        setIntervalWpms([...intervalWpms, curr_wpm]);
+      }
     }, 2500);
 
     return () => clearInterval(interval);
-  }, [curr_wpm, intervalWpms, setIntervalWpms]);
+  }, [curr_wpm, intervalWpms, isPaused]);
 
   return (
     <Box>
+      {isPaused && <BlurBox text={"Game Paused"} size={23} color={"white"} />}
       <Box
         sx={{
           padding: "25px",
