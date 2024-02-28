@@ -4,7 +4,7 @@ import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import clickAudio from "../../common/audio";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Carousel: React.FC<{
   title?: string;
@@ -85,11 +85,14 @@ const Carousel: React.FC<{
 
   return (
     <Box>
+      <AnimatePresence>
       <motion.div
+        key={currentIndex}
         initial="hidden"
         animate={fadeOut ? "hidden" : "visible"}
         variants={fadeInOutVariants}
         transition={{ duration: 1.5 }}
+        exit={{ opacity: 0 }}
       >
         <Box
           sx={{
@@ -173,7 +176,8 @@ const Carousel: React.FC<{
           </Box>
         </Box>
       </motion.div>
-    </Box>
+      </AnimatePresence>
+  </Box>
   );
 };
 
