@@ -17,6 +17,8 @@ services:
     <<: *frontend
     environment:
       - REACT_APP_BACKEND_URL=http://backend-test:8000
+      - TESTING_USERNAME=admin
+      - TESTING_PASSWORD=admin
     ports:
       - 8081:8080
     depends_on:
@@ -46,11 +48,11 @@ services:
     environment:
       - ACCESS_TOKEN_SECRET_KEY=secret
       - REFRESH_TOKEN_SECRET_KEY=secret
-      - TESTING_USERNAME=admin
-      - TESTING_PASSWORD=admin
       - POSTGRES_URL=postgresql://postgres:postgres@postgres-test:5432/default
       - MONGO_URL=mongodb://mongo-test:27017/default
       - OPENAPI_KEY=${OPENAPI_KEY}
+      - TESTING_USERNAME=admin
+      - TESTING_PASSWORD=admin
     ports:
       - 8001:8000
     depends_on:
