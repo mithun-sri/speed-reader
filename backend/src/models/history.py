@@ -67,6 +67,7 @@ class History(Document):
     question_ids = ListField(StringField(), required=True)
     game_mode = StringField(required=True)
     game_submode = StringField(required=True)
+    difficulty = StringField(required=True)
     # TODO: Rename to `is_summary`
     # Can only be True if text is non-fiction.
     summary = BooleanField(required=True)
