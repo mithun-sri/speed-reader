@@ -8,6 +8,7 @@ const StyledPagination = styled(Pagination)({
     alignItems: "center",
     width: "100%",
     marginTop: "20px",
+    paddingTop: "20px",
     paddingBottom: "20px",
     color: "primary",
     size: "large",

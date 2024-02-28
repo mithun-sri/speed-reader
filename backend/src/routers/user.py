@@ -102,9 +102,9 @@ async def get_user_available_texts(
         read_text_ids = models.History.objects(user_id=user.id).distinct("text_id")
         query = query.filter(models.Text.id.not_in(read_text_ids))
 
-        if text_filter.game_mode:
+        if text_filter and text_filter.game_mode:
             query = query.filter(models.Text.game_mode == text_filter.game_mode)
-        if text_filter.difficulty:
+        if text_filter and text_filter.difficulty:
             query = query.filter(models.Text.difficulty == text_filter.difficulty)
 
         if text_sort:

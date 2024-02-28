@@ -37,8 +37,10 @@ const DifficultyBox: React.FC<DifficultyBoxProps> = ({ difficulty }) => {
         borderRadius: "0.8vw",
         backgroundColor: color,
         fontWeight: "bolder",
-        fontSize: "1vw",
+        fontSize: "0.8vw",
         fontFamily: "JetBrains Mono, monospace",
+        marginLeft: "10px",
+        color: "white",
       }}
     >
       {difficulty.toUpperCase()}

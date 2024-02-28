@@ -4,13 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import StyledPagination from "../../components/Pagination/Pagination";
 import {ItemBoxHovered, ItemBox, SearchBar}from "../../components/TextCards/AvailableTextCards"
-
-interface TextProps {
-    title: string;
-    description: string;
-    difficulty: string;
-    image?: string;
-}
+import { getAvailableTexts } from "../../hooks/users";
 
 const AvailableTexts: React.FC = () => {
     let pageSize = 10;
@@ -26,21 +20,24 @@ const AvailableTexts: React.FC = () => {
             description: "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, near New York City, the novel depicts first-person narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan.",
             difficulty: "Easy",
             image: "https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg",
-            author: "F. Scott Fitzgerald"
+            author: "F. Scott Fitzgerald",
+            is_fiction: true
         },
         {
             title: "Pride and Prejudice",
             description: "Pride and Prejudice is a romantic novel of manners written by Jane Austen in 1813. The novel follows the character development of Elizabeth Bennet, the dynamic protagonist of the book who learns about the repercussions of hasty judgments and comes to appreciate the difference between superficial goodness and actual goodness.",
             difficulty: "Med",
             image: "https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg",
-            author: "Jane Austen"
+            author: "Jane Austen",
+            is_fiction: true
         },
         {
             title: "Middlemarch",
             description: "Middlemarch, A Study of Provincial Life is a novel by the English author George Eliot (Mary Anne Evans), first published in eight installments (volumes) during 1871–72. The novel is set in the fictitious Midlands town of Middlemarch during 1829–32, and it comprises several distinct (though intersecting) stories and a large cast of characters.",
             difficulty: "Hard",
             image: "https://www.gutenberg.org/cache/epub/145/pg145.cover.medium.jpg",
-            author: "George Eliot"
+            author: "George Eliot",
+            is_fiction: true
         },
     ]
 
@@ -95,7 +92,7 @@ const AvailableTexts: React.FC = () => {
                                         alignItems: "center",
                                     }}
                                 >
-                                    <ItemBox key={index} title={text.title} description={text.description} difficulty={text.difficulty} image={text.image} author={text.author}/>
+                                    <ItemBox key={index} title={text.title} description={text.description} difficulty={text.difficulty} image={text.image} author={text.author} is_fiction={text.is_fiction}/>
                                     <AnimatePresence mode="wait">
                                     {isHovered && (
                                         <motion.div
@@ -121,6 +118,7 @@ const AvailableTexts: React.FC = () => {
                                                 difficulty={text.difficulty}
                                                 image={text.image}
                                                 author={text.author}
+                                                is_fiction={text.is_fiction}
                                             />
                                         </motion.div>
 
