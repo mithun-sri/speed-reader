@@ -4,9 +4,15 @@ import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./Quiz.css";
 
 import { useEffect } from "react";
+import {
+  ADAPTIVE_MODE,
+  STANDARD_MODE,
+  SUMMARISED_MODE,
+} from "../../common/constants";
 import { useGameContext } from "../../context/GameContext";
 import { useNextQuestions, usePostAnswers } from "../../hooks/game";
 import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
+import { StandardView } from "../StandardMode/StandardMode";
 
 const QuizView = () => {
   const { incrementCurrentStage } = useGameScreenContext();
@@ -61,6 +67,16 @@ const QuizView = () => {
   const moveToResults = () => {
     setTimeout(() => {
       if (mode !== null && view !== null) {
+        const gameMode = {
+          [STANDARD_MODE]: "standard",
+          [ADAPTIVE_MODE]: "adaptive",
+          [SUMMARISED_MODE]: "", // NOTE: This should not be relevant
+        }[mode];
+        const gameSubmode = {
+          [StandardView.Word]: "word-by-word",
+          [StandardView.Highlighted]: "highlight",
+          [StandardView.Peripheral]: "peripheral",
+        }[view];
         postAnswers.mutate(
           {
             answers: quizAnswers.map((selectedOption, questionIndex) => ({
@@ -69,8 +85,8 @@ const QuizView = () => {
             })),
             average_wpm: averageWpm,
             interval_wpms: intervalWpms,
-            game_mode: mode,
-            game_submode: view.toString(),
+            game_mode: gameMode,
+            game_submode: gameSubmode,
             summary: summarised,
           },
           {

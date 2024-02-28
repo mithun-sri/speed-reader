@@ -686,6 +686,23 @@
         "operationId": "get_user_statistics",
         "parameters": [
           {
+            "name": "game_mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": "all",
+              "title": "Game Mode"
+            }
+          },
+          {
             "name": "access_token",
             "in": "cookie",
             "required": false,
@@ -1478,15 +1495,12 @@
             "title": "Game Mode"
           },
           "game_submode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
+            "type": "string",
             "title": "Game Submode"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty"
           },
           "summary": {
             "type": "boolean",
@@ -1520,6 +1534,7 @@
           "text_id",
           "game_mode",
           "game_submode",
+          "difficulty",
           "summary",
           "average_wpm",
           "interval_wpms",
