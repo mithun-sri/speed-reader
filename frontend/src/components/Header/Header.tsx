@@ -17,6 +17,7 @@ const HeaderContainer = styled(Box)({
   justifyContent: "space-between",
   alignItems: "center",
   color: "white",
+  zIndex: 9999,
 });
 
 const Header = () => {
