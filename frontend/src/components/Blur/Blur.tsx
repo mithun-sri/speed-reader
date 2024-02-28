@@ -1,29 +1,48 @@
 import Box from "@mui/material/Box";
-import React from "react";
 import JetBrainsMonoText from "../Text/TextComponent";
 
-const BlurBox: React.FC<{
-  text: string;
-  size: number;
-  color: string;
-}> = ({ text, size, color }) => {
+const BlurBox = () => {
   return (
     <Box
       sx={{
         position: "fixed",
-        top: "15%",
-        bottom: "15%",
+        bottom: "0",
         left: "0",
         width: "100%",
-        height: "65%",
+        height: "100%",
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        backdropFilter: "blur(15px)",
-        // backgroundColor: "white",
+        backdropFilter: "blur(30px)",
       }}
     >
-      <JetBrainsMonoText text={text} size={size} color={color} />
+      <JetBrainsMonoText text={"Game Paused"} size={25} color={"white"} />
+      <Box
+        sx={{
+          fontFamily: "JetBrains Mono, monospace",
+          fontWeight: "light",
+          fontSize: 18,
+          color: "white",
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: "10px",
+        }}
+      >
+        Press &apos;Space&apos; key to unpause.
+      </Box>
+      <Box
+        sx={{
+          fontFamily: "JetBrains Mono, monospace",
+          fontWeight: "light",
+          fontSize: 18,
+          color: "white",
+          position: "absolute",
+          bottom: "200px",
+        }}
+      >
+        Tip: Tap ↑ ↓ to control wpm.
+      </Box>
     </Box>
   );
 };
