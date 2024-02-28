@@ -45,6 +45,8 @@ async def get_current_user_(
     dependencies=[Security(verify_auth)],
 )
 async def get_user_statistics(
+    *,
+    game_mode: Optional[str] = "all",
     user: Annotated[models.User, Depends(get_current_user)],
 ):
     """
@@ -52,7 +54,10 @@ async def get_user_statistics(
     """
     pipeline = [
         {
-            "$match": {"user_id": user.id},
+            "$match": {
+                "user_id": user.id,
+                "game_mode": game_mode,
+            },
         },
         {
             "$group": {
@@ -103,7 +108,10 @@ async def get_user_available_texts(
         query = query.filter(models.Text.id.not_in(read_text_ids))
 
         if text_filter.game_mode:
-            query = query.filter(models.Text.game_mode == text_filter.game_mode)
+            # TODO:
+            # Only `summary` is associated with `Text`, not `game_mode`.
+            # query = query.filter(models.Text.game_mode == text_filter.game_mode)
+            pass
         if text_filter.difficulty:
             query = query.filter(models.Text.difficulty == text_filter.difficulty)
 
@@ -153,6 +161,7 @@ async def get_histories(
             text_id=history.text_id,
             game_mode=history.game_mode,
             game_submode=history.game_submode,
+            difficulty=history.difficulty,
             summary=history.summary,
             average_wpm=history.average_wpm,
             interval_wpms=history.interval_wpms,
@@ -191,6 +200,7 @@ async def get_history(
         text_id=history.text_id,
         game_mode=history.game_mode,
         game_submode=history.game_submode,
+        difficulty=history.difficulty,
         summary=history.summary,
         average_wpm=history.average_wpm,
         interval_wpms=history.interval_wpms,
