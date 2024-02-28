@@ -3,11 +3,11 @@ import Header from "../../components/Header/Header";
 import StyledTextField from "../../components/Textbox/StyledTextField";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import { StyledCheckbox } from "../../components/Checkbox/Checkbox";
-import {MenuItem, OutlinedInput, Typography } from "@mui/material";
+import {MenuItem, OutlinedInput, Skeleton, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import StyledMultiSelect from "../../components/MultiSelect/MultiSelect";
 import IconButton from "@mui/material/IconButton";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import StyledPagination from "../../components/Pagination/Pagination";
 import axios from "axios";
 import { forEach } from "cypress/types/lodash";
@@ -81,8 +81,57 @@ const AvailableTexts: React.FC = () => {
                 >
                     {
                         texts.slice((page - 1) * pageSize, page * pageSize).map((text, index) => {
+                            const [isHovered, setIsHovered] = useState(false);
                             return (
-                                <ItemBox key={index} title={text.title} description={text.description} difficulty={text.difficulty} />
+                                <Box
+                                    key={index}
+                                    onMouseEnter={() => {
+                                        const timeoutId = setTimeout(() => setIsHovered(true), 300);
+                                        return () => clearTimeout(timeoutId);
+                                    }}
+                                    onMouseLeave={() => setIsHovered(false)}
+                                    sx={{
+                                        width: "60%",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <ItemBox key={index} title={text.title} description={text.description} difficulty={text.difficulty} />
+                                    <AnimatePresence mode="wait">
+                                    {isHovered && (
+                                        <motion.div
+                                            key={index + "hovered"}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 0.15 }}
+                                            exit={{ opacity: 0 }}
+                                            style={{
+                                                display: "flex",
+                                                width: "65%",
+                                                paddingTop: "20px",
+                                                paddingLeft: "50px",
+                                                paddingRight: "50px",
+                                                flexDirection: "column",
+                                                backgroundColor: "#35363a",
+                                                position: 'absolute',
+                                                zIndex: 1,
+                                                height: "500px",
+                                            }}
+                                        >
+                                            <ItemBoxHovered
+                                                title={"The Great Gatsby"}
+                                                description={
+                                                    "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, near New York City, the novel depicts first-person narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
+                                                }
+                                                difficulty={"Easy"}
+                                            />
+                                        </motion.div>
+
+                                    )}
+                                    </AnimatePresence>
+                                </Box>
                             );
                         })
                     }
@@ -203,6 +252,47 @@ const SearchBar: React.FC = () => {
 // TODO: Make a component for rendering the list of available texts
 // Make use of Material UI pagination
 
+const ItemBoxHovered: React.FC<TextProps> = (
+    {
+        title,
+        description,
+        difficulty
+    }
+) => {
+    return (
+        <Box>
+            <Box
+                sx={{
+                    marginTop: "30px",
+                    marginBottom: "10px",
+                }}
+            >
+                <Skeleton
+                    variant="rectangular"
+                    width="100%"
+                    height="300px"
+                />
+            </Box>
+            <Box
+                sx={{
+                    marginBottom: "10px",
+                }}
+            >
+                  <Skeleton
+                    variant="rectangular"
+                    width="70%"
+                    height="50px"
+                />
+            </Box>
+            <Skeleton
+                variant="rectangular"
+                width="60%"
+                height="50px"
+            />
+       </Box>
+    )
+}
+
 const ItemBox: React.FC<TextProps> = (
     {
         title,
@@ -215,10 +305,9 @@ const ItemBox: React.FC<TextProps> = (
         <Box
         sx={{
             display: "flex",
-            width: window.innerWidth > 600 ? "50%" : "100%",
-            padding: "25px",
-            margin: "10px",
+            width: "100%",
             flexDirection: "row",
+            marginBottom: "20px",
             backgroundColor: "#323437",
             }}
         >
@@ -243,14 +332,8 @@ const ItemBox: React.FC<TextProps> = (
             >
                 <JetBrainsMonoText text={title} size={24} color={"#D9D9D9"} />
                 <JetBrainsMonoText text={truncatedDescription} size={16} color={"#D9D9D9"} />
-                <Box
-                    sx={{
-                        backgroundColor: "#E2B714",
-                        padding: "10px",
-                        borderRadius: "5px",
-                    }}
-                >
-                    <JetBrainsMonoText text={"Difficulty: " + difficulty} size={16} color={"#D9D9D9"} />
+                <Box>
+                    {/* <JetBrainsMonoText text={"Difficulty: " + difficulty} size={16} color={"#D9D9D9"} /> */}
                 </Box>
             </Box>
         </Box>
