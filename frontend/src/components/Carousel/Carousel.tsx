@@ -92,7 +92,6 @@ const Carousel: React.FC<{
         animate={fadeOut ? "hidden" : "visible"}
         variants={fadeInOutVariants}
         transition={{ duration: 1.5 }}
-        exit={{ opacity: 0 }}
       >
         <Box
           sx={{

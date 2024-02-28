@@ -8,7 +8,9 @@ const StyledPagination = styled(Pagination)({
     alignItems: "center",
     width: "100%",
     marginTop: "20px",
+    paddingBottom: "20px",
     color: "primary",
+    size: "large",
     "& .MuiPaginationItem-root": {
         color: "white",
         fontFamily: "JetBrains Mono, monospace",

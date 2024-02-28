@@ -31,13 +31,14 @@ const DifficultyBox: React.FC<DifficultyBoxProps> = ({ difficulty }) => {
         display: "flex",
         justifyContent: "center",
         alignContent: "center",
-        marginLeft: "0.65vw",
-        width: "50%",
+        // marginLeft: "0.65vw",
+        width: "30%",
         padding: "0.25vw 0.45vw",
         borderRadius: "0.8vw",
         backgroundColor: color,
         fontWeight: "bolder",
-        fontSize: "1.15vw",
+        fontSize: "1vw",
+        fontFamily: "JetBrains Mono, monospace",
       }}
     >
       {difficulty.toUpperCase()}

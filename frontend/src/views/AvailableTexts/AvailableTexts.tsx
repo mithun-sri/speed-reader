@@ -1,12 +1,6 @@
 import Box from "@mui/material/Box";
 import Header from "../../components/Header/Header";
-import StyledTextField from "../../components/Textbox/StyledTextField";
-import JetBrainsMonoText from "../../components/Text/TextComponent";
-import { StyledCheckbox } from "../../components/Checkbox/Checkbox";
-import {MenuItem, OutlinedInput, Skeleton, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import StyledMultiSelect from "../../components/MultiSelect/MultiSelect";
-import IconButton from "@mui/material/IconButton";
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import StyledPagination from "../../components/Pagination/Pagination";
 import {ItemBoxHovered, ItemBox, SearchBar}from "../../components/TextCards/AvailableTextCards"
@@ -15,10 +9,11 @@ interface TextProps {
     title: string;
     description: string;
     difficulty: string;
+    image?: string;
 }
 
 const AvailableTexts: React.FC = () => {
-    let pageSize = 25;
+    let pageSize = 10;
     const [page, setPage] = useState(1);
     const [numPages, setNumPages] = useState(10);
     const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -30,16 +25,22 @@ const AvailableTexts: React.FC = () => {
             title: "The Great Gatsby",
             description: "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, near New York City, the novel depicts first-person narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan.",
             difficulty: "Easy",
+            image: "https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg",
+            author: "F. Scott Fitzgerald"
         },
         {
-            title: "The Catcher in the Rye",
-            description: "The Catcher in the Rye is a novel by J. D. Salinger, partially published in serial form in 1945–1946 and as a novel in 1951. It was originally intended for adults, but is often read by adolescents for its themes of angst and alienation, and as a critique on superficiality in society.",
-            difficulty: "Medium",
+            title: "Pride and Prejudice",
+            description: "Pride and Prejudice is a romantic novel of manners written by Jane Austen in 1813. The novel follows the character development of Elizabeth Bennet, the dynamic protagonist of the book who learns about the repercussions of hasty judgments and comes to appreciate the difference between superficial goodness and actual goodness.",
+            difficulty: "Med",
+            image: "https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg",
+            author: "Jane Austen"
         },
         {
-            title: "To Kill a Mockingbird",
-            description: "To Kill a Mockingbird is a novel by Harper Lee published in 1960. Instantly successful, widely read in high schools and middle schools in the United States, it has become a classic of modern American literature, winning the Pulitzer Prize.",
+            title: "Middlemarch",
+            description: "Middlemarch, A Study of Provincial Life is a novel by the English author George Eliot (Mary Anne Evans), first published in eight installments (volumes) during 1871–72. The novel is set in the fictitious Midlands town of Middlemarch during 1829–32, and it comprises several distinct (though intersecting) stories and a large cast of characters.",
             difficulty: "Hard",
+            image: "https://www.gutenberg.org/cache/epub/145/pg145.cover.medium.jpg",
+            author: "George Eliot"
         },
     ]
 
@@ -77,10 +78,15 @@ const AvailableTexts: React.FC = () => {
                                 <Box
                                     key={index}
                                     onMouseEnter={() => {
-                                        const timeoutId = setTimeout(() => setIsHovered(true), 300);
+                                        const timeoutId = setTimeout(() => {
+                                            setIsHovered(true);
+                                        }
+                                            , 300);
                                         return () => clearTimeout(timeoutId);
                                     }}
-                                    onMouseLeave={() => setIsHovered(false)}
+                                    onMouseLeave={() => {
+                                        setIsHovered(false);
+                                    }}
                                     sx={{
                                         width: "60%",
                                         display: "flex",
@@ -89,7 +95,7 @@ const AvailableTexts: React.FC = () => {
                                         alignItems: "center",
                                     }}
                                 >
-                                    <ItemBox key={index} title={text.title} description={text.description} difficulty={text.difficulty} />
+                                    <ItemBox key={index} title={text.title} description={text.description} difficulty={text.difficulty} image={text.image} author={text.author}/>
                                     <AnimatePresence mode="wait">
                                     {isHovered && (
                                         <motion.div
@@ -101,22 +107,20 @@ const AvailableTexts: React.FC = () => {
                                             style={{
                                                 display: "flex",
                                                 width: "65%",
-                                                paddingTop: "20px",
-                                                paddingLeft: "50px",
-                                                paddingRight: "50px",
+                                                padding: "30px",
                                                 flexDirection: "column",
                                                 backgroundColor: "#35363a",
                                                 position: 'absolute',
                                                 zIndex: 1,
-                                                height: "500px",
+                                                height: "400px",
                                             }}
                                         >
                                             <ItemBoxHovered
-                                                title={"The Great Gatsby"}
-                                                description={
-                                                    "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, near New York City, the novel depicts first-person narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan."
-                                                }
-                                                difficulty={"Easy"}
+                                                title={text.title}
+                                                description={text.description}
+                                                difficulty={text.difficulty}
+                                                image={text.image}
+                                                author={text.author}
                                             />
                                         </motion.div>
 
@@ -133,8 +137,5 @@ const AvailableTexts: React.FC = () => {
         </Box>
     );
 }
-
-// TODO: Make a component for rendering the list of available texts
-// Make use of Material UI pagination
 
 export default AvailableTexts;

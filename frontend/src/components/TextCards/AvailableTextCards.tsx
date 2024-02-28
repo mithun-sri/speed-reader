@@ -7,11 +7,14 @@ import { MenuItem, OutlinedInput } from '@mui/material';
 import StyledMultiSelect from '../MultiSelect/MultiSelect';
 import IconButton from '@mui/material/IconButton';
 import StyledTextField from '../Textbox/StyledTextField';
+import DifficultyBox from '../Difficulty/DifficultyBox';
 
 interface TextProps {
     title: string;
     description: string;
     difficulty: string;
+    image?: string;
+    author?: string;
 }
 
 export const SearchBar: React.FC = () => {
@@ -61,7 +64,7 @@ export const SearchBar: React.FC = () => {
                     textAlign: "center",
                     }}
                 >
-                    <Box>Update</Box>
+                    <Box>Update Filters</Box>
                 </Box>
                 </IconButton>
             </Box>
@@ -126,7 +129,83 @@ export const ItemBoxHovered: React.FC<TextProps> = (
     {
         title,
         description,
-        difficulty
+        difficulty,
+        image,
+        author
+    }
+) => {
+    return (
+        <Box
+        sx={{
+            display: "flex",
+            flexDirection: "column",
+        }}
+        >
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    marginBottom: "20px",
+                    alignItems: "center",
+                    width: "100%",
+                }}
+            >
+                <Box
+                    component={"img"}
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "15%"
+                    }}
+                    src={image}
+                />
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "85%",
+                        padding: "20px",
+                    }}
+                >
+                    <JetBrainsMonoText text={title} size={24} color={"#D9D9D9"} />
+                    <JetBrainsMonoText text={"By " + author} size={16} color={"#D9D9D9"} />
+                    <JetBrainsMonoText text={description} size={16} color={"#D9D9D9"} />
+                </Box>
+       </Box>
+       <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: "100%",
+                        backgroundColor: "#35363a",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "30%",
+                        }}
+                    >
+                        <DifficultyBox difficulty={difficulty} />
+                    </Box>
+                    <JetBrainsMonoText text={"Summarised"} size={16} color={"#D9D9D9"} />
+                    <StyledCheckbox />
+                </Box>
+    </Box>
+    )
+}
+
+export const ItemBoxHoveredSkeleton: React.FC<TextProps> = (
+    {
+        title,
+        description,
+        difficulty,
+        author
     }
 ) => {
     const [loading,setLoading] = useState(true)
@@ -169,7 +248,9 @@ export const ItemBox: React.FC<TextProps> = (
     {
         title,
         description,
-        difficulty
+        difficulty,
+        image,
+        author
     }
 ) => {
     const truncatedDescription = description.length > 200 ? description.substring(0, 200) + "..." : description;
@@ -191,7 +272,7 @@ export const ItemBox: React.FC<TextProps> = (
                     justifyContent: "center",
                     width: "15%",
                 }}
-                src={"https://www.gutenberg.org/cache/epub/73059/pg73059.cover.medium.jpg"}
+                src={image}
             />
             <Box
                 sx={{
@@ -203,8 +284,17 @@ export const ItemBox: React.FC<TextProps> = (
                 }}
             >
                 <JetBrainsMonoText text={title} size={24} color={"#D9D9D9"} />
+                <JetBrainsMonoText text={"By " + author} size={16} color={"#c7c7c7"} />
                 <JetBrainsMonoText text={truncatedDescription} size={16} color={"#D9D9D9"} />
                 <Box>
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        width: "30%",
+                    
+                    }}>
+                        <DifficultyBox difficulty={difficulty} />
+                    </Box>
                     {/* <JetBrainsMonoText text={"Difficulty: " + difficulty} size={16} color={"#D9D9D9"} /> */}
                 </Box>
             </Box>
