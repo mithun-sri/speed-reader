@@ -51,6 +51,15 @@ export function SnackContextProvider({ children }: { children: ReactNode }) {
         onClose={handleClose}
         message={message}
         action={action}
+        ContentProps={{
+          sx: {
+            border: "1px solid #E2B714",
+            bgcolor: "rgba(226, 183, 20, 0.5)",
+            "& .MuiSnackbarContent-message": {
+              fontFamily: "JetBrains Mono, monospace",
+            },
+          },
+        }}
       />
       {children}
     </SnackContext.Provider>

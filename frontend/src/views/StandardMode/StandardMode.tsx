@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 import BlurBox from "../../components/Blur/Blur";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
+import WpmSign from "../../components/WpmSign/WpmSign";
 import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
@@ -275,6 +276,7 @@ const WordTextDisplay: React.FC<{
 
   return (
     <Box>
+      <WpmSign wpm={curr_wpm} />
       {isPaused && <BlurBox />}
       <Box
         sx={{
@@ -399,6 +401,7 @@ export const HighlightedTextDisplay: React.FC<{
         alignItems: "center",
       }}
     >
+      <WpmSign wpm={curr_wpm} />
       {isPaused && <BlurBox />}
       <Box
         sx={{
