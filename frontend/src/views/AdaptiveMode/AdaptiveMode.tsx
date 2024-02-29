@@ -1,10 +1,12 @@
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
-import { calculateAverageWpm } from "../../common/constants";
+import { ADAPTIVE_MODE, calculateAverageWpm } from "../../common/constants";
+import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import { useGameContext } from "../../context/GameContext";
+import { useWebGazerContext } from "../../context/WebGazerContext";
 import { useNextText } from "../../hooks/game";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
 
@@ -13,11 +15,39 @@ const AdaptiveModeView = () => {
   //const { wpm, setTextId, summarised } = useGameContext();
   //const { data: text } = summarised ? useNextSummarisedText() : useNextText();
   const { wpm, setTextId } = useGameContext();
+  const { resumeWebGazer, pauseWebGazer } = useWebGazerContext();
   const { data: text } = useNextText();
+  const [showGameScreen, setShowGameScreen] = useState(false);
+
+  useEffect(() => {
+    resumeWebGazer();
+
+    return () => {
+      pauseWebGazer();
+    };
+  }, []);
 
   useEffect(() => {
     setTextId(text.id);
   }, [text]);
+
+  const startAdaptiveModeGame = () => {
+    setShowGameScreen(true);
+  };
+
+  const countdownComp = (
+    <Box
+      sx={{
+        marginTop: "100px",
+      }}
+    >
+      <CountdownComponent
+        duration={3}
+        mode={ADAPTIVE_MODE}
+        onCountdownFinish={startAdaptiveModeGame.bind(this)}
+      />
+    </Box>
+  );
 
   return (
     <Box
@@ -38,7 +68,11 @@ const AdaptiveModeView = () => {
           padding: "25px",
         }}
       >
-        <AdaptiveModeTextDisplay text={text.content} wpm={wpm || 200} />
+        {showGameScreen ? (
+          <AdaptiveModeTextDisplay text={text.content} wpm={wpm || 200} />
+        ) : (
+          countdownComp
+        )}
       </Box>
     </Box>
   );
@@ -80,12 +114,13 @@ const AdaptiveModeTextDisplay: React.FC<{
   const [nextLineIndex, setNextLineIndex] = useState(0);
   const [lastLineChangeTime, setLastLineChangeTime] = useState(Date.now());
   const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
-  const { setWpm, gazeX, intervalWpms, setIntervalWpms, setAverageWpm } =
+  const { setWpm, intervalWpms, setIntervalWpms, setAverageWpm } =
     useGameContext();
+  const { gazeX } = useWebGazerContext();
   const { incrementCurrentStage } = useGameScreenContext();
 
   useEffect(() => {
-    if (highlightedIndex === wordsArray.length - 1 && wordsArray.length > 0) {
+    if (wordsArray.length > 0 && highlightedIndex === wordsArray.length - 1) {
       const avg_wpm = calculateAverageWpm(intervalWpms);
       setAverageWpm(avg_wpm);
 

@@ -6,6 +6,7 @@ import {
   SUMMARISED_MODE,
 } from "../../common/constants";
 import { GameProvider, useGameContext } from "../../context/GameContext";
+import { useWebGazerContext } from "../../context/WebGazerContext";
 import AdaptiveModeView from "../AdaptiveMode/AdaptiveMode";
 import DiffSelect from "../DiffSelect/DiffSelect";
 import ModeSelectView from "../ModeSelect/ModeSelect";
@@ -15,6 +16,7 @@ import StandardModeGameView from "../StandardMode/StandardMode";
 import StandardSubModeView from "../StandardMode/StandardSubMode";
 import SummarisedSubMode from "../SummarizedMode/SummarizedSubMode";
 import WebGazerCalibration from "../WebGazerCalibration/WebGazerCalibration";
+import WebGazerRecalibrationChoice from "../WebGazerCalibration/WebGazerRecalibrationChoice";
 import WpmView from "../WpmView/WpmView";
 
 export const GameScreenContext = React.createContext<{
@@ -64,6 +66,7 @@ const GameView = () => {
 
 const GameScreen = () => {
   const { mode, summarised } = useGameContext();
+  const { needsCalibration, webGazerInitialised } = useWebGazerContext();
   const [currentStage, setCurrentStage] = useState(0);
 
   const stages = [
@@ -72,10 +75,11 @@ const GameScreen = () => {
     <DiffSelect key={2} />,
     <StandardSelect key={3} />, // to be skipped if mode is not standard
     <WpmSelect key={4} />, // to be skipped if mode is not standard
-    <WebGazerCalibration key={5} />, // to be skipped if mode is standard
-    <GameView key={6} />,
-    <Quiz key={7} />,
-    <ResultsPage key={8} />,
+    <WebGazerRecalibrationChoice key={5} />, // to be skipped if mode is standard
+    <WebGazerCalibration key={6} />, // to be skipped if mode is standard and choice is no
+    <GameView key={7} />,
+    <Quiz key={8} />,
+    <ResultsPage key={9} />,
   ];
 
   const MODE_SELECT_STAGE = 0;
@@ -83,18 +87,30 @@ const GameScreen = () => {
   const DIFF_SELECT_STAGE = 2;
   const STANDARD_SELECT_STAGE = 3;
   const WPM_SELECT_STAGE = 4;
-  const CALIBRATION_STAGE = 5;
-  const GAME_STAGE = 6;
+  const RECALIBRATION_CHOICE_STAGE = 5;
+  const CALIBRATION_STAGE = 6;
+  const GAME_STAGE = 7;
 
   const incrementCurrentStage = (modeArg?: GameMode) => {
     const newStage = currentStage + 1;
     const _mode = modeArg === undefined ? mode : modeArg;
     console.log("mode is: " + _mode);
+    console.log("needsCalibration is: " + needsCalibration);
+    console.log("webGazerInitialised is: " + webGazerInitialised);
     if (_mode !== SUMMARISED_MODE && newStage === SUMMARISED_SUB_MODE_STAGE) {
       setCurrentStage(DIFF_SELECT_STAGE);
     } else if (_mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
-      setCurrentStage(CALIBRATION_STAGE);
-    } else if (_mode === STANDARD_MODE && newStage === CALIBRATION_STAGE) {
+      if (webGazerInitialised) {
+        setCurrentStage(RECALIBRATION_CHOICE_STAGE);
+      } else {
+        setCurrentStage(CALIBRATION_STAGE);
+      }
+    } else if (!needsCalibration && newStage === CALIBRATION_STAGE) {
+      setCurrentStage(GAME_STAGE);
+    } else if (
+      _mode === STANDARD_MODE &&
+      newStage === RECALIBRATION_CHOICE_STAGE
+    ) {
       setCurrentStage(GAME_STAGE);
     } else {
       setCurrentStage(newStage);
