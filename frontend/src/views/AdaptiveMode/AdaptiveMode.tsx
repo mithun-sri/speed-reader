@@ -12,7 +12,7 @@ const AdaptiveModeView = () => {
   // When GPT get next text is set up use the following instead
   //const { wpm, setTextId, summarised } = useGameContext();
   //const { data: text } = summarised ? useNextSummarisedText() : useNextText();
-  const { wpm, setTextId, summarised } = useGameContext();
+  const { setTextId, summarised } = useGameContext();
   const { data: text } = useNextText(summarised);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const AdaptiveModeView = () => {
           padding: "25px",
         }}
       >
-        <AdaptiveModeTextDisplay text={text.content} wpm={wpm || 200} />
+        <AdaptiveModeTextDisplay text={text.content} />
       </Box>
     </Box>
   );
@@ -46,9 +46,8 @@ const AdaptiveModeView = () => {
 
 const AdaptiveModeTextDisplay: React.FC<{
   text: string;
-  wpm: number;
   size?: number;
-}> = ({ text, wpm }) => {
+}> = ({ text }) => {
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 16;
@@ -80,9 +79,14 @@ const AdaptiveModeTextDisplay: React.FC<{
   const [nextLineIndex, setNextLineIndex] = useState(0);
   const [lastLineChangeTime, setLastLineChangeTime] = useState(Date.now());
   const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
-  const { setWpm, gazeX, intervalWpms, setIntervalWpms, setAverageWpm } =
+  const { gazeX, intervalWpms, setIntervalWpms, setAverageWpm } =
     useGameContext();
   const { incrementCurrentStage } = useGameScreenContext();
+
+  // NOTE:
+  // Do not use `setWpm` from `GameContext` here,
+  // as it will force this component to re-render from scratch
+  const [wpm, setWpm] = useState<number>(200);
 
   // initialize intervalWpms list with initial wpm on component first render
   useEffect(() => {
@@ -112,7 +116,13 @@ const AdaptiveModeTextDisplay: React.FC<{
   useEffect(() => {
     if (
       nextLineIndex == 0 ||
-      (hitLeftCheckpoint && gazeX > window.innerWidth * rightCheckpoint)
+      (hitLeftCheckpoint && gazeX > window.innerWidth * rightCheckpoint) ||
+      // NOTE:
+      // Sometimes WebGazer's predictions are so-off that it never proceeds to the next line.
+      // Since we're using WebGazer merely as a guide for the user's WPM,
+      // I think it makes sense to proceed to the next line even if the above checkpoint conditions are not strictly met.
+      // Feel free to adjust/remove this condition as you see fit.
+      highlightedIndex == nextLineIndex - 1
     ) {
       setNextLineIndex((prevNextLineIndex) => {
         const timeNow = Date.now();
@@ -124,17 +134,20 @@ const AdaptiveModeTextDisplay: React.FC<{
         setHighlightedIndex(prevNextLineIndex);
         setCurrentLineIndex(prevNextLineIndex);
         setHitLeftCheckpoint(false);
+
         let lineLength = wordsArray[prevNextLineIndex].length;
-
         for (let i = prevNextLineIndex + 1; i < wordsArray.length; i++) {
-          lineLength += wordsArray[i].length + 1;
-
+          lineLength += wordsArray[i].length;
           if (lineLength > maxCharactersPerLine) {
             return i - 1;
           }
         }
-
-        return prevNextLineIndex;
+        // NOTE:
+        // We used to return `prevNextLineIndex` here,
+        // but it was preventing the last line to be displayed when it's shorter than `maxCharactersPerLine`.
+        // TODO:
+        // We may need to update checkpoint conditions if we hit this case.
+        return wordsArray.length;
       });
     }
 

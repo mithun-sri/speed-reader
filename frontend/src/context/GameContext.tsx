@@ -24,6 +24,7 @@ interface GameContextType {
   endWebGazer: () => void;
   restartWebGazer: () => void;
   turnOffWebGazerCam: () => void;
+  turnOffPredictionPoints: () => void;
   gazeX: number;
   setGazeX: (x: number) => void;
   gazeY: number;
@@ -67,6 +68,7 @@ const GameContext = createContext<GameContextType>({
   endWebGazer: () => {},
   restartWebGazer: () => {},
   turnOffWebGazerCam: () => {},
+  turnOffPredictionPoints: () => {},
 
   // gaze_x and gaze_y are only for ADAPTIVE_MODE
   gazeX: 0,
@@ -155,7 +157,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         .begin();
 
       await webgazer
-        .showPredictionPoints(false)
+        .showPredictionPoints(true)
         .showVideoPreview(true)
         .applyKalmanFilter(true);
 
@@ -193,6 +195,13 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const turnOffPredictionPoints = async () => {
+    const webgazer = (window as any).webgazer;
+    if (webgazer !== undefined) {
+      await webgazer.showPredictionPoints(false);
+    }
+  };
+
   const modifyQuizAnswer = (index: number, answer: number | null) => {
     setQuizAnswers((prevAnswers) => {
       const newAnswers = [...prevAnswers];
@@ -226,6 +235,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         endWebGazer,
         restartWebGazer,
         turnOffWebGazerCam,
+        turnOffPredictionPoints,
         gazeX,
         setGazeX,
         gazeY,

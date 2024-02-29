@@ -6,8 +6,12 @@ import { GameScreenContext } from "../GameScreen/GameScreen";
 import "./WebGazerCalibration.css";
 
 const WebGazerCalibration = () => {
-  const { initialiseWebGazer, turnOffWebGazerCam, webGazerInitialised } =
-    useGameContext();
+  const {
+    initialiseWebGazer,
+    turnOffWebGazerCam,
+    turnOffPredictionPoints,
+    webGazerInitialised,
+  } = useGameContext();
   const canvasRef = useRef(null);
   const [pointCalibrate, setPointCalibrate] = useState(0);
   const [clickCounts, setClickCounts] = useState({
@@ -237,6 +241,7 @@ const WebGazerCalibration = () => {
                 color: "#E2B714",
               }}
               onClick={() => {
+                turnOffPredictionPoints();
                 context.incrementCurrentStage();
               }}
               style={{ zIndex: 10 }}
