@@ -1,14 +1,14 @@
+import os
 import secrets
 from typing import Annotated
 
 from fastapi import Cookie, Depends, HTTPException, Response, status
 from fastapi.security import HTTPBasic, HTTPBasicCredentials, OAuth2PasswordBearer
-from jose import JWTError, jwt
 from sqlalchemy import select
 
 from ..database import Session, get_session
 from ..models.user import User
-from ..utils.auth import ACCESS_TOKEN_SECRET_KEY, ALGORITHM
+from ..utils.auth import get_access_token_payload
 from .exceptions import (
     AlreadyAuthenticatedException,
     InvalidRoleException,
@@ -54,15 +54,7 @@ def get_current_user_or_none(
     if not access_token:
         raise TokenNotFoundException()
 
-    try:
-        payload = jwt.decode(
-            access_token,
-            ACCESS_TOKEN_SECRET_KEY,
-            algorithms=[ALGORITHM],
-        )
-    except JWTError:
-        raise InvalidTokenException()
-
+    payload = get_access_token_payload(access_token)
     username = payload.get("sub")
     if not username:
         raise InvalidTokenException()
@@ -118,20 +110,33 @@ def verify_user(
         raise InvalidRoleException("user")
 
 
-# TODO:
-# Move keys to GitLab CI/CD secrets
-TESTING_USERNAME = b"admin"
-TESTING_PASSWORD = b"sAzGmYEoi4#Y9jX3oue#U59Fg^p&%D55"
+TESTING_USERNAME = os.environ.get("TESTING_USERNAME")
+TESTING_PASSWORD = os.environ.get("TESTING_PASSWORD")
 
 
 def verify_testing(credentials: Annotated[HTTPBasicCredentials, Depends(basic_scheme)]):
+    # NOTE:
+    # Only raise exceptions if this dependency is used in testing environment.
+    # In development, staging or production these environment variable may/should not be present.
+    if not TESTING_USERNAME:
+        raise Exception("TESTING_USERNAME environment variable not set")
+    if not TESTING_PASSWORD:
+        raise Exception("TESTING_PASSWORD environment variable not set")
+
+    if not TESTING_USERNAME or not TESTING_PASSWORD:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="No testing credentials",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
     is_correct_username = secrets.compare_digest(
         credentials.username.encode("utf8"),
-        TESTING_USERNAME,
+        TESTING_USERNAME.encode("utf8"),
     )
     is_correct_password = secrets.compare_digest(
         credentials.password.encode("utf8"),
-        TESTING_PASSWORD,
+        TESTING_PASSWORD.encode("utf8"),
     )
     if not (is_correct_username and is_correct_password):
         raise HTTPException(

@@ -30,6 +30,8 @@ variables:
 .backend: &backend
   image: python:3.12
   variables:
+    ACCESS_TOKEN_SECRET_KEY: secret
+    REFRESH_TOKEN_SECRET_KEY: secret
     POSTGRES_URL: postgresql://postgres:postgres@postgres:5432/default
     MONGO_URL: mongodb://mongo:27017/default
 
@@ -51,6 +53,8 @@ variables:
 .backend-test:
   <<: *backend
   variables:
+    ACCESS_TOKEN_SECRET_KEY: secret
+    REFRESH_TOKEN_SECRET_KEY: secret
     POSTGRES_URL: postgresql://postgres:postgres@postgres-test:5432/default
     MONGO_URL: mongodb://mongo-test:27017/default
 
