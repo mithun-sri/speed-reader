@@ -1114,6 +1114,15 @@
         "operationId": "get_next_text",
         "parameters": [
           {
+            "name": "is_summary",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "title": "Is Summary"
+            }
+          },
+          {
             "name": "access_token",
             "in": "cookie",
             "required": false,
