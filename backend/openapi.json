@@ -1718,7 +1718,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {
@@ -1766,7 +1773,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {
@@ -1863,7 +1877,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {
@@ -1919,7 +1940,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {
@@ -1995,7 +2023,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {

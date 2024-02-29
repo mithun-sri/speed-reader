@@ -484,6 +484,13 @@ export interface Result {
 /**
  * 
  * @export
+ * @interface Summary
+ */
+export interface Summary {
+}
+/**
+ * 
+ * @export
  * @interface Text
  */
 export interface Text {
@@ -501,10 +508,10 @@ export interface Text {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof Text
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -556,10 +563,10 @@ export interface TextCreateWithQuestions {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextCreateWithQuestions
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -649,10 +656,10 @@ export interface TextWithQuestions {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextWithQuestions
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -710,10 +717,10 @@ export interface TextWithQuestionsAndStatistics {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextWithQuestionsAndStatistics
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -795,10 +802,10 @@ export interface TextWithStatistics {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextWithStatistics
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
