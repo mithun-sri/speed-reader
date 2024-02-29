@@ -37,9 +37,6 @@ async def get_next_text(
 ):
     """
     Gets the next text that the user has not attempted before.
-    TODO:
-    The current implementation returns a random text,
-    regardless of which texts the user has seen.
     """
     text_ids = models.History.objects(user_id=user.id).distinct("text_id")
 
@@ -68,20 +65,24 @@ NUM_QUESTIONS_PER_GAME = 10
 )
 async def get_next_questions(
     text_id: str,
+    user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ):
     """
     Gets next 10 questions that the user has not attempted before.
-    TODO:
-    The current implementation returns 10 random questions for the given text,
-    regardless of which questions the user has seen.
     """
     text = session.get(models.Text, text_id)
     if not text:
         raise TextNotFoundException(text_id=text_id)
 
-    question_ids = models.History.objects(text_id=text_id).distinct("question_ids")
-    question_ids = sum(question_ids, [])
+    pipeline = [
+        {"$match": {"user_id": user.id}},
+        {"$unwind": "$question_ids"},
+        {"$group": {"_id": None, "question_ids": {"$addToSet": "$question_ids"}}},
+    ]
+    item = models.History.objects().aggregate(pipeline)
+    item = next(item, {})
+    question_ids = item.get("question_ids", [])
 
     query_unseen = (
         select(models.Question)

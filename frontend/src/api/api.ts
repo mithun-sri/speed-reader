@@ -1959,7 +1959,7 @@ export class DefaultApi extends BaseAPI {
 export const GameApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {AccessToken} [accessToken] 
@@ -1994,7 +1994,7 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
          * @param {boolean} isSummary 
          * @param {AccessToken} [accessToken] 
@@ -2083,7 +2083,7 @@ export const GameApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = GameApiAxiosParamCreator(configuration)
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {AccessToken} [accessToken] 
@@ -2097,7 +2097,7 @@ export const GameApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
          * @param {boolean} isSummary 
          * @param {AccessToken} [accessToken] 
@@ -2136,7 +2136,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = GameApiFp(configuration)
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {AccessToken} [accessToken] 
@@ -2147,7 +2147,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.getNextQuestions(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
-         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
          * @param {boolean} isSummary 
          * @param {AccessToken} [accessToken] 
@@ -2180,7 +2180,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
  */
 export class GameApi extends BaseAPI {
     /**
-     * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+     * Gets next 10 questions that the user has not attempted before.
      * @summary Get Next Questions
      * @param {string} textId 
      * @param {AccessToken} [accessToken] 
@@ -2193,7 +2193,7 @@ export class GameApi extends BaseAPI {
     }
 
     /**
-     * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+     * Gets the next text that the user has not attempted before.
      * @summary Get Next Text
      * @param {boolean} isSummary 
      * @param {AccessToken} [accessToken] 
