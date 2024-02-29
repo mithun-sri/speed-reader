@@ -59,7 +59,7 @@ def get_current_user_or_none(
     if not username:
         raise InvalidTokenException()
 
-    query = select(User).filter(User.username == username)
+    query = select(User).where(User.username == username)
     user = session.scalars(query).one_or_none()
     return user
 
