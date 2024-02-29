@@ -19,10 +19,10 @@ const NotFound = () => {
 
   return (
     <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          height: "100vh",
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100vh",
       }}
     >
       <Header />
@@ -34,37 +34,37 @@ const NotFound = () => {
           alignItems: "center",
         }}
       >
-      <Box>
-        <JetBrainsMonoText
-          text="404"
-          size={window.innerWidth / 10}
-          color="#E2B714"
-        ></JetBrainsMonoText>
-      </Box>
-      <Box
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          marginTop: "1em",
-        }}
-      >
-        {text.split(" ").map((word, index) => (
-          <Box
-            component="span"
-            key={index}
-            sx={{
-              margin: "0.4em",
-            }}
-          >
-            <JetBrainsMonoText
-              text={word}
-              size={window.innerWidth / 50}
-              color={index <= highlightedIndex ? "#E2B714" : "#646669"}
-            ></JetBrainsMonoText>
-          </Box>
-        ))}
-      </Box>
+        <Box>
+          <JetBrainsMonoText
+            text="404"
+            size={window.innerWidth / 10}
+            color="#E2B714"
+          ></JetBrainsMonoText>
+        </Box>
+        <Box
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            marginTop: "1em",
+          }}
+        >
+          {text.split(" ").map((word, index) => (
+            <Box
+              component="span"
+              key={index}
+              sx={{
+                margin: "0.4em",
+              }}
+            >
+              <JetBrainsMonoText
+                text={word}
+                size={window.innerWidth / 50}
+                color={index <= highlightedIndex ? "#E2B714" : "#646669"}
+              ></JetBrainsMonoText>
+            </Box>
+          ))}
+        </Box>
       </Box>
     </Box>
   );

@@ -48,12 +48,12 @@ const ModeSelectView = () => {
             transition={{ duration: 1 }}
             exit={{ opacity: 0 }}
           >
-                    <Carousel
-          title="choose game mode."
-          options={options}
-          returnSelectedIndex={handleValueFromCarousel}
-          defaultIdx={mode !== null ? options.indexOf(mode) : undefined}
-        />
+            <Carousel
+              title="choose game mode."
+              options={options}
+              returnSelectedIndex={handleValueFromCarousel}
+              defaultIdx={mode !== null ? options.indexOf(mode) : undefined}
+            />
           </motion.div>
         </AnimatePresence>
         <Footer />

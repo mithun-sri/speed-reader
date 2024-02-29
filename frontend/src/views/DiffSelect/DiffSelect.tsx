@@ -60,14 +60,14 @@ const DiffSelect = () => {
             transition={{ duration: 1 }}
             exit={{ opacity: 0 }}
           >
-        <Carousel
-          title="choose text difficulty."
-          options={options}
-          returnSelectedIndex={handleValueFromCarousel}
-          defaultIdx={
-            difficulty !== null ? options.indexOf(difficulty) : undefined
-          }
-        />
+            <Carousel
+              title="choose text difficulty."
+              options={options}
+              returnSelectedIndex={handleValueFromCarousel}
+              defaultIdx={
+                difficulty !== null ? options.indexOf(difficulty) : undefined
+              }
+            />
           </motion.div>
         </AnimatePresence>
       </Box>

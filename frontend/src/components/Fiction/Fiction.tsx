@@ -1,12 +1,11 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 interface FictionBoxProps {
-    is_fiction?: boolean;
+  is_fiction?: boolean;
 }
 
 const FictionBox: React.FC<FictionBoxProps> = ({ is_fiction }) => {
-
   return (
     <Box
       sx={{
@@ -24,7 +23,7 @@ const FictionBox: React.FC<FictionBoxProps> = ({ is_fiction }) => {
         marginLeft: "10px",
       }}
     >
-        {is_fiction ? "FICTION" : "NON-FICTION"}
+      {is_fiction ? "FICTION" : "NON-FICTION"}
     </Box>
   );
 };
