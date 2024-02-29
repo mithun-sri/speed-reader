@@ -43,7 +43,7 @@ async def get_next_text(
     """
     text_ids = models.History.objects(user_id=user.id).distinct("text_id")
 
-    query_unseen = select(models.Text).where(models.Text.id.notin_(text_ids))
+    query_unseen = select(models.Text).where(models.Text.id.notin_(text_ids)).limit(1)
     query_random = query_unseen.order_by(func.random()).limit(1)
     if is_summary:
         query_unseen = query_unseen.where(models.Text.summary.isnot(None))
