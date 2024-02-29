@@ -13,10 +13,10 @@ import { useGameScreenContext } from "../GameScreen/GameScreen";
 const AdaptiveModeView = () => {
   // When GPT get next text is set up use the following instead
   //const { wpm, setTextId, summarised } = useGameContext();
-  //const { data: text } = summarised ? useNextSummarisedText() : useNextText();
+  //const { data: text } = useNextText(summarised);
   const { wpm, setTextId, summarised } = useGameContext();
-  const { resumeWebGazer, pauseWebGazer } = useWebGazerContext();
   const { data: text } = useNextText(summarised);
+  const { resumeWebGazer, pauseWebGazer } = useWebGazerContext();
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   useEffect(() => {
