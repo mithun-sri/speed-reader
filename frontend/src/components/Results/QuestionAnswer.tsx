@@ -60,7 +60,7 @@ const QuestionAnswer: React.FC<{
             key={index}
             sx={{
               width: fontSize * 4,
-              fontSize: fontSize / 2,
+              fontSize: fontSize / 3,
               backgroundColor:
                 userAnswer !== index && index !== correctAnswer
                   ? "#E2B714"
@@ -69,7 +69,7 @@ const QuestionAnswer: React.FC<{
                     : "#379F3B",
               border: `calc(${fontSize / 5}px) solid #646669`,
               borderRadius: fontSize / 7,
-              padding: `calc(${fontSize / 5}px) calc(${fontSize * 1.4}px)`,
+              padding: `calc(${fontSize / 5}px) calc(${fontSize * 1.3}px)`,
               color: "#fff",
               display: "flex",
               alignItems: "center",

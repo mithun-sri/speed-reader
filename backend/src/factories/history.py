@@ -33,6 +33,7 @@ class HistoryFactory(factory.mongoengine.MongoEngineFactory):
     game_submode = factory.LazyAttribute(
         lambda obj: random.choice(GAME_SUBMODES[obj.game_mode])
     )
+    difficulty = factory.Faker("random_element", elements=["easy", "medium", "hard"])
     summary = factory.Faker("boolean")
     average_wpm = factory.Faker("random_int", min=1, max=1000)
     interval_wpms = factory.List(

@@ -119,6 +119,11 @@ const AdaptiveModeTextDisplay: React.FC<{
   const { gazeX } = useWebGazerContext();
   const { incrementCurrentStage } = useGameScreenContext();
 
+  // initialize intervalWpms list with initial wpm on component first render
+  useEffect(() => {
+    setIntervalWpms([wpm]);
+  }, []);
+
   useEffect(() => {
     if (wordsArray.length > 0 && highlightedIndex === wordsArray.length - 1) {
       const avg_wpm = calculateAverageWpm(intervalWpms);

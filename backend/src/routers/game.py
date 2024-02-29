@@ -137,6 +137,7 @@ async def post_answers(
         question_ids=question_ids,
         game_mode=game_mode,
         game_submode=game_submode,
+        difficulty=text.difficulty,
         summary=summary,
         average_wpm=average_wpm,
         interval_wpms=interval_wpms,

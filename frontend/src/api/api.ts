@@ -107,10 +107,10 @@ export interface BodyGetUserAvailableTexts {
 export interface BodyGetUserAvailableTextsTextFilter {
     /**
      * 
-     * @type {GameMode}
+     * @type {GameMode1}
      * @memberof BodyGetUserAvailableTextsTextFilter
      */
-    'game_mode'?: GameMode;
+    'game_mode'?: GameMode1;
     /**
      * 
      * @type {Difficulty}
@@ -241,9 +241,9 @@ export interface GameMode {
 /**
  * 
  * @export
- * @interface GameSubmode
+ * @interface GameMode1
  */
-export interface GameSubmode {
+export interface GameMode1 {
 }
 /**
  * 
@@ -278,10 +278,16 @@ export interface History {
     'game_mode': string;
     /**
      * 
-     * @type {GameSubmode}
+     * @type {string}
      * @memberof History
      */
-    'game_submode': GameSubmode;
+    'game_submode': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof History
+     */
+    'difficulty': string;
     /**
      * 
      * @type {boolean}
@@ -593,10 +599,10 @@ export interface TextCreateWithQuestions {
 export interface TextFilter {
     /**
      * 
-     * @type {GameMode}
+     * @type {GameMode1}
      * @memberof TextFilter
      */
-    'game_mode'?: GameMode;
+    'game_mode'?: GameMode1;
     /**
      * 
      * @type {Difficulty}
@@ -1859,6 +1865,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication HTTPBasic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -2346,11 +2356,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
+         * @param {GameMode} [gameMode] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserStatistics: async (gameMode?: GameMode, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/current/statistics`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2362,6 +2373,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (gameMode !== undefined) {
+                for (const [key, value] of Object.entries(gameMode)) {
+                    localVarQueryParameter[key] = value;
+                }
+            }
 
 
     
@@ -2405,6 +2422,37 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(bodyLoginUser, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Logs out a user. Invalidates the refresh token. TODO: Blacklist the refresh token.
+         * @summary Logout User
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        logoutUser: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2517,12 +2565,13 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
+         * @param {GameMode} [gameMode] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserStatistics(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics(accessToken, options);
+        async getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics(gameMode, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserStatistics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2539,6 +2588,19 @@ export const UserApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.loginUser(bodyLoginUser, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.loginUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Logs out a user. Invalidates the refresh token. TODO: Blacklist the refresh token.
+         * @summary Logout User
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async logoutUser(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.logoutUser(accessToken, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.logoutUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2612,12 +2674,13 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
+         * @param {GameMode} [gameMode] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics(accessToken?: AccessToken, options?: any): AxiosPromise<UserStatistics> {
-            return localVarFp.getUserStatistics(accessToken, options).then((request) => request(axios, basePath));
+        getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: any): AxiosPromise<UserStatistics> {
+            return localVarFp.getUserStatistics(gameMode, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Logs in a user. Returns access token and refresh token.
@@ -2629,6 +2692,16 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          */
         loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
             return localVarFp.loginUser(bodyLoginUser, accessToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Logs out a user. Invalidates the refresh token. TODO: Blacklist the refresh token.
+         * @summary Logout User
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        logoutUser(accessToken?: AccessToken, options?: any): AxiosPromise<any> {
+            return localVarFp.logoutUser(accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Registers a new user.
@@ -2706,13 +2779,14 @@ export class UserApi extends BaseAPI {
     /**
      * Gets the statistics based on the user\'s game history.
      * @summary Get User Statistics
+     * @param {GameMode} [gameMode] 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserStatistics(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getUserStatistics(accessToken, options).then((request) => request(this.axios, this.basePath));
+    public getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUserStatistics(gameMode, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2726,6 +2800,18 @@ export class UserApi extends BaseAPI {
      */
     public loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).loginUser(bodyLoginUser, accessToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Logs out a user. Invalidates the refresh token. TODO: Blacklist the refresh token.
+     * @summary Logout User
+     * @param {AccessToken} [accessToken] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public logoutUser(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).logoutUser(accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
