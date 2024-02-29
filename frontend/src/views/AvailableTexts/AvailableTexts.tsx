@@ -3,7 +3,7 @@ import Header from "../../components/Header/Header";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import StyledPagination from "../../components/Pagination/Pagination";
-import {ItemBoxHovered, ItemBox, SearchBar}from "../../components/TextCards/AvailableTextCards"
+import {ItemBoxHovered, ItemBox, SearchBar, ItemBoxHoveredSkeleton}from "../../components/TextCards/AvailableTextCards"
 import { getAvailableTexts } from "../../hooks/users";
 
 const AvailableTexts: React.FC = () => {
@@ -21,7 +21,8 @@ const AvailableTexts: React.FC = () => {
             difficulty: "Easy",
             image: "https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg",
             author: "F. Scott Fitzgerald",
-            is_fiction: true
+            is_fiction: true,
+            source: "https://www.gutenberg.org/ebooks/64317"
         },
         {
             title: "Pride and Prejudice",
@@ -29,7 +30,8 @@ const AvailableTexts: React.FC = () => {
             difficulty: "Med",
             image: "https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg",
             author: "Jane Austen",
-            is_fiction: true
+            is_fiction: true,
+            source: "https://www.gutenberg.org/ebooks/1342"
         },
         {
             title: "Middlemarch",
@@ -37,7 +39,8 @@ const AvailableTexts: React.FC = () => {
             difficulty: "Hard",
             image: "https://www.gutenberg.org/cache/epub/145/pg145.cover.medium.jpg",
             author: "George Eliot",
-            is_fiction: true
+            is_fiction: true,
+            source: "https://www.gutenberg.org/ebooks/145"
         },
     ]
 
@@ -75,11 +78,7 @@ const AvailableTexts: React.FC = () => {
                                 <Box
                                     key={index}
                                     onMouseEnter={() => {
-                                        const timeoutId = setTimeout(() => {
                                             setIsHovered(true);
-                                        }
-                                            , 300);
-                                        return () => clearTimeout(timeoutId);
                                     }}
                                     onMouseLeave={() => {
                                         setIsHovered(false);
@@ -92,7 +91,7 @@ const AvailableTexts: React.FC = () => {
                                         alignItems: "center",
                                     }}
                                 >
-                                    <ItemBox key={index} title={text.title} description={text.description} difficulty={text.difficulty} image={text.image} author={text.author} is_fiction={text.is_fiction}/>
+                                    <ItemBox key={index} title={text.title} description={text.description} difficulty={text.difficulty} image={text.image} author={text.author} is_fiction={text.is_fiction} source={text.source}/>
                                     <AnimatePresence mode="wait">
                                     {isHovered && (
                                         <motion.div
@@ -104,12 +103,15 @@ const AvailableTexts: React.FC = () => {
                                             style={{
                                                 display: "flex",
                                                 width: "65%",
-                                                padding: "30px",
+                                                paddingLeft: "20px",
+                                                paddingRight: "20px",
+                                                paddingTop: "10px",
+                                                paddingBottom: "10px",
                                                 flexDirection: "column",
                                                 backgroundColor: "#35363a",
                                                 position: 'absolute',
                                                 zIndex: 1,
-                                                height: "400px",
+                                                height: "300px",
                                             }}
                                         >
                                             <ItemBoxHovered
@@ -119,6 +121,7 @@ const AvailableTexts: React.FC = () => {
                                                 image={text.image}
                                                 author={text.author}
                                                 is_fiction={text.is_fiction}
+                                                source={text.source}
                                             />
                                         </motion.div>
 

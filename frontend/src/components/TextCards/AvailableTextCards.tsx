@@ -3,13 +3,13 @@ import Skeleton from '@mui/material/Skeleton';
 import { useState } from 'react';
 import JetBrainsMonoText from "../Text/TextComponent";
 import { StyledCheckbox } from '../Checkbox/Checkbox';
-import { Link, MenuItem, OutlinedInput } from '@mui/material';
+import { Icon, Link, MenuItem, OutlinedInput } from '@mui/material';
 import StyledMultiSelect from '../MultiSelect/MultiSelect';
 import IconButton from '@mui/material/IconButton';
 import StyledTextField from '../Textbox/StyledTextField';
 import DifficultyBox from '../Difficulty/DifficultyBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSquareArrowUpRight } from '@fortawesome/free-solid-svg-icons';
+import { faSquareArrowUpRight, faEye, faGamepad } from '@fortawesome/free-solid-svg-icons';
 import FictionBox from '../Fiction/Fiction';
 
 interface TextProps {
@@ -19,6 +19,7 @@ interface TextProps {
     image?: string;
     author?: string;
     is_fiction?: boolean;
+    source: string;
 }
 
 export const SearchBar: React.FC = () => {
@@ -66,6 +67,10 @@ export const SearchBar: React.FC = () => {
                     fontSize: '20px',
                     wordWrap: "break-word",
                     textAlign: "center",
+                    "&:hover": {
+                        backgroundColor: "#cba412",
+                    },
+                    transition: "0.1s ease-out"
                     }}
                 >
                     <Box>Update Filters</Box>
@@ -136,7 +141,8 @@ export const ItemBoxHovered: React.FC<TextProps> = (
         difficulty,
         image,
         author,
-        is_fiction
+        is_fiction,
+        source
     }
 ) => {
     return (
@@ -181,27 +187,35 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                         }}
                     >
                         <JetBrainsMonoText text={title} size={24} color={"#D9D9D9"} />
-                        <Box sx={{display: "flex", width: "50%", flexDirection: "row", alignItems: "center"}}>
+                        <Box sx={{display: "flex", width: "40%", flexDirection: "row", alignItems: "center"}}>
                             <DifficultyBox difficulty={difficulty} />
                             <FictionBox is_fiction={is_fiction}/>
-                            <Link href="https://www.google.com" sx={{textDecoration: "none", marginLeft: "10px", float: "right"}}>
-                                <Box sx={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-                                    <JetBrainsMonoText text={"Learn more"} size={16} color={"#D9D9D9"} />
-                                    <IconButton
-                                        sx={{
-                                            color: "#FFFFFF",
-                                            "& :hover": {
-                                                color: "#E2B714",
-                                            },
-                                        }}
-                                    >
-                                        <FontAwesomeIcon
-                                            icon={faSquareArrowUpRight}
-                                            className="fa-table-page-icon"
-                                        />
-                                    </IconButton>
-                                </Box>
-                            </Link>
+                        </Box>
+                        <Box sx={{display: "flex", width: "20%", flexDirection: "row", marginLeft: "auto", justifyContent: "right"}}>
+                            <Link href={source} sx={{
+                                textDecoration: "none",
+                                marginLeft: "10px", 
+                                float: "right",
+                                justifyContent: "right",
+                                }}>
+                                    <Box sx={{
+                                        display: "flex", 
+                                        flexDirection: "row", 
+                                        alignItems: "center"
+                                        }}>
+                                        <JetBrainsMonoText text={"Learn more"} size={16} color={"#D9D9D9"} />
+                                        <IconButton
+                                            sx={{
+                                                color: "#FFFFFF",
+                                            }}
+                                        >
+                                            <FontAwesomeIcon
+                                                icon={faSquareArrowUpRight}
+                                                className="fa-table-page-icon"
+                                            />
+                                        </IconButton>
+                                    </Box>
+                                </Link>
                         </Box>
                     </Box>
                     <JetBrainsMonoText text={"By " + author} size={16} color={"#D9D9D9"} />
@@ -215,7 +229,6 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                         justifyContent: "right",
                         alignItems: "center",
                         width: "100%",
-                        backgroundColor: "red",
                     }}
                 >
                     <IconButton
@@ -234,8 +247,20 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                             fontSize: '16px',
                             wordWrap: "break-word",
                             textAlign: "center",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            "&:hover": {
+                                backgroundColor: "#cba412",
+                            },
+                            transition: "0.1s ease-out"
                             }}
                         >
+                            <FontAwesomeIcon
+                                icon={faEye}
+                                className="fa-table-page-icon"
+                                style={{marginRight: "10px"}}
+                            />
                             <Box>Play Adaptive</Box>
                         </Box>
                     </IconButton>
@@ -255,30 +280,21 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                             fontSize: '16px',
                             wordWrap: "break-word",
                             textAlign: "center",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            "&:hover": {
+                                backgroundColor: "#cba412",
+                            },
+                            transition: "0.1s ease-out"
                             }}
                         >
+                                                        <FontAwesomeIcon
+                                icon={faGamepad}
+                                className="fa-table-page-icon"
+                                style={{marginRight: "10px"}}
+                            />
                             <Box>Play Standard</Box>
-                        </Box>
-                    </IconButton>
-                    <IconButton
-                        sx={{
-                            fontFamily: "JetBrains Mono, monospace",
-                            color: "#FFFFFF",
-                        }}
-                        >
-                        <Box
-                            sx={{
-                            border: "none",
-                            borderRadius: "5px",
-                            background: "#E2B714",
-                            padding: "10px 20px 10px 20px",
-                            fontWeight: "bolder",
-                            fontSize: '16px',
-                            wordWrap: "break-word",
-                            textAlign: "center",
-                            }}
-                        >
-                            <Box>Play Summarised</Box>
                         </Box>
                     </IconButton>
                 </Box>
@@ -292,7 +308,8 @@ export const ItemBoxHoveredSkeleton: React.FC<TextProps> = (
         description,
         difficulty,
         author,
-        is_fiction
+        is_fiction,
+        source
     }
 ) => {
     const [loading,setLoading] = useState(true)
@@ -301,32 +318,37 @@ export const ItemBoxHoveredSkeleton: React.FC<TextProps> = (
         <Box>
             <Box
                 sx={{
-                    marginTop: "30px",
-                    marginBottom: "10px",
+                    marginTop: "10px",
                 }}
             >
                 <Skeleton
                     variant="rectangular"
                     width="100%"
-                    height="300px"
+                    height="115px"
                 />
             </Box>
             <Box
                 sx={{
-                    marginBottom: "10px",
+                    marginTop: "15px",
                 }}
             >
-                  <Skeleton
+                                <Skeleton
                     variant="rectangular"
-                    width="70%"
-                    height="50px"
+                    width="100%"
+                    height="60px"
                 />
-            </Box>
-            <Skeleton
-                variant="rectangular"
-                width="60%"
-                height="50px"
-            />
+                </Box>
+                <Box
+                sx={{
+                    marginTop: "15px",
+                }}
+            >
+                                <Skeleton
+                    variant="rectangular"
+                    width="80%"
+                    height="60px"
+                />
+                </Box>
        </Box>
     )
 }
@@ -338,7 +360,8 @@ export const ItemBox: React.FC<TextProps> = (
         difficulty,
         image,
         author,
-        is_fiction
+        is_fiction,
+        source
     }
 ) => {
     const truncatedDescription = description.length > 200 ? description.substring(0, 200) + "..." : description;
