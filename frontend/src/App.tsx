@@ -34,7 +34,10 @@ function App() {
                     <Route element={<AuthRoute fallback="/login" />}>
                       <Route path="/" element={<Navigate to="/game" />} />
                       <Route path="/game" element={<GamePage />} />
-                      <Route path="/calibrate" element={<WebGazerCalibration />} />
+                      <Route
+                        path="/calibrate"
+                        element={<WebGazerCalibration />}
+                      />
                       <Route path="/user" element={<UserView />} />
                       <Route path="/gpt" element={<GptView />} />
                       <Route element={<AdminRoute fallback="/login" />}>
