@@ -1,7 +1,6 @@
-import random
 from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends, Security
+from fastapi import APIRouter, Body, Depends, Query, Security
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -32,6 +31,8 @@ router = APIRouter(
     response_model=schemas.Text,
 )
 async def get_next_text(
+    is_summary: Annotated[bool, Query()],
+    user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ):
     """
@@ -40,12 +41,20 @@ async def get_next_text(
     The current implementation returns a random text,
     regardless of which texts the user has seen.
     """
-    query = select(models.Text).order_by(func.random()).limit(1)
-    text = session.scalars(query).one_or_none()
-    if not text:
-        raise NoTextAvailableException()
+    text_ids = models.History.objects(user_id=user.id).distinct("text_id")
 
-    return text
+    query_unseen = select(models.Text).where(models.Text.id.notin_(text_ids))
+    query_random = query_unseen.order_by(func.random()).limit(1)
+    if is_summary:
+        query_unseen = query_unseen.where(models.Text.summary.isnot(None))
+        query_random = query_random.where(models.Text.summary.isnot(None))
+
+    if text := session.scalars(query_unseen).one_or_none():
+        return text
+    if text := session.scalars(query_random).one_or_none():
+        return text
+
+    raise NoTextAvailableException()
 
 
 # TODO:
@@ -71,10 +80,26 @@ async def get_next_questions(
     if not text:
         raise TextNotFoundException(text_id=text_id)
 
-    if len(text.questions) < NUM_QUESTIONS_PER_GAME:
-        raise NotEnoughQuestionsException(text_id=text_id)
+    question_ids = models.History.objects(text_id=text_id).distinct("question_ids")
+    question_ids = sum(question_ids, [])
 
-    return random.sample(text.questions, NUM_QUESTIONS_PER_GAME)
+    query_unseen = (
+        select(models.Question)
+        .where(models.Question.id.notin_(question_ids))
+        .limit(NUM_QUESTIONS_PER_GAME)
+    )
+    query_random = (
+        query_unseen.where(models.Question.text_id == text_id)
+        .order_by(func.random())
+        .limit(NUM_QUESTIONS_PER_GAME)
+    )
+
+    if questions := session.scalars(query_unseen).all():
+        return questions
+    if questions := session.scalars(query_random).all():
+        return questions
+
+    raise NotEnoughQuestionsException(text_id=text_id)
 
 
 @router.post(
