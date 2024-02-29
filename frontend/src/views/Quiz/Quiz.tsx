@@ -63,6 +63,10 @@ const QuizView = () => {
 
   const allQuestionsAnswered = quizAnswers.every((option) => option !== null);
 
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   const postAnswers = usePostAnswers(textId);
   const moveToResults = () => {
     setTimeout(() => {
@@ -93,6 +97,7 @@ const QuizView = () => {
             onSuccess: (res: any) => {
               console.log("Answers posted successfully: ", res?.data);
               setQuizResults(res?.data);
+              scrollToTop();
               incrementCurrentStage();
             },
             onError: (err: any) => {
@@ -195,6 +200,7 @@ const QuizView = () => {
                 borderRadius: "30px",
                 background: "#E2B714",
                 padding: "10px 60px 10px 60px",
+                marginBottom: "10vh",
                 fontWeight: "bolder",
                 fontSize: 35,
                 cursor: "pointer",

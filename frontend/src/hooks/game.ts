@@ -7,10 +7,10 @@ import { BodyPostAnswers, GameApi } from "../api";
 
 const gameApi = new GameApi();
 
-export function useNextText() {
+export function useNextText(isSummary: boolean) {
   return useSuspenseQuery({
     queryKey: ["next-text"],
-    queryFn: () => gameApi.getNextText().then((res) => res.data),
+    queryFn: () => gameApi.getNextText(isSummary).then((res) => res.data),
     // NOTE:
     // This disables caching mechanism of react-query temporarily.
     // Comment it out when we have data-fetching logic working.

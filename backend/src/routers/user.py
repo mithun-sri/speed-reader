@@ -105,15 +105,15 @@ async def get_user_available_texts(
     def filter_query(query):
         # Build the base query for texts not read by user
         read_text_ids = models.History.objects(user_id=user.id).distinct("text_id")
-        query = query.filter(models.Text.id.not_in(read_text_ids))
+        query = query.where(models.Text.id.not_in(read_text_ids))
 
         if text_filter.game_mode:
             # TODO:
             # Only `summary` is associated with `Text`, not `game_mode`.
-            # query = query.filter(models.Text.game_mode == text_filter.game_mode)
+            # query = query.where(models.Text.game_mode == text_filter.game_mode)
             pass
         if text_filter.difficulty:
-            query = query.filter(models.Text.difficulty == text_filter.difficulty)
+            query = query.where(models.Text.difficulty == text_filter.difficulty)
 
         if text_sort:
             attr = getattr(models.Text, text_sort.field)
@@ -233,10 +233,10 @@ async def register_user(
     """
     Registers a new user.
     """
-    query_check_username = select(models.User).filter(models.User.username == username)
+    query_check_username = select(models.User).where(models.User.username == username)
     if session.scalars(query_check_username).one_or_none():
         raise HTTPException(status_code=409, detail="Username already used")
-    query_check_email = select(models.User).filter(models.User.email == email)
+    query_check_email = select(models.User).where(models.User.email == email)
     if session.scalars(query_check_email).one_or_none():
         raise HTTPException(status_code=409, detail="Email already used")
 
@@ -265,7 +265,7 @@ async def login_user(
     """
     Logs in a user. Returns access token and refresh token.
     """
-    query = select(models.User).filter(models.User.username == username)
+    query = select(models.User).where(models.User.username == username)
     user = session.scalars(query).one_or_none()
     if not user or not verify_password(password, user.password):
         raise InvalidCredentialsException()

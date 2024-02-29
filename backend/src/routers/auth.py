@@ -52,7 +52,7 @@ async def get_token(
     if username is None:
         raise InvalidTokenException()
 
-    query = select(User).filter(User.username == username)
+    query = select(User).where(User.username == username)
     user = session.scalars(query).one_or_none()
     if user is None:
         raise InvalidCredentialsException()

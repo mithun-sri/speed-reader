@@ -206,7 +206,7 @@ async def get_questions(
     """
     Gets the questions of a text by the given id.
     """
-    query = select(models.Question).filter_by(text_id=text_id)
+    query = select(models.Question).where(models.Question.text_id == text_id)
     questions = session.scalars(query).all()
 
     pipeline = [
