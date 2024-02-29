@@ -102,7 +102,7 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
         .begin();
 
       await webgazer
-        .showPredictionPoints(true)
+        .showPredictionPoints(false)
         .showVideoPreview(true)
         .applyKalmanFilter(true);
 
