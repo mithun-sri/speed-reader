@@ -2,10 +2,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { AxiosClientProvider } from "./axios";
 import NotFound from "./components/Error/NotFound";
 import ServerError from "./components/Error/ServerError";
 import LinearProgressFallback from "./components/LoadingBar/LinearProgressFallback";
+import { ApiClientProvider } from "./context/ApiContext";
 import { SnackContextProvider } from "./context/SnackContext";
 import AdminRoute from "./routes/AdminRoute";
 import AuthRoute from "./routes/AuthRoute";
@@ -21,11 +21,14 @@ function App() {
   const queryClient = new QueryClient();
 
   return (
+    // TODO:
+    // Refactor deep nested tree of context providers:
+    // https://alexkorep.com/react/react-many-context-providers-tree/
     <Suspense fallback={<LinearProgressFallback />}>
       <ErrorBoundary FallbackComponent={ServerError}>
-        <SnackContextProvider>
-          <AxiosClientProvider>
-            <QueryClientProvider client={queryClient}>
+        <ApiClientProvider>
+          <QueryClientProvider client={queryClient}>
+            <SnackContextProvider>
               <BrowserRouter>
                 <Routes>
                   <Route element={<AuthRoute fallback="/login" />}>
@@ -44,9 +47,9 @@ function App() {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
-            </QueryClientProvider>
-          </AxiosClientProvider>
-        </SnackContextProvider>
+            </SnackContextProvider>
+          </QueryClientProvider>
+        </ApiClientProvider>
       </ErrorBoundary>
     </Suspense>
   );
