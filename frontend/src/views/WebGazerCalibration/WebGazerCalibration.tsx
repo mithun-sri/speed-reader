@@ -1,14 +1,23 @@
 import { Box } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
-import { useGameContext } from "../../context/GameContext";
+import { useWebGazerContext } from "../../context/WebGazerContext";
 import { GameScreenContext } from "../GameScreen/GameScreen";
 import "./WebGazerCalibration.css";
 
 const WebGazerCalibration = () => {
-  const { initialiseWebGazer, turnOffWebGazerCam, webGazerInitialised } =
-    useGameContext();
+  const {
+    initialiseWebGazer,
+    turnOffWebGazerCam,
+    pauseWebGazer,
+    setNeedsCalibration,
+    webGazerInitialised,
+    manualRecalibration,
+    setManualRecalibration,
+  } = useWebGazerContext();
   const canvasRef = useRef(null);
+  const navigate = useNavigate();
   const [pointCalibrate, setPointCalibrate] = useState(0);
   const [clickCounts, setClickCounts] = useState({
     Pt1: 0,
@@ -38,6 +47,8 @@ const WebGazerCalibration = () => {
     return () => {
       window.removeEventListener("load", handleLoad);
       turnOffWebGazerCam();
+      pauseWebGazer();
+      setNeedsCalibration(false);
     };
   }, []);
 
@@ -91,15 +102,20 @@ const WebGazerCalibration = () => {
       document.getElementById("Pt5")?.style.removeProperty("display");
       turnOffWebGazerCam();
     } else if (pointCalibrate >= 9) {
-      document.querySelectorAll(".CalibrationButton").forEach((i) => {
-        if (i instanceof HTMLElement) {
-          i.style.setProperty("display", "none");
-        }
-      });
-      document
-        .getElementById("calibration_done")
-        ?.style.setProperty("display", "block");
-      clearCanvas();
+      if (manualRecalibration) {
+        setManualRecalibration(false);
+        navigate("/");
+      } else {
+        document.querySelectorAll(".CalibrationButton").forEach((i) => {
+          if (i instanceof HTMLElement) {
+            i.style.setProperty("display", "none");
+          }
+        });
+        document
+          .getElementById("calibration_done")
+          ?.style.setProperty("display", "block");
+        clearCanvas();
+      }
     }
   }, [pointCalibrate]);
 
