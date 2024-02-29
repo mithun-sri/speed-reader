@@ -1,4 +1,5 @@
 import {
+  faArrowsToEye,
   faFileLines,
   faStopwatch,
   faUser,
@@ -10,6 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useWebGazerContext } from "../../context/WebGazerContext";
 
 const HeaderContainer = styled(Box)({
   backgroundColor: "#2C2E31",
@@ -18,10 +20,12 @@ const HeaderContainer = styled(Box)({
   justifyContent: "space-between",
   alignItems: "center",
   color: "white",
+  zIndex: 9999,
 });
 
 const Header = () => {
   const [iconSize, setIconSize] = useState(calculateIconSize());
+  const { webGazerInitialised, setManualRecalibration } = useWebGazerContext();
 
   useEffect(() => {
     function handleResize() {
@@ -51,7 +55,7 @@ const Header = () => {
   }
   return (
     <HeaderContainer>
-      <Link reloadDocument to={"/"} style={{ textDecoration: "" }}>
+      <Link to={"/"} style={{ textDecoration: "" }}>
         <IconButton>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box
@@ -82,11 +86,28 @@ const Header = () => {
         </IconButton>
       </Link>
       <Box sx={{ display: "flex", alignItems: "center" }}>
+        {webGazerInitialised && (
+          <IconButton
+            style={{
+              fontSize: iconSize / 1.8,
+              marginRight: "20px",
+            }}
+            component={Link}
+            onClick={() => {
+              setManualRecalibration(true);
+            }}
+            to="/calibrate"
+          >
+            <FontAwesomeIcon icon={faArrowsToEye} color="#EE4B2B" />
+          </IconButton>
+        )}
+
         <Tooltip title="Available texts">
           <IconButton
             style={{
               fontSize: iconSize / 1.8,
-              marginRight: "15px",
+              marginRight: "20px",
+              marginLeft: "15px",
             }}
             component={Link}
             to="/available-texts"
@@ -99,7 +120,7 @@ const Header = () => {
             style={{
               fontSize: iconSize / 1.8,
               marginRight: iconSize / 1.2,
-              marginLeft: "10px",
+              marginLeft: "15px",
               color: "#D1D0C5",
             }}
             component={Link}

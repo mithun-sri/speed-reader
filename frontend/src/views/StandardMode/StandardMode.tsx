@@ -11,7 +11,9 @@ import "./StandardMode.css";
 
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
+import BlurBox from "../../components/Blur/Blur";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
+import WpmSign from "../../components/WpmSign/WpmSign";
 import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
@@ -27,11 +29,8 @@ const StandardModeGameView: React.FC<{
   mode?: StandardView;
   difficulty?: GameDifficulty;
 }> = ({ wpm, mode }) => {
-  // When GPT get next text is set up use the following instead
-  //const { data: text } = summarised ? useNextSummarisedText() : useNextText();
-  //const { setTextId, summarised } = useGameContext();
-  const { data: text } = useNextText();
-  const { setTextId } = useGameContext();
+  const { setTextId, summarised } = useGameContext();
+  const { data: text } = useNextText(summarised);
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   useEffect(() => {
@@ -76,7 +75,7 @@ const StandardModeGameView: React.FC<{
       >
         {showGameScreen ? (
           <StandardModeGameComponent
-            wpm={wpm || 400} // Handle undefined wpm
+            wpm={wpm || 200} // Handle undefined wpm
             text={text.content}
             view={mode || StandardView.Word} // Handle undefined mode
           />
@@ -212,15 +211,26 @@ const WordTextDisplay: React.FC<{
   const [words, setWords] = useState<string[]>([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
+  const [isPaused, setPaused] = useState(false);
+
+  // initialize intervalWpms list with initial wpm on component first render
+  useEffect(() => {
+    setIntervalWpms([wpm]);
+  }, []);
 
   // updates WPM based on keyboard event
   useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) =>
-      wpmAdjuster(event, curr_wpm, setWpm);
+    const keyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === " ") {
+        setPaused((prevPaused) => !prevPaused);
+      } else {
+        wpmAdjuster(event, curr_wpm, setWpm);
+      }
+    };
     window.addEventListener("keydown", keyDownHandler);
 
     return () => window.removeEventListener("keydown", keyDownHandler);
-  }, [curr_wpm]);
+  }, [curr_wpm, isPaused]);
 
   // updates which word to be shown
   useEffect(() => {
@@ -228,13 +238,15 @@ const WordTextDisplay: React.FC<{
     setWords(wordsArray);
 
     const interval = setInterval(() => {
-      setWordIndex((prevIndex) => prevIndex + 1);
+      if (!isPaused) {
+        setWordIndex((prevIndex) => prevIndex + 1);
+      }
     }, 60000 / curr_wpm); // Word change every (60000 / wpm) milliseconds
 
     return () => {
       clearInterval(interval);
     };
-  }, [text, curr_wpm]);
+  }, [text, curr_wpm, isPaused]);
 
   // calculate avg wpm and navigate to next screen (quiz) when game ends
   useEffect(() => {
@@ -251,14 +263,18 @@ const WordTextDisplay: React.FC<{
   // record WPM every 2.5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setIntervalWpms([...intervalWpms, curr_wpm]);
+      if (!isPaused) {
+        setIntervalWpms([...intervalWpms, curr_wpm]);
+      }
     }, 2500);
 
     return () => clearInterval(interval);
-  }, [curr_wpm, intervalWpms, setIntervalWpms]);
+  }, [curr_wpm, intervalWpms, isPaused]);
 
   return (
     <Box>
+      <WpmSign wpm={curr_wpm} />
+      {isPaused && <BlurBox />}
       <Box
         sx={{
           padding: "25px",
@@ -300,32 +316,46 @@ export const HighlightedTextDisplay: React.FC<{
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
   const [curr_wpm, setWpm] = useState(wpm);
+  const [isPaused, setPaused] = useState(false);
+
   const wordsPerFrame = 30;
   const wordsArray = text.split(" ");
 
+  // initialize intervalWpms list with initial wpm on component first render
+  useEffect(() => {
+    setIntervalWpms([wpm]);
+  }, []);
+
   // updates WPM based on keyboard event
   useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) =>
-      wpmAdjuster(event, curr_wpm, setWpm);
+    const keyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === " ") {
+        setPaused((prevPaused) => !prevPaused);
+      } else {
+        wpmAdjuster(event, curr_wpm, setWpm);
+      }
+    };
     window.addEventListener("keydown", keyDownHandler);
 
     return () => window.removeEventListener("keydown", keyDownHandler);
-  }, [curr_wpm]);
+  }, [curr_wpm, isPaused]);
 
   // updates which word to be highlighted
   useEffect(() => {
     const interval = setInterval(() => {
-      setHighlightedIndex((prevIndex) => {
-        const newIndex = prevIndex + 1;
-        setWordIndex(newIndex);
-        return newIndex < wordsArray.length ? newIndex : prevIndex;
-      });
+      if (!isPaused) {
+        setHighlightedIndex((prevIndex) => {
+          const newIndex = prevIndex + 1;
+          setWordIndex(newIndex);
+          return newIndex < wordsArray.length ? newIndex : prevIndex;
+        });
+      }
     }, 60000 / curr_wpm);
 
     return () => {
       clearInterval(interval);
     };
-  }, [text, curr_wpm]);
+  }, [text, curr_wpm, isPaused]);
 
   // calculate avg wpm and navigate to next screen (quiz) when game ends
   useEffect(() => {
@@ -342,11 +372,13 @@ export const HighlightedTextDisplay: React.FC<{
   // record WPM every 2.5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setIntervalWpms([...intervalWpms, curr_wpm]);
+      if (!isPaused) {
+        setIntervalWpms([...intervalWpms, curr_wpm]);
+      }
     }, 2500);
 
     return () => clearInterval(interval);
-  }, [curr_wpm, intervalWpms, setIntervalWpms]);
+  }, [curr_wpm, intervalWpms, isPaused]);
 
   // calculates which words should be shown on the screen (in the current frame)
   const currentFrameIndex = Math.floor(highlightedIndex / wordsPerFrame);
@@ -359,7 +391,15 @@ export const HighlightedTextDisplay: React.FC<{
     .join(" ");
 
   return (
-    <Box>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <WpmSign wpm={curr_wpm} />
+      {isPaused && <BlurBox />}
       <Box
         sx={{
           marginTop: "160px",
@@ -395,6 +435,7 @@ export const HighlightedTextDisplay: React.FC<{
         sx={{
           width: window.innerWidth / 2,
           paddingTop: "200px",
+          paddingBottom: "10px",
         }}
       >
         <GameProgressBar
@@ -419,13 +460,13 @@ const wpmAdjuster = (
 ): void => {
   if (event.code === "ArrowUp") {
     console.log("ArrowUp");
-    const new_wpm = curr_wpm + 5;
+    const new_wpm = curr_wpm + 10;
     setWpm(new_wpm);
     console.log(new_wpm);
   }
   if (event.code === "ArrowDown") {
     console.log("ArrowDown");
-    const new_wpm = Math.max(curr_wpm - 5, 1);
+    const new_wpm = Math.max(curr_wpm - 10, 1);
     setWpm(new_wpm);
     console.log(new_wpm);
   }

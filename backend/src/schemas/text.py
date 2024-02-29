@@ -1,4 +1,6 @@
 # TODO: Organise schemas into appropriate modules.
+from typing import Optional
+
 from pydantic import BaseModel
 
 from .game import Question, QuestionCreate
@@ -7,7 +9,7 @@ from .game import Question, QuestionCreate
 class TextBase(BaseModel):
     title: str
     content: str
-    summary: str
+    summary: Optional[str]
     source: str
     fiction: bool  # TODO: Rename to `is_fiction`
     difficulty: str

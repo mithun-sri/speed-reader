@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
+import { QuestionMasked } from "../api";
 import { GameDifficulty, GameMode } from "../common/constants";
 import { StandardView } from "../views/StandardMode/StandardMode";
-import { QuestionMasked } from "../api";
 
 interface GameContextType {
   mode: GameMode | null;
@@ -18,16 +18,6 @@ interface GameContextType {
   setAverageWpm: (averageWpm: number) => void;
   intervalWpms: number[];
   setIntervalWpms: (intervalWpms: number[]) => void;
-  webGazerInitialised: boolean;
-  setwebGazerInitialised: (webGazerInitialised: boolean) => void;
-  initialiseWebGazer: () => void;
-  endWebGazer: () => void;
-  restartWebGazer: () => void;
-  turnOffWebGazerCam: () => void;
-  gazeX: number;
-  setGazeX: (x: number) => void;
-  gazeY: number;
-  setGazeY: (y: number) => void;
   textId: string;
   setTextId: (textid: string) => void;
   quizAnswers: (number | null)[];
@@ -48,7 +38,7 @@ const GameContext = createContext<GameContextType>({
   setDifficulty: () => {},
 
   // wpm and view are only for STANDARD_MODE
-  wpm: 400,
+  wpm: 200,
   setWpm: () => {},
   view: null,
   setView: () => {},
@@ -59,20 +49,6 @@ const GameContext = createContext<GameContextType>({
   // store wpm average for a game after a game ends
   intervalWpms: [],
   setIntervalWpms: () => {},
-
-  // used for webgazer initialisation and maintaining state
-  webGazerInitialised: false,
-  setwebGazerInitialised: () => {},
-  initialiseWebGazer: () => {},
-  endWebGazer: () => {},
-  restartWebGazer: () => {},
-  turnOffWebGazerCam: () => {},
-
-  // gaze_x and gaze_y are only for ADAPTIVE_MODE
-  gazeX: 0,
-  setGazeX: () => {},
-  gazeY: 0,
-  setGazeY: () => {},
 
   textId: "",
   setTextId: () => {},
@@ -106,92 +82,14 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [mode, setMode] = useState<GameMode | null>(null);
   const [summarised, setSummarised] = useState<boolean>(false);
   const [difficulty, setDifficulty] = useState<GameDifficulty | null>(null);
-  const [wpm, setWpm] = useState<number | null>(400);
+  const [wpm, setWpm] = useState<number | null>(200);
   const [view, setView] = useState<StandardView | null>(null);
   const [averageWpm, setAverageWpm] = useState<number>(0);
   const [intervalWpms, setIntervalWpms] = useState<number[]>([]);
-  const [webGazerInitialised, setwebGazerInitialised] =
-    useState<boolean>(false);
-  const [gazeX, setGazeX] = useState<number>(0);
-  const [gazeY, setGazeY] = useState<number>(0);
   const [textId, setTextId] = useState<string>("");
   const [quizAnswers, setQuizAnswers] = useState<(number | null)[]>([]);
   const [quizResults, setQuizResults] = useState<any>([]);
   const [quizContent, setQuizContent] = useState<QuestionMasked[] | null>([]);
-
-  const initialiseWebGazer = () => {
-    if (
-      webGazerInitialised ||
-      document.querySelector(
-        'script[src="https://webgazer.cs.brown.edu/webgazer.js"]',
-      )
-    ) {
-      const webgazer = (window as any).webgazer;
-      if (webgazer !== undefined) {
-        webgazer.showVideoPreview(true);
-      }
-      return;
-    }
-
-    const script = document.createElement("script");
-    script.src = "https://webgazer.cs.brown.edu/webgazer.js";
-    script.async = true;
-
-    script.onload = async () => {
-      const webgazer = (window as any).webgazer;
-      if (webgazer === undefined) {
-        console.error("WebGazer not loaded correctly.");
-        return;
-      }
-
-      await webgazer
-        .setRegression("ridge")
-        .setGazeListener((data: any, _: any) => {
-          if (data == null) return;
-          setGazeX(data.x);
-          setGazeY(data.y);
-        })
-        .saveDataAcrossSessions(true)
-        .begin();
-
-      await webgazer
-        .showPredictionPoints(false)
-        .showVideoPreview(true)
-        .applyKalmanFilter(true);
-
-      setwebGazerInitialised(true);
-    };
-
-    document.body.appendChild(script);
-  };
-
-  const endWebGazer = async () => {
-    const webgazer = (window as any).webgazer;
-    if (webgazer !== undefined) {
-      await webgazer.end();
-      setwebGazerInitialised(false);
-    }
-  };
-
-  const restartWebGazer = async () => {
-    const webgazer = (window as any).webgazer;
-    if (webgazer !== undefined) {
-      await webgazer.clearData();
-    }
-  };
-
-  const turnOffWebGazerCam = async () => {
-    const webgazer = (window as any).webgazer;
-    if (webgazer !== undefined) {
-      await webgazer.showVideoPreview(false);
-
-      const videoContainer = document.getElementById("webgazerVideoContainer");
-      if (videoContainer) {
-        videoContainer.style.display = "none";
-        videoContainer.style.pointerEvents = "none";
-      }
-    }
-  };
 
   const modifyQuizAnswer = (index: number, answer: number | null) => {
     setQuizAnswers((prevAnswers) => {
@@ -220,16 +118,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
         setAverageWpm,
         intervalWpms,
         setIntervalWpms,
-        webGazerInitialised,
-        setwebGazerInitialised,
-        initialiseWebGazer,
-        endWebGazer,
-        restartWebGazer,
-        turnOffWebGazerCam,
-        gazeX,
-        setGazeX,
-        gazeY,
-        setGazeY,
         textId,
         setTextId,
         quizAnswers,

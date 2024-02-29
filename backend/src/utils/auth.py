@@ -1,18 +1,31 @@
-# TODO: No need to put this file under `utils/security` directory i.e. move to `utils/`.
+import os
 from datetime import datetime, timedelta, timezone
+from typing import Any
 
-from jose import jwt
+from jose import JWTError, jwt
 
-# TODO:
-# Move keys to GitLab CI/CD secrets
+from ..services.exceptions import InvalidTokenException
+
 ACCESS_TOKEN_EXPIRE_MINUTES = 10
-ACCESS_TOKEN_SECRET_KEY = (
-    "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
-)
-REFRESH_TOKEN_SECRET_KEY = (
-    "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e6"
-)
+ACCESS_TOKEN_SECRET_KEY = os.environ.get("ACCESS_TOKEN_SECRET_KEY", "")
+REFRESH_TOKEN_SECRET_KEY = os.environ.get("REFRESH_TOKEN_SECRET_KEY", "")
 ALGORITHM = "HS256"
+
+if not ACCESS_TOKEN_SECRET_KEY:
+    raise Exception("ACCESS_TOKEN_SECRET_KEY environment variable not set")
+if not REFRESH_TOKEN_SECRET_KEY:
+    raise Exception("REFRESH_TOKEN_SECRET_KEY environment variable not set")
+
+
+def get_access_token_payload(access_token: str) -> dict[str, Any]:
+    try:
+        return jwt.decode(
+            access_token,
+            ACCESS_TOKEN_SECRET_KEY,
+            algorithms=[ALGORITHM],
+        )
+    except JWTError:
+        raise InvalidTokenException()
 
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
@@ -24,7 +37,6 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> s
         expire = issued_at + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode.update({"exp": expire, "iat": issued_at})
-    print(to_encode)
     return jwt.encode(to_encode, key=ACCESS_TOKEN_SECRET_KEY, algorithm=ALGORITHM)
 
 

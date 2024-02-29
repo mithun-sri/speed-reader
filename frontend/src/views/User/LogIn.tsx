@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BodyLoginUser } from "../../api";
 import Header from "../../components/Header/Header";
 import StyledTextField from "../../components/Textbox/StyledTextField";
+import { useSnack } from "../../context/SnackContext";
 import { useLoginUser } from "../../hooks/users";
 
 const Login: React.FC = () => {
@@ -38,6 +39,7 @@ const Login: React.FC = () => {
 
   const loginUser = useLoginUser();
   const navigate = useNavigate();
+  const { showSnack } = useSnack();
 
   const onSubmit = (data: BodyLoginUser) => {
     loginUser.mutate(data, {
@@ -45,8 +47,7 @@ const Login: React.FC = () => {
         navigate("/game");
       },
       onError: () => {
-        // TODO: Handle login error.
-        console.error("Error logging in");
+        showSnack("Failed to login");
       },
     });
   };

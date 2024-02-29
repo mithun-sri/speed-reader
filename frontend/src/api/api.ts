@@ -107,10 +107,10 @@ export interface BodyGetUserAvailableTexts {
 export interface BodyGetUserAvailableTextsTextFilter {
     /**
      * 
-     * @type {GameMode}
+     * @type {GameMode1}
      * @memberof BodyGetUserAvailableTextsTextFilter
      */
-    'game_mode'?: GameMode;
+    'game_mode'?: GameMode1;
     /**
      * 
      * @type {Difficulty}
@@ -241,9 +241,9 @@ export interface GameMode {
 /**
  * 
  * @export
- * @interface GameSubmode
+ * @interface GameMode1
  */
-export interface GameSubmode {
+export interface GameMode1 {
 }
 /**
  * 
@@ -278,10 +278,16 @@ export interface History {
     'game_mode': string;
     /**
      * 
-     * @type {GameSubmode}
+     * @type {string}
      * @memberof History
      */
-    'game_submode': GameSubmode;
+    'game_submode': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof History
+     */
+    'difficulty': string;
     /**
      * 
      * @type {boolean}
@@ -478,6 +484,13 @@ export interface Result {
 /**
  * 
  * @export
+ * @interface Summary
+ */
+export interface Summary {
+}
+/**
+ * 
+ * @export
  * @interface Text
  */
 export interface Text {
@@ -495,10 +508,10 @@ export interface Text {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof Text
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -550,10 +563,10 @@ export interface TextCreateWithQuestions {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextCreateWithQuestions
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -593,10 +606,10 @@ export interface TextCreateWithQuestions {
 export interface TextFilter {
     /**
      * 
-     * @type {GameMode}
+     * @type {GameMode1}
      * @memberof TextFilter
      */
-    'game_mode'?: GameMode;
+    'game_mode'?: GameMode1;
     /**
      * 
      * @type {Difficulty}
@@ -643,10 +656,10 @@ export interface TextWithQuestions {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextWithQuestions
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -704,10 +717,10 @@ export interface TextWithQuestionsAndStatistics {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextWithQuestionsAndStatistics
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -789,10 +802,10 @@ export interface TextWithStatistics {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextWithStatistics
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -1859,6 +1872,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            // authentication HTTPBasic required
+            // http basic authentication required
+            setBasicAuthToObject(localVarRequestOptions, configuration)
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -1942,7 +1959,7 @@ export class DefaultApi extends BaseAPI {
 export const GameApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {AccessToken} [accessToken] 
@@ -1977,13 +1994,16 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
+         * @param {boolean} isSummary 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getNextText: async (isSummary: boolean, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'isSummary' is not null or undefined
+            assertParamExists('getNextText', 'isSummary', isSummary)
             const localVarPath = `/game/texts/next`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1995,6 +2015,10 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (isSummary !== undefined) {
+                localVarQueryParameter['is_summary'] = isSummary;
+            }
 
 
     
@@ -2059,7 +2083,7 @@ export const GameApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = GameApiAxiosParamCreator(configuration)
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {AccessToken} [accessToken] 
@@ -2073,14 +2097,15 @@ export const GameApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
+         * @param {boolean} isSummary 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNextText(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(accessToken, options);
+        async getNextText(isSummary: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(isSummary, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.getNextText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2111,7 +2136,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = GameApiFp(configuration)
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {AccessToken} [accessToken] 
@@ -2122,14 +2147,15 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.getNextQuestions(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
-         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
+         * @param {boolean} isSummary 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText(accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
-            return localVarFp.getNextText(accessToken, options).then((request) => request(axios, basePath));
+        getNextText(isSummary: boolean, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
+            return localVarFp.getNextText(isSummary, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Accepts the question answers and other statistics. Returns the results to the answers.
@@ -2154,7 +2180,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
  */
 export class GameApi extends BaseAPI {
     /**
-     * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+     * Gets next 10 questions that the user has not attempted before.
      * @summary Get Next Questions
      * @param {string} textId 
      * @param {AccessToken} [accessToken] 
@@ -2167,15 +2193,16 @@ export class GameApi extends BaseAPI {
     }
 
     /**
-     * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+     * Gets the next text that the user has not attempted before.
      * @summary Get Next Text
+     * @param {boolean} isSummary 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GameApi
      */
-    public getNextText(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
-        return GameApiFp(this.configuration).getNextText(accessToken, options).then((request) => request(this.axios, this.basePath));
+    public getNextText(isSummary: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return GameApiFp(this.configuration).getNextText(isSummary, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2346,11 +2373,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
+         * @param {GameMode} [gameMode] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserStatistics: async (gameMode?: GameMode, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/current/statistics`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2362,6 +2390,12 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (gameMode !== undefined) {
+                for (const [key, value] of Object.entries(gameMode)) {
+                    localVarQueryParameter[key] = value;
+                }
+            }
 
 
     
@@ -2405,6 +2439,37 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(bodyLoginUser, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Logs out a user. Invalidates the refresh token. TODO: Blacklist the refresh token.
+         * @summary Logout User
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        logoutUser: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/users/logout`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2517,12 +2582,13 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
+         * @param {GameMode} [gameMode] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserStatistics(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics(accessToken, options);
+        async getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics(gameMode, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserStatistics']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2539,6 +2605,19 @@ export const UserApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.loginUser(bodyLoginUser, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.loginUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Logs out a user. Invalidates the refresh token. TODO: Blacklist the refresh token.
+         * @summary Logout User
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async logoutUser(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.logoutUser(accessToken, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UserApi.logoutUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2612,12 +2691,13 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
+         * @param {GameMode} [gameMode] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics(accessToken?: AccessToken, options?: any): AxiosPromise<UserStatistics> {
-            return localVarFp.getUserStatistics(accessToken, options).then((request) => request(axios, basePath));
+        getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: any): AxiosPromise<UserStatistics> {
+            return localVarFp.getUserStatistics(gameMode, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Logs in a user. Returns access token and refresh token.
@@ -2629,6 +2709,16 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          */
         loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
             return localVarFp.loginUser(bodyLoginUser, accessToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Logs out a user. Invalidates the refresh token. TODO: Blacklist the refresh token.
+         * @summary Logout User
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        logoutUser(accessToken?: AccessToken, options?: any): AxiosPromise<any> {
+            return localVarFp.logoutUser(accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Registers a new user.
@@ -2706,13 +2796,14 @@ export class UserApi extends BaseAPI {
     /**
      * Gets the statistics based on the user\'s game history.
      * @summary Get User Statistics
+     * @param {GameMode} [gameMode] 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserStatistics(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getUserStatistics(accessToken, options).then((request) => request(this.axios, this.basePath));
+    public getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUserStatistics(gameMode, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2726,6 +2817,18 @@ export class UserApi extends BaseAPI {
      */
     public loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).loginUser(bodyLoginUser, accessToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Logs out a user. Invalidates the refresh token. TODO: Blacklist the refresh token.
+     * @summary Logout User
+     * @param {AccessToken} [accessToken] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UserApi
+     */
+    public logoutUser(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).logoutUser(accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

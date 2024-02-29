@@ -4,9 +4,15 @@ import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./Quiz.css";
 
 import { useEffect } from "react";
+import {
+  ADAPTIVE_MODE,
+  STANDARD_MODE,
+  SUMMARISED_MODE,
+} from "../../common/constants";
 import { useGameContext } from "../../context/GameContext";
 import { useNextQuestions, usePostAnswers } from "../../hooks/game";
 import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
+import { StandardView } from "../StandardMode/StandardMode";
 
 const QuizView = () => {
   const { incrementCurrentStage } = useGameScreenContext();
@@ -57,10 +63,24 @@ const QuizView = () => {
 
   const allQuestionsAnswered = quizAnswers.every((option) => option !== null);
 
+  const scrollToTop = () => {
+    window.scrollTo(0, 0);
+  };
+
   const postAnswers = usePostAnswers(textId);
   const moveToResults = () => {
     setTimeout(() => {
       if (mode !== null && view !== null) {
+        const gameMode = {
+          [STANDARD_MODE]: "standard",
+          [ADAPTIVE_MODE]: "adaptive",
+          [SUMMARISED_MODE]: "", // NOTE: This should not be relevant
+        }[mode];
+        const gameSubmode = {
+          [StandardView.Word]: "word-by-word",
+          [StandardView.Highlighted]: "highlight",
+          [StandardView.Peripheral]: "peripheral",
+        }[view];
         postAnswers.mutate(
           {
             answers: quizAnswers.map((selectedOption, questionIndex) => ({
@@ -69,14 +89,15 @@ const QuizView = () => {
             })),
             average_wpm: averageWpm,
             interval_wpms: intervalWpms,
-            game_mode: mode,
-            game_submode: view.toString(),
+            game_mode: gameMode,
+            game_submode: gameSubmode,
             summary: summarised,
           },
           {
             onSuccess: (res: any) => {
               console.log("Answers posted successfully: ", res?.data);
               setQuizResults(res?.data);
+              scrollToTop();
               incrementCurrentStage();
             },
             onError: (err: any) => {
@@ -171,6 +192,7 @@ const QuizView = () => {
               fontFamily: "JetBrains Mono, monospace",
               color: "#FFFFFF",
             }}
+            onClick={moveToResults}
           >
             <Box
               sx={{
@@ -178,11 +200,11 @@ const QuizView = () => {
                 borderRadius: "30px",
                 background: "#E2B714",
                 padding: "10px 60px 10px 60px",
+                marginBottom: "10vh",
                 fontWeight: "bolder",
                 fontSize: 35,
                 cursor: "pointer",
               }}
-              onClick={moveToResults}
             >
               Submit
             </Box>

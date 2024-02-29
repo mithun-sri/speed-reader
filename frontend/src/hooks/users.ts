@@ -58,10 +58,15 @@ export function useLoginUser() {
   });
 }
 
-export function getAvailableTexts() {
-  return useSuspenseQuery({
-    queryKey: ["available_texts"],
-    queryFn: () => userApi.getUserAvailableTexts(1, 10).then((res) => res.data),
-    gcTime: 0,
+export function useLogoutUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => userApi.logoutUser(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["users", "current"],
+      });
+    },
   });
 }

@@ -53,7 +53,7 @@
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0; 
+    bottom: 0;
     padding-top: 33vh;
     margin: auto;
     display: none;
@@ -71,6 +71,14 @@
 .calibration-in-progress {
     text-align: center;
     margin-bottom: 14vh;
+    justify-content: center;
+    align-items: center;
+    top: 7vh;
+    left: 0;
+    right: 0;
+    bottom: 0; 
+    margin: auto;
+    z-index: 1;
 }
 
 .in_progress_text {

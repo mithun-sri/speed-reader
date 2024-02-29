@@ -2,6 +2,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useLogoutUser } from "../../hooks/users";
 import LogOut from "../Button/LogOut";
 
 const UserDashboardTop: React.FC<{
@@ -28,6 +29,15 @@ const UserDashboardTop: React.FC<{
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  const logoutMutation = useLogoutUser();
+  const handleLogoutClick = () => {
+    logoutMutation.mutateAsync(undefined, {
+      onError(err) {
+        console.log("Error logging out user: " + err);
+      },
+    });
+  };
 
   return (
     <Box
@@ -69,7 +79,7 @@ const UserDashboardTop: React.FC<{
         >
           User {user_id}
         </Box>
-        <LogOut fontSize={fontSize / 4} />
+        <LogOut fontSize={fontSize / 4} onClick={handleLogoutClick} />
       </Box>
     </Box>
   );
