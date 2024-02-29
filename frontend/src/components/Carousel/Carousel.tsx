@@ -85,14 +85,6 @@ const Carousel: React.FC<{
 
   return (
     <Box>
-      <AnimatePresence>
-      <motion.div
-        key={currentIndex}
-        initial="hidden"
-        animate={fadeOut ? "hidden" : "visible"}
-        variants={fadeInOutVariants}
-        transition={{ duration: 1.5 }}
-      >
         <Box
           sx={{
             fontFamily: "JetBrains Mono, monospace",
@@ -174,8 +166,6 @@ const Carousel: React.FC<{
             </IconButton>
           </Box>
         </Box>
-      </motion.div>
-      </AnimatePresence>
   </Box>
   );
 };

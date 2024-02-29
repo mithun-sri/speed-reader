@@ -103,15 +103,12 @@ const AvailableTexts: React.FC = () => {
                                             style={{
                                                 display: "flex",
                                                 width: "65%",
-                                                paddingLeft: "20px",
-                                                paddingRight: "20px",
-                                                paddingTop: "10px",
-                                                paddingBottom: "10px",
+                                                padding: "3vh",
                                                 flexDirection: "column",
                                                 backgroundColor: "#35363a",
                                                 position: 'absolute',
                                                 zIndex: 1,
-                                                height: "300px",
+                                                minHeight: "30vh",
                                             }}
                                         >
                                             <ItemBoxHovered

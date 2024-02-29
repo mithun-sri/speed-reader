@@ -3,7 +3,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { useState } from 'react';
 import JetBrainsMonoText from "../Text/TextComponent";
 import { StyledCheckbox } from '../Checkbox/Checkbox';
-import { Icon, Link, MenuItem, OutlinedInput } from '@mui/material';
+import { Icon, Link, MenuItem, OutlinedInput, Tooltip } from '@mui/material';
 import StyledMultiSelect from '../MultiSelect/MultiSelect';
 import IconButton from '@mui/material/IconButton';
 import StyledTextField from '../Textbox/StyledTextField';
@@ -156,8 +156,6 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                 sx={{
                     display: "flex",
                     flexDirection: "row",
-                    marginBottom: "20px",
-                    alignItems: "center",
                     width: "100%",
                 }}
             >
@@ -166,7 +164,7 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                     sx={{
                         display: "flex",
                         justifyContent: "center",
-                        width: "15%"
+                        width: "20%",
                     }}
                     src={image}
                 />
@@ -175,7 +173,9 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                         display: "flex",
                         flexDirection: "column",
                         width: "85%",
-                        padding: "20px",
+                        paddingTop: "1vh",
+                        paddingLeft: "2%",
+                        paddingRight: "2%",
                     }}
                 >
                     <Box
@@ -183,7 +183,6 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                             width: "100%",
                             display: "flex",
                             flexDirection: "row",
-                            alignItems: "center",
                         }}
                     >
                         <JetBrainsMonoText text={title} size={24} color={"#D9D9D9"} />
@@ -192,7 +191,7 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                             <FictionBox is_fiction={is_fiction}/>
                         </Box>
                         <Box sx={{display: "flex", width: "20%", flexDirection: "row", marginLeft: "auto", justifyContent: "right"}}>
-                            <Link href={source} sx={{
+                            <Link href={source} target="_blank" sx={{
                                 textDecoration: "none",
                                 marginLeft: "10px", 
                                 float: "right",
@@ -200,10 +199,11 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                                 }}>
                                     <Box sx={{
                                         display: "flex", 
-                                        flexDirection: "row", 
-                                        alignItems: "center"
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "right",
                                         }}>
-                                        <JetBrainsMonoText text={"Learn more"} size={16} color={"#D9D9D9"} />
+                                        <Tooltip title="Learn more">
                                         <IconButton
                                             sx={{
                                                 color: "#FFFFFF",
@@ -214,21 +214,34 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                                                 className="fa-table-page-icon"
                                             />
                                         </IconButton>
+                                        </Tooltip>
                                     </Box>
                                 </Link>
                         </Box>
-                    </Box>
-                    <JetBrainsMonoText text={"By " + author} size={16} color={"#D9D9D9"} />
+                    </Box> 
+                    <Box
+                        sx={{
+                            flexGrowth: 1,
+                            marginBottom: 'auto',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                marginBottom: "2vh"
+                            }}
+                        >
+                            <JetBrainsMonoText text={"By " + author} size={16} color={"#D9D9D9"} />
+                        </Box>
                     <JetBrainsMonoText text={description} size={16} color={"#D9D9D9"} />
-                </Box>
-       </Box>
-       <Box
+                        </Box>
+                    <Box
                     sx={{
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "right",
                         alignItems: "center",
                         width: "100%",
+                        marginTop: "auto",
                     }}
                 >
                     <IconButton
@@ -298,6 +311,8 @@ export const ItemBoxHovered: React.FC<TextProps> = (
                         </Box>
                     </IconButton>
                 </Box>
+                </Box>
+       </Box>
     </Box>
     )
 }

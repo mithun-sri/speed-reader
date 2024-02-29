@@ -19,15 +19,21 @@ const NotFound = () => {
 
   return (
     <Box
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          height: "100vh",
       }}
     >
       <Header />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
       <Box>
         <JetBrainsMonoText
           text="404"
@@ -58,6 +64,7 @@ const NotFound = () => {
             ></JetBrainsMonoText>
           </Box>
         ))}
+      </Box>
       </Box>
     </Box>
   );
