@@ -6,6 +6,7 @@ import Carousel from "../../components/Carousel/Carousel";
 import Header from "../../components/Header/Header";
 import { useGameContext } from "../../context/GameContext";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
+import { AnimatePresence, motion } from "framer-motion";
 
 const DiffSelect = () => {
   const { incrementCurrentStage, decrementCurrentStage } =
@@ -51,14 +52,24 @@ const DiffSelect = () => {
           color: "white",
         }}
       >
-        <Carousel
-          title="choose text difficulty."
-          options={options}
-          returnSelectedIndex={handleValueFromCarousel}
-          defaultIdx={
-            difficulty !== null ? options.indexOf(difficulty) : undefined
-          }
-        />
+        <AnimatePresence>
+          <motion.div
+            key={"mode_select"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Carousel
+              title="choose text difficulty."
+              options={options}
+              returnSelectedIndex={handleValueFromCarousel}
+              defaultIdx={
+                difficulty !== null ? options.indexOf(difficulty) : undefined
+              }
+            />
+          </motion.div>
+        </AnimatePresence>
       </Box>
     </Box>
   );

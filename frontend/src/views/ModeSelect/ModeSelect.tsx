@@ -12,6 +12,7 @@ import Header from "../../components/Header/Header";
 import { useGameContext } from "../../context/GameContext";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
 import "./ModeSelect.css";
+import { AnimatePresence, motion } from "framer-motion";
 
 const ModeSelectView = () => {
   const { incrementCurrentStage } = useGameScreenContext(); // This is possible because Carousel is only used within a GameScreenContext
@@ -39,12 +40,22 @@ const ModeSelectView = () => {
       <Header />
       <Box sx={{ marginTop: "85px" }} />
       <header className="ModeSelect-header">
-        <Carousel
-          title="choose game mode."
-          options={options}
-          returnSelectedIndex={handleValueFromCarousel}
-          defaultIdx={mode !== null ? options.indexOf(mode) : undefined}
-        />
+        <AnimatePresence>
+          <motion.div
+            key={"mode_select"}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <Carousel
+              title="choose game mode."
+              options={options}
+              returnSelectedIndex={handleValueFromCarousel}
+              defaultIdx={mode !== null ? options.indexOf(mode) : undefined}
+            />
+          </motion.div>
+        </AnimatePresence>
         <Footer />
       </header>
     </div>
