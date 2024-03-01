@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Header from "../../components/Header/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import StyledPagination from "../../components/Pagination/Pagination";
 import {
@@ -8,6 +8,8 @@ import {
   ItemBox,
   SearchBar,
 } from "../../components/TextCards/AvailableTextCards";
+import { getAvailableTexts } from "../../hooks/users";
+import { UserAvailableTexts } from "../../api";
 
 const AvailableTexts: React.FC = () => {
   const pageSize = 10;
@@ -17,7 +19,7 @@ const AvailableTexts: React.FC = () => {
     setPage(value);
   };
   // const [texts, setTexts] = useState<TextProps[]>([]);
-  const texts = [
+  const [texts, setTexts] = useState([
     {
       title: "The Great Gatsby",
       description:
@@ -50,7 +52,16 @@ const AvailableTexts: React.FC = () => {
       is_fiction: true,
       source: "https://www.gutenberg.org/ebooks/145",
     },
-  ];
+  ]);
+
+  const { data: newData } = getAvailableTexts();
+  const [_texts, _setTexts] = useState<UserAvailableTexts>(newData);
+  useEffect(() => {
+    if (newData) {
+      _setTexts(newData);
+    }
+  }
+  , [newData]);
 
   return (
     <Box

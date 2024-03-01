@@ -107,3 +107,13 @@ export function getUserStatistics(mode: string) {
     gcTime: 0,
   });
 }
+
+export function getAvailableTexts() {
+  const { userApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["users", "available_texts"],
+    queryFn: () => userApi.getUserAvailableTexts().then((res) => res.data),
+    gcTime: 0,
+  });
+}

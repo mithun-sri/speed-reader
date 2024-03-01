@@ -107,13 +107,14 @@ async def get_user_available_texts(
         read_text_ids = models.History.objects(user_id=user.id).distinct("text_id")
         query = query.where(models.Text.id.not_in(read_text_ids))
 
-        if text_filter.game_mode:
-            # TODO:
-            # Only `summary` is associated with `Text`, not `game_mode`.
-            # query = query.where(models.Text.game_mode == text_filter.game_mode)
-            pass
-        if text_filter.difficulty:
-            query = query.where(models.Text.difficulty == text_filter.difficulty)
+        if text_filter:
+            if text_filter.game_mode:
+                # TODO:
+                # Only `summary` is associated with `Text`, not `game_mode`.
+                # query = query.where(models.Text.game_mode == text_filter.game_mode)
+                pass
+            if text_filter.difficulty:
+                query = query.where(models.Text.difficulty == text_filter.difficulty)
 
         if text_sort:
             attr = getattr(models.Text, text_sort.field)
@@ -129,9 +130,10 @@ async def get_user_available_texts(
     total_texts = session.scalar(query)
 
     # Collect paginated available texts
-    query = filter_query(select(models.Text.id))
+    query = filter_query(select(models.Text))
     query = query.offset((page - 1) * page_size).limit(page_size)
     texts = session.scalars(query).all()
+    texts = [schemas.Text(**text.__dict__) for text in texts]  # type: ignore
 
     return schemas.UserAvailableTexts(
         texts=texts,  # type: ignore
