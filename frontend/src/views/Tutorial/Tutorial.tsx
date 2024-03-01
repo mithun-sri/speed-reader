@@ -7,7 +7,7 @@ import BlurBox from "../../components/Blur/Blur";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import WpmSign from "../../components/WpmSign/WpmSign";
-import "./Intro.css";
+import "./Tutorial.css";
 
 const INTRO_TEXT = [
   "Welcome to Speed Reader, your premier platform for unlocking the power of speed reading!",
@@ -26,7 +26,7 @@ const STAGE_DOWN_ARROW = 3;
 const STAGE_SPACE = 4;
 const STAGE_QUESTION = 6;
 
-function Intro() {
+function Tutorial() {
   const navigate = useNavigate();
   const [cookies, setCookie] = useCookies(["visited"]);
 
@@ -60,9 +60,9 @@ function Intro() {
     <Box>
       <Header />
       {stage === STAGE_QUESTION ? (
-        <IntroQuestion incrementStage={incrementStage} />
+        <TutorialQuestion incrementStage={incrementStage} />
       ) : stage < STAGE_UP_ARROW || stage > STAGE_SPACE ? (
-        <IntroHighlightedTextDisplay
+        <TutorialHighlightedTextDisplay
           text={INTRO_TEXT[stage]}
           wpm={wpm}
           setWpm={setWpm}
@@ -70,7 +70,7 @@ function Intro() {
           onTextFinish={onTextFinish}
         />
       ) : (
-        <IntroWordTextDisplay
+        <TutorialWordTextDisplay
           text={INTRO_TEXT[stage]}
           wpm={wpm}
           setWpm={setWpm}
@@ -83,7 +83,7 @@ function Intro() {
   );
 }
 
-const IntroWordTextDisplay: React.FC<{
+const TutorialWordTextDisplay: React.FC<{
   text: string;
   wpm: number;
   setWpm: (newWpm: number) => void;
@@ -151,7 +151,7 @@ const IntroWordTextDisplay: React.FC<{
   );
 };
 
-IntroWordTextDisplay.propTypes = {
+TutorialWordTextDisplay.propTypes = {
   text: PropTypes.string.isRequired,
   wpm: PropTypes.number.isRequired,
   setWpm: PropTypes.func.isRequired,
@@ -220,7 +220,7 @@ const highlightedWord: React.FC<{
   );
 };
 
-const IntroHighlightedTextDisplay: React.FC<{
+const TutorialHighlightedTextDisplay: React.FC<{
   text: string;
   wpm: number;
   setWpm: (newWpm: number) => void;
@@ -325,7 +325,7 @@ const IntroHighlightedTextDisplay: React.FC<{
   );
 };
 
-IntroHighlightedTextDisplay.propTypes = {
+TutorialHighlightedTextDisplay.propTypes = {
   text: PropTypes.string.isRequired,
   wpm: PropTypes.number.isRequired,
   setWpm: PropTypes.func.isRequired,
@@ -333,7 +333,7 @@ IntroHighlightedTextDisplay.propTypes = {
   onTextFinish: PropTypes.func.isRequired,
 };
 
-const IntroQuestion: React.FC<{
+const TutorialQuestion: React.FC<{
   incrementStage: () => void;
 }> = ({ incrementStage }) => {
   const [selectedOption, setSelectedOption] = useState(-1);
@@ -366,7 +366,7 @@ const IntroQuestion: React.FC<{
         alignItems: "center",
       }}
     >
-      <div id={`intro-question`} className="question-container">
+      <div id={`tutorial-question`} className="question-container">
         <JetBrainsMonoText
           text={
             "Which keys can you use to adjust the text speed in Standard Mode?"
@@ -422,8 +422,8 @@ const IntroQuestion: React.FC<{
   );
 };
 
-IntroQuestion.propTypes = {
+TutorialQuestion.propTypes = {
   incrementStage: PropTypes.func.isRequired,
 };
 
-export default Intro;
+export default Tutorial;
