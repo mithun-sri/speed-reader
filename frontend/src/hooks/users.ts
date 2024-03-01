@@ -87,3 +87,23 @@ export function useLogoutUser() {
     },
   });
 }
+
+export function getCurrentUser() {
+  const { userApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["users"],
+    queryFn: () => userApi.getCurrentUser().then((res) => res.data),
+    gcTime: 0,
+  });
+}
+
+export function getUserStatistics(mode: string) {
+  const { userApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["users", "statistics", mode],
+    queryFn: () => userApi.getUserStatistics(mode).then((res) => res.data),
+    gcTime: 0,
+  });
+}
