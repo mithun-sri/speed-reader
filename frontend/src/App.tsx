@@ -17,6 +17,7 @@ import { GamePage } from "./views/GameScreen/GameScreen";
 import Login from "./views/User/LogIn";
 import SignUp from "./views/User/SignUp";
 import UserView from "./views/User/UserView";
+import AvailableTexts from "./views/AvailableTexts/AvailableTexts";
 import WebGazerCalibration from "./views/WebGazerCalibration/WebGazerCalibration";
 
 function App() {
@@ -39,6 +40,10 @@ function App() {
                         element={<WebGazerCalibration />}
                       />
                       <Route path="/user" element={<UserView />} />
+                      <Route
+                        path="/available-texts"
+                        element={<AvailableTexts />}
+                      />
                       <Route path="/gpt" element={<GptView />} />
                       <Route element={<AdminRoute fallback="/login" />}>
                         <Route path="/admin" element={<AdminAnalytics />} />
