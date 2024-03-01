@@ -6,7 +6,11 @@ import UserTable from "../../components/Table/UserTable";
 import UserDashboardTop from "../../components/User/UserDashboardTop";
 import UserStats from "../../components/User/UserStats";
 import React from "react";
-import { getCurrentUser, getUserStatistics } from "../../hooks/users";
+import {
+  getCurrentUser,
+  getHistories,
+  getUserStatistics,
+} from "../../hooks/users";
 import { UserStatistics } from "../../api";
 
 const UserView = () => {
@@ -14,6 +18,8 @@ const UserView = () => {
   const userId = isError ? userData.username : "placeholder";
 
   console.log(error);
+
+  const { data: userHistory } = getHistories();
 
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
@@ -59,7 +65,7 @@ const UserView = () => {
         </PageContainer>
         <PageContainer size={fontSize} title="History">
           <Box>
-            <UserTable />
+            <UserTable results={userHistory} />
           </Box>
         </PageContainer>
       </Box>
