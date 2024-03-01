@@ -27,7 +27,8 @@ const TextSelect = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 4,
+          gap: 2,
+          paddingBottom: "20px",
         }}
       >
         <TextSelectContainer>
@@ -55,7 +56,6 @@ const TextSelectContainer: React.FC<{
       sx={{
         borderRadius: "40px",
         margin: "5px auto",
-        marginBottom: "30px",
         padding: "40px 50px",
         border: "2px solid #646669",
         minHeight: "20px",
