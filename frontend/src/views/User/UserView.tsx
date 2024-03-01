@@ -67,11 +67,10 @@ const UserView = () => {
 const StatisticsBox: React.FC = () => {
   const [mode, setMode] = useState("standard");
   const { data: newData } = getUserStatistics(mode);
-  const [userStatisticsData, setUserStatisticsData] =
-    useState<UserStatistics>(newData);
+  const [userStatisticsData, setUserStatisticsData] = useState<UserStatistics | null>(newData);
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       const { data: newData } = getUserStatistics(mode);
       setUserStatisticsData(newData);
     };
@@ -81,8 +80,14 @@ const StatisticsBox: React.FC = () => {
 
   return (
     <>
-      <UserStats userData={userStatisticsData}></UserStats>
-      <UserGraph mode={mode} setMode={setMode}></UserGraph>
+      {userStatisticsData ? (
+        <>
+          <UserStats userData={userStatisticsData}></UserStats>
+          <UserGraph mode={mode} setMode={setMode}></UserGraph>
+        </>
+      ) : (
+        <Box sx={{color:"#fff"}}>No Statistics Available</Box>
+      )}
     </>
   );
 };
