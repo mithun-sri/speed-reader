@@ -1,10 +1,11 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import { AdminApi, TextCreateWithQuestions } from "../api";
-
-const adminApi = new AdminApi();
+import { TextCreateWithQuestions } from "../api";
+import { useApiClient } from "../context/ApiContext";
 
 export function getAdminStatistics(gameMode: string) {
+  const { adminApi } = useApiClient();
+
   return useSuspenseQuery({
     queryKey: ["admin-statistics", gameMode],
     queryFn: () =>
@@ -14,6 +15,8 @@ export function getAdminStatistics(gameMode: string) {
 }
 
 export function getTexts(page?: number, pageSize?: number) {
+  const { adminApi } = useApiClient();
+
   return useSuspenseQuery({
     queryKey: ["texts-statistics"],
     queryFn: () => adminApi.getTexts(page, pageSize).then((res) => res.data),
@@ -22,6 +25,8 @@ export function getTexts(page?: number, pageSize?: number) {
 }
 
 export function getQuestion(textId: string, questionId: string) {
+  const { adminApi } = useApiClient();
+
   return useSuspenseQuery({
     queryKey: ["question-statistics", textId, questionId],
     queryFn: () =>
@@ -32,6 +37,8 @@ export function getQuestion(textId: string, questionId: string) {
 
 // Define the hook function
 export function useGenerateText(difficulty: string, isFiction: boolean) {
+  const { adminApi } = useApiClient();
+
   return useSuspenseQuery({
     queryKey: ["generate-text"],
     queryFn: () =>
@@ -46,6 +53,8 @@ export function useGenerateText(difficulty: string, isFiction: boolean) {
 }
 
 export function useApproveText() {
+  const { adminApi } = useApiClient();
+
   return useMutation({
     mutationFn: (text: TextCreateWithQuestions) => adminApi.approveText(text),
   });

@@ -3,11 +3,12 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { BodyPostAnswers, GameApi } from "../api";
-
-const gameApi = new GameApi();
+import { BodyPostAnswers } from "../api";
+import { useApiClient } from "../context/ApiContext";
 
 export function useNextText(isSummary: boolean) {
+  const { gameApi } = useApiClient();
+
   return useSuspenseQuery({
     queryKey: ["next-text"],
     queryFn: () => gameApi.getNextText(isSummary).then((res) => res.data),
@@ -19,6 +20,8 @@ export function useNextText(isSummary: boolean) {
 }
 
 export function useNextQuestions(textId: string) {
+  const { gameApi } = useApiClient();
+
   return useSuspenseQuery({
     queryKey: ["next-questions"],
     queryFn: () => gameApi.getNextQuestions(textId).then((res) => res.data),
@@ -27,6 +30,7 @@ export function useNextQuestions(textId: string) {
 }
 
 export function usePostAnswers(textId: string) {
+  const { gameApi } = useApiClient();
   const queryClient = useQueryClient();
 
   return useMutation({
