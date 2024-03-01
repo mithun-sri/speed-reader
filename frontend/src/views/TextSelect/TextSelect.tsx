@@ -1,9 +1,11 @@
 import { Box } from "@mui/material";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import BackButton from "../../components/Button/BackButton";
 import Header from "../../components/Header/Header";
+import OriginalSelect from "../../components/Summarised/OriginalSelect";
 import SummarisedSelect from "../../components/Summarised/Summarised";
 import { useGameContext } from "../../context/GameContext";
-import DiffSelect from "../DiffSelect/DiffSelect";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const TextSelect = () => {
@@ -16,8 +18,35 @@ const TextSelect = () => {
     decrementCurrentStage();
   };
 
+  const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  useEffect(() => {
+    function handleResize() {
+      setFontSize(calculateFontSize());
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []); // Run effect only once on mount
+
+  function calculateFontSize() {
+    const windowWidth = window.innerWidth;
+    const minFontSize = 40;
+    const maxFontSize = 200;
+
+    const calculatedFontSize = Math.min(
+      maxFontSize,
+      Math.max(minFontSize, windowWidth / 6),
+    );
+
+    return calculatedFontSize;
+  }
+
   return (
-    <Box>
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
       <Header />
       <Box sx={{ marginLeft: "7vw", marginTop: "35px", marginBottom: "0px" }}>
         <BackButton label="mode" handleClick={handleBackButton} />
@@ -27,17 +56,33 @@ const TextSelect = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 2,
-          paddingBottom: "20px",
         }}
       >
-        <TextSelectContainer>
-          <SummarisedSelect />
-        </TextSelectContainer>
-        <HorizontalLineWithText />
-        <TextSelectContainer>
-          <DiffSelect />
-        </TextSelectContainer>
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "70vh",
+              gap: "7vh",
+              paddingBottom: "20px",
+            }}
+          >
+            <TextSelectContainer>
+              <OriginalSelect size={fontSize} />
+            </TextSelectContainer>
+            <TextSelectContainer>
+              <SummarisedSelect size={fontSize} />
+            </TextSelectContainer>
+          </motion.div>
+        </AnimatePresence>
       </Box>
     </Box>
   );
@@ -56,7 +101,6 @@ const TextSelectContainer: React.FC<{
       sx={{
         borderRadius: "40px",
         margin: "5px auto",
-        padding: "40px 50px",
         border: "2px solid #646669",
         minHeight: "20px",
         boxSizing: "border-box",
@@ -72,6 +116,7 @@ const TextSelectContainer: React.FC<{
   </Box>
 );
 
+// eslint-disable-next-line
 const HorizontalLineWithText = () => {
   return (
     <Box
