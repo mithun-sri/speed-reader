@@ -11,7 +11,6 @@ import {
   getHistories,
   getUserStatistics,
 } from "../../hooks/users";
-import { UserStatistics } from "../../api";
 
 const UserView = () => {
   const { data: userData } = getCurrentUser();
@@ -74,17 +73,16 @@ const UserView = () => {
 const StatisticsBox: React.FC = () => {
   const [mode, setMode] = useState("standard");
   const { data: newData } = getUserStatistics(mode);
-  const [userStatisticsData, setUserStatisticsData] =
-    useState<UserStatistics | null>(newData);
+  const userStatisticsData = newData;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data: newData } = getUserStatistics(mode);
-      setUserStatisticsData(newData);
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const { data: newData } = getUserStatistics(mode);
+  //     setUserStatisticsData(newData);
+  //   };
 
-    fetchData();
-  }, [mode]);
+  //   fetchData();
+  // }, [mode]);
 
   return (
     <>
