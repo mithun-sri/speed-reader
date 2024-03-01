@@ -1,0 +1,24 @@
+.question-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  padding: 20px;
+  text-align: center;
+}
+
+.question-container:not(:last-child) {
+  margin-bottom: 25vh;
+}
+
+.question-container:last-child {
+  margin-bottom: 15vh;
+}
+
+.options-container {
+  display: flex;
+  width: 75%;
+  flex-direction: column;
+  margin-top: 20px;
+}

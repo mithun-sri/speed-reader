@@ -13,11 +13,12 @@ import AuthRoute from "./routes/AuthRoute";
 import GuestRoute from "./routes/GuestRoute";
 import AdminAnalytics from "./views/Admin/Analytics";
 import GptView from "./views/Admin/GptView";
+import AvailableTexts from "./views/AvailableTexts/AvailableTexts";
 import { GamePage } from "./views/GameScreen/GameScreen";
+import Tutorial from "./views/Tutorial/Tutorial";
 import Login from "./views/User/LogIn";
 import SignUp from "./views/User/SignUp";
 import UserView from "./views/User/UserView";
-import AvailableTexts from "./views/AvailableTexts/AvailableTexts";
 import WebGazerCalibration from "./views/WebGazerCalibration/WebGazerCalibration";
 
 function App() {
@@ -35,7 +36,7 @@ function App() {
               <WebGazerProvider>
                 <BrowserRouter>
                   <Routes>
-                    <Route element={<AuthRoute fallback="/login" />}>
+                    <Route element={<AuthRoute fallback="/tutorial" />}>
                       <Route path="/" element={<Navigate to="/game" />} />
                       <Route path="/game" element={<GamePage />} />
                       <Route
@@ -55,6 +56,7 @@ function App() {
                     <Route element={<GuestRoute fallback="/game" />}>
                       <Route path="/login" element={<Login />} />
                       <Route path="/signup" element={<SignUp />} />
+                      <Route path="/tutorial" element={<Tutorial />} />
                     </Route>
                     <Route path="*" element={<NotFound />} />
                   </Routes>
