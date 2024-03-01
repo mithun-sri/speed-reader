@@ -6,9 +6,11 @@ import UserTable from "../../components/Table/UserTable";
 import UserDashboardTop from "../../components/User/UserDashboardTop";
 import UserStats from "../../components/User/UserStats";
 import React from "react";
+import { getCurrentUser, getUserStatistics } from "../../hooks/users";
+import { UserStatistics } from "../../api";
 
 const UserView = () => {
-  const userId = "placeholder";
+  const { data: userData } = getCurrentUser();
 
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
@@ -41,7 +43,7 @@ const UserView = () => {
           alignItems: "center",
         }}
       >
-        <UserDashboardTop user_id={userId} />
+        <UserDashboardTop user_id={userData.username} />
         <PageContainer size={fontSize} title="Statistics">
           <Box
             sx={{
@@ -49,8 +51,7 @@ const UserView = () => {
               flexDirection: "row",
             }}
           >
-            <UserStats></UserStats>
-            <UserGraph></UserGraph>
+            <StatisticsBox />
           </Box>
         </PageContainer>
         <PageContainer size={fontSize} title="History">
@@ -60,6 +61,29 @@ const UserView = () => {
         </PageContainer>
       </Box>
     </Box>
+  );
+};
+
+const StatisticsBox: React.FC = () => {
+  const [mode, setMode] = useState("standard");
+  const { data: newData } = getUserStatistics(mode);
+  const [userStatisticsData, setUserStatisticsData] =
+    useState<UserStatistics>(newData);
+
+  useEffect(() => {
+    const fetchData = () => {
+      const { data: newData } = getUserStatistics(mode);
+      setUserStatisticsData(newData);
+    };
+
+    fetchData();
+  }, [mode]);
+
+  return (
+    <>
+      <UserStats userData={userStatisticsData}></UserStats>
+      <UserGraph mode={mode} setMode={setMode}></UserGraph>
+    </>
   );
 };
 
