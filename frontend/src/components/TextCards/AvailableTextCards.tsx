@@ -13,6 +13,7 @@ import {
   faGamepad,
 } from "@fortawesome/free-solid-svg-icons";
 import FictionBox from "../Fiction/Fiction";
+import { Text, UserAvailableTexts } from "../../api";
 
 interface TextProps {
   title: string;
@@ -129,15 +130,10 @@ export const SearchBar: React.FC = () => {
   );
 };
 
-export const ItemBoxHovered: React.FC<TextProps> = ({
-  title,
-  description,
-  difficulty,
-  image,
-  author,
-  is_fiction,
-  source,
-}) => {
+export const ItemBoxHovered: React.FC<Text> = ({title, description, difficulty, fiction, source}) => {
+  const author = "Author";
+  const image = "https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg";
+
   return (
     <Box
       sx={{
@@ -188,7 +184,7 @@ export const ItemBoxHovered: React.FC<TextProps> = ({
               }}
             >
               <DifficultyBox difficulty={difficulty} />
-              <FictionBox is_fiction={is_fiction} />
+              <FictionBox is_fiction={fiction} />
             </Box>
             <Box
               sx={{
@@ -335,14 +331,19 @@ export const ItemBoxHovered: React.FC<TextProps> = ({
   );
 };
 
-export const ItemBox: React.FC<TextProps> = ({
+export const ItemBox: React.FC<Text> = ({
+  id,
   title,
   description,
   difficulty,
-  image,
-  author,
-  is_fiction,
+  // image,
+  // author,
+  fiction,
+  source
 }) => {
+  const author = "Author";
+  const image = "https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg";
+
   const truncatedDescription =
     description.length > 200
       ? description.substring(0, 200) + "..."
@@ -393,7 +394,7 @@ export const ItemBox: React.FC<TextProps> = ({
             }}
           >
             <DifficultyBox difficulty={difficulty} />
-            <FictionBox is_fiction={is_fiction} />
+            <FictionBox is_fiction={fiction} />
           </Box>
         </Box>
         <JetBrainsMonoText text={"By " + author} size={16} color={"#c7c7c7"} />

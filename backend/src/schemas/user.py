@@ -40,7 +40,8 @@ class TextSort(BaseModel):
 class TextFilter(BaseModel):
     game_mode: Optional[str] = None
     difficulty: Optional[str] = None
-
+    include_fiction: Optional[bool] = True
+    include_nonfiction: Optional[bool] = True
 
 class History(BaseModel):
     text_id: str

@@ -1744,6 +1744,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -1758,6 +1770,9 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "id"
         ],
         "title": "Text"
@@ -1799,6 +1814,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "questions": {
             "items": {
               "$ref": "#/components/schemas/QuestionCreate"
@@ -1816,6 +1843,9 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "questions"
         ],
         "title": "TextCreateWithQuestions"
@@ -1843,6 +1873,30 @@
               }
             ],
             "title": "Difficulty"
+          },
+          "include_fiction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Include Fiction",
+            "default": true
+          },
+          "include_nonfiction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Include Nonfiction",
+            "default": true
           }
         },
         "type": "object",
@@ -1903,6 +1957,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -1924,6 +1990,9 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "id",
           "questions"
         ],
@@ -1966,6 +2035,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -2003,6 +2084,9 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "id",
           "questions",
           "min_wpm",
@@ -2049,6 +2133,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -2079,6 +2175,9 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "id",
           "min_wpm",
           "max_wpm",

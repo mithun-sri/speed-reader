@@ -12,11 +12,22 @@ import { getAvailableTexts } from "../../hooks/users";
 import { UserAvailableTexts } from "../../api";
 
 const AvailableTexts: React.FC = () => {
-  const pageSize = 10;
+  const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
-  const numPages = 10;
+  const [numPages, setNumPages] = useState(1)
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
+    const { data: newData } = getAvailableTexts();
+    const [availableTexts, setAvailableTexts] = useState<UserAvailableTexts>(newData);
+    
+    useEffect(() => {
+      if (newData) {
+        setAvailableTexts(newData);
+        setPageSize(newData.page_size);
+        setPage(newData.page);
+      }
+    }
+    , [newData]);
   };
   // const [texts, setTexts] = useState<TextProps[]>([]);
   const [texts, setTexts] = useState([
@@ -55,10 +66,14 @@ const AvailableTexts: React.FC = () => {
   ]);
 
   const { data: newData } = getAvailableTexts();
-  const [_texts, _setTexts] = useState<UserAvailableTexts>(newData);
+  const [availableTexts, setAvailableTexts] = useState<UserAvailableTexts>(newData);
+  
   useEffect(() => {
     if (newData) {
-      _setTexts(newData);
+      setAvailableTexts(newData);
+      setPageSize(newData.page_size);
+      setPage(newData.page);
+      setNumPages(Math.ceil(newData.total_texts / newData.page_size));
     }
   }
   , [newData]);
@@ -90,7 +105,7 @@ const AvailableTexts: React.FC = () => {
               alignItems: "center",
             }}
           >
-            {texts
+            {availableTexts.texts
               .slice((page - 1) * pageSize, page * pageSize)
               .map((text, index) => {
                 const [isHovered, setIsHovered] = useState(false);
@@ -112,13 +127,16 @@ const AvailableTexts: React.FC = () => {
                     }}
                   >
                     <ItemBox
-                      key={index}
+                      id={text.id}
                       title={text.title}
+                      content={text.content}
+                      summary={text.summary}
+                      word_count={text.word_count}
                       description={text.description}
                       difficulty={text.difficulty}
-                      image={text.image}
-                      author={text.author}
-                      is_fiction={text.is_fiction}
+                      // image,
+                      // author,
+                      fiction={text.fiction}
                       source={text.source}
                     />
                     <AnimatePresence mode="wait">
@@ -141,12 +159,16 @@ const AvailableTexts: React.FC = () => {
                           }}
                         >
                           <ItemBoxHovered
+                            id={text.id}
                             title={text.title}
+                            content={text.content}
+                            summary={text.summary}
+                            word_count={text.word_count}
                             description={text.description}
                             difficulty={text.difficulty}
-                            image={text.image}
-                            author={text.author}
-                            is_fiction={text.is_fiction}
+                            // image,
+                            // author,
+                            fiction={text.fiction}
                             source={text.source}
                           />
                         </motion.div>
