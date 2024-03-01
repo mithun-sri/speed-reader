@@ -14,10 +14,8 @@ import {
 import { UserStatistics } from "../../api";
 
 const UserView = () => {
-  const { data: userData, error, isError } = getCurrentUser();
-  const userId = isError ? userData.username : "placeholder";
-
-  console.log(error);
+  const { data: userData } = getCurrentUser();
+  const userId = userData.username;
 
   const { data: userHistory } = getHistories();
 
@@ -81,9 +79,8 @@ const StatisticsBox: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: newData, error, isError } = getUserStatistics(mode);
-      console.log(error);
-      setUserStatisticsData(isError ? null : newData);
+      const { data: newData } = getUserStatistics(mode);
+      setUserStatisticsData(newData);
     };
 
     fetchData();
