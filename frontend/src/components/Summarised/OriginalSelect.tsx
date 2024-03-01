@@ -43,7 +43,7 @@ const OriginalSelect: React.FC<{
               padding: "10px",
               flexDirection: "column",
               justifyContent: "center",
-              backgroundColor: "#35363a",
+              backgroundColor: "#303236",
               position: "absolute",
               zIndex: 1,
               borderRadius: "40px",
