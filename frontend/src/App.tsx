@@ -13,12 +13,12 @@ import AuthRoute from "./routes/AuthRoute";
 import GuestRoute from "./routes/GuestRoute";
 import AdminAnalytics from "./views/Admin/Analytics";
 import GptView from "./views/Admin/GptView";
+import AvailableTexts from "./views/AvailableTexts/AvailableTexts";
 import { GamePage } from "./views/GameScreen/GameScreen";
+import Intro from "./views/Intro/Intro";
 import Login from "./views/User/LogIn";
 import SignUp from "./views/User/SignUp";
 import UserView from "./views/User/UserView";
-import Intro from "./views/Intro/Intro";
-import AvailableTexts from "./views/AvailableTexts/AvailableTexts";
 import WebGazerCalibration from "./views/WebGazerCalibration/WebGazerCalibration";
 
 function App() {
@@ -36,7 +36,7 @@ function App() {
               <WebGazerProvider>
                 <BrowserRouter>
                   <Routes>
-                    <Route element={<AuthRoute fallback="/login" />}>
+                    <Route element={<AuthRoute fallback="/intro" />}>
                       <Route path="/" element={<Navigate to="/game" />} />
                       <Route path="/game" element={<GamePage />} />
                       <Route
@@ -53,7 +53,7 @@ function App() {
                         <Route path="/admin" element={<AdminAnalytics />} />
                       </Route>
                     </Route>
-                    <Route element={<GuestRoute fallback="/game" />}>
+                    <Route element={<GuestRoute fallback="/intro" />}>
                       <Route path="/login" element={<Login />} />
                       <Route path="/signup" element={<SignUp />} />
                       <Route path="/intro" element={<Intro />} />

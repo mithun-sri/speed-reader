@@ -1,6 +1,7 @@
 import { Box, IconButton } from "@mui/material";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import BlurBox from "../../components/Blur/Blur";
 import Header from "../../components/Header/Header";
@@ -27,6 +28,16 @@ const STAGE_QUESTION = 6;
 
 function Intro() {
   const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies(["visited"]);
+
+  useEffect(() => {
+    if (cookies.visited) {
+      navigate("/signup");
+      return;
+    }
+    setCookie("visited", true, { path: "/" });
+  }, []);
+
   const [stage, setStage] = useState(0);
   const [wpm, setWpm] = useState(200);
 
@@ -34,14 +45,13 @@ function Intro() {
     if (stage < INTRO_TEXT.length - 1) setStage(stage + 1);
     else {
       setStage(0);
-      navigate("/game");
+      navigate("/signup");
     }
   }
 
   function onTextFinish() {
     if (stage === STAGE_UP_ARROW) return;
     if (stage === STAGE_DOWN_ARROW) return;
-    if (stage === STAGE_SPACE) return;
     if (stage === STAGE_SPACE) return;
     incrementStage();
   }
