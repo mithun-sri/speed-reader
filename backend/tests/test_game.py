@@ -1,3 +1,5 @@
+import random
+
 import pytest
 import ulid
 from fastapi.testclient import TestClient
@@ -14,7 +16,10 @@ class TestGetNextText:
         self,
         user_client: TestClient,
     ):
-        response = user_client.get("/game/texts/next")
+        response = user_client.get(
+            "/game/texts/next",
+            params={"is_summary": random.choice([True, False])},
+        )
         assert response.status_code == 404
 
     def test_returns_text(
@@ -26,7 +31,10 @@ class TestGetNextText:
         session.add(text)
         session.commit()
 
-        response = user_client.get("/game/texts/next")
+        response = user_client.get(
+            "/game/texts/next",
+            params={"is_summary": random.choice([True, False])},
+        )
         assert response.status_code == 200
 
         response_body = response.json()

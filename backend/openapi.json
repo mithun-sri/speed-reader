@@ -1110,9 +1110,18 @@
           "game"
         ],
         "summary": "Get Next Text",
-        "description": "Gets the next text that the user has not attempted before.\nTODO:\nThe current implementation returns a random text,\nregardless of which texts the user has seen.",
+        "description": "Gets the next text that the user has not attempted before.",
         "operationId": "get_next_text",
         "parameters": [
+          {
+            "name": "is_summary",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "title": "Is Summary"
+            }
+          },
           {
             "name": "access_token",
             "in": "cookie",
@@ -1160,7 +1169,7 @@
           "game"
         ],
         "summary": "Get Next Questions",
-        "description": "Gets next 10 questions that the user has not attempted before.\nTODO:\nThe current implementation returns 10 random questions for the given text,\nregardless of which questions the user has seen.",
+        "description": "Gets next 10 questions that the user has not attempted before.",
         "operationId": "get_next_questions",
         "parameters": [
           {
@@ -1709,7 +1718,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {
@@ -1757,7 +1773,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {
@@ -1854,7 +1877,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {
@@ -1910,7 +1940,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {
@@ -1986,7 +2023,14 @@
             "title": "Content"
           },
           "summary": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Summary"
           },
           "source": {

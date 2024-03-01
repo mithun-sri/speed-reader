@@ -1,7 +1,12 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import { UserStatistics } from "../../api";
 
-const UserStats = () => {
+interface UserStatsProps {
+  userData: UserStatistics;
+}
+
+const UserStats: React.FC<UserStatsProps> = ({ userData }) => {
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 35;
@@ -31,16 +36,28 @@ const UserStats = () => {
         flex: "1",
       }}
     >
-      <UserData1 title="score" value="84%" size={fontSize / 2} />
-      <UserData1 title="average wpm" value="246" size={fontSize / 2.1} />
-      <MinMax minVal="123" maxVal="534" size={fontSize / 3} />
+      <UserData1
+        title="score"
+        value={userData.average_score}
+        size={fontSize / 2}
+      />
+      <UserData1
+        title="average wpm"
+        value={userData.average_wpm}
+        size={fontSize / 2.1}
+      />
+      <MinMax
+        minVal={userData.min_wpm}
+        maxVal={userData.max_wpm}
+        size={fontSize / 3}
+      />
     </Box>
   );
 };
 
 const UserData1: React.FC<{
   title: string;
-  value: string;
+  value: number;
   size: number;
 }> = ({ title, value, size }) => {
   return (
@@ -67,15 +84,15 @@ const UserData1: React.FC<{
           textAlign: "right",
         }}
       >
-        {value}
+        {title === "score" ? `${value}%` : value}
       </Box>
     </Box>
   );
 };
 
 const MinMax: React.FC<{
-  minVal: string;
-  maxVal: string;
+  minVal: number;
+  maxVal: number;
   size: number;
 }> = ({ minVal, maxVal, size }) => {
   const _Title: React.FC<{
@@ -93,7 +110,7 @@ const MinMax: React.FC<{
     </Box>
   );
   const _Value: React.FC<{
-    val: string;
+    val: number;
   }> = ({ val }) => (
     <Box
       sx={{

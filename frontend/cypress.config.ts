@@ -4,10 +4,8 @@ import { defineConfig } from "cypress";
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:8081";
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8001";
 
-// TODO:
-// Move keys to GitLab CI/CD secrets
-const TESTING_USERNAME = "admin";
-const TESTING_PASSWORD = "sAzGmYEoi4#Y9jX3oue#U59Fg^p&%D55";
+const TESTING_USERNAME = process.env.TESTING_USERNAME || "admin";
+const TESTING_PASSWORD = process.env.TZESTING_PASSWORD || "admin";
 
 export default defineConfig({
   e2e: {

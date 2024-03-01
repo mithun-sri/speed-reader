@@ -23,15 +23,17 @@ const DropDownMode: React.FC<{
       <StyledSelect value={selectValue} onChange={selectOnChange}>
         <MenuItem value="standard">standard</MenuItem>
         <MenuItem value="adaptive">adaptive</MenuItem>
-        <MenuItem value="summarised">summarised</MenuItem>
       </StyledSelect>
     </StyledFormControl>
   );
 };
 
-const UserGraph = () => {
-  const [mode, setMode] = useState<string>("standard");
+interface UserGraphProps {
+  mode: string;
+  setMode: (mode: string) => void;
+}
 
+const UserGraph: React.FC<UserGraphProps> = ({ mode, setMode }) => {
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 15;

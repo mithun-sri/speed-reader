@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from sqlalchemy.orm import Mapped, relationship
 
@@ -14,7 +14,7 @@ class Text(ULIDMixin, TimestampMixin, Base):
 
     title: Mapped[str]
     content: Mapped[str]
-    summary: Mapped[str]
+    summary: Mapped[Optional[str]]
     source: Mapped[str]
     # TODO: Rename to `is_fiction`
     fiction: Mapped[bool]

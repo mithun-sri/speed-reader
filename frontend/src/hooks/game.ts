@@ -3,14 +3,15 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { BodyPostAnswers, GameApi } from "../api";
+import { BodyPostAnswers } from "../api";
+import { useApiClient } from "../context/ApiContext";
 
-const gameApi = new GameApi();
+export function useNextText(isSummary: boolean) {
+  const { gameApi } = useApiClient();
 
-export function useNextText() {
   return useSuspenseQuery({
     queryKey: ["next-text"],
-    queryFn: () => gameApi.getNextText().then((res) => res.data),
+    queryFn: () => gameApi.getNextText(isSummary).then((res) => res.data),
     // NOTE:
     // This disables caching mechanism of react-query temporarily.
     // Comment it out when we have data-fetching logic working.
@@ -19,6 +20,8 @@ export function useNextText() {
 }
 
 export function useNextQuestions(textId: string) {
+  const { gameApi } = useApiClient();
+
   return useSuspenseQuery({
     queryKey: ["next-questions"],
     queryFn: () => gameApi.getNextQuestions(textId).then((res) => res.data),
@@ -27,6 +30,7 @@ export function useNextQuestions(textId: string) {
 }
 
 export function usePostAnswers(textId: string) {
+  const { gameApi } = useApiClient();
   const queryClient = useQueryClient();
 
   return useMutation({

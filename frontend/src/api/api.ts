@@ -484,6 +484,13 @@ export interface Result {
 /**
  * 
  * @export
+ * @interface Summary
+ */
+export interface Summary {
+}
+/**
+ * 
+ * @export
  * @interface Text
  */
 export interface Text {
@@ -501,10 +508,10 @@ export interface Text {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof Text
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -556,10 +563,10 @@ export interface TextCreateWithQuestions {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextCreateWithQuestions
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -649,10 +656,10 @@ export interface TextWithQuestions {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextWithQuestions
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -710,10 +717,10 @@ export interface TextWithQuestionsAndStatistics {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextWithQuestionsAndStatistics
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -795,10 +802,10 @@ export interface TextWithStatistics {
     'content': string;
     /**
      * 
-     * @type {string}
+     * @type {Summary}
      * @memberof TextWithStatistics
      */
-    'summary': string;
+    'summary': Summary;
     /**
      * 
      * @type {string}
@@ -1952,7 +1959,7 @@ export class DefaultApi extends BaseAPI {
 export const GameApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {AccessToken} [accessToken] 
@@ -1987,13 +1994,16 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             };
         },
         /**
-         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
+         * @param {boolean} isSummary 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getNextText: async (isSummary: boolean, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'isSummary' is not null or undefined
+            assertParamExists('getNextText', 'isSummary', isSummary)
             const localVarPath = `/game/texts/next`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2005,6 +2015,10 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
+
+            if (isSummary !== undefined) {
+                localVarQueryParameter['is_summary'] = isSummary;
+            }
 
 
     
@@ -2069,7 +2083,7 @@ export const GameApiFp = function(configuration?: Configuration) {
     const localVarAxiosParamCreator = GameApiAxiosParamCreator(configuration)
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {AccessToken} [accessToken] 
@@ -2083,14 +2097,15 @@ export const GameApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
+         * @param {boolean} isSummary 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNextText(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(accessToken, options);
+        async getNextText(isSummary: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(isSummary, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.getNextText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2121,7 +2136,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
     const localVarFp = GameApiFp(configuration)
     return {
         /**
-         * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+         * Gets next 10 questions that the user has not attempted before.
          * @summary Get Next Questions
          * @param {string} textId 
          * @param {AccessToken} [accessToken] 
@@ -2132,14 +2147,15 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
             return localVarFp.getNextQuestions(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
-         * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+         * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
+         * @param {boolean} isSummary 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText(accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
-            return localVarFp.getNextText(accessToken, options).then((request) => request(axios, basePath));
+        getNextText(isSummary: boolean, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
+            return localVarFp.getNextText(isSummary, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Accepts the question answers and other statistics. Returns the results to the answers.
@@ -2164,7 +2180,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
  */
 export class GameApi extends BaseAPI {
     /**
-     * Gets next 10 questions that the user has not attempted before. TODO: The current implementation returns 10 random questions for the given text, regardless of which questions the user has seen.
+     * Gets next 10 questions that the user has not attempted before.
      * @summary Get Next Questions
      * @param {string} textId 
      * @param {AccessToken} [accessToken] 
@@ -2177,15 +2193,16 @@ export class GameApi extends BaseAPI {
     }
 
     /**
-     * Gets the next text that the user has not attempted before. TODO: The current implementation returns a random text, regardless of which texts the user has seen.
+     * Gets the next text that the user has not attempted before.
      * @summary Get Next Text
+     * @param {boolean} isSummary 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GameApi
      */
-    public getNextText(accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
-        return GameApiFp(this.configuration).getNextText(accessToken, options).then((request) => request(this.axios, this.basePath));
+    public getNextText(isSummary: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return GameApiFp(this.configuration).getNextText(isSummary, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

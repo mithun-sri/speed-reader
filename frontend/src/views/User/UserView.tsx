@@ -6,9 +6,20 @@ import UserTable from "../../components/Table/UserTable";
 import UserDashboardTop from "../../components/User/UserDashboardTop";
 import UserStats from "../../components/User/UserStats";
 import React from "react";
+import {
+  getCurrentUser,
+  getHistories,
+  getUserStatistics,
+} from "../../hooks/users";
+import { UserStatistics } from "../../api";
 
 const UserView = () => {
-  const userId = "placeholder";
+  const { data: userData, error, isError } = getCurrentUser();
+  const userId = isError ? userData.username : "placeholder";
+
+  console.log(error);
+
+  const { data: userHistory } = getHistories();
 
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
@@ -49,17 +60,46 @@ const UserView = () => {
               flexDirection: "row",
             }}
           >
-            <UserStats></UserStats>
-            <UserGraph></UserGraph>
+            <StatisticsBox />
           </Box>
         </PageContainer>
         <PageContainer size={fontSize} title="History">
           <Box>
-            <UserTable />
+            <UserTable results={userHistory} />
           </Box>
         </PageContainer>
       </Box>
     </Box>
+  );
+};
+
+const StatisticsBox: React.FC = () => {
+  const [mode, setMode] = useState("standard");
+  const { data: newData } = getUserStatistics(mode);
+  const [userStatisticsData, setUserStatisticsData] =
+    useState<UserStatistics | null>(newData);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data: newData, error, isError } = getUserStatistics(mode);
+      console.log(error);
+      setUserStatisticsData(isError ? null : newData);
+    };
+
+    fetchData();
+  }, [mode]);
+
+  return (
+    <>
+      {userStatisticsData ? (
+        <>
+          <UserStats userData={userStatisticsData}></UserStats>
+          <UserGraph mode={mode} setMode={setMode}></UserGraph>
+        </>
+      ) : (
+        <Box sx={{ color: "#fff" }}>No Statistics Available</Box>
+      )}
+    </>
   );
 };
 
