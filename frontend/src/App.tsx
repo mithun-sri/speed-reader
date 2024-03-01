@@ -16,6 +16,7 @@ import { GamePage } from "./views/GameScreen/GameScreen";
 import Login from "./views/User/LogIn";
 import SignUp from "./views/User/SignUp";
 import UserView from "./views/User/UserView";
+import Intro from "./views/Intro/Intro";
 
 function App() {
   const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ function App() {
                   <Route element={<GuestRoute fallback="/game" />}>
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
+                    <Route path="/intro" element={<Intro />} />
                   </Route>
                   <Route path="*" element={<NotFound />} />
                 </Routes>
