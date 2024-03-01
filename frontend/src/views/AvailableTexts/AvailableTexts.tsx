@@ -134,8 +134,8 @@ const AvailableTexts: React.FC = () => {
                       word_count={text.word_count}
                       description={text.description}
                       difficulty={text.difficulty}
-                      // image,
-                      // author,
+                      image_url={text.image_url}
+                      author={text.author}
                       fiction={text.fiction}
                       source={text.source}
                     />
@@ -166,8 +166,8 @@ const AvailableTexts: React.FC = () => {
                             word_count={text.word_count}
                             description={text.description}
                             difficulty={text.difficulty}
-                            // image,
-                            // author,
+                            image_url={text.image_url}
+                            author={text.author}
                             fiction={text.fiction}
                             source={text.source}
                           />

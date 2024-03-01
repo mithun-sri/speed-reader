@@ -19,8 +19,8 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.add_column("text", sa.Column("image_url", sa.String(), default="https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg", nullable=False))
-
+    op.add_column("text", sa.Column("image_url", sa.String(), server_default="https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg", nullable=False))
+    
 
 def downgrade() -> None:
     op.drop_column("text", "image_url")

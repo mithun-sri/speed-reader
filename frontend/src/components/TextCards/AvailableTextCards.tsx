@@ -130,9 +130,7 @@ export const SearchBar: React.FC = () => {
   );
 };
 
-export const ItemBoxHovered: React.FC<Text> = ({title, description, difficulty, fiction, source}) => {
-  const author = "Author";
-  const image = "https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg";
+export const ItemBoxHovered: React.FC<Text> = ({title, description, difficulty, fiction, source, author, image_url}) => {
 
   return (
     <Box
@@ -155,7 +153,7 @@ export const ItemBoxHovered: React.FC<Text> = ({title, description, difficulty, 
             justifyContent: "center",
             width: "20%",
           }}
-          src={image}
+          src={image_url}
         />
         <Box
           sx={{
@@ -172,6 +170,7 @@ export const ItemBoxHovered: React.FC<Text> = ({title, description, difficulty, 
               width: "100%",
               display: "flex",
               flexDirection: "row",
+              overflowWrap: "break-word",
             }}
           >
             <JetBrainsMonoText text={title} size={24} color={"#D9D9D9"} />
@@ -336,13 +335,11 @@ export const ItemBox: React.FC<Text> = ({
   title,
   description,
   difficulty,
-  // image,
-  // author,
+  image_url,
+  author,
   fiction,
   source
 }) => {
-  const author = "Author";
-  const image = "https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg";
 
   const truncatedDescription =
     description.length > 200
@@ -366,7 +363,7 @@ export const ItemBox: React.FC<Text> = ({
           justifyContent: "center",
           width: "15%",
         }}
-        src={image}
+        src={image_url}
       />
       <Box
         sx={{

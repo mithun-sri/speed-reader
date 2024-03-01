@@ -133,7 +133,14 @@ async def get_user_available_texts(
     query = filter_query(select(models.Text))
     query = query.offset((page - 1) * page_size).limit(page_size)
     texts = session.scalars(query).all()
+    # for i, text in enumerate(texts):
+    #     _text = text.__dict__
+    #     _text["description"] = "description"
+    #     _text["image_url"] = "https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg"
+    #     _text["author"] = "Author"
+    #     texts[i] = schemas.Text(**_text)  # type: ignore
     texts = [schemas.Text(**text.__dict__) for text in texts]  # type: ignore
+    # texts = [schemas.Text(text) for text in texts]  # type: ignore
 
     return schemas.UserAvailableTexts(
         texts=texts,  # type: ignore

@@ -17,3 +17,6 @@ class TextFactory(factory.alchemy.SQLAlchemyModelFactory):
         "random_element",
         elements=["easy", "medium", "hard"],
     )
+    author = factory.Faker("name")
+    image_url = "https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg"
+    description = factory.Faker("text")

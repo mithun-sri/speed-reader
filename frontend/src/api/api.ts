@@ -117,6 +117,18 @@ export interface BodyGetUserAvailableTextsTextFilter {
      * @memberof BodyGetUserAvailableTextsTextFilter
      */
     'difficulty'?: Difficulty;
+    /**
+     * 
+     * @type {IncludeFiction}
+     * @memberof BodyGetUserAvailableTextsTextFilter
+     */
+    'include_fiction'?: IncludeFiction;
+    /**
+     * 
+     * @type {IncludeNonfiction}
+     * @memberof BodyGetUserAvailableTextsTextFilter
+     */
+    'include_nonfiction'?: IncludeNonfiction;
 }
 /**
  * 
@@ -318,6 +330,20 @@ export interface History {
      * @memberof History
      */
     'results': Array<Result>;
+}
+/**
+ * 
+ * @export
+ * @interface IncludeFiction
+ */
+export interface IncludeFiction {
+}
+/**
+ * 
+ * @export
+ * @interface IncludeNonfiction
+ */
+export interface IncludeNonfiction {
 }
 /**
  * 
@@ -541,6 +567,24 @@ export interface Text {
      * @type {string}
      * @memberof Text
      */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
+    'author': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
+    'image_url': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Text
+     */
     'id': string;
 }
 /**
@@ -593,6 +637,24 @@ export interface TextCreateWithQuestions {
     'word_count': number;
     /**
      * 
+     * @type {string}
+     * @memberof TextCreateWithQuestions
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextCreateWithQuestions
+     */
+    'author': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextCreateWithQuestions
+     */
+    'image_url': string;
+    /**
+     * 
      * @type {Array<QuestionCreate>}
      * @memberof TextCreateWithQuestions
      */
@@ -616,6 +678,18 @@ export interface TextFilter {
      * @memberof TextFilter
      */
     'difficulty'?: Difficulty;
+    /**
+     * 
+     * @type {IncludeFiction}
+     * @memberof TextFilter
+     */
+    'include_fiction'?: IncludeFiction;
+    /**
+     * 
+     * @type {IncludeNonfiction}
+     * @memberof TextFilter
+     */
+    'include_nonfiction'?: IncludeNonfiction;
 }
 /**
  * 
@@ -689,6 +763,24 @@ export interface TextWithQuestions {
      * @type {string}
      * @memberof TextWithQuestions
      */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestions
+     */
+    'author': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestions
+     */
+    'image_url': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestions
+     */
     'id': string;
     /**
      * 
@@ -745,6 +837,24 @@ export interface TextWithQuestionsAndStatistics {
      * @memberof TextWithQuestionsAndStatistics
      */
     'word_count': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'author': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'image_url': string;
     /**
      * 
      * @type {string}
@@ -830,6 +940,24 @@ export interface TextWithStatistics {
      * @memberof TextWithStatistics
      */
     'word_count': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithStatistics
+     */
+    'description': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithStatistics
+     */
+    'author': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof TextWithStatistics
+     */
+    'image_url': string;
     /**
      * 
      * @type {string}
