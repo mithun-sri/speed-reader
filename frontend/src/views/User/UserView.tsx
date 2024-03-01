@@ -10,8 +10,10 @@ import { getCurrentUser, getUserStatistics } from "../../hooks/users";
 import { UserStatistics } from "../../api";
 
 const UserView = () => {
-  const { data: userData } = getCurrentUser();
-  const userId = userData ? userData.username : "placeholder";
+  const { data: userData, error, isError } = getCurrentUser();
+  const userId = isError ? userData.username : "placeholder";
+
+  console.log(error);
 
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
@@ -73,8 +75,9 @@ const StatisticsBox: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: newData } = getUserStatistics(mode);
-      setUserStatisticsData(newData);
+      const { data: newData, error, isError } = getUserStatistics(mode);
+      console.log(error);
+      setUserStatisticsData(isError ? null : newData);
     };
 
     fetchData();
