@@ -4,11 +4,7 @@ import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./Quiz.css";
 
 import { useEffect } from "react";
-import {
-  ADAPTIVE_MODE,
-  STANDARD_MODE,
-  SUMMARISED_MODE,
-} from "../../common/constants";
+import { ADAPTIVE_MODE, STANDARD_MODE } from "../../common/constants";
 import { useGameContext } from "../../context/GameContext";
 import { useNextQuestions, usePostAnswers } from "../../hooks/game";
 import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
@@ -74,7 +70,6 @@ const QuizView = () => {
         const gameMode = {
           [STANDARD_MODE]: "standard",
           [ADAPTIVE_MODE]: "adaptive",
-          [SUMMARISED_MODE]: "", // NOTE: This should not be relevant
         }[mode];
         const gameSubmode = {
           [StandardView.Word]: "word-by-word",

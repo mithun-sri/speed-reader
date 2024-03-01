@@ -251,6 +251,7 @@ const WebGazerCalibration = () => {
                 fontWeight: "bold",
                 fontSize: 25,
                 color: "#E2B714",
+                cursor: "pointer",
               }}
               onClick={() => {
                 context.incrementCurrentStage();
