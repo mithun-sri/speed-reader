@@ -1,11 +1,7 @@
-export type GameMode =
-  | typeof STANDARD_MODE
-  | typeof ADAPTIVE_MODE
-  | typeof SUMMARISED_MODE;
+export type GameMode = typeof STANDARD_MODE | typeof ADAPTIVE_MODE;
 
 export const STANDARD_MODE = "Standard Mode";
 export const ADAPTIVE_MODE = "Adaptive Mode";
-export const SUMMARISED_MODE = "Summarised Mode";
 
 export type GameDifficulty = typeof EASY | typeof MED | typeof HARD;
 
