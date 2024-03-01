@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { UserStatistics } from "../../api";
 
 interface UserStatsProps {
-  userData: UserStatistics
+  userData: UserStatistics;
 }
 
-const UserStats: React.FC<UserStatsProps> = ({userData}) => {
+const UserStats: React.FC<UserStatsProps> = ({ userData }) => {
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
     const minFontSize = 35;
@@ -36,9 +36,21 @@ const UserStats: React.FC<UserStatsProps> = ({userData}) => {
         flex: "1",
       }}
     >
-      <UserData1 title="score" value={userData.average_score} size={fontSize / 2} />
-      <UserData1 title="average wpm" value={userData.average_wpm} size={fontSize / 2.1} />
-      <MinMax minVal={userData.min_wpm} maxVal={userData.max_wpm} size={fontSize / 3} />
+      <UserData1
+        title="score"
+        value={userData.average_score}
+        size={fontSize / 2}
+      />
+      <UserData1
+        title="average wpm"
+        value={userData.average_wpm}
+        size={fontSize / 2.1}
+      />
+      <MinMax
+        minVal={userData.min_wpm}
+        maxVal={userData.max_wpm}
+        size={fontSize / 3}
+      />
     </Box>
   );
 };
