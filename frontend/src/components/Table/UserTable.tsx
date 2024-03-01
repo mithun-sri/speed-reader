@@ -22,90 +22,37 @@ import {
   StyledInputLabel,
   StyledSelect,
 } from "../Button/DropDownMenu";
+import { History } from "../../api";
 
 interface Row {
   id: number;
-  text: string;
+  text_id: string;
   mode: string;
   difficulty: string;
   average: number;
   accuracy: number;
-  date: string;
   page: string;
 }
 
+function convertHistoryToRows(histories: History[]): Row[] {
+  return histories.map((history, index) => ({
+    id: index + 1,
+    text_id: history.text_id,
+    mode: history.game_mode,
+    difficulty: history.difficulty,
+    average: history.average_wpm,
+    accuracy: history.score,
+    page: "example.com",
+  }));
+}
+
 const columns = [
-  { id: "text", label: "text", type: "string" },
+  { id: "text_id", label: "text", type: "number" },
   { id: "mode", label: "mode", type: "string" },
   { id: "difficulty", label: "diff.", type: "string" },
   { id: "average", label: "avg.", type: "number" },
   { id: "accuracy", label: "acc (%)", type: "number" },
-  { id: "date", label: "date", type: "string" },
   { id: "page", label: "page", type: "button" },
-];
-
-// Example data
-const rows: Row[] = [
-  {
-    id: 1,
-    text: "Sample Text",
-    mode: "standard",
-    difficulty: "easy",
-    average: 255,
-    accuracy: 80,
-    date: "2024 Feb 08 10:30",
-    page: "https://example.com",
-  },
-  {
-    id: 2,
-    text: "Another Text",
-    mode: "adaptive",
-    difficulty: "med",
-    average: 155,
-    accuracy: 75,
-    date: "2024 Feb 09 14:45",
-    page: "https://example.com",
-  },
-  {
-    id: 3,
-    text: "Yet Another Text",
-    mode: "summarised",
-    difficulty: "hard",
-    average: 400,
-    accuracy: 85,
-    date: "2024 Feb 10 08:15",
-    page: "https://example.com",
-  },
-  {
-    id: 4,
-    text: "Sample Text",
-    mode: "standard",
-    difficulty: "easy",
-    average: 255,
-    accuracy: 80,
-    date: "2024 Feb 08 10:30",
-    page: "https://example.com",
-  },
-  {
-    id: 5,
-    text: "Another Text",
-    mode: "adaptive",
-    difficulty: "med",
-    average: 155,
-    accuracy: 75,
-    date: "2024 Feb 09 14:45",
-    page: "https://example.com",
-  },
-  {
-    id: 6,
-    text: "Yet Another Text",
-    mode: "summarised",
-    difficulty: "hard",
-    average: 400,
-    accuracy: 85,
-    date: "2024 Feb 10 08:15",
-    page: "https://example.com",
-  },
 ];
 
 const StyledTableCell = styled(TableCell)({
@@ -116,7 +63,12 @@ const StyledTableCell = styled(TableCell)({
   borderColor: "#646669",
 });
 
-function UserTable() {
+interface UserTableProps {
+  results: Array<History>;
+}
+
+const UserTable: React.FC<UserTableProps> = ({ results }) => {
+  const rows = convertHistoryToRows(results);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [modeFilter, setModeFilter] = useState("");
@@ -276,7 +228,7 @@ function UserTable() {
       />
     </Paper>
   );
-}
+};
 
 const StyledTablePagination = styled(TablePagination)`
   display: flex;

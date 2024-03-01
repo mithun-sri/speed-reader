@@ -6,11 +6,20 @@ import UserTable from "../../components/Table/UserTable";
 import UserDashboardTop from "../../components/User/UserDashboardTop";
 import UserStats from "../../components/User/UserStats";
 import React from "react";
-import { getCurrentUser, getUserStatistics } from "../../hooks/users";
+import {
+  getCurrentUser,
+  getHistories,
+  getUserStatistics,
+} from "../../hooks/users";
 import { UserStatistics } from "../../api";
 
 const UserView = () => {
-  const { data: userData } = getCurrentUser();
+  const { data: userData, error, isError } = getCurrentUser();
+  const userId = isError ? userData.username : "placeholder";
+
+  console.log(error);
+
+  const { data: userHistory } = getHistories();
 
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
@@ -43,7 +52,7 @@ const UserView = () => {
           alignItems: "center",
         }}
       >
-        <UserDashboardTop user_id={userData.username} />
+        <UserDashboardTop user_id={userId} />
         <PageContainer size={fontSize} title="Statistics">
           <Box
             sx={{
@@ -56,7 +65,7 @@ const UserView = () => {
         </PageContainer>
         <PageContainer size={fontSize} title="History">
           <Box>
-            <UserTable />
+            <UserTable results={userHistory} />
           </Box>
         </PageContainer>
       </Box>
@@ -68,12 +77,13 @@ const StatisticsBox: React.FC = () => {
   const [mode, setMode] = useState("standard");
   const { data: newData } = getUserStatistics(mode);
   const [userStatisticsData, setUserStatisticsData] =
-    useState<UserStatistics>(newData);
+    useState<UserStatistics | null>(newData);
 
   useEffect(() => {
-    const fetchData = () => {
-      const { data: newData } = getUserStatistics(mode);
-      setUserStatisticsData(newData);
+    const fetchData = async () => {
+      const { data: newData, error, isError } = getUserStatistics(mode);
+      console.log(error);
+      setUserStatisticsData(isError ? null : newData);
     };
 
     fetchData();
@@ -81,8 +91,14 @@ const StatisticsBox: React.FC = () => {
 
   return (
     <>
-      <UserStats userData={userStatisticsData}></UserStats>
-      <UserGraph mode={mode} setMode={setMode}></UserGraph>
+      {userStatisticsData ? (
+        <>
+          <UserStats userData={userStatisticsData}></UserStats>
+          <UserGraph mode={mode} setMode={setMode}></UserGraph>
+        </>
+      ) : (
+        <Box sx={{ color: "#fff" }}>No Statistics Available</Box>
+      )}
     </>
   );
 };
