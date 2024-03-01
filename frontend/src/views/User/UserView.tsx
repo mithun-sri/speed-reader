@@ -11,6 +11,7 @@ import { UserStatistics } from "../../api";
 
 const UserView = () => {
   const { data: userData } = getCurrentUser();
+  const userId = userData ? userData.username : "placeholder";
 
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
@@ -43,7 +44,7 @@ const UserView = () => {
           alignItems: "center",
         }}
       >
-        <UserDashboardTop user_id={userData.username} />
+        <UserDashboardTop user_id={userId} />
         <PageContainer size={fontSize} title="Statistics">
           <Box
             sx={{
