@@ -71,10 +71,21 @@ const TextSelect = () => {
               justifyContent: "center",
               width: "100%",
               height: "70vh",
-              gap: "7vh",
               paddingBottom: "20px",
             }}
           >
+            <Box
+              sx={{
+                fontFamily: "JetBrains Mono, monospace",
+                fontWeight: "bolder",
+                fontSize: fontSize / 6.3,
+                color: "#D1D0C5",
+                justifySelf: "flex-start",
+                marginBottom: "4vh",
+              }}
+            >
+              {"choose text type."}
+            </Box>
             <TextSelectContainer>
               <OriginalSelect size={fontSize} />
             </TextSelectContainer>
@@ -88,7 +99,7 @@ const TextSelect = () => {
   );
 };
 
-const TextSelectContainer: React.FC<{
+export const TextSelectContainer: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => (
   <Box
@@ -100,7 +111,7 @@ const TextSelectContainer: React.FC<{
     <Box
       sx={{
         borderRadius: "40px",
-        margin: "5px auto",
+        marginBottom: "6vh",
         border: "2px solid #646669",
         minHeight: "20px",
         boxSizing: "border-box",

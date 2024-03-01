@@ -80,7 +80,7 @@ const OriginalSelect: React.FC<{
           cursor: "pointer",
         }}
       >
-        Original Text
+        Original
       </Box>
       <Box
         sx={{

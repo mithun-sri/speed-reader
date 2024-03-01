@@ -38,7 +38,7 @@ const SummarisedSelect: React.FC<{
           cursor: "pointer",
         }}
       >
-        Summarised Text
+        Summarised
       </Box>
       <Box
         sx={{
