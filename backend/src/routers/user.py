@@ -158,6 +158,7 @@ async def get_histories(
 
     return [
         schemas.History(
+            id=history.id,
             text_id=history.text_id,
             game_mode=history.game_mode,
             game_submode=history.game_submode,
@@ -182,12 +183,13 @@ async def get_histories(
 
 @router.get(
     "/current/results/{history_id}",
-    response_model=schemas.History,
+    response_model=schemas.HistoryWithQuestions,
     dependencies=[Security(verify_auth)],
 )
 async def get_history(
     history_id: str,
     user: Annotated[models.User, Depends(get_current_user)],
+    session: Annotated[Session, Depends(get_session)],
 ):
     """
     Gets the history of games played by the user.
@@ -196,7 +198,19 @@ async def get_history(
     if not history:
         raise HistoryNotFoundException(history_id=history_id)
 
-    return schemas.History(
+    # NOTE:
+    # Sort and zip questions and results to avoid N+1 problem
+    # when finding question details for each result.
+    question_ids = [result.question_id for result in history.results]
+    query = select(models.Question).where(models.Question.id.in_(question_ids))
+    questions = session.scalars(query).all()
+    questions = list(questions)
+    questions.sort(key=lambda question: question.id)
+    results = history.results
+    results.sort(key=lambda result: result.question_id)
+
+    return schemas.HistoryWithQuestions(
+        id=history.id,
         text_id=history.text_id,
         game_mode=history.game_mode,
         game_submode=history.game_submode,
@@ -206,13 +220,15 @@ async def get_history(
         interval_wpms=history.interval_wpms,
         score=history.score,
         results=[
-            schemas.Result(
-                question_id=result.question_id,
+            schemas.ResultWithQuestion(
+                question_id=question.id,
+                content=question.content,
+                options=question.options,
                 correct=result.correct,
                 correct_option=result.correct_option,
                 selected_option=result.selected_option,
             )
-            for result in history.results
+            for question, result in zip(questions, results)
         ],
     )
 

@@ -40,6 +40,11 @@ class Result(BaseModel):
     selected_option: int
 
 
+class ResultWithQuestion(Result):
+    content: str
+    options: list[str]
+
+
 class QuestionStatistics(BaseModel):
     question_id: str
     options: list[str]
