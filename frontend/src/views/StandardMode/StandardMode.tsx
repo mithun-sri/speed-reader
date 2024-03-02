@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { GameDifficulty, STANDARD_MODE } from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
-import JetBrainsMonoText from "../../components/Text/TextComponent";
 import "./StandardMode.css";
 
 import Box from "@mui/material/Box";
@@ -11,6 +10,7 @@ import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
 import HighlightedTextDisplay from "./HighlightedTextDisplay";
 import WordTextDisplay from "./WordTextDisplay";
+import PeripheralTextDisplay from "./PeripheralTextDisplay";
 
 export enum StandardView {
   Word = 0,
@@ -95,7 +95,7 @@ const StandardModeGameComponent: React.FC<{
   text: string;
   view: StandardView;
 }> = ({ wpm, text, view }) => {
-  let display = <HighlightedTextDisplay text={text} wpm={wpm} />;
+  let display = <WordTextDisplay text={text} wpm={wpm} />;
 
   switch (view) {
     case StandardView.Word: {
@@ -107,7 +107,7 @@ const StandardModeGameComponent: React.FC<{
       break;
     }
     case StandardView.Peripheral: {
-      console.log("Peripheral view not implemented.");
+      display = <PeripheralTextDisplay text={text} wpm={wpm} />;
       break;
     }
     default: {
@@ -135,60 +135,6 @@ StandardModeGameComponent.propTypes = {
     StandardView.Highlighted,
     StandardView.Peripheral,
   ]).isRequired,
-};
-
-// eslint-disable-next-line
-const nonHighlightedWord: React.FC<{
-  word: string;
-}> = ({ word }) => {
-  return (
-    <JetBrainsMonoText
-      text={word}
-      size={25}
-      color="#646669"
-    ></JetBrainsMonoText>
-  );
-};
-
-const highlightedWord: React.FC<{
-  word: string;
-}> = ({ word }) => {
-  const calculateFontSize = () => {
-    const windowWidth = window.innerWidth;
-    const minFontSize = 16;
-    const maxFontSize = 48;
-
-    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 15));
-  };
-
-  const [fontSize, setFontSize] = useState(calculateFontSize());
-
-  useEffect(() => {
-    function handleResize() {
-      setFontSize(calculateFontSize());
-    }
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  return (
-    <Box
-      sx={{
-        fontFamily: "JetBrains Mono, monospace",
-        fontSize: fontSize,
-        color: "#E2B714",
-        fontWeight: "bolder",
-        textAlign: "center",
-        marginTop: "200px",
-      }}
-    >
-      {word}
-    </Box>
-  );
 };
 
 export default StandardModeGameView;

@@ -6,9 +6,11 @@ import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 import BlurBox from "../../components/Blur/Blur";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
+import { wpmAdjuster } from "../../components/WpmAdjuster/WpmAdjuster";
 import WpmSign from "../../components/WpmSign/WpmSign";
 import { useGameContext } from "../../context/GameContext";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
+import JetBrainsMonoText from "../../components/Text/TextComponent";
 
 /*
   Mode 1.1 (Word): Standard mode displaying the text one word at a time 
@@ -113,6 +115,60 @@ WordTextDisplay.propTypes = {
   text: PropTypes.string.isRequired,
   wpm: PropTypes.number.isRequired,
   size: PropTypes.number,
+};
+
+// eslint-disable-next-line
+const nonHighlightedWord: React.FC<{
+  word: string;
+}> = ({ word }) => {
+  return (
+    <JetBrainsMonoText
+      text={word}
+      size={25}
+      color="#646669"
+    ></JetBrainsMonoText>
+  );
+};
+
+const highlightedWord: React.FC<{
+  word: string;
+}> = ({ word }) => {
+  const calculateFontSize = () => {
+    const windowWidth = window.innerWidth;
+    const minFontSize = 16;
+    const maxFontSize = 48;
+
+    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 15));
+  };
+
+  const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  useEffect(() => {
+    function handleResize() {
+      setFontSize(calculateFontSize());
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return (
+    <Box
+      sx={{
+        fontFamily: "JetBrains Mono, monospace",
+        fontSize: fontSize,
+        color: "#E2B714",
+        fontWeight: "bolder",
+        textAlign: "center",
+        marginTop: "200px",
+      }}
+    >
+      {word}
+    </Box>
+  );
 };
 
 export default WordTextDisplay;
