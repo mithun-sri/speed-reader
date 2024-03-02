@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { COOKIE_CONSENT_COOKIE } from "../../common/constants";
 import BlurBox from "../../components/Blur/Blur";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
@@ -25,18 +26,24 @@ const STAGE_UP_ARROW = 2;
 const STAGE_DOWN_ARROW = 3;
 const STAGE_SPACE = 4;
 const STAGE_QUESTION = 6;
+const VISITED_COOKIE = "visited";
 
 function Tutorial() {
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies(["visited"]);
+  const [cookies, setCookie] = useCookies([
+    COOKIE_CONSENT_COOKIE,
+    VISITED_COOKIE,
+  ]);
 
   useEffect(() => {
-    if (cookies.visited) {
-      navigate("/signup");
-      return;
+    if (cookies.hasConsentedToCookies) {
+      if (cookies.visited) {
+        navigate("/signup");
+        return;
+      }
+      setCookie(VISITED_COOKIE, true, { path: "/" });
     }
-    setCookie("visited", true, { path: "/" });
-  }, []);
+  }, [cookies.hasConsentedToCookies]);
 
   const [stage, setStage] = useState(0);
   const [wpm, setWpm] = useState(200);
