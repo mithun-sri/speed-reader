@@ -16,41 +16,35 @@ import FictionBox from "../Fiction/Fiction";
 import { Text, TextFilter, UserAvailableTexts } from "../../api";
 import { useState } from "react";
 
-export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => void }> = ({ onUpdateFilters }) => {
+export const SearchBar: React.FC<{ initialFilters: TextFilter, onUpdateFilters: (textFilter: TextFilter) => void}> = ({ initialFilters, onUpdateFilters }) => {
   const difficulty_options = ["any", "easy", "medium", "hard"];
 
-  const [difficulty, setDifficulty] = useState<String>(difficulty_options[0])
-  const [onlyUnplayed, setOnlyUnplayed] = useState(false);
-  const [includeFiction, setIncludeFiction] = useState(false);
-  const [includeNonFiction, setIncludeNonFiction] = useState(false);
-  const [keyword, setKeyword] = useState("");
+  const [formData, setFormData] = useState({
+    keyword: initialFilters.keyword,
+    only_unplayed: initialFilters.only_unplayed,
+    include_fiction: initialFilters.include_fiction,
+    include_nonfiction: initialFilters.include_nonfiction,
+    difficulty: initialFilters.difficulty === "" ? "any" : initialFilters.difficulty,
+  });
 
   const handleCheckOnlyUnplayed = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setOnlyUnplayed(event.target.checked);
+    setFormData({...formData, only_unplayed: event.target.checked});
   };
 
   const handleCheckIncludeFiction = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIncludeFiction(event.target.checked);
+    setFormData({...formData, include_fiction: event.target.checked});
   };
 
   const handleCheckIncludeNonFiction = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIncludeNonFiction(event.target.checked);
+    setFormData({...formData, include_nonfiction: event.target.checked});
   };
 
   const handleSelectChange = (event: SelectChangeEvent<string>) => {
-    const newValue = event.target.value;
-    setDifficulty(newValue);
+    setFormData({...formData, difficulty: event.target.value});
   };
 
   const handleUpdateFilters = () => {
-    const filters = {
-      include_fiction: includeFiction,
-      include_nonfiction: includeNonFiction,
-      difficulty: difficulty,
-      only_unplayed: onlyUnplayed,
-      keyword: keyword
-    };
-    onUpdateFilters(filters);
+    onUpdateFilters(formData);
   }
   
   return (
@@ -78,8 +72,8 @@ export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => 
             width: "80%",
           }}
           placeholder="Search for a text or author..."
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
+          value={formData.keyword}
+          onChange={(e) => setFormData({...formData, keyword: e.target.value})}
         />
         <IconButton
           sx={{
@@ -128,7 +122,7 @@ export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => 
           }}
         >
           <JetBrainsMonoText text={"Only unplayed"} size={16} color={"#D9D9D9"} />
-          <StyledCheckbox checked={onlyUnplayed} onChange={handleCheckOnlyUnplayed} />
+          <StyledCheckbox checked={!!formData.only_unplayed} onChange={handleCheckOnlyUnplayed} />
         </Box>
         <Box
           sx={{
@@ -141,7 +135,7 @@ export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => 
           }}
         >
           <JetBrainsMonoText text={"Fiction"} size={16} color={"#D9D9D9"} />
-          <StyledCheckbox checked={includeFiction} onChange={handleCheckIncludeFiction} />
+          <StyledCheckbox checked={!!formData.include_fiction} onChange={handleCheckIncludeFiction} />
         </Box>
         <Box
           sx={{
@@ -154,7 +148,7 @@ export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => 
           }}
         >
           <JetBrainsMonoText text={"Non-fiction"} size={16} color={"#D9D9D9"} />
-          <StyledCheckbox checked={includeNonFiction} onChange={handleCheckIncludeNonFiction} />
+          <StyledCheckbox checked={!!formData.include_nonfiction} onChange={handleCheckIncludeNonFiction} />
         </Box>
         <Box
           sx={{
@@ -168,7 +162,7 @@ export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => 
         >
           <JetBrainsMonoText text={"Difficulty"} size={16} color={"#D9D9D9"} />
           <Select
-            value={difficulty as string}
+            value={formData.difficulty as string}
             label="Difficulty"
             onChange={handleSelectChange}
             sx={
@@ -193,8 +187,8 @@ export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => 
                 ".MuiSelect-icon": {
                   color: "#D9D9D9",
                 },
+                }
               }
-            }
           >
             {difficulty_options.map((diff) => (
               <MenuItem key={diff} value={diff}>
@@ -492,3 +486,19 @@ export const ItemBox: React.FC<Text> = ({
     </Box>
   );
 };
+
+export const NoTexts: React.FC = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "30vh",
+      }}
+    >
+      <JetBrainsMonoText text={"No results found"} size={20} color={"#D9D9D9"} />
+    </Box>
+  );
+}

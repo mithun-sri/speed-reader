@@ -7,6 +7,7 @@ import {
   ItemBoxHovered,
   ItemBox,
   SearchBar,
+  NoTexts,
 } from "../../components/TextCards/AvailableTextCards";
 import { getAvailableTexts } from "../../hooks/users";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
@@ -39,8 +40,6 @@ const AvailableTexts: React.FC = () => {
     base += `&nonfiction=${textFilter.include_nonfiction}`;
     base += `&search=${textFilter.keyword}`;
     navigate(base, { replace: true });
-    // window.location.reload();
-    // navigate(`/available-texts/${value}/${pageSize}`, { replace: true });
     setPageNum(value);
     window.location.reload();
   };
@@ -48,37 +47,22 @@ const AvailableTexts: React.FC = () => {
   const handleUpdatedFilters = async (newFilters: TextFilter) => {
     setTextFilter(newFilters);
     let base = `/available-texts/1/${pageSize}`;
-    let added = false;
-    if (newFilters.difficulty) {
-      base += `?difficulty=${newFilters.difficulty}`;
-      added = true;
+    const queryParams = [];
+
+    queryParams.push(`difficulty=${newFilters.difficulty}`);
+    queryParams.push(`fiction=${newFilters.include_fiction}`);
+    queryParams.push(`nonfiction=${newFilters.include_nonfiction}`);
+
+    if (newFilters.only_unplayed) {
+      queryParams.push(`unplayed=${newFilters.only_unplayed}`);
     }
-    if (added) {
-      base += `&fiction=${newFilters.include_fiction}`;
+
+    if (newFilters.keyword) {
+      queryParams.push(`search=${newFilters.keyword}`);
     }
-    else {
-      base += `?fiction=${newFilters.include_fiction}`;
-      added = true;
-    }
-    if (added) {
-      base += `&nonfiction=${newFilters.include_nonfiction}`;
-    }
-    else {
-      base += `?nonfiction=${newFilters.include_nonfiction}`;
-      added = true;
-    }
-    if (added && newFilters.only_unplayed) {
-      base += `&unplayed=${newFilters.only_unplayed}`;
-    }
-    else if (newFilters.only_unplayed) {
-      base += `?unplayed=${newFilters.only_unplayed}`;
-      added = true;
-    }
-    if (added && newFilters.keyword) {
-      base += `&search=${newFilters.keyword}`;
-    }
-    else if (newFilters.keyword) {
-      base += `?search=${newFilters.keyword}`;
+
+    if (queryParams.length > 0) {
+      base += `?${queryParams.join("&")}`;
     }
     navigate(base, { replace: true });
     window.location.reload();
@@ -101,7 +85,7 @@ const AvailableTexts: React.FC = () => {
           transition={{ duration: 1 }}
           exit={{ opacity: 0 }}
         >
-          <SearchBar onUpdateFilters={handleUpdatedFilters} />
+          <SearchBar initialFilters={textFilter} onUpdateFilters={handleUpdatedFilters} />
           <Box
             sx={{
               display: "flex",
@@ -111,7 +95,8 @@ const AvailableTexts: React.FC = () => {
               alignItems: "center",
             }}
           >
-            {availableTexts.texts
+            { availableTexts.texts.length > 0 ?       
+            availableTexts.texts
               .slice(0, pageSize)
               .map((text, index) => {
                 const [isHovered, setIsHovered] = useState(false);
@@ -182,7 +167,9 @@ const AvailableTexts: React.FC = () => {
                     </AnimatePresence>
                   </Box>
                 );
-              })}
+              })
+              : <NoTexts/>
+            }
           </Box>
           <StyledPagination page={pageNum} count={numPages} onChange={handleChange} />
         </motion.div>
