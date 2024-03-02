@@ -9,6 +9,8 @@ export const EASY = "Easy";
 export const MED = "Medium";
 export const HARD = "Hard";
 
+export const COOKIE_CONSENT_COOKIE = "hasConsentedToCookies";
+
 export function calculateAverageWpm(intervalWpms: number[]) {
   if (intervalWpms.length === 0) {
     return 0;
