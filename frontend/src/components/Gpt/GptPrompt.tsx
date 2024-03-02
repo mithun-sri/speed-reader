@@ -64,7 +64,7 @@ const GptPrompt: React.FC<{
             }}
           >
             <JetBrainsMonoText
-              text="choose text difficulty."
+              text="Choose text difficulty"
               size={fontSize * 0.6}
               color="#FFFFFF"
             />
@@ -99,7 +99,7 @@ const GptPrompt: React.FC<{
           <GptButton
             onButtonClick={handleGenerateTextButton}
             color="#E2B714"
-            label="generate."
+            label="generate"
           ></GptButton>
         </Box>
       </StyledBox>

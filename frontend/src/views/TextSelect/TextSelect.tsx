@@ -81,10 +81,10 @@ const TextSelect = () => {
                 fontSize: fontSize / 6.3,
                 color: "#D1D0C5",
                 justifySelf: "flex-start",
-                marginBottom: "4vh",
+                marginBottom: "6vh",
               }}
             >
-              {"choose text type."}
+              {"Choose text type"}
             </Box>
             <TextSelectContainer>
               <OriginalSelect size={fontSize} />
@@ -99,7 +99,7 @@ const TextSelect = () => {
   );
 };
 
-export const TextSelectContainer: React.FC<{
+const TextSelectContainer: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => (
   <Box

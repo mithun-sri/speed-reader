@@ -1,6 +1,6 @@
 import {
   faArrowsToEye,
-  faFileLines,
+  faBook,
   faStopwatch,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -112,7 +112,7 @@ const Header = () => {
             component={Link}
             to="/available-texts"
           >
-            <FontAwesomeIcon icon={faFileLines} color="#D1D0C5" />
+            <FontAwesomeIcon icon={faBook} color="#D1D0C5" />
           </IconButton>
         </Tooltip>
         <Tooltip title="User dashboard">
