@@ -136,19 +136,19 @@ async def get_user_available_texts(
             ):
                 # Return no texts if both fiction and nonfiction are excluded
                 query = query.where(
-                    models.Text.fiction == False
-                )  # pylint: disable=singleton-comparison
+                    models.Text.fiction == False # pylint: disable=singleton-comparison
+                )  
                 query = query.where(
-                    models.Text.fiction == True
-                )  # pylint: disable=singleton-comparison
+                    models.Text.fiction == True # pylint: disable=singleton-comparison
+                )  
             elif text_filter.include_fiction is False:
                 query = query.where(
-                    models.Text.fiction == False
-                )  # pylint: disable=singleton-comparison
+                    models.Text.fiction == False # pylint: disable=singleton-comparison
+                )  
             elif text_filter.include_nonfiction is False:
                 query = query.where(
-                    models.Text.fiction == True
-                )  # pylint: disable=singleton-comparison
+                    models.Text.fiction == True # pylint: disable=singleton-comparison
+                )  
             if text_filter.only_unplayed:
                 read_text_ids = models.History.objects(user_id=user.id).distinct(
                     "text_id"
