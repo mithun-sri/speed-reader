@@ -1,10 +1,9 @@
 import { Box } from "@mui/material";
 import CookieConsent from "react-cookie-consent";
+import { Outlet } from "react-router-dom";
 import { COOKIE_CONSENT_COOKIE } from "../../common/constants";
 
-const CookieConsentHOC: React.FC<{
-  children: any;
-}> = ({ children }) => {
+const CookieConsentHOC = () => {
   return (
     <Box>
       {!document.cookie.includes(COOKIE_CONSENT_COOKIE) && (
@@ -26,7 +25,7 @@ const CookieConsentHOC: React.FC<{
           This website uses cookies to enhance the user experience.
         </CookieConsent>
       )}
-      {children}
+      <Outlet />
     </Box>
   );
 };

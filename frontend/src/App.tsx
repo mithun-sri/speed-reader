@@ -39,9 +39,9 @@ function App() {
             <SnackContextProvider>
               <WebGazerProvider>
                 <BrowserRouter>
-                  <Route element={<DesktopRoute fallback="/mobile" />}>
-                    <CookieConsentHOC>
-                      <Routes>
+                  <Routes>
+                    <Route element={<DesktopRoute fallback="/mobile" />}>
+                      <Route element={<CookieConsentHOC />}>
                         <Route element={<AuthRoute fallback="/tutorial" />}>
                           <Route path="/" element={<Navigate to="/game" />} />
                           <Route path="/game" element={<GamePage />} />
@@ -65,12 +65,12 @@ function App() {
                           <Route path="/tutorial" element={<Tutorial />} />
                         </Route>
                         <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </CookieConsentHOC>
-                  </Route>
-                  <Route element={<MobileRoute fallback="/" />}>
-                    <Route path="/mobile" element={<NoMobile />} />
-                  </Route>
+                      </Route>
+                    </Route>
+                    <Route element={<MobileRoute fallback="/" />}>
+                      <Route path="/mobile" element={<NoMobile />} />
+                    </Route>
+                  </Routes>
                 </BrowserRouter>
               </WebGazerProvider>
             </SnackContextProvider>
