@@ -77,7 +77,7 @@ const StatisticsBox: React.FC = () => {
 
   return (
     <>
-      {userStatisticsData.average_wpm !== 0 ? (
+      {userStatisticsData.average_wpm == 0 ? (
         <>
           <UserStats userData={userStatisticsData}></UserStats>
           <UserGraph mode={mode} setMode={setMode}></UserGraph>

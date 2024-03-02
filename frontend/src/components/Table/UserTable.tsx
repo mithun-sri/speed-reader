@@ -24,6 +24,7 @@ import {
   StyledSelect,
 } from "../Button/DropDownMenu";
 import { History } from "../../api";
+import DifficultyBox from "../Difficulty/DifficultyBox";
 
 interface Row {
   id: number;
@@ -57,10 +58,10 @@ const columns = [
 ];
 
 const StyledTableCell = styled(TableCell)({
-  backgroundColor: "#323437",
+  backgroundColor: "transparent",
   fontFamily: "JetBrains Mono, monospace",
   color: "white",
-  fontSize: "20px",
+  // fontSize: "20px",
   borderColor: "#646669",
 });
 
@@ -128,7 +129,12 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
   });
 
   return (
-    <>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
       {rows.length === 0 ? (
         <Box
           sx={{
@@ -143,9 +149,10 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
       ) : (
         <Paper
           sx={{
-            backgroundColor: "#323437",
-            fontFamily: "JetBrains Mono, monospace",
+            backgroundColor: "transparent",
+            boxShadow: "none",
             fontSize: "18px",
+            width: "70vw",
           }}
         >
           <StyledFormControl>
@@ -170,15 +177,20 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
             </StyledSelect>
           </StyledFormControl>
           <TableContainer>
-            <Table>
+            <Table aria-labelledby="tableTitle" size="medium">
               <TableHead>
-                <TableRow>
+                <TableRow
+                  sx={{
+                    borderBottom: "1px solid #646669",
+                    backgroundColor: "transparent",
+                  }}
+                >
                   {columns.map((column) => (
                     <StyledTableCell
                       key={column.id}
                       sx={{
-                        fontSize: 25,
-                        fontWeight: 1000,
+                        fontSize: "1.3vw",
+                        fontWeight: "bolder",
                       }}
                     >
                       {column.type === "button" ? (
@@ -221,9 +233,11 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
                                 className="fa-table-page-icon"
                               />
                             </IconButton>
-                          ) : (
-                            // Ensure only valid column IDs are used for accessing properties of Row objects
+                          ) : // Ensure only valid column IDs are used for accessing properties of Row objects
+                          column.id !== "difficulty" ? (
                             row[column.id as keyof Row]
+                          ) : (
+                            <DifficultyBox difficulty={row.difficulty} />
                           )}
                         </StyledTableCell>
                       ))}
@@ -242,7 +256,7 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
           />
         </Paper>
       )}
-    </>
+    </Box>
   );
 };
 
@@ -254,7 +268,6 @@ const StyledTablePagination = styled(TablePagination)`
   .MuiTablePagination-toolbar {
     background-color: #323437; /* Background color */
     color: white; /* Text color */
-    font-family: "JetBrains Mono";
   }
 
   .MuiSelect-icon {
@@ -265,13 +278,12 @@ const StyledTablePagination = styled(TablePagination)`
   .MuiTablePagination-displayedRows {
     color: white; /* Text colour */
     font-family: "JetBrains Mono";
-    font-size: 16px;
+    font-size: 0.9vw;
   }
 
   /* 'Rows per page' text */
   .MuiTablePagination-selectLabel {
-    font-family: "JetBrains Mono";
-    font-size: 16px;
+    font-size: 0.9vw;
   }
 `;
 
