@@ -58,7 +58,7 @@ const StandardSubModeView = () => {
           marginBottom: fontSize / 8,
         }}
       >
-        choose your view
+        Choose your view
       </Box>
       <motion.div
         initial="hidden"

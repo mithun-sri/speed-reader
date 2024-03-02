@@ -64,7 +64,7 @@ const GptPrompt: React.FC<{
             }}
           >
             <JetBrainsMonoText
-              text="choose text difficulty"
+              text="Choose text difficulty"
               size={fontSize * 0.6}
               color="#FFFFFF"
             />

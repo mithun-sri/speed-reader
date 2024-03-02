@@ -84,7 +84,7 @@ const TextSelect = () => {
                 marginBottom: "6vh",
               }}
             >
-              {"choose text type"}
+              {"Choose text type"}
             </Box>
             <TextSelectContainer>
               <OriginalSelect size={fontSize} />

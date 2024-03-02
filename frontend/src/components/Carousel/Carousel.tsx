@@ -87,7 +87,7 @@ const Carousel: React.FC<{
           color: "#D1D0C5",
         }}
       >
-        {title !== undefined ? title : "choose."}
+        {title !== undefined ? title : "Choose"}
       </Box>
       <Box
         sx={{
