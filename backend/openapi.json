@@ -922,7 +922,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/History"
+                  "$ref": "#/components/schemas/HistoryWithQuestions"
                 }
               }
             }
@@ -1530,6 +1530,10 @@
             "type": "integer",
             "title": "Score"
           },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
           "results": {
             "items": {
               "$ref": "#/components/schemas/Result"
@@ -1548,9 +1552,74 @@
           "average_wpm",
           "interval_wpms",
           "score",
+          "id",
           "results"
         ],
         "title": "History"
+      },
+      "HistoryWithQuestions": {
+        "properties": {
+          "text_id": {
+            "type": "string",
+            "title": "Text Id"
+          },
+          "game_mode": {
+            "type": "string",
+            "title": "Game Mode"
+          },
+          "game_submode": {
+            "type": "string",
+            "title": "Game Submode"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty"
+          },
+          "summary": {
+            "type": "boolean",
+            "title": "Summary"
+          },
+          "average_wpm": {
+            "type": "integer",
+            "title": "Average Wpm"
+          },
+          "interval_wpms": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Interval Wpms"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/ResultWithQuestion"
+            },
+            "type": "array",
+            "title": "Results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text_id",
+          "game_mode",
+          "game_submode",
+          "difficulty",
+          "summary",
+          "average_wpm",
+          "interval_wpms",
+          "score",
+          "id",
+          "results"
+        ],
+        "title": "HistoryWithQuestions"
       },
       "Question": {
         "properties": {
@@ -1706,6 +1775,47 @@
           "selected_option"
         ],
         "title": "Result"
+      },
+      "ResultWithQuestion": {
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "title": "Question Id"
+          },
+          "correct": {
+            "type": "boolean",
+            "title": "Correct"
+          },
+          "correct_option": {
+            "type": "integer",
+            "title": "Correct Option"
+          },
+          "selected_option": {
+            "type": "integer",
+            "title": "Selected Option"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "options": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Options"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question_id",
+          "correct",
+          "correct_option",
+          "selected_option",
+          "content",
+          "options"
+        ],
+        "title": "ResultWithQuestion"
       },
       "Text": {
         "properties": {

@@ -314,10 +314,83 @@ export interface History {
     'score': number;
     /**
      * 
+     * @type {string}
+     * @memberof History
+     */
+    'id': string;
+    /**
+     * 
      * @type {Array<Result>}
      * @memberof History
      */
     'results': Array<Result>;
+}
+/**
+ * 
+ * @export
+ * @interface HistoryWithQuestions
+ */
+export interface HistoryWithQuestions {
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'text_id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'game_mode': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'game_submode': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'difficulty': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof HistoryWithQuestions
+     */
+    'summary': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof HistoryWithQuestions
+     */
+    'average_wpm': number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof HistoryWithQuestions
+     */
+    'interval_wpms': Array<number>;
+    /**
+     * 
+     * @type {number}
+     * @memberof HistoryWithQuestions
+     */
+    'score': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'id': string;
+    /**
+     * 
+     * @type {Array<ResultWithQuestion>}
+     * @memberof HistoryWithQuestions
+     */
+    'results': Array<ResultWithQuestion>;
 }
 /**
  * 
@@ -480,6 +553,49 @@ export interface Result {
      * @memberof Result
      */
     'selected_option': number;
+}
+/**
+ * 
+ * @export
+ * @interface ResultWithQuestion
+ */
+export interface ResultWithQuestion {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResultWithQuestion
+     */
+    'question_id': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ResultWithQuestion
+     */
+    'correct': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ResultWithQuestion
+     */
+    'correct_option': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ResultWithQuestion
+     */
+    'selected_option': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResultWithQuestion
+     */
+    'content': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ResultWithQuestion
+     */
+    'options': Array<string>;
 }
 /**
  * 
@@ -2557,7 +2673,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getHistory(historyId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<History>> {
+        async getHistory(historyId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HistoryWithQuestions>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getHistory(historyId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getHistory']?.[localVarOperationServerIndex]?.url;
@@ -2672,7 +2788,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getHistory(historyId: string, accessToken?: AccessToken, options?: any): AxiosPromise<History> {
+        getHistory(historyId: string, accessToken?: AccessToken, options?: any): AxiosPromise<HistoryWithQuestions> {
             return localVarFp.getHistory(historyId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
