@@ -1,4 +1,5 @@
 # TODO: Organise schemas into appropriate modules.
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -14,6 +15,11 @@ class User(BaseModel):
     role: str
 
 
+class UserStatisticsAverageWpmPerDay(BaseModel):
+    date: datetime
+    wpm: int
+
+
 class UserStatistics(BaseModel):
     user_id: str  # TODO: Is this necessary?
     username: str  # TODO: Is this necessary?
@@ -21,6 +27,7 @@ class UserStatistics(BaseModel):
     min_wpm: int
     max_wpm: int
     average_wpm: int
+    average_wpm_per_day: list[UserStatisticsAverageWpmPerDay]
     average_score: int
 
 
