@@ -4,7 +4,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from .game import Result
+from .game import Result, ResultWithQuestion
 from .text import Text
 
 
@@ -49,7 +49,7 @@ class TextFilter(BaseModel):
     difficulty: Optional[str] = None
 
 
-class History(BaseModel):
+class HistoryBase(BaseModel):
     text_id: str
     game_mode: str
     game_submode: str
@@ -58,4 +58,13 @@ class History(BaseModel):
     average_wpm: int
     interval_wpms: list[int]
     score: int
+
+
+class History(HistoryBase):
+    id: str
     results: list[Result]
+
+
+class HistoryWithQuestions(HistoryBase):
+    id: str
+    results: list[ResultWithQuestion]
