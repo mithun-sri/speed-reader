@@ -46,8 +46,8 @@ const Login: React.FC = () => {
       onSuccess: () => {
         navigate("/game");
       },
-      onError: () => {
-        showSnack("Failed to login");
+      onError: (error) => {
+        showSnack("Failed to login: " + error.message);
       },
     });
   };

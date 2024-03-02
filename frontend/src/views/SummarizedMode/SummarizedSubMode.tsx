@@ -1,16 +1,11 @@
 import { Box, IconButton } from "@mui/material";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import {
-  ADAPTIVE_MODE,
-  GameMode,
-  STANDARD_MODE,
-  SUMMARISED_MODE,
-} from "../../common/constants";
+import { ADAPTIVE_MODE, GameMode, STANDARD_MODE } from "../../common/constants";
 import BackButton from "../../components/Button/BackButton";
 import Header from "../../components/Header/Header";
 import { useGameContext } from "../../context/GameContext";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
-import { motion } from "framer-motion";
 
 const SummarizedSubMode: React.FC = () => {
   const { incrementCurrentStage, decrementCurrentStage } =
@@ -51,7 +46,6 @@ const SummarizedSubMode: React.FC = () => {
 
   const handleBackButton = () => {
     setSummarised(false);
-    setMode(SUMMARISED_MODE);
     decrementCurrentStage();
   };
 

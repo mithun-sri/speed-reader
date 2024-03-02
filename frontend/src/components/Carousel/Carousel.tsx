@@ -46,12 +46,12 @@ const Carousel: React.FC<{
 
   function calculateFontSize() {
     const windowWidth = window.innerWidth;
-    const minFontSize = 40;
+    const minFontSize = 50;
     const maxFontSize = 200;
 
     const calculatedFontSize = Math.min(
       maxFontSize,
-      Math.max(minFontSize, windowWidth / 6),
+      Math.max(minFontSize, windowWidth / 5),
     );
 
     return calculatedFontSize;
@@ -96,9 +96,7 @@ const Carousel: React.FC<{
           alignItems: "center",
           flexDirection: "row",
           fontWeight: "bold",
-          marginTop: fontSize / 35,
-          marginBottom: fontSize / 50,
-          height: fontSize,
+          marginY: `${fontSize / 4}px`,
         }}
       >
         {visibleOptions.map((option, index) => (
@@ -124,7 +122,6 @@ const Carousel: React.FC<{
       </Box>
       <Box
         sx={{
-          marginTop: fontSize / 50,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",

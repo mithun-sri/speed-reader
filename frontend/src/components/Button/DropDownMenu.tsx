@@ -2,7 +2,7 @@ import { FormControl, InputLabel, Select, styled } from "@mui/material";
 
 export const StyledFormControl = styled(FormControl)({
   margin: "10px",
-  width: "200px",
+  width: "13vw",
 });
 
 export const StyledSelect = styled(Select<string>)({
@@ -14,8 +14,9 @@ export const StyledSelect = styled(Select<string>)({
   fontFamily: "JetBrains Mono, monospace",
   color: "white",
   fontWeight: "bolder",
-  fontSize: "25px",
+  fontSize: "1vw",
   textAlign: "center",
+  padding: "0 1vw",
 });
 
 export const StyledInputLabel = styled(InputLabel)({

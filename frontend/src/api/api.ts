@@ -177,13 +177,6 @@ export interface Difficulty {
 /**
  * 
  * @export
- * @interface GameMode
- */
-export interface GameMode {
-}
-/**
- * 
- * @export
  * @interface HTTPValidationError
  */
 export interface HTTPValidationError {
@@ -250,10 +243,83 @@ export interface History {
     'score': number;
     /**
      * 
+     * @type {string}
+     * @memberof History
+     */
+    'id': string;
+    /**
+     * 
      * @type {Array<Result>}
      * @memberof History
      */
     'results': Array<Result>;
+}
+/**
+ * 
+ * @export
+ * @interface HistoryWithQuestions
+ */
+export interface HistoryWithQuestions {
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'text_id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'game_mode': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'game_submode': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'difficulty': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof HistoryWithQuestions
+     */
+    'summary': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof HistoryWithQuestions
+     */
+    'average_wpm': number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof HistoryWithQuestions
+     */
+    'interval_wpms': Array<number>;
+    /**
+     * 
+     * @type {number}
+     * @memberof HistoryWithQuestions
+     */
+    'score': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'id': string;
+    /**
+     * 
+     * @type {Array<ResultWithQuestion>}
+     * @memberof HistoryWithQuestions
+     */
+    'results': Array<ResultWithQuestion>;
 }
 /**
  * 
@@ -444,6 +510,49 @@ export interface Result {
      * @memberof Result
      */
     'selected_option': number;
+}
+/**
+ * 
+ * @export
+ * @interface ResultWithQuestion
+ */
+export interface ResultWithQuestion {
+    /**
+     * 
+     * @type {string}
+     * @memberof ResultWithQuestion
+     */
+    'question_id': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ResultWithQuestion
+     */
+    'correct': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof ResultWithQuestion
+     */
+    'correct_option': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ResultWithQuestion
+     */
+    'selected_option': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ResultWithQuestion
+     */
+    'content': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof ResultWithQuestion
+     */
+    'options': Array<string>;
 }
 /**
  * 
@@ -1020,10 +1129,35 @@ export interface UserStatistics {
     'average_wpm': number;
     /**
      * 
+     * @type {Array<UserStatisticsAverageWpmPerDay>}
+     * @memberof UserStatistics
+     */
+    'average_wpm_per_day': Array<UserStatisticsAverageWpmPerDay>;
+    /**
+     * 
      * @type {number}
      * @memberof UserStatistics
      */
     'average_score': number;
+}
+/**
+ * 
+ * @export
+ * @interface UserStatisticsAverageWpmPerDay
+ */
+export interface UserStatisticsAverageWpmPerDay {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserStatisticsAverageWpmPerDay
+     */
+    'date': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserStatisticsAverageWpmPerDay
+     */
+    'wpm': number;
 }
 /**
  * 
@@ -2320,7 +2454,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @throws {RequiredError}
          */
         getHistories: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/users/current/results`;
+            const localVarPath = `/users/current/histories`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2354,7 +2488,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         getHistory: async (historyId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'historyId' is not null or undefined
             assertParamExists('getHistory', 'historyId', historyId)
-            const localVarPath = `/users/current/results/{history_id}`
+            const localVarPath = `/users/current/histories/{history_id}`
                 .replace(`{${"history_id"}}`, encodeURIComponent(String(historyId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2426,12 +2560,14 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
-         * @param {GameMode} [gameMode] 
+         * @param {string} gameMode 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics: async (gameMode?: GameMode, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserStatistics: async (gameMode: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'gameMode' is not null or undefined
+            assertParamExists('getUserStatistics', 'gameMode', gameMode)
             const localVarPath = `/users/current/statistics`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2445,9 +2581,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarQueryParameter = {} as any;
 
             if (gameMode !== undefined) {
-                for (const [key, value] of Object.entries(gameMode)) {
-                    localVarQueryParameter[key] = value;
-                }
+                localVarQueryParameter['game_mode'] = gameMode;
             }
 
 
@@ -2610,7 +2744,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getHistory(historyId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<History>> {
+        async getHistory(historyId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HistoryWithQuestions>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getHistory(historyId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getHistory']?.[localVarOperationServerIndex]?.url;
@@ -2635,12 +2769,12 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
-         * @param {GameMode} [gameMode] 
+         * @param {string} gameMode 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
+        async getUserStatistics(gameMode: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics(gameMode, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserStatistics']?.[localVarOperationServerIndex]?.url;
@@ -2725,7 +2859,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getHistory(historyId: string, accessToken?: AccessToken, options?: any): AxiosPromise<History> {
+        getHistory(historyId: string, accessToken?: AccessToken, options?: any): AxiosPromise<HistoryWithQuestions> {
             return localVarFp.getHistory(historyId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2744,12 +2878,12 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
-         * @param {GameMode} [gameMode] 
+         * @param {string} gameMode 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: any): AxiosPromise<UserStatistics> {
+        getUserStatistics(gameMode: string, accessToken?: AccessToken, options?: any): AxiosPromise<UserStatistics> {
             return localVarFp.getUserStatistics(gameMode, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2849,13 +2983,13 @@ export class UserApi extends BaseAPI {
     /**
      * Gets the statistics based on the user\'s game history.
      * @summary Get User Statistics
-     * @param {GameMode} [gameMode] 
+     * @param {string} gameMode 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+    public getUserStatistics(gameMode: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).getUserStatistics(gameMode, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 

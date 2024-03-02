@@ -1,17 +1,15 @@
-export type GameMode =
-  | typeof STANDARD_MODE
-  | typeof ADAPTIVE_MODE
-  | typeof SUMMARISED_MODE;
+export type GameMode = typeof STANDARD_MODE | typeof ADAPTIVE_MODE;
 
 export const STANDARD_MODE = "Standard Mode";
 export const ADAPTIVE_MODE = "Adaptive Mode";
-export const SUMMARISED_MODE = "Summarised Mode";
 
 export type GameDifficulty = typeof EASY | typeof MED | typeof HARD;
 
 export const EASY = "Easy";
 export const MED = "Medium";
 export const HARD = "Hard";
+
+export const COOKIE_CONSENT_COOKIE = "hasConsentedToCookies";
 
 export function calculateAverageWpm(intervalWpms: number[]) {
   if (intervalWpms.length === 0) {

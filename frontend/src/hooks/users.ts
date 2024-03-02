@@ -123,3 +123,23 @@ export function getAvailableTexts(
     gcTime: 0,
   });
 }
+
+export function getHistories() {
+  const { userApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["users", "histories"],
+    queryFn: () => userApi.getHistories().then((res) => res.data),
+    gcTime: 0,
+  });
+}
+
+export function getHistory(historyId: string) {
+  const { userApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["users", "history", historyId],
+    queryFn: () => userApi.getHistory(historyId).then((res) => res.data),
+    gcTime: 0,
+  });
+}

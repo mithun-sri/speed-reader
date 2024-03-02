@@ -6,11 +6,17 @@ import UserTable from "../../components/Table/UserTable";
 import UserDashboardTop from "../../components/User/UserDashboardTop";
 import UserStats from "../../components/User/UserStats";
 import React from "react";
-import { getCurrentUser, getUserStatistics } from "../../hooks/users";
-import { UserStatistics } from "../../api";
+import {
+  getCurrentUser,
+  getHistories,
+  getUserStatistics,
+} from "../../hooks/users";
 
 const UserView = () => {
   const { data: userData } = getCurrentUser();
+  const userId = userData.username;
+
+  const { data: userHistory } = getHistories();
 
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
@@ -43,7 +49,7 @@ const UserView = () => {
           alignItems: "center",
         }}
       >
-        <UserDashboardTop user_id={userData.username} />
+        <UserDashboardTop user_id={userId} />
         <PageContainer size={fontSize} title="Statistics">
           <Box
             sx={{
@@ -56,7 +62,7 @@ const UserView = () => {
         </PageContainer>
         <PageContainer size={fontSize} title="History">
           <Box>
-            <UserTable />
+            <UserTable results={userHistory} />
           </Box>
         </PageContainer>
       </Box>
@@ -67,22 +73,27 @@ const UserView = () => {
 const StatisticsBox: React.FC = () => {
   const [mode, setMode] = useState("standard");
   const { data: newData } = getUserStatistics(mode);
-  const [userStatisticsData, setUserStatisticsData] =
-    useState<UserStatistics>(newData);
-
-  useEffect(() => {
-    const fetchData = () => {
-      const { data: newData } = getUserStatistics(mode);
-      setUserStatisticsData(newData);
-    };
-
-    fetchData();
-  }, [mode]);
+  const userStatisticsData = newData;
 
   return (
     <>
-      <UserStats userData={userStatisticsData}></UserStats>
-      <UserGraph mode={mode} setMode={setMode}></UserGraph>
+      {userStatisticsData.average_wpm !== 0 ? (
+        <>
+          <UserStats userData={userStatisticsData}></UserStats>
+          <UserGraph mode={mode} setMode={setMode}></UserGraph>
+        </>
+      ) : (
+        <Box
+          sx={{
+            fontFamily: "JetBrains Mono, monospace",
+            color: "#fff",
+            fontSize: "3vh",
+            margin: "8vh 26vw",
+          }}
+        >
+          No Statistics Available.
+        </Box>
+      )}
     </>
   );
 };

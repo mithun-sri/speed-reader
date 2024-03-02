@@ -11,6 +11,9 @@ interface WebGazerContextType {
   endWebGazer: () => void;
   restartWebGazer: () => void;
   turnOffWebGazerCam: () => void;
+  turnOffPredictionPoints: () => void;
+  enableWebGazerListener: () => void;
+  disableWebGazerListener: () => void;
   pauseWebGazer: () => void;
   resumeWebGazer: () => void;
   gazeX: number;
@@ -31,6 +34,9 @@ const WebGazerContext = createContext<WebGazerContextType>({
   endWebGazer: () => {},
   restartWebGazer: () => {},
   turnOffWebGazerCam: () => {},
+  turnOffPredictionPoints: () => {},
+  enableWebGazerListener: () => {},
+  disableWebGazerListener: () => {},
   pauseWebGazer: () => {},
   resumeWebGazer: () => {},
 
@@ -102,7 +108,7 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
         .begin();
 
       await webgazer
-        .showPredictionPoints(false)
+        .showPredictionPoints(true)
         .showVideoPreview(true)
         .applyKalmanFilter(true);
 
@@ -167,6 +173,31 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const turnOffPredictionPoints = async () => {
+    const webgazer = (window as any).webgazer;
+    if (webgazer !== undefined) {
+      await webgazer.showPredictionPoints(false);
+    }
+  };
+
+  const enableWebGazerListener = async () => {
+    const webgazer = (window as any).webgazer;
+    if (webgazer !== undefined) {
+      await webgazer.setGazeListener((data: any, _: any) => {
+        if (data == null) return;
+        setGazeX(data.x);
+        setGazeY(data.y);
+      });
+    }
+  };
+
+  const disableWebGazerListener = async () => {
+    const webgazer = (window as any).webgazer;
+    if (webgazer !== undefined) {
+      await webgazer.clearGazeListener();
+    }
+  };
+
   return (
     <WebGazerContext.Provider
       value={{
@@ -180,6 +211,9 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
         endWebGazer,
         restartWebGazer,
         turnOffWebGazerCam,
+        turnOffPredictionPoints,
+        enableWebGazerListener,
+        disableWebGazerListener,
         pauseWebGazer,
         resumeWebGazer,
         gazeX,

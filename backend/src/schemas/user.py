@@ -1,9 +1,10 @@
 # TODO: Organise schemas into appropriate modules.
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
 
-from .game import Result
+from .game import Result, ResultWithQuestion
 from .text import Text
 
 
@@ -14,6 +15,11 @@ class User(BaseModel):
     role: str
 
 
+class UserStatisticsAverageWpmPerDay(BaseModel):
+    date: datetime
+    wpm: int
+
+
 class UserStatistics(BaseModel):
     user_id: str  # TODO: Is this necessary?
     username: str  # TODO: Is this necessary?
@@ -21,6 +27,7 @@ class UserStatistics(BaseModel):
     min_wpm: int
     max_wpm: int
     average_wpm: int
+    average_wpm_per_day: list[UserStatisticsAverageWpmPerDay]
     average_score: int
 
 
@@ -39,7 +46,7 @@ class TextFilter(BaseModel):
     keyword: Optional[str] = None
 
 
-class History(BaseModel):
+class HistoryBase(BaseModel):
     text_id: str
     game_mode: str
     game_submode: str
@@ -48,4 +55,13 @@ class History(BaseModel):
     average_wpm: int
     interval_wpms: list[int]
     score: int
+
+
+class History(HistoryBase):
+    id: str
     results: list[Result]
+
+
+class HistoryWithQuestions(HistoryBase):
+    id: str
+    results: list[ResultWithQuestion]

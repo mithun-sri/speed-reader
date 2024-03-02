@@ -19,6 +19,8 @@ const CountdownComponent: React.FC<{
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {
+      console.log(Date.now());
+
       if (count === 1) {
         clearInterval(countdownInterval);
         // Add your game initialization logic here
