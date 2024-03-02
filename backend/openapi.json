@@ -688,17 +688,9 @@
           {
             "name": "game_mode",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "default": "all",
+              "type": "string",
               "title": "Game Mode"
             }
           },
@@ -2172,6 +2164,13 @@
             "type": "integer",
             "title": "Average Wpm"
           },
+          "average_wpm_per_day": {
+            "items": {
+              "$ref": "#/components/schemas/UserStatisticsAverageWpmPerDay"
+            },
+            "type": "array",
+            "title": "Average Wpm Per Day"
+          },
           "average_score": {
             "type": "integer",
             "title": "Average Score"
@@ -2185,9 +2184,29 @@
           "min_wpm",
           "max_wpm",
           "average_wpm",
+          "average_wpm_per_day",
           "average_score"
         ],
         "title": "UserStatistics"
+      },
+      "UserStatisticsAverageWpmPerDay": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Date"
+          },
+          "wpm": {
+            "type": "integer",
+            "title": "Wpm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "wpm"
+        ],
+        "title": "UserStatisticsAverageWpmPerDay"
       },
       "ValidationError": {
         "properties": {

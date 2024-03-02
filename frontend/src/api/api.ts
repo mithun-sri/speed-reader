@@ -107,10 +107,10 @@ export interface BodyGetUserAvailableTexts {
 export interface BodyGetUserAvailableTextsTextFilter {
     /**
      * 
-     * @type {GameMode1}
+     * @type {GameMode}
      * @memberof BodyGetUserAvailableTextsTextFilter
      */
-    'game_mode'?: GameMode1;
+    'game_mode'?: GameMode;
     /**
      * 
      * @type {Difficulty}
@@ -237,13 +237,6 @@ export interface Difficulty {
  * @interface GameMode
  */
 export interface GameMode {
-}
-/**
- * 
- * @export
- * @interface GameMode1
- */
-export interface GameMode1 {
 }
 /**
  * 
@@ -606,10 +599,10 @@ export interface TextCreateWithQuestions {
 export interface TextFilter {
     /**
      * 
-     * @type {GameMode1}
+     * @type {GameMode}
      * @memberof TextFilter
      */
-    'game_mode'?: GameMode1;
+    'game_mode'?: GameMode;
     /**
      * 
      * @type {Difficulty}
@@ -967,10 +960,35 @@ export interface UserStatistics {
     'average_wpm': number;
     /**
      * 
+     * @type {Array<UserStatisticsAverageWpmPerDay>}
+     * @memberof UserStatistics
+     */
+    'average_wpm_per_day': Array<UserStatisticsAverageWpmPerDay>;
+    /**
+     * 
      * @type {number}
      * @memberof UserStatistics
      */
     'average_score': number;
+}
+/**
+ * 
+ * @export
+ * @interface UserStatisticsAverageWpmPerDay
+ */
+export interface UserStatisticsAverageWpmPerDay {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserStatisticsAverageWpmPerDay
+     */
+    'date': string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UserStatisticsAverageWpmPerDay
+     */
+    'wpm': number;
 }
 /**
  * 
@@ -2373,12 +2391,14 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
-         * @param {GameMode} [gameMode] 
+         * @param {string} gameMode 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics: async (gameMode?: GameMode, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserStatistics: async (gameMode: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'gameMode' is not null or undefined
+            assertParamExists('getUserStatistics', 'gameMode', gameMode)
             const localVarPath = `/users/current/statistics`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2392,9 +2412,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarQueryParameter = {} as any;
 
             if (gameMode !== undefined) {
-                for (const [key, value] of Object.entries(gameMode)) {
-                    localVarQueryParameter[key] = value;
-                }
+                localVarQueryParameter['game_mode'] = gameMode;
             }
 
 
@@ -2582,12 +2600,12 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
-         * @param {GameMode} [gameMode] 
+         * @param {string} gameMode 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
+        async getUserStatistics(gameMode: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserStatistics>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getUserStatistics(gameMode, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserStatistics']?.[localVarOperationServerIndex]?.url;
@@ -2691,12 +2709,12 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Gets the statistics based on the user\'s game history.
          * @summary Get User Statistics
-         * @param {GameMode} [gameMode] 
+         * @param {string} gameMode 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: any): AxiosPromise<UserStatistics> {
+        getUserStatistics(gameMode: string, accessToken?: AccessToken, options?: any): AxiosPromise<UserStatistics> {
             return localVarFp.getUserStatistics(gameMode, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2796,13 +2814,13 @@ export class UserApi extends BaseAPI {
     /**
      * Gets the statistics based on the user\'s game history.
      * @summary Get User Statistics
-     * @param {GameMode} [gameMode] 
+     * @param {string} gameMode 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserStatistics(gameMode?: GameMode, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+    public getUserStatistics(gameMode: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
         return UserApiFp(this.configuration).getUserStatistics(gameMode, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
