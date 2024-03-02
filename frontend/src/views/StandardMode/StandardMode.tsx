@@ -1,9 +1,5 @@
 import PropTypes from "prop-types";
-import {
-  calculateAverageWpm,
-  GameDifficulty,
-  STANDARD_MODE,
-} from "../../common/constants";
+import { calculateAverageWpm, GameDifficulty } from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
@@ -49,7 +45,6 @@ const StandardModeGameView: React.FC<{
     >
       <CountdownComponent
         duration={3}
-        mode={STANDARD_MODE}
         onCountdownFinish={startStandardModeGame}
       />
     </Box>

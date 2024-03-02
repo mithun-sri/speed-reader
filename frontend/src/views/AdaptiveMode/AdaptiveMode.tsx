@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
-import { ADAPTIVE_MODE, calculateAverageWpm } from "../../common/constants";
+import { calculateAverageWpm } from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
@@ -13,28 +13,36 @@ import { useGameScreenContext } from "../GameScreen/GameScreen";
 const AdaptiveModeView = () => {
   const { setTextId, summarised } = useGameContext();
   const { data: text } = useNextText(summarised);
-  const { resumeWebGazer, pauseWebGazer, enableWebGazerListener } =
-    useWebGazerContext();
+
+  setTextId(text.id);
+
+  const {
+    resumeWebGazer,
+    pauseWebGazer,
+    disableWebGazerListener,
+    enableWebGazerListener,
+  } = useWebGazerContext();
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   useEffect(() => {
-    resumeWebGazer();
+    // NOTE:
+    // This is a temporary fix to prevent the even loop from being busy
+    // and not allowing the setTimeout to break in.
+    disableWebGazerListener();
+    pauseWebGazer();
 
     return () => {
-      pauseWebGazer();
+      resumeWebGazer();
+      enableWebGazerListener();
     };
   }, []);
-
-  useEffect(() => {
-    setTextId(text.id);
-  }, [text]);
 
   const startAdaptiveModeGame = () => {
     // NOTE:
     // This is a temporary fix to prevent the even loop from being busy
     // and not allowing the setTimeout to break in.
-    enableWebGazerListener();
     resumeWebGazer();
+    enableWebGazerListener();
 
     setShowGameScreen(true);
   };
@@ -47,7 +55,6 @@ const AdaptiveModeView = () => {
     >
       <CountdownComponent
         duration={3}
-        mode={ADAPTIVE_MODE}
         onCountdownFinish={startAdaptiveModeGame}
       />
     </Box>
