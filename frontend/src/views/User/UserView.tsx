@@ -87,8 +87,8 @@ const StatisticsBox: React.FC = () => {
           sx={{
             fontFamily: "JetBrains Mono, monospace",
             color: "#fff",
-            fontSize: "1.4vw",
-            margin: "5.4vw 26vw",
+            fontSize: "3vh",
+            margin: "8vh 26vw",
           }}
         >
           No Statistics Available.

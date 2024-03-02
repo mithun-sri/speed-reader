@@ -140,8 +140,8 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
           sx={{
             fontFamily: "JetBrains Mono, monospace",
             color: "#fff",
-            fontSize: "1.4vw",
-            margin: "5.4vw 27vw",
+            fontSize: "3vh",
+            margin: "9vh 27vw",
           }}
         >
           No History Available.
