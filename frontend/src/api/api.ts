@@ -83,75 +83,6 @@ export interface Answer {
 /**
  * 
  * @export
- * @interface BodyGetUserAvailableTexts
- */
-export interface BodyGetUserAvailableTexts {
-    /**
-     * 
-     * @type {BodyGetUserAvailableTextsTextFilter}
-     * @memberof BodyGetUserAvailableTexts
-     */
-    'text_filter'?: BodyGetUserAvailableTextsTextFilter;
-    /**
-     * 
-     * @type {BodyGetUserAvailableTextsTextSort}
-     * @memberof BodyGetUserAvailableTexts
-     */
-    'text_sort'?: BodyGetUserAvailableTextsTextSort;
-}
-/**
- * 
- * @export
- * @interface BodyGetUserAvailableTextsTextFilter
- */
-export interface BodyGetUserAvailableTextsTextFilter {
-    /**
-     * 
-     * @type {GameMode1}
-     * @memberof BodyGetUserAvailableTextsTextFilter
-     */
-    'game_mode'?: GameMode1;
-    /**
-     * 
-     * @type {Difficulty}
-     * @memberof BodyGetUserAvailableTextsTextFilter
-     */
-    'difficulty'?: Difficulty;
-    /**
-     * 
-     * @type {IncludeFiction}
-     * @memberof BodyGetUserAvailableTextsTextFilter
-     */
-    'include_fiction'?: IncludeFiction;
-    /**
-     * 
-     * @type {IncludeNonfiction}
-     * @memberof BodyGetUserAvailableTextsTextFilter
-     */
-    'include_nonfiction'?: IncludeNonfiction;
-}
-/**
- * 
- * @export
- * @interface BodyGetUserAvailableTextsTextSort
- */
-export interface BodyGetUserAvailableTextsTextSort {
-    /**
-     * 
-     * @type {any}
-     * @memberof BodyGetUserAvailableTextsTextSort
-     */
-    'field': any;
-    /**
-     * 
-     * @type {any}
-     * @memberof BodyGetUserAvailableTextsTextSort
-     */
-    'ascending'?: any;
-}
-/**
- * 
- * @export
  * @interface BodyLoginUser
  */
 export interface BodyLoginUser {
@@ -253,13 +184,6 @@ export interface GameMode {
 /**
  * 
  * @export
- * @interface GameMode1
- */
-export interface GameMode1 {
-}
-/**
- * 
- * @export
  * @interface HTTPValidationError
  */
 export interface HTTPValidationError {
@@ -344,6 +268,20 @@ export interface IncludeFiction {
  * @interface IncludeNonfiction
  */
 export interface IncludeNonfiction {
+}
+/**
+ * 
+ * @export
+ * @interface Keyword
+ */
+export interface Keyword {
+}
+/**
+ * 
+ * @export
+ * @interface OnlyUnplayed
+ */
+export interface OnlyUnplayed {
 }
 /**
  * 
@@ -668,12 +606,6 @@ export interface TextCreateWithQuestions {
 export interface TextFilter {
     /**
      * 
-     * @type {GameMode1}
-     * @memberof TextFilter
-     */
-    'game_mode'?: GameMode1;
-    /**
-     * 
      * @type {Difficulty}
      * @memberof TextFilter
      */
@@ -690,25 +622,18 @@ export interface TextFilter {
      * @memberof TextFilter
      */
     'include_nonfiction'?: IncludeNonfiction;
-}
-/**
- * 
- * @export
- * @interface TextSort
- */
-export interface TextSort {
     /**
      * 
-     * @type {string}
-     * @memberof TextSort
+     * @type {OnlyUnplayed}
+     * @memberof TextFilter
      */
-    'field': string;
+    'only_unplayed'?: OnlyUnplayed;
     /**
      * 
-     * @type {boolean}
-     * @memberof TextSort
+     * @type {Keyword}
+     * @memberof TextFilter
      */
-    'ascending'?: boolean;
+    'keyword'?: Keyword;
 }
 /**
  * 
@@ -2459,11 +2384,11 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @param {number} [page] 
          * @param {number} [pageSize] 
          * @param {AccessToken} [accessToken] 
-         * @param {BodyGetUserAvailableTexts} [bodyGetUserAvailableTexts] 
+         * @param {TextFilter} [textFilter] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserAvailableTexts: async (page?: number, pageSize?: number, accessToken?: AccessToken, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserAvailableTexts: async (page?: number, pageSize?: number, accessToken?: AccessToken, textFilter?: TextFilter, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/current/available_texts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2472,7 +2397,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
@@ -2491,7 +2416,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(bodyGetUserAvailableTexts, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(textFilter, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2697,12 +2622,12 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {number} [page] 
          * @param {number} [pageSize] 
          * @param {AccessToken} [accessToken] 
-         * @param {BodyGetUserAvailableTexts} [bodyGetUserAvailableTexts] 
+         * @param {TextFilter} [textFilter] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserAvailableTexts>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserAvailableTexts(page, pageSize, accessToken, bodyGetUserAvailableTexts, options);
+        async getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, textFilter?: TextFilter, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserAvailableTexts>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserAvailableTexts(page, pageSize, accessToken, textFilter, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserAvailableTexts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2809,12 +2734,12 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {number} [page] 
          * @param {number} [pageSize] 
          * @param {AccessToken} [accessToken] 
-         * @param {BodyGetUserAvailableTexts} [bodyGetUserAvailableTexts] 
+         * @param {TextFilter} [textFilter] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options?: any): AxiosPromise<UserAvailableTexts> {
-            return localVarFp.getUserAvailableTexts(page, pageSize, accessToken, bodyGetUserAvailableTexts, options).then((request) => request(axios, basePath));
+        getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, textFilter?: TextFilter, options?: any): AxiosPromise<UserAvailableTexts> {
+            return localVarFp.getUserAvailableTexts(page, pageSize, accessToken, textFilter, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the statistics based on the user\'s game history.
@@ -2912,13 +2837,13 @@ export class UserApi extends BaseAPI {
      * @param {number} [page] 
      * @param {number} [pageSize] 
      * @param {AccessToken} [accessToken] 
-     * @param {BodyGetUserAvailableTexts} [bodyGetUserAvailableTexts] 
+     * @param {TextFilter} [textFilter] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, bodyGetUserAvailableTexts?: BodyGetUserAvailableTexts, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getUserAvailableTexts(page, pageSize, accessToken, bodyGetUserAvailableTexts, options).then((request) => request(this.axios, this.basePath));
+    public getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, textFilter?: TextFilter, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUserAvailableTexts(page, pageSize, accessToken, textFilter, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

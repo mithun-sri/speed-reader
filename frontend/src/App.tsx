@@ -44,7 +44,7 @@ function App() {
                       />
                       <Route path="/user" element={<UserView />} />
                       <Route
-                        path="/available-texts"
+                        path="/available-texts/:page?/:page_size?/:search?"
                         element={<AvailableTexts />}
                       />
                       <Route path="/gpt" element={<GptView />} />

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import JetBrainsMonoText from "../Text/TextComponent";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
-import { Link, MenuItem, OutlinedInput, Tooltip } from "@mui/material";
+import { FormControl, Link, MenuItem, OutlinedInput, Select, SelectChangeEvent, Tooltip } from "@mui/material";
 import StyledMultiSelect from "../MultiSelect/MultiSelect";
 import IconButton from "@mui/material/IconButton";
 import StyledTextField from "../Textbox/StyledTextField";
@@ -13,20 +13,46 @@ import {
   faGamepad,
 } from "@fortawesome/free-solid-svg-icons";
 import FictionBox from "../Fiction/Fiction";
-import { Text, UserAvailableTexts } from "../../api";
+import { Text, TextFilter, UserAvailableTexts } from "../../api";
+import { useState } from "react";
 
-interface TextProps {
-  title: string;
-  description: string;
-  difficulty: string;
-  image?: string;
-  author?: string;
-  is_fiction?: boolean;
-  source: string;
-}
+export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => void }> = ({ onUpdateFilters }) => {
+  const difficulty_options = ["any", "easy", "medium", "hard"];
 
-export const SearchBar: React.FC = () => {
-  const difficulty = ["easy", "medium", "hard"];
+  const [difficulty, setDifficulty] = useState<String>(difficulty_options[0])
+  const [onlyUnplayed, setOnlyUnplayed] = useState(false);
+  const [includeFiction, setIncludeFiction] = useState(false);
+  const [includeNonFiction, setIncludeNonFiction] = useState(false);
+  const [keyword, setKeyword] = useState("");
+
+  const handleCheckOnlyUnplayed = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setOnlyUnplayed(event.target.checked);
+  };
+
+  const handleCheckIncludeFiction = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIncludeFiction(event.target.checked);
+  };
+
+  const handleCheckIncludeNonFiction = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIncludeNonFiction(event.target.checked);
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    const newValue = event.target.value;
+    setDifficulty(newValue);
+  };
+
+  const handleUpdateFilters = () => {
+    const filters = {
+      include_fiction: includeFiction,
+      include_nonfiction: includeNonFiction,
+      difficulty: difficulty,
+      only_unplayed: onlyUnplayed,
+      keyword: keyword
+    };
+    onUpdateFilters(filters);
+  }
+  
   return (
     <Box
       sx={{
@@ -51,13 +77,16 @@ export const SearchBar: React.FC = () => {
             display: "flex",
             width: "80%",
           }}
-          placeholder="Search for a text..."
+          placeholder="Search for a text or author..."
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
         />
         <IconButton
           sx={{
             fontFamily: "JetBrains Mono, monospace",
             color: "#FFFFFF",
           }}
+          onMouseDown={handleUpdateFilters}
         >
           <Box
             sx={{
@@ -88,43 +117,48 @@ export const SearchBar: React.FC = () => {
           width: "70%",
         }}
       >
-        <JetBrainsMonoText text={"Only unplayed"} size={16} color={"#D9D9D9"} />
-        <StyledCheckbox />
-        <JetBrainsMonoText text={"Fiction"} size={16} color={"#D9D9D9"} />
-        <StyledCheckbox />
-        <JetBrainsMonoText text={"Non-fiction"} size={16} color={"#D9D9D9"} />
-        <StyledCheckbox />
-        <JetBrainsMonoText text={"Difficulty"} size={16} color={"#D9D9D9"} />
-        <StyledMultiSelect
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
-          multiple
-          input={<OutlinedInput label="Name" />}
-          value={[difficulty[0]]}
-        >
-          {difficulty.map((diff) => (
-            <MenuItem key={diff} value={diff}>
-              {diff}
-            </MenuItem>
-          ))}
-        </StyledMultiSelect>
-        {/* Sort by */}
-        <JetBrainsMonoText text={"Sort by"} size={16} color={"#D9D9D9"} />
-        <StyledMultiSelect
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
-          multiple
-          input={<OutlinedInput label="Name" />}
-          value={[difficulty[0]]}
-        >
-          {difficulty.map((diff) => (
-            <MenuItem key={diff} value={diff}>
-              {diff}
-            </MenuItem>
-          ))}
-        </StyledMultiSelect>
-        {/* Clear all filters */}
-        {/* Update styling */}
+          <JetBrainsMonoText text={"Only unplayed"} size={16} color={"#D9D9D9"} />
+          <StyledCheckbox checked={onlyUnplayed} onChange={handleCheckOnlyUnplayed} />
+          <JetBrainsMonoText text={"Fiction"} size={16} color={"#D9D9D9"} />
+          <StyledCheckbox checked={includeFiction} onChange={handleCheckIncludeFiction} />
+          <JetBrainsMonoText text={"Non-fiction"} size={16} color={"#D9D9D9"} />
+          <StyledCheckbox checked={includeNonFiction} onChange={handleCheckIncludeNonFiction} />
+          <JetBrainsMonoText text={"Difficulty"} size={16} color={"#D9D9D9"} />
+          <Select
+            value={difficulty as string}
+            label="Difficulty"
+            onChange={handleSelectChange}
+            sx={
+              {
+                borderRadius: 5,
+                border: "3px solid #D9D9D9",
+                height: "39px",
+                backgroundColor: "#2C2E31",
+                color: "#D9D9D9",
+                fontFamily: "JetBrains Mono, monospace",
+                paddingLeft: "3px",
+                paddingRight: "3px",
+                marginLeft: "10px",
+                marginRight: "10px",
+                fontWeight: "bold",
+                "&:hover": {
+                  borderColor: "#E2B714",
+                },
+                "&:hover .MuiSelect-icon": {
+                  color: "#E2B714",
+                },
+                ".MuiSelect-icon": {
+                  color: "#D9D9D9",
+                },
+              }
+            }
+          >
+            {difficulty_options.map((diff) => (
+              <MenuItem key={diff} value={diff}>
+                {diff}
+              </MenuItem>
+            ))}
+          </Select>
       </Box>
     </Box>
   );

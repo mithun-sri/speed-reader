@@ -4,7 +4,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { BodyLoginUser, BodyRegisterUser } from "../api";
+import { BodyLoginUser, BodyRegisterUser, TextFilter } from "../api";
 import { useApiClient } from "../context/ApiContext";
 
 export function useAuth() {
@@ -108,12 +108,11 @@ export function getUserStatistics(mode: string) {
   });
 }
 
-export function getAvailableTexts() {
+export function getAvailableTexts(page: number, pageSize: number, text_filter: TextFilter) {
   const { userApi } = useApiClient();
-
   return useSuspenseQuery({
     queryKey: ["users", "available_texts"],
-    queryFn: () => userApi.getUserAvailableTexts().then((res) => res.data),
+    queryFn: () => userApi.getUserAvailableTexts(page, pageSize, undefined, text_filter).then((res) => res.data),
     gcTime: 0,
   });
 }

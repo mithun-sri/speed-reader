@@ -744,7 +744,7 @@
       }
     },
     "/users/current/available_texts": {
-      "get": {
+      "post": {
         "tags": [
           "user"
         ],
@@ -793,12 +793,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "allOf": [
+                "anyOf": [
                   {
-                    "$ref": "#/components/schemas/Body_get_user_available_texts"
+                    "$ref": "#/components/schemas/TextFilter"
+                  },
+                  {
+                    "type": "null"
                   }
                 ],
-                "title": "Body"
+                "title": "Text Filter"
               }
             }
           }
@@ -1369,32 +1372,6 @@
         ],
         "title": "Answer"
       },
-      "Body_get_user_available_texts": {
-        "properties": {
-          "text_filter": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/TextFilter"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "text_sort": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/TextSort"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "type": "object",
-        "title": "Body_get_user_available_texts"
-      },
       "Body_login_user": {
         "properties": {
           "username": {
@@ -1852,17 +1829,6 @@
       },
       "TextFilter": {
         "properties": {
-          "game_mode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Game Mode"
-          },
           "difficulty": {
             "anyOf": [
               {
@@ -1897,28 +1863,33 @@
             ],
             "title": "Include Nonfiction",
             "default": true
+          },
+          "only_unplayed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Only Unplayed",
+            "default": false
+          },
+          "keyword": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keyword"
           }
         },
         "type": "object",
         "title": "TextFilter"
-      },
-      "TextSort": {
-        "properties": {
-          "field": {
-            "type": "string",
-            "title": "Field"
-          },
-          "ascending": {
-            "type": "boolean",
-            "title": "Ascending",
-            "default": false
-          }
-        },
-        "type": "object",
-        "required": [
-          "field"
-        ],
-        "title": "TextSort"
       },
       "TextWithQuestions": {
         "properties": {

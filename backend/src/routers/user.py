@@ -83,7 +83,7 @@ async def get_user_statistics(
     )
 
 
-@router.get(
+@router.post(
     "/current/available_texts",
     response_model=schemas.UserAvailableTexts,
     dependencies=[Security(verify_auth)],
@@ -93,7 +93,6 @@ async def get_user_available_texts(
     page: Annotated[int, Query()] = 1,
     page_size: Annotated[int, Query()] = 10,
     text_filter: Optional[schemas.TextFilter] = None,
-    text_sort: Optional[schemas.TextSort] = None,
     user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ):
@@ -101,27 +100,25 @@ async def get_user_available_texts(
     Gets the texts not read by the user.
     Returns the texts paginated and sorted/filtered by the given parameters.
     """
-
     def filter_query(query):
-        # Build the base query for texts not read by user
-        read_text_ids = models.History.objects(user_id=user.id).distinct("text_id")
-        query = query.where(models.Text.id.not_in(read_text_ids))
-
         if text_filter:
-            if text_filter.game_mode:
-                # TODO:
-                # Only `summary` is associated with `Text`, not `game_mode`.
-                # query = query.where(models.Text.game_mode == text_filter.game_mode)
-                pass
             if text_filter.difficulty:
                 query = query.where(models.Text.difficulty == text_filter.difficulty)
-
-        if text_sort:
-            attr = getattr(models.Text, text_sort.field)
-            if text_sort.ascending:
-                query = query.order_by(attr)
-            else:
-                query = query.order_by(attr.desc())
+            if text_filter.include_fiction == False and text_filter.include_nonfiction == False:
+                # Return no texts if both fiction and nonfiction are excluded 
+                query = query.where(models.Text.fiction == False)
+                query = query.where(models.Text.fiction == True)
+            elif text_filter.include_fiction == False:
+                query = query.where(models.Text.fiction == False)
+            elif text_filter.include_nonfiction == False:
+                query = query.where(models.Text.fiction == True)
+            if text_filter.only_unplayed:
+                read_text_ids = models.History.objects(user_id=user.id).distinct("text_id")
+                query = query.where(models.Text.id.not_in(read_text_ids))
+            if text_filter.keyword:
+                # find texts with the keyword in the title or author
+                query = query.where(models.Text.title.ilike(f"%{text_filter.keyword}%") | 
+                                    models.Text.author.ilike(f"%{text_filter.keyword}%"))
 
         return query
 
@@ -133,14 +130,7 @@ async def get_user_available_texts(
     query = filter_query(select(models.Text))
     query = query.offset((page - 1) * page_size).limit(page_size)
     texts = session.scalars(query).all()
-    # for i, text in enumerate(texts):
-    #     _text = text.__dict__
-    #     _text["description"] = "description"
-    #     _text["image_url"] = "https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg"
-    #     _text["author"] = "Author"
-    #     texts[i] = schemas.Text(**_text)  # type: ignore
     texts = [schemas.Text(**text.__dict__) for text in texts]  # type: ignore
-    # texts = [schemas.Text(text) for text in texts]  # type: ignore
 
     return schemas.UserAvailableTexts(
         texts=texts,  # type: ignore
