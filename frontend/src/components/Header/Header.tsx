@@ -103,30 +103,30 @@ const Header = () => {
         )}
 
         <Tooltip title="Available texts">
-        <Link to={"/available-texts"}>
-          <IconButton
-            style={{
-              fontSize: iconSize / 1.8,
-              marginRight: "20px",
-              marginLeft: "15px",
-            }}
-          >
-            <FontAwesomeIcon icon={faFileLines} color="#D1D0C5" />
-          </IconButton>
-        </Link>
+          <Link to={"/available-texts"}>
+            <IconButton
+              style={{
+                fontSize: iconSize / 1.8,
+                marginRight: "20px",
+                marginLeft: "15px",
+              }}
+            >
+              <FontAwesomeIcon icon={faFileLines} color="#D1D0C5" />
+            </IconButton>
+          </Link>
         </Tooltip>
         <Tooltip title="User dashboard">
           <Link to={"/user"}>
-          <IconButton
-            style={{
-              fontSize: iconSize / 1.8,
-              marginRight: iconSize / 1.2,
-              marginLeft: "15px",
-              color: "#D1D0C5",
-            }}
-          >
-            <FontAwesomeIcon icon={faUser} color="#E2B714" />
-          </IconButton>
+            <IconButton
+              style={{
+                fontSize: iconSize / 1.8,
+                marginRight: iconSize / 1.2,
+                marginLeft: "15px",
+                color: "#D1D0C5",
+              }}
+            >
+              <FontAwesomeIcon icon={faUser} color="#E2B714" />
+            </IconButton>
           </Link>
         </Tooltip>
       </Box>

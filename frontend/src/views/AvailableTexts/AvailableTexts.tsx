@@ -20,7 +20,7 @@ const AvailableTexts: React.FC = () => {
 
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  
+
   const [textFilter, setTextFilter] = useState<TextFilter>({
     difficulty: searchParams.get("difficulty") || "",
     include_fiction:
@@ -33,7 +33,11 @@ const AvailableTexts: React.FC = () => {
   });
 
   const pageSize = 10;
-  const { data: newData, refetch} = getAvailableTexts(pageNum, pageSize, textFilter);
+  const { data: newData, refetch } = getAvailableTexts(
+    pageNum,
+    pageSize,
+    textFilter,
+  );
   const [hoveredIndex, setHoveredIndex] = useState(-1);
 
   const availableTexts = newData;
@@ -82,7 +86,7 @@ const AvailableTexts: React.FC = () => {
     const fetchData = async () => {
       await refetch();
     };
-  
+
     fetchData();
   }, [pageNum, textFilter, refetch]);
 
@@ -116,8 +120,7 @@ const AvailableTexts: React.FC = () => {
               alignItems: "center",
             }}
           >
-            {
-             availableTexts.texts.length > 0 ? (
+            {availableTexts.texts.length > 0 ? (
               availableTexts.texts.slice(0, pageSize).map((text, index) => {
                 return (
                   <Box
