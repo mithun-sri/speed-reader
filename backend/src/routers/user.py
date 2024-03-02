@@ -143,7 +143,7 @@ async def get_user_available_texts(
 
 # TODO: Move the endpoints below to where appropriate.
 @router.get(
-    "/current/results",
+    "/current/histories",
     response_model=list[schemas.History],
     dependencies=[Security(verify_auth)],
 )
@@ -182,7 +182,7 @@ async def get_histories(
 
 
 @router.get(
-    "/current/results/{history_id}",
+    "/current/histories/{history_id}",
     response_model=schemas.HistoryWithQuestions,
     dependencies=[Security(verify_auth)],
 )

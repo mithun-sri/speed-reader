@@ -827,7 +827,7 @@
         }
       }
     },
-    "/users/current/results": {
+    "/users/current/histories": {
       "get": {
         "tags": [
           "user"
@@ -881,7 +881,7 @@
         }
       }
     },
-    "/users/current/results/{history_id}": {
+    "/users/current/histories/{history_id}": {
       "get": {
         "tags": [
           "user"

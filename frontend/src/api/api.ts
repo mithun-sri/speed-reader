@@ -2383,7 +2383,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @throws {RequiredError}
          */
         getHistories: async (accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/users/current/results`;
+            const localVarPath = `/users/current/histories`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2417,7 +2417,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         getHistory: async (historyId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'historyId' is not null or undefined
             assertParamExists('getHistory', 'historyId', historyId)
-            const localVarPath = `/users/current/results/{history_id}`
+            const localVarPath = `/users/current/histories/{history_id}`
                 .replace(`{${"history_id"}}`, encodeURIComponent(String(historyId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
