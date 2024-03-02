@@ -12,34 +12,19 @@ import {
   YAxis,
 } from "recharts";
 import { useParams } from "react-router-dom";
-// import { getHistory } from "../../hooks/users";
-// import NotFound from "../../components/Error/NotFound";
+import { getHistory } from "../../hooks/users";
+import NotFound from "../../components/Error/NotFound";
 
 const HistoricalResultsPage: React.FC = () => {
-  const { text_id } = useParams<{ text_id?: string }>();
+  const { id } = useParams<{ id?: string }>();
 
-  console.log(text_id);
-  // if (!text_id) {
-  // return <NotFound />;
-  //   }
+  if (!id) {
+    return <NotFound />;
+  }
 
-  // const { data: gameHistory } = getHistory(text_id);
+  const { data: gameHistory } = getHistory(id);
 
-  // const { average_wpm, interval_wpms, score, game_mode, results } = gameHistory;
-
-  const average_wpm = 200;
-  const interval_wpms = [200, 200, 200, 200, 200, 200];
-  const score = 78;
-  const game_mode = "adaptive";
-  const results = [
-    {
-      question_id: 1,
-      question: "Why did the chicken cross the road?",
-      options: ["he was hungry", "he was not hungry", "he was sick"],
-      correct_option: 1,
-      selected_option: 1,
-    },
-  ];
+  const { average_wpm, interval_wpms, score, game_mode, results } = gameHistory;
 
   const wpmData = interval_wpms.map((wpm, index) => ({ index, wpm }));
 
@@ -154,7 +139,7 @@ const HistoricalResultsPage: React.FC = () => {
               </Box>
             </Box>
           </Box>
-          {game_mode == "adaptive" && (
+          {game_mode === "adaptive" && (
             <Box
               sx={{
                 display: "flex",
@@ -193,7 +178,7 @@ const HistoricalResultsPage: React.FC = () => {
             <QuestionAnswer
               key={question.question_id}
               questionNumber={index + 1}
-              question={question.question}
+              question={question.content}
               questions={question.options}
               correctAnswer={question.correct_option}
               userAnswer={question.selected_option}

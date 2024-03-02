@@ -44,7 +44,7 @@ function convertHistoryToRows(histories: History[]): Row[] {
     difficulty: history.difficulty,
     average: history.average_wpm,
     accuracy: history.score,
-    page: `history/${history.text_id}`,
+    page: `history/${history.id}`,
   }));
 }
 
