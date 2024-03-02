@@ -44,10 +44,11 @@ const SignUp: React.FC = () => {
   const onSubmit = (data: BodyRegisterUser) => {
     registerUser.mutate(data, {
       onSuccess: () => {
+        showSnack("Successfully registered!");
         navigate("/login");
       },
-      onError: () => {
-        showSnack("Failed to register");
+      onError: (error) => {
+        showSnack("Failed to register: " + error.message);
       },
     });
   };
