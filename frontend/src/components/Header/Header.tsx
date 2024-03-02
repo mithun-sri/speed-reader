@@ -1,6 +1,7 @@
 import {
   faArrowsToEye,
   faFileLines,
+  faLock,
   faStopwatch,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +13,7 @@ import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useWebGazerContext } from "../../context/WebGazerContext";
+import { useAuth } from "../../hooks/users";
 
 const HeaderContainer = styled(Box)({
   backgroundColor: "#2C2E31",
@@ -26,6 +28,7 @@ const HeaderContainer = styled(Box)({
 const Header = () => {
   const [iconSize, setIconSize] = useState(calculateIconSize());
   const { webGazerInitialised, setManualRecalibration } = useWebGazerContext();
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     function handleResize() {
@@ -119,7 +122,7 @@ const Header = () => {
           <IconButton
             style={{
               fontSize: iconSize / 1.8,
-              marginRight: iconSize / 1.2,
+              marginRight: isAdmin ? "20px" : iconSize / 1.2,
               marginLeft: "15px",
               color: "#D1D0C5",
             }}
@@ -129,6 +132,22 @@ const Header = () => {
             <FontAwesomeIcon icon={faUser} color="#E2B714" />
           </IconButton>
         </Tooltip>
+        {isAdmin && (
+          <Tooltip title="Admin dashboard">
+            <IconButton
+              style={{
+                fontSize: iconSize / 1.8,
+                marginRight: iconSize / 1.2,
+                marginLeft: "15px",
+                color: "#D1D0C5",
+              }}
+              component={Link}
+              to="/admin"
+            >
+              <FontAwesomeIcon icon={faLock} color="#E2B714" />
+            </IconButton>
+          </Tooltip>
+        )}
       </Box>
     </HeaderContainer>
   );
