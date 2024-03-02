@@ -14,26 +14,7 @@ const AdaptiveModeView = () => {
   const { setTextId, summarised } = useGameContext();
   const { data: text } = useNextText(summarised);
 
-  const {
-    resumeWebGazer,
-    pauseWebGazer,
-    disableWebGazerListener,
-    enableWebGazerListener,
-  } = useWebGazerContext();
   const [showGameScreen, setShowGameScreen] = useState(false);
-
-  useEffect(() => {
-    // NOTE:
-    // This is a temporary fix to prevent the even loop from being busy
-    // and not allowing the setTimeout to break in.
-    disableWebGazerListener();
-    pauseWebGazer();
-
-    return () => {
-      resumeWebGazer();
-      enableWebGazerListener();
-    };
-  }, []);
 
   // TODO:
   // This is a temporary fix to prevent the infinite loop while rendering this component.
@@ -41,29 +22,6 @@ const AdaptiveModeView = () => {
   useEffect(() => {
     setTextId(text.id);
   }, [text]);
-
-  const startAdaptiveModeGame = () => {
-    // NOTE:
-    // This is a temporary fix to prevent the even loop from being busy
-    // and not allowing the setTimeout to break in.
-    resumeWebGazer();
-    enableWebGazerListener();
-
-    setShowGameScreen(true);
-  };
-
-  const countdownComp = (
-    <Box
-      sx={{
-        marginTop: "100px",
-      }}
-    >
-      <CountdownComponent
-        duration={3}
-        onCountdownFinish={startAdaptiveModeGame}
-      />
-    </Box>
-  );
 
   return (
     <Box
@@ -92,7 +50,16 @@ const AdaptiveModeView = () => {
             text={summarised ? (text.summary as string) : text.content}
           />
         ) : (
-          countdownComp
+          <Box
+            sx={{
+              marginTop: "100px",
+            }}
+          >
+            <CountdownComponent
+              duration={3}
+              onCountdownFinish={() => setShowGameScreen(true)}
+            />
+          </Box>
         )}
       </Box>
     </Box>
@@ -125,81 +92,111 @@ const AdaptiveModeTextDisplay: React.FC<{
     };
   }, []);
 
+  const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
+  const [hitRightCheckpoint, setHitRightCheckpoint] = useState(false);
+  const { setWebGazerListener, clearWebGazerListener } = useWebGazerContext();
+
+  useEffect(() => {
+    setWebGazerListener((data: any, _: any) => {
+      if (data === null) return;
+      const leftCheckpoint = 0.5;
+      const rightCheckpoint = 0.75;
+      if (!hitLeftCheckpoint && data.x < window.innerWidth * leftCheckpoint) {
+        setHitLeftCheckpoint(true);
+      }
+      if (
+        !hitRightCheckpoint &&
+        hitLeftCheckpoint &&
+        data.x > window.innerWidth * rightCheckpoint
+      ) {
+        setHitRightCheckpoint(true);
+      }
+    });
+
+    return () => clearWebGazerListener();
+  }, [hitLeftCheckpoint, hitRightCheckpoint]);
+
   const wordsArray = text.split(" ");
-  const maxCharactersPerLine = 60;
-  const leftCheckpoint = 0.5;
-  const rightCheckpoint = 0.75;
 
   function calculateNextLineIndex(prevNextLineIndex: number): number {
-    let lineLength = 0;
+    const maxCharsPerLine = 60;
+    let chars = 0;
     for (let i = prevNextLineIndex; i < wordsArray.length; i++) {
-      lineLength += wordsArray[i].length;
-      if (lineLength > maxCharactersPerLine) {
-        return i - 1;
-      }
+      chars += wordsArray[i].length;
+      if (chars > maxCharsPerLine) return i - 1;
     }
     return wordsArray.length;
   }
-
-  const [highlightedIndex, setHighlightedIndex] = useState(0);
-  const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [nextLineIndex, setNextLineIndex] = useState(calculateNextLineIndex(0));
-  const [lastLineChangeTime, setLastLineChangeTime] = useState(Date.now());
-  const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
-  const { intervalWpms, setIntervalWpms, setAverageWpm } = useGameContext();
-  const { gazeX } = useWebGazerContext();
-  const { incrementCurrentStage } = useGameScreenContext();
 
   // NOTE:
   // Do not use `setWpm` from `GameContext` here,
   // as it will force this component to re-render from scratch
   const [wpm, setWpm] = useState<number>(200);
-
-  // initialize intervalWpms list with initial wpm on component first render
-  useEffect(() => {
-    setIntervalWpms([wpm]);
-  }, []);
-
-  useEffect(() => {
-    if (wordsArray.length > 0 && highlightedIndex === wordsArray.length - 1) {
-      const avg_wpm = calculateAverageWpm(intervalWpms);
-      setAverageWpm(avg_wpm);
-
-      incrementCurrentStage();
-      console.log("intervalWpms: ");
-      console.log(intervalWpms);
-    }
-  }, [highlightedIndex]);
-
-  // record WPM every 2.5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIntervalWpms([...intervalWpms, wpm]);
-    }, 2500);
-
-    return () => clearInterval(interval);
-  }, [wpm]);
+  const [currentLineIndex, setCurrentLineIndex] = useState(0);
+  const [nextLineIndex, setNextLineIndex] = useState(calculateNextLineIndex(0));
+  const [lastLineChangeTime, setLastLineChangeTime] = useState(Date.now());
+  const { intervalWpms, setIntervalWpms, setAverageWpm } = useGameContext();
+  const { incrementCurrentStage } = useGameScreenContext();
 
   useEffect(() => {
-    if (hitLeftCheckpoint && gazeX > window.innerWidth * rightCheckpoint) {
+    if (hitLeftCheckpoint && hitRightCheckpoint) {
       const timeNow = Date.now();
       setWpm(
         (nextLineIndex - currentLineIndex) /
           ((timeNow - lastLineChangeTime) / 60000),
       );
       setLastLineChangeTime(timeNow);
+
+      if (nextLineIndex === wordsArray.length) {
+        setAverageWpm(calculateAverageWpm(intervalWpms));
+        incrementCurrentStage();
+        return;
+      }
+
       setCurrentLineIndex(nextLineIndex);
       setNextLineIndex(calculateNextLineIndex(nextLineIndex));
       setHitLeftCheckpoint(false);
+      setHitRightCheckpoint(false);
     }
-
-    if (!hitLeftCheckpoint) {
-      setHitLeftCheckpoint(gazeX < window.innerWidth * leftCheckpoint);
-    }
-  }, [gazeX]);
+  }, [hitLeftCheckpoint, hitRightCheckpoint]);
 
   useEffect(() => {
-    console.log("wpm: ", wpm);
+    // Record the wpm every 2.5 seconds.
+    const recordIntervalWpms = setInterval(() => {
+      setIntervalWpms(intervalWpms ? [...intervalWpms, wpm] : []);
+    }, 2500 * 10);
+
+    return () => clearInterval(recordIntervalWpms);
+  }, [wpm]);
+
+  return (
+    <AdaptiveModeTextDisplayInner
+      wpm={wpm}
+      currentLineIndex={currentLineIndex}
+      nextLineIndex={nextLineIndex}
+      wordsArray={wordsArray}
+      fontSize={fontSize}
+    />
+  );
+};
+
+const AdaptiveModeTextDisplayInner = ({
+  wpm,
+  currentLineIndex,
+  nextLineIndex,
+  wordsArray,
+  fontSize,
+}: {
+  wpm: number;
+  currentLineIndex: number;
+  nextLineIndex: number;
+  wordsArray: string[];
+  fontSize: number;
+}) => {
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
+
+  useEffect(() => {
+    // Update the highlighted index every 60 / wpm seconds.
     const updateHighlightedIndex = setInterval(() => {
       // NOTE:
       // Take `prevHighlightedIndex` as an argument
