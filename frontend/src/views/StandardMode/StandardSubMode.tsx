@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import BackButton from "../../components/Button/BackButton";
 import Header from "../../components/Header/Header";
@@ -6,7 +7,6 @@ import HighlightWordsPreview from "../../components/Preview/HighlightWords";
 import PeripheralPreview from "../../components/Preview/Peripheral";
 import WordByWordPreview from "../../components/Preview/WordByWord";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
-import { motion } from "framer-motion";
 
 const StandardSubModeView = () => {
   const { decrementCurrentStage } = useGameScreenContext();
@@ -58,7 +58,7 @@ const StandardSubModeView = () => {
           marginBottom: fontSize / 8,
         }}
       >
-        choose your view.
+        choose your view
       </Box>
       <motion.div
         initial="hidden"

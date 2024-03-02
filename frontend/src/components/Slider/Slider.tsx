@@ -107,7 +107,7 @@ function SpeedSlider() {
             fontWeight: "bolder",
           }}
         >
-          Choose your reading speed.
+          choose your reading speed.
         </Box>
         <PrettoSlider
           valueLabelDisplay="auto"
