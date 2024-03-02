@@ -71,7 +71,10 @@ const StandardModeGameView: React.FC<{
         {showGameScreen ? (
           <StandardModeGameComponent
             wpm={wpm || 200} // Handle undefined wpm
-            text={text.content}
+            // TODO:
+            // OpenAPI generator fails to interpret Python's `Optional` type
+            // and assigns `interface{}` to `summary`.
+            text={summarised ? (text.summary as string) : text.content}
             view={mode || StandardView.Word} // Handle undefined mode
           />
         ) : (

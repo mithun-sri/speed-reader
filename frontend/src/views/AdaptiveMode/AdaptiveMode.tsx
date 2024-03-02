@@ -85,7 +85,12 @@ const AdaptiveModeView = () => {
         }}
       >
         {showGameScreen ? (
-          <AdaptiveModeTextDisplay text={text.content} />
+          <AdaptiveModeTextDisplay
+            // TODO:
+            // OpenAPI generator fails to interpret Python's `Optional` type
+            // and assigns `interface{}` to `summary`.
+            text={summarised ? (text.summary as string) : text.content}
+          />
         ) : (
           countdownComp
         )}
