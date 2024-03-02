@@ -56,7 +56,7 @@ function App() {
                             element={<HistoricalResultsPage />}
                           />
                           <Route
-                            path="/available-texts/:page?/:page_size?"
+                            path="/available-texts/:page?"
                             element={<AvailableTexts />}
                           />
                           <Route path="/gpt" element={<GptView />} />

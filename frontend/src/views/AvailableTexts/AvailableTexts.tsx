@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Header from "../../components/Header/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import StyledPagination from "../../components/Pagination/Pagination";
 import {
@@ -14,11 +14,13 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { TextFilter } from "../../api";
 
 const AvailableTexts: React.FC = () => {
-  const { page, page_size } = useParams();
+  const { page } = useParams();
+  const [pageNum, setPageNum] = useState(Number(page) || 1);
+  const [customSearch, setCustomSearch] = useState(false);
+
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
-  const [pageNum, setPageNum] = useState(Number(page) || 1);
+  
   const [textFilter, setTextFilter] = useState<TextFilter>({
     difficulty: searchParams.get("difficulty") || "",
     include_fiction:
@@ -29,9 +31,11 @@ const AvailableTexts: React.FC = () => {
     only_unplayed: searchParams.get("unplayed") === "true" || false,
     keyword: searchParams.get("search") || "",
   });
-  const pageSize = Number(page_size) || 10;
 
-  const { data: newData } = getAvailableTexts(pageNum, pageSize, textFilter);
+  const pageSize = 10;
+  const { data: newData, refetch} = getAvailableTexts(pageNum, pageSize, textFilter);
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
+
   const availableTexts = newData;
   const numPages = Math.ceil(newData.total_texts / newData.page_size);
 
@@ -39,19 +43,20 @@ const AvailableTexts: React.FC = () => {
     event: React.ChangeEvent<unknown>,
     value: number,
   ) => {
-    let base = `/available-texts/${value}/${pageSize}`;
-    base += `?difficulty=${textFilter.difficulty}`;
-    base += `&fiction=${textFilter.include_fiction}`;
-    base += `&nonfiction=${textFilter.include_nonfiction}`;
-    base += `&search=${textFilter.keyword}`;
+    let base = `/available-texts/${value}`;
+    if (customSearch) {
+      base += `?difficulty=${textFilter.difficulty}`;
+      base += `&fiction=${textFilter.include_fiction}`;
+      base += `&nonfiction=${textFilter.include_nonfiction}`;
+      base += `&search=${textFilter.keyword}`;
+    }
     navigate(base, { replace: true });
     setPageNum(value);
-    window.location.reload();
   };
 
   const handleUpdatedFilters = async (newFilters: TextFilter) => {
     setTextFilter(newFilters);
-    let base = `/available-texts/1/${pageSize}`;
+    let base = `/available-texts/1`;
     const queryParams = [];
 
     queryParams.push(`difficulty=${newFilters.difficulty}`);
@@ -69,9 +74,17 @@ const AvailableTexts: React.FC = () => {
     if (queryParams.length > 0) {
       base += `?${queryParams.join("&")}`;
     }
+    setCustomSearch(true);
     navigate(base, { replace: true });
-    window.location.reload();
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await refetch();
+    };
+  
+    fetchData();
+  }, [pageNum, textFilter, refetch]);
 
   return (
     <Box
@@ -103,17 +116,17 @@ const AvailableTexts: React.FC = () => {
               alignItems: "center",
             }}
           >
-            {availableTexts.texts.length > 0 ? (
+            {
+             availableTexts.texts.length > 0 ? (
               availableTexts.texts.slice(0, pageSize).map((text, index) => {
-                const [isHovered, setIsHovered] = useState(false);
                 return (
                   <Box
                     key={index}
                     onMouseEnter={() => {
-                      setIsHovered(true);
+                      setHoveredIndex(index);
                     }}
                     onMouseLeave={() => {
-                      setIsHovered(false);
+                      setHoveredIndex(-1);
                     }}
                     sx={{
                       width: "60%",
@@ -137,7 +150,7 @@ const AvailableTexts: React.FC = () => {
                       source={text.source}
                     />
                     <AnimatePresence mode="wait">
-                      {isHovered && (
+                      {hoveredIndex == index && (
                         <motion.div
                           key={index + "hovered"}
                           initial={{ opacity: 0 }}
