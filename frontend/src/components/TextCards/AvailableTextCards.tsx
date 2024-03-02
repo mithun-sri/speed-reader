@@ -117,12 +117,55 @@ export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => 
           width: "70%",
         }}
       >
+        <Box
+          sx={{
+            paddingLeft: "5px",
+            paddingRight: "5px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <JetBrainsMonoText text={"Only unplayed"} size={16} color={"#D9D9D9"} />
           <StyledCheckbox checked={onlyUnplayed} onChange={handleCheckOnlyUnplayed} />
+        </Box>
+        <Box
+          sx={{
+            paddingLeft: "5px",
+            paddingRight: "5px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <JetBrainsMonoText text={"Fiction"} size={16} color={"#D9D9D9"} />
           <StyledCheckbox checked={includeFiction} onChange={handleCheckIncludeFiction} />
+        </Box>
+        <Box
+          sx={{
+            paddingLeft: "5px",
+            paddingRight: "5px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <JetBrainsMonoText text={"Non-fiction"} size={16} color={"#D9D9D9"} />
           <StyledCheckbox checked={includeNonFiction} onChange={handleCheckIncludeNonFiction} />
+        </Box>
+        <Box
+          sx={{
+            paddingLeft: "5px",
+            paddingRight: "5px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <JetBrainsMonoText text={"Difficulty"} size={16} color={"#D9D9D9"} />
           <Select
             value={difficulty as string}
@@ -159,6 +202,7 @@ export const SearchBar: React.FC<{ onUpdateFilters: (textFilter: TextFilter) => 
               </MenuItem>
             ))}
           </Select>
+          </Box>
       </Box>
     </Box>
   );

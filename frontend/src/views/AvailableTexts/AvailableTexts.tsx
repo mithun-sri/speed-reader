@@ -9,21 +9,23 @@ import {
   SearchBar,
 } from "../../components/TextCards/AvailableTextCards";
 import { getAvailableTexts } from "../../hooks/users";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { TextFilter } from "../../api";
 
 const AvailableTexts: React.FC = () => {
   const {page, page_size} = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   
   const [pageNum, setPageNum] = useState(Number(page) || 1);
   const [textFilter, setTextFilter] = useState<TextFilter>({
-    difficulty: "easy",
-    include_fiction: true,
-    include_nonfiction: true,
-    only_unplayed: false,
-    keyword: ""
+    difficulty: searchParams.get("difficulty") || "",
+    include_fiction: searchParams.get("fiction") === "true" || !searchParams.get("fiction"),
+    include_nonfiction: searchParams.get("nonfiction") === "true" || !searchParams.get("nonfiction"),
+    only_unplayed: searchParams.get("unplayed") === "true" || false,
+    keyword: searchParams.get("search") || "",
   });
+  console.log(textFilter);
   const pageSize = Number(page_size) || 10;
 
   const { data: newData } = getAvailableTexts(pageNum, pageSize, textFilter);
@@ -31,14 +33,55 @@ const AvailableTexts: React.FC = () => {
   const numPages = Math.ceil(newData.total_texts / newData.page_size);
 
   const handleChange = async (event: React.ChangeEvent<unknown>, value: number) => {
-    navigate(`/available-texts/${value}/${pageSize}`, { replace: true });
+    let base = `/available-texts/${value}/${pageSize}`;
+    base += `?difficulty=${textFilter.difficulty}`;
+    base += `&fiction=${textFilter.include_fiction}`;
+    base += `&nonfiction=${textFilter.include_nonfiction}`;
+    base += `&search=${textFilter.keyword}`;
+    navigate(base, { replace: true });
+    // window.location.reload();
+    // navigate(`/available-texts/${value}/${pageSize}`, { replace: true });
     setPageNum(value);
     window.location.reload();
   };
 
-  const handleUpdatedFilters = (newFilters: TextFilter) => {
+  const handleUpdatedFilters = async (newFilters: TextFilter) => {
     setTextFilter(newFilters);
-    console.log(newFilters);
+    let base = `/available-texts/1/${pageSize}`;
+    let added = false;
+    if (newFilters.difficulty) {
+      base += `?difficulty=${newFilters.difficulty}`;
+      added = true;
+    }
+    if (added) {
+      base += `&fiction=${newFilters.include_fiction}`;
+    }
+    else {
+      base += `?fiction=${newFilters.include_fiction}`;
+      added = true;
+    }
+    if (added) {
+      base += `&nonfiction=${newFilters.include_nonfiction}`;
+    }
+    else {
+      base += `?nonfiction=${newFilters.include_nonfiction}`;
+      added = true;
+    }
+    if (added && newFilters.only_unplayed) {
+      base += `&unplayed=${newFilters.only_unplayed}`;
+    }
+    else if (newFilters.only_unplayed) {
+      base += `?unplayed=${newFilters.only_unplayed}`;
+      added = true;
+    }
+    if (added && newFilters.keyword) {
+      base += `&search=${newFilters.keyword}`;
+    }
+    else if (newFilters.keyword) {
+      base += `?search=${newFilters.keyword}`;
+    }
+    navigate(base, { replace: true });
+    window.location.reload();
   };
 
   return (

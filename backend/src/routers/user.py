@@ -102,7 +102,7 @@ async def get_user_available_texts(
     """
     def filter_query(query):
         if text_filter:
-            if text_filter.difficulty:
+            if text_filter.difficulty and text_filter.difficulty != "any":
                 query = query.where(models.Text.difficulty == text_filter.difficulty)
             if text_filter.include_fiction == False and text_filter.include_nonfiction == False:
                 # Return no texts if both fiction and nonfiction are excluded 
