@@ -100,25 +100,33 @@ async def get_user_available_texts(
     Gets the texts not read by the user.
     Returns the texts paginated and sorted/filtered by the given parameters.
     """
+
     def filter_query(query):
         if text_filter:
             if text_filter.difficulty and text_filter.difficulty != "any":
                 query = query.where(models.Text.difficulty == text_filter.difficulty)
-            if text_filter.include_fiction == False and text_filter.include_nonfiction == False:
-                # Return no texts if both fiction and nonfiction are excluded 
-                query = query.where(models.Text.fiction == False)
-                query = query.where(models.Text.fiction == True)
-            elif text_filter.include_fiction == False:
-                query = query.where(models.Text.fiction == False)
-            elif text_filter.include_nonfiction == False:
-                query = query.where(models.Text.fiction == True)
+            if (
+                text_filter.include_fiction is False
+                and text_filter.include_nonfiction is False
+            ):
+                # Return no texts if both fiction and nonfiction are excluded
+                query = query.where(models.Text.fiction is False)
+                query = query.where(models.Text.fiction is True)
+            elif text_filter.include_fiction is False:
+                query = query.where(models.Text.fiction is False)
+            elif text_filter.include_nonfiction is False:
+                query = query.where(models.Text.fiction is True)
             if text_filter.only_unplayed:
-                read_text_ids = models.History.objects(user_id=user.id).distinct("text_id")
+                read_text_ids = models.History.objects(user_id=user.id).distinct(
+                    "text_id"
+                )
                 query = query.where(models.Text.id.not_in(read_text_ids))
             if text_filter.keyword:
                 # find texts with the keyword in the title or author
-                query = query.where(models.Text.title.ilike(f"%{text_filter.keyword}%") | 
-                                    models.Text.author.ilike(f"%{text_filter.keyword}%"))
+                query = query.where(
+                    models.Text.title.ilike(f"%{text_filter.keyword}%")
+                    | models.Text.author.ilike(f"%{text_filter.keyword}%")
+                )
 
         return query
 

@@ -38,6 +38,7 @@ class TextFilter(BaseModel):
     only_unplayed: Optional[bool] = False
     keyword: Optional[str] = None
 
+
 class History(BaseModel):
     text_id: str
     game_mode: str

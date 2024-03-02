@@ -1,8 +1,13 @@
 import Box from "@mui/material/Box";
 import JetBrainsMonoText from "../Text/TextComponent";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
-import { FormControl, Link, MenuItem, OutlinedInput, Select, SelectChangeEvent, Tooltip } from "@mui/material";
-import StyledMultiSelect from "../MultiSelect/MultiSelect";
+import {
+  Link,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Tooltip,
+} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import StyledTextField from "../Textbox/StyledTextField";
 import DifficultyBox from "../Difficulty/DifficultyBox";
@@ -13,10 +18,13 @@ import {
   faGamepad,
 } from "@fortawesome/free-solid-svg-icons";
 import FictionBox from "../Fiction/Fiction";
-import { Text, TextFilter, UserAvailableTexts } from "../../api";
+import { Text, TextFilter } from "../../api";
 import { useState } from "react";
 
-export const SearchBar: React.FC<{ initialFilters: TextFilter, onUpdateFilters: (textFilter: TextFilter) => void}> = ({ initialFilters, onUpdateFilters }) => {
+export const SearchBar: React.FC<{
+  initialFilters: TextFilter;
+  onUpdateFilters: (textFilter: TextFilter) => void;
+}> = ({ initialFilters, onUpdateFilters }) => {
   const difficulty_options = ["any", "easy", "medium", "hard"];
 
   const [formData, setFormData] = useState({
@@ -24,29 +32,36 @@ export const SearchBar: React.FC<{ initialFilters: TextFilter, onUpdateFilters: 
     only_unplayed: initialFilters.only_unplayed,
     include_fiction: initialFilters.include_fiction,
     include_nonfiction: initialFilters.include_nonfiction,
-    difficulty: initialFilters.difficulty === "" ? "any" : initialFilters.difficulty,
+    difficulty:
+      initialFilters.difficulty === "" ? "any" : initialFilters.difficulty,
   });
 
-  const handleCheckOnlyUnplayed = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({...formData, only_unplayed: event.target.checked});
+  const handleCheckOnlyUnplayed = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFormData({ ...formData, only_unplayed: event.target.checked });
   };
 
-  const handleCheckIncludeFiction = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({...formData, include_fiction: event.target.checked});
+  const handleCheckIncludeFiction = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFormData({ ...formData, include_fiction: event.target.checked });
   };
 
-  const handleCheckIncludeNonFiction = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({...formData, include_nonfiction: event.target.checked});
+  const handleCheckIncludeNonFiction = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFormData({ ...formData, include_nonfiction: event.target.checked });
   };
 
   const handleSelectChange = (event: SelectChangeEvent<string>) => {
-    setFormData({...formData, difficulty: event.target.value});
+    setFormData({ ...formData, difficulty: event.target.value });
   };
 
   const handleUpdateFilters = () => {
     onUpdateFilters(formData);
-  }
-  
+  };
+
   return (
     <Box
       sx={{
@@ -73,7 +88,9 @@ export const SearchBar: React.FC<{ initialFilters: TextFilter, onUpdateFilters: 
           }}
           placeholder="Search for a text or author..."
           value={formData.keyword}
-          onChange={(e) => setFormData({...formData, keyword: e.target.value})}
+          onChange={(e) =>
+            setFormData({ ...formData, keyword: e.target.value })
+          }
         />
         <IconButton
           sx={{
@@ -121,8 +138,15 @@ export const SearchBar: React.FC<{ initialFilters: TextFilter, onUpdateFilters: 
             alignItems: "center",
           }}
         >
-          <JetBrainsMonoText text={"Only unplayed"} size={16} color={"#D9D9D9"} />
-          <StyledCheckbox checked={!!formData.only_unplayed} onChange={handleCheckOnlyUnplayed} />
+          <JetBrainsMonoText
+            text={"Only unplayed"}
+            size={16}
+            color={"#D9D9D9"}
+          />
+          <StyledCheckbox
+            checked={!!formData.only_unplayed}
+            onChange={handleCheckOnlyUnplayed}
+          />
         </Box>
         <Box
           sx={{
@@ -135,7 +159,10 @@ export const SearchBar: React.FC<{ initialFilters: TextFilter, onUpdateFilters: 
           }}
         >
           <JetBrainsMonoText text={"Fiction"} size={16} color={"#D9D9D9"} />
-          <StyledCheckbox checked={!!formData.include_fiction} onChange={handleCheckIncludeFiction} />
+          <StyledCheckbox
+            checked={!!formData.include_fiction}
+            onChange={handleCheckIncludeFiction}
+          />
         </Box>
         <Box
           sx={{
@@ -148,7 +175,10 @@ export const SearchBar: React.FC<{ initialFilters: TextFilter, onUpdateFilters: 
           }}
         >
           <JetBrainsMonoText text={"Non-fiction"} size={16} color={"#D9D9D9"} />
-          <StyledCheckbox checked={!!formData.include_nonfiction} onChange={handleCheckIncludeNonFiction} />
+          <StyledCheckbox
+            checked={!!formData.include_nonfiction}
+            onChange={handleCheckIncludeNonFiction}
+          />
         </Box>
         <Box
           sx={{
@@ -165,30 +195,28 @@ export const SearchBar: React.FC<{ initialFilters: TextFilter, onUpdateFilters: 
             value={formData.difficulty as string}
             label="Difficulty"
             onChange={handleSelectChange}
-            sx={
-              {
-                borderRadius: 5,
-                border: "3px solid #D9D9D9",
-                height: "39px",
-                backgroundColor: "#2C2E31",
+            sx={{
+              borderRadius: 5,
+              border: "3px solid #D9D9D9",
+              height: "39px",
+              backgroundColor: "#2C2E31",
+              color: "#D9D9D9",
+              fontFamily: "JetBrains Mono, monospace",
+              paddingLeft: "3px",
+              paddingRight: "3px",
+              marginLeft: "10px",
+              marginRight: "10px",
+              fontWeight: "bold",
+              "&:hover": {
+                borderColor: "#E2B714",
+              },
+              "&:hover .MuiSelect-icon": {
+                color: "#E2B714",
+              },
+              ".MuiSelect-icon": {
                 color: "#D9D9D9",
-                fontFamily: "JetBrains Mono, monospace",
-                paddingLeft: "3px",
-                paddingRight: "3px",
-                marginLeft: "10px",
-                marginRight: "10px",
-                fontWeight: "bold",
-                "&:hover": {
-                  borderColor: "#E2B714",
-                },
-                "&:hover .MuiSelect-icon": {
-                  color: "#E2B714",
-                },
-                ".MuiSelect-icon": {
-                  color: "#D9D9D9",
-                },
-                }
-              }
+              },
+            }}
           >
             {difficulty_options.map((diff) => (
               <MenuItem key={diff} value={diff}>
@@ -196,14 +224,21 @@ export const SearchBar: React.FC<{ initialFilters: TextFilter, onUpdateFilters: 
               </MenuItem>
             ))}
           </Select>
-          </Box>
+        </Box>
       </Box>
     </Box>
   );
 };
 
-export const ItemBoxHovered: React.FC<Text> = ({title, description, difficulty, fiction, source, author, image_url}) => {
-
+export const ItemBoxHovered: React.FC<Text> = ({
+  title,
+  description,
+  difficulty,
+  fiction,
+  source,
+  author,
+  image_url,
+}) => {
   return (
     <Box
       sx={{
@@ -403,16 +438,13 @@ export const ItemBoxHovered: React.FC<Text> = ({title, description, difficulty, 
 };
 
 export const ItemBox: React.FC<Text> = ({
-  id,
   title,
   description,
   difficulty,
   image_url,
   author,
   fiction,
-  source
 }) => {
-
   const truncatedDescription =
     description.length > 200
       ? description.substring(0, 200) + "..."
@@ -498,7 +530,11 @@ export const NoTexts: React.FC = () => {
         height: "30vh",
       }}
     >
-      <JetBrainsMonoText text={"No results found"} size={20} color={"#D9D9D9"} />
+      <JetBrainsMonoText
+        text={"No results found"}
+        size={20}
+        color={"#D9D9D9"}
+      />
     </Box>
   );
-}
+};

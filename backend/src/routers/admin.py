@@ -108,6 +108,9 @@ async def get_texts(
             fiction=text.fiction,
             difficulty=text.difficulty,
             word_count=text.word_count,
+            description=text.description,
+            author=text.author,
+            image_url=text.image_url,
             min_wpm=item.get("minWpm", 0),
             max_wpm=item.get("maxWpm", 0),
             average_wpm=int(item.get("avgWpm", 0)),
@@ -159,6 +162,9 @@ async def get_text(
         fiction=text.fiction,
         difficulty=text.difficulty,
         word_count=text.word_count,
+        description=text.description,
+        author=text.author,
+        image_url=text.image_url,
         min_wpm=item.get("minWpm", 0),
         max_wpm=item.get("maxWpm", 0),
         average_wpm=int(item.get("avgWpm", 0)),
@@ -381,6 +387,12 @@ async def generate_text(difficulty: str, fiction: bool):
         raise BadResponseFromOpenAI()
 
     text = json.loads(response)
+    text["image_url"] = ""
+    if text["gutenberg_link"]:
+        text[
+            "image_url"
+        ] = f"https://www.gutenberg.org/cache/epub/{text['gutenberg_link'].split('/')[-1]}/pg{text['gutenberg_link'].split('/')[-1]}-cover-medium.jpg"
+
     return schemas.TextCreateWithQuestions(
         title=text["title"],
         content=text["extract"],
@@ -397,6 +409,9 @@ async def generate_text(difficulty: str, fiction: bool):
         ],
         summary=text["summarised"],
         source=text["gutenberg_link"],
+        description="",
+        author=text["author"],
+        image_url=text["image_url"],
     )
 
 
@@ -420,6 +435,9 @@ async def approve_text(
         fiction=text_data.fiction,
         difficulty=text_data.difficulty,
         word_count=text_data.word_count,
+        description=text_data.description,
+        author=text_data.author,
+        image_url=text_data.image_url,
     )
     questions = [
         models.Question(
