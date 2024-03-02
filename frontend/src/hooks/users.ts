@@ -117,3 +117,13 @@ export function getHistories() {
     gcTime: 0,
   });
 }
+
+export function getHistory(historyId: string) {
+  const { userApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["users", "history", historyId],
+    queryFn: () => userApi.getHistory(historyId).then((res) => res.data),
+    gcTime: 0,
+  });
+}
