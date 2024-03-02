@@ -29,7 +29,6 @@ const AvailableTexts: React.FC = () => {
     only_unplayed: searchParams.get("unplayed") === "true" || false,
     keyword: searchParams.get("search") || "",
   });
-  console.log(textFilter);
   const pageSize = Number(page_size) || 10;
 
   const { data: newData } = getAvailableTexts(pageNum, pageSize, textFilter);

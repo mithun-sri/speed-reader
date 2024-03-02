@@ -135,12 +135,12 @@ async def get_user_available_texts(
                 and text_filter.include_nonfiction is False
             ):
                 # Return no texts if both fiction and nonfiction are excluded
-                query = query.where(models.Text.fiction is False)
-                query = query.where(models.Text.fiction is True)
+                query = query.where(models.Text.fiction == False)
+                query = query.where(models.Text.fiction == True)
             elif text_filter.include_fiction is False:
-                query = query.where(models.Text.fiction is False)
+                query = query.where(models.Text.fiction == False)
             elif text_filter.include_nonfiction is False:
-                query = query.where(models.Text.fiction is True)
+                query = query.where(models.Text.fiction == True)
             if text_filter.only_unplayed:
                 read_text_ids = models.History.objects(user_id=user.id).distinct(
                     "text_id"
