@@ -71,6 +71,12 @@ async def get_user_statistics(
     ]
     pipeline_graph = [
         {
+            "$match": {
+                "user_id": user.id,
+                "game_mode": game_mode,
+            }
+        },
+        {
             "$group": {
                 "_id": {"$dateToString": {"format": "%Y-%m-%d", "date": "$timestamp"}},
                 "avgWpm": {"$avg": "$average_wpm"},
