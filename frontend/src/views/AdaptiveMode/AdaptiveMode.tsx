@@ -14,8 +14,6 @@ const AdaptiveModeView = () => {
   const { setTextId, summarised } = useGameContext();
   const { data: text } = useNextText(summarised);
 
-  setTextId(text.id);
-
   const {
     resumeWebGazer,
     pauseWebGazer,
@@ -36,6 +34,13 @@ const AdaptiveModeView = () => {
       enableWebGazerListener();
     };
   }, []);
+
+  // TODO:
+  // This is a temporary fix to prevent the infinite loop while rendering this component.
+  // There may be a better way to do this if we restructure `GameContext`.
+  useEffect(() => {
+    setTextId(text.id);
+  }, [text]);
 
   const startAdaptiveModeGame = () => {
     // NOTE:
@@ -119,9 +124,21 @@ const AdaptiveModeTextDisplay: React.FC<{
   const maxCharactersPerLine = 60;
   const leftCheckpoint = 0.5;
   const rightCheckpoint = 0.75;
+
+  function calculateNextLineIndex(prevNextLineIndex: number): number {
+    let lineLength = 0;
+    for (let i = prevNextLineIndex; i < wordsArray.length; i++) {
+      lineLength += wordsArray[i].length;
+      if (lineLength > maxCharactersPerLine) {
+        return i - 1;
+      }
+    }
+    return wordsArray.length;
+  }
+
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
-  const [nextLineIndex, setNextLineIndex] = useState(0);
+  const [nextLineIndex, setNextLineIndex] = useState(calculateNextLineIndex(0));
   const [lastLineChangeTime, setLastLineChangeTime] = useState(Date.now());
   const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
   const { intervalWpms, setIntervalWpms, setAverageWpm } = useGameContext();
@@ -147,7 +164,7 @@ const AdaptiveModeTextDisplay: React.FC<{
       console.log("intervalWpms: ");
       console.log(intervalWpms);
     }
-  }, [highlightedIndex, wordsArray.length]);
+  }, [highlightedIndex]);
 
   // record WPM every 2.5 seconds
   useEffect(() => {
@@ -156,44 +173,19 @@ const AdaptiveModeTextDisplay: React.FC<{
     }, 2500);
 
     return () => clearInterval(interval);
-  }, [wpm, intervalWpms]);
+  }, [wpm]);
 
   useEffect(() => {
-    if (
-      nextLineIndex == 0 ||
-      (hitLeftCheckpoint && gazeX > window.innerWidth * rightCheckpoint) ||
-      // NOTE:
-      // Sometimes WebGazer's predictions are so-off that it never proceeds to the next line.
-      // Since we're using WebGazer merely as a guide for the user's WPM,
-      // I think it makes sense to proceed to the next line even if the above checkpoint conditions are not strictly met.
-      // Feel free to adjust/remove this condition as you see fit.
-      highlightedIndex == nextLineIndex - 1
-    ) {
-      setNextLineIndex((prevNextLineIndex) => {
-        const timeNow = Date.now();
-        setWpm(
-          (nextLineIndex - currentLineIndex) /
-            ((timeNow - lastLineChangeTime) / 60000),
-        );
-        setLastLineChangeTime(timeNow);
-        setHighlightedIndex(prevNextLineIndex);
-        setCurrentLineIndex(prevNextLineIndex);
-        setHitLeftCheckpoint(false);
-
-        let lineLength = wordsArray[prevNextLineIndex].length;
-        for (let i = prevNextLineIndex + 1; i < wordsArray.length; i++) {
-          lineLength += wordsArray[i].length;
-          if (lineLength > maxCharactersPerLine) {
-            return i - 1;
-          }
-        }
-        // NOTE:
-        // We used to return `prevNextLineIndex` here,
-        // but it was preventing the last line to be displayed when it's shorter than `maxCharactersPerLine`.
-        // TODO:
-        // We may need to update checkpoint conditions if we hit this case.
-        return wordsArray.length - 1;
-      });
+    if (hitLeftCheckpoint && gazeX > window.innerWidth * rightCheckpoint) {
+      const timeNow = Date.now();
+      setWpm(
+        (nextLineIndex - currentLineIndex) /
+          ((timeNow - lastLineChangeTime) / 60000),
+      );
+      setLastLineChangeTime(timeNow);
+      setCurrentLineIndex(nextLineIndex);
+      setNextLineIndex(calculateNextLineIndex(nextLineIndex));
+      setHitLeftCheckpoint(false);
     }
 
     if (!hitLeftCheckpoint) {
@@ -202,18 +194,18 @@ const AdaptiveModeTextDisplay: React.FC<{
   }, [gazeX]);
 
   useEffect(() => {
+    console.log("wpm: ", wpm);
     const updateHighlightedIndex = setInterval(() => {
-      setHighlightedIndex((prevIndex) => {
-        return prevIndex < nextLineIndex - 1
-          ? prevIndex + 1
-          : nextLineIndex - 1;
-      });
+      // NOTE:
+      // Take `prevHighlightedIndex` as an argument
+      // to avoid capturing the stale value of `highlightedIndex` in the callback closure.
+      setHighlightedIndex((prevHighlightedIndex) =>
+        Math.min(prevHighlightedIndex + 1, nextLineIndex - 1),
+      );
     }, 60000 / wpm);
 
-    return () => {
-      clearInterval(updateHighlightedIndex);
-    };
-  }, [text, wpm]);
+    return () => clearInterval(updateHighlightedIndex);
+  }, [wpm]);
 
   return (
     <Box>

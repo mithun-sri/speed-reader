@@ -10,7 +10,6 @@ const WebGazerCalibration = () => {
   const {
     initialiseWebGazer,
     turnOffWebGazerCam,
-    pauseWebGazer,
     setNeedsCalibration,
     turnOffPredictionPoints,
     webGazerInitialised,
@@ -48,7 +47,6 @@ const WebGazerCalibration = () => {
     return () => {
       window.removeEventListener("load", handleLoad);
       turnOffWebGazerCam();
-      pauseWebGazer();
       setNeedsCalibration(false);
     };
   }, []);
