@@ -81,7 +81,7 @@ const TextSelect = () => {
                 fontSize: fontSize / 6.3,
                 color: "#D1D0C5",
                 justifySelf: "flex-start",
-                marginBottom: "4vh",
+                marginBottom: "6vh",
               }}
             >
               {"choose text type"}

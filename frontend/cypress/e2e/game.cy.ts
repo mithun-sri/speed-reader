@@ -20,8 +20,7 @@ describe("game spec", () => {
     cy.contains("I accept").click();
 
     // Select the game mode.
-    cy.get("[data-cy=left-arrow]").click();
-    cy.contains("Standard Mode").click();
+    cy.contains("Standard").click();
     cy.contains("Original").click();
     cy.contains("Medium").click();
     cy.contains("Word by Word").click();

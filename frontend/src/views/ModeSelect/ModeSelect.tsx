@@ -64,7 +64,7 @@ const ModeSelectView = () => {
               alignItems: "center",
               width: "85%",
               height: "70vh",
-              justifyContent: "space-evenly",
+              justifyContent: "center",
             }}
           >
             <Box
@@ -73,6 +73,7 @@ const ModeSelectView = () => {
                 fontWeight: "bolder",
                 fontSize: fontSize / 6.3,
                 color: "#D1D0C5",
+                marginBottom: "6vh",
               }}
             >
               {"choose game mode"}
