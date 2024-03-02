@@ -1,6 +1,7 @@
 import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  Box,
   IconButton,
   MenuItem,
   Paper,
@@ -127,106 +128,121 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
   });
 
   return (
-    <Paper
-      sx={{
-        backgroundColor: "#323437",
-        fontFamily: "JetBrains Mono, monospace",
-        fontSize: "18px",
-      }}
-    >
-      <StyledFormControl>
-        <StyledInputLabel>Mode Filter</StyledInputLabel>
-        <StyledSelect value={modeFilter} onChange={handleModeFilterChange}>
-          <MenuItem value="">All</MenuItem>
-          <MenuItem value="standard">Standard</MenuItem>
-          <MenuItem value="adaptive">Adaptive</MenuItem>
-          <MenuItem value="summarised">Summarised</MenuItem>
-        </StyledSelect>
-      </StyledFormControl>
-      <StyledFormControl>
-        <StyledInputLabel>Diff Filter</StyledInputLabel>
-        <StyledSelect
-          value={difficultyFilter}
-          onChange={handleDifficultyFilterChange}
+    <>
+      {rows.length === 0 ? (
+        <Box
+          sx={{
+            fontFamily: "JetBrains Mono, monospace",
+            color: "#fff",
+            fontSize: "1.4vw",
+            margin: "5.4vw 27vw",
+          }}
         >
-          <MenuItem value="">All</MenuItem>
-          <MenuItem value="easy">Easy</MenuItem>
-          <MenuItem value="med">Medium</MenuItem>
-          <MenuItem value="hard">Hard</MenuItem>
-        </StyledSelect>
-      </StyledFormControl>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <StyledTableCell
-                  key={column.id}
-                  sx={{
-                    fontSize: 25,
-                    fontWeight: 1000,
-                  }}
-                >
-                  {column.type === "button" ? (
-                    column.label
-                  ) : (
-                    <TableSortLabel
-                      active={sortColumn === column.id}
-                      direction={
-                        sortColumn === column.id ? sortDirection : "asc"
-                      }
-                      onClick={() => handleSort(column.id)}
-                    >
-                      {column.label}
-                    </TableSortLabel>
-                  )}
-                </StyledTableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredRows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow key={row.id}>
+          No History Available.
+        </Box>
+      ) : (
+        <Paper
+          sx={{
+            backgroundColor: "#323437",
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: "18px",
+          }}
+        >
+          <StyledFormControl>
+            <StyledInputLabel>Mode Filter</StyledInputLabel>
+            <StyledSelect value={modeFilter} onChange={handleModeFilterChange}>
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="standard">Standard</MenuItem>
+              <MenuItem value="adaptive">Adaptive</MenuItem>
+              <MenuItem value="summarised">Summarised</MenuItem>
+            </StyledSelect>
+          </StyledFormControl>
+          <StyledFormControl>
+            <StyledInputLabel>Diff Filter</StyledInputLabel>
+            <StyledSelect
+              value={difficultyFilter}
+              onChange={handleDifficultyFilterChange}
+            >
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="easy">Easy</MenuItem>
+              <MenuItem value="med">Medium</MenuItem>
+              <MenuItem value="hard">Hard</MenuItem>
+            </StyledSelect>
+          </StyledFormControl>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
                   {columns.map((column) => (
-                    <StyledTableCell key={column.id}>
+                    <StyledTableCell
+                      key={column.id}
+                      sx={{
+                        fontSize: 25,
+                        fontWeight: 1000,
+                      }}
+                    >
                       {column.type === "button" ? (
-                        <IconButton
-                          component={Link}
-                          to={row.page}
-                          sx={{
-                            color: "#FFFFFF",
-                            "& :hover": {
-                              color: "#E2B714",
-                            },
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faSquareArrowUpRight}
-                            className="fa-table-page-icon"
-                          />
-                        </IconButton>
+                        column.label
                       ) : (
-                        // Ensure only valid column IDs are used for accessing properties of Row objects
-                        row[column.id as keyof Row]
+                        <TableSortLabel
+                          active={sortColumn === column.id}
+                          direction={
+                            sortColumn === column.id ? sortDirection : "asc"
+                          }
+                          onClick={() => handleSort(column.id)}
+                        >
+                          {column.label}
+                        </TableSortLabel>
                       )}
                     </StyledTableCell>
                   ))}
                 </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <StyledTablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        count={filteredRows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+              </TableHead>
+              <TableBody>
+                {filteredRows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row) => (
+                    <TableRow key={row.id}>
+                      {columns.map((column) => (
+                        <StyledTableCell key={column.id}>
+                          {column.type === "button" ? (
+                            <IconButton
+                              component={Link}
+                              to={row.page}
+                              sx={{
+                                color: "#FFFFFF",
+                                "& :hover": {
+                                  color: "#E2B714",
+                                },
+                              }}
+                            >
+                              <FontAwesomeIcon
+                                icon={faSquareArrowUpRight}
+                                className="fa-table-page-icon"
+                              />
+                            </IconButton>
+                          ) : (
+                            // Ensure only valid column IDs are used for accessing properties of Row objects
+                            row[column.id as keyof Row]
+                          )}
+                        </StyledTableCell>
+                      ))}
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <StyledTablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            count={filteredRows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+      )}
+    </>
   );
 };
 

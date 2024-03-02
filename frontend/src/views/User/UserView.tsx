@@ -75,24 +75,24 @@ const StatisticsBox: React.FC = () => {
   const { data: newData } = getUserStatistics(mode);
   const userStatisticsData = newData;
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const { data: newData } = getUserStatistics(mode);
-  //     setUserStatisticsData(newData);
-  //   };
-
-  //   fetchData();
-  // }, [mode]);
-
   return (
     <>
-      {userStatisticsData ? (
+      {userStatisticsData.average_wpm !== 0 ? (
         <>
           <UserStats userData={userStatisticsData}></UserStats>
           <UserGraph mode={mode} setMode={setMode}></UserGraph>
         </>
       ) : (
-        <Box sx={{ color: "#fff" }}>No Statistics Available</Box>
+        <Box
+          sx={{
+            fontFamily: "JetBrains Mono, monospace",
+            color: "#fff",
+            fontSize: "1.4vw",
+            margin: "5.4vw 26vw",
+          }}
+        >
+          No Statistics Available.
+        </Box>
       )}
     </>
   );
