@@ -2,7 +2,7 @@
 
 exports[`Matches snapshots 1`] = `
 <div
-  className="MuiFormControl-root css-1t50edp-MuiFormControl-root"
+  className="MuiFormControl-root css-zhwqls-MuiFormControl-root"
 />
 `;
 
@@ -14,7 +14,7 @@ exports[`Matches snapshots 2`] = `
 
 exports[`Matches snapshots 3`] = `
 <div
-  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary css-bil47x-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
+  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary css-1x9ivlu-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
   onClick={[Function]}
 >
   <div

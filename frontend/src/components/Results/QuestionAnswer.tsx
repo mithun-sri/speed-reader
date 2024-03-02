@@ -73,6 +73,7 @@ const QuestionAnswer: React.FC<{
               color: "#fff",
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               textAlign: "center",
               marginBottom: "40px",
             }}

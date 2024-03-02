@@ -24,6 +24,7 @@ import Login from "./views/User/LogIn";
 import SignUp from "./views/User/SignUp";
 import UserView from "./views/User/UserView";
 import WebGazerCalibration from "./views/WebGazerCalibration/WebGazerCalibration";
+import HistoricalResultsPage from "./views/Results/HistoricalResultPage";
 
 function App() {
   const queryClient = new QueryClient();
@@ -50,6 +51,10 @@ function App() {
                             element={<WebGazerCalibration />}
                           />
                           <Route path="/user" element={<UserView />} />
+                          <Route
+                            path="/user/history/:text_id"
+                            element={<HistoricalResultsPage />}
+                          />
                           <Route
                             path="/available-texts"
                             element={<AvailableTexts />}
