@@ -7,6 +7,8 @@ interface WebGazerContextType {
   setwebGazerInitialised: (webGazerInitialised: boolean) => void;
   needsCalibration: boolean;
   setNeedsCalibration: (needsCalibration: boolean) => void;
+  calibratedBefore: boolean;
+  setCalibratedBefore: (calibratedBefore: boolean) => void;
   manualRecalibration: boolean;
   setManualRecalibration: (manualRecalibration: boolean) => void;
   initialiseWebGazer: () => void;
@@ -14,6 +16,7 @@ interface WebGazerContextType {
   restartWebGazer: () => void;
   turnOffWebGazerCam: () => void;
   turnOffPredictionPoints: () => void;
+  turnOnPredictionPoints: () => void;
   pauseWebGazer: () => void;
   resumeWebGazer: () => void;
   setWebGazerListener: (listener: WebGazerListener) => void;
@@ -26,6 +29,8 @@ const WebGazerContext = createContext<WebGazerContextType>({
   setwebGazerInitialised: () => {},
   needsCalibration: false,
   setNeedsCalibration: () => {},
+  calibratedBefore: false,
+  setCalibratedBefore: () => {},
   manualRecalibration: false,
   setManualRecalibration: () => {},
   initialiseWebGazer: () => {},
@@ -33,6 +38,7 @@ const WebGazerContext = createContext<WebGazerContextType>({
   restartWebGazer: () => {},
   turnOffWebGazerCam: () => {},
   turnOffPredictionPoints: () => {},
+  turnOnPredictionPoints: () => {},
   pauseWebGazer: () => {},
   resumeWebGazer: () => {},
   setWebGazerListener: (_listener) => {},
@@ -57,6 +63,7 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [webGazerInitialised, setwebGazerInitialised] =
     useState<boolean>(false);
   const [needsCalibration, setNeedsCalibration] = useState<boolean>(false);
+  const [calibratedBefore, setCalibratedBefore] = useState<boolean>(false);
   const [manualRecalibration, setManualRecalibration] =
     useState<boolean>(false);
 
@@ -69,9 +76,11 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
     ) {
       const webgazer = (window as any).webgazer;
       if (webgazer !== undefined) {
+        setCalibratedBefore(false);
         await restartWebGazer();
         await resumeWebGazer();
         await turnOnWebGazerCam();
+        await turnOnPredictionPoints();
       }
       return;
     }
@@ -135,12 +144,9 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
   const turnOffWebGazerCam = async () => {
     const webgazer = (window as any).webgazer;
     if (webgazer !== undefined) {
-      await webgazer.showVideoPreview(false);
-
       const videoContainer = document.getElementById("webgazerVideoContainer");
       if (videoContainer) {
-        videoContainer.style.display = "none";
-        videoContainer.style.pointerEvents = "none";
+        videoContainer.style.opacity = "0";
       }
     }
   };
@@ -148,12 +154,9 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
   const turnOnWebGazerCam = async () => {
     const webgazer = (window as any).webgazer;
     if (webgazer !== undefined) {
-      await webgazer.showVideoPreview(true);
-
       const videoContainer = document.getElementById("webgazerVideoContainer");
       if (videoContainer) {
-        videoContainer.style.display = "block";
-        videoContainer.style.pointerEvents = "auto";
+        videoContainer.style.opacity = "1";
       }
     }
   };
@@ -162,6 +165,13 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
     const webgazer = (window as any).webgazer;
     if (webgazer !== undefined) {
       await webgazer.showPredictionPoints(false);
+    }
+  };
+
+  const turnOnPredictionPoints = async () => {
+    const webgazer = (window as any).webgazer;
+    if (webgazer !== undefined) {
+      await webgazer.showPredictionPoints(true);
     }
   };
 
@@ -186,6 +196,8 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
         setwebGazerInitialised,
         needsCalibration,
         setNeedsCalibration,
+        calibratedBefore,
+        setCalibratedBefore,
         manualRecalibration,
         setManualRecalibration,
         initialiseWebGazer,
@@ -193,6 +205,7 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
         restartWebGazer,
         turnOffWebGazerCam,
         turnOffPredictionPoints,
+        turnOnPredictionPoints,
         pauseWebGazer,
         resumeWebGazer,
         setWebGazerListener: setWebGazerListner,
