@@ -1,5 +1,6 @@
 import {
   faArrowsToEye,
+  faBook,
   faFileLines,
   faStopwatch,
   faUser,

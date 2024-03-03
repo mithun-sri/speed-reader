@@ -10,10 +10,8 @@ const WebGazerCalibration = () => {
   const {
     initialiseWebGazer,
     turnOffWebGazerCam,
-    pauseWebGazer,
     setNeedsCalibration,
     turnOffPredictionPoints,
-    disableWebGazerListener,
     webGazerInitialised,
     manualRecalibration,
     setManualRecalibration,
@@ -33,11 +31,6 @@ const WebGazerCalibration = () => {
     Pt9: 0,
   });
 
-  // // TODO: Remove after debugging.
-  // turnOffPredictionPoints();
-  // const { incrementCurrentStage } = useGameScreenContext();
-  // incrementCurrentStage();
-
   useEffect(() => {
     const handleLoad = () => {
       initialiseWebGazer();
@@ -54,7 +47,6 @@ const WebGazerCalibration = () => {
     return () => {
       window.removeEventListener("load", handleLoad);
       turnOffWebGazerCam();
-      pauseWebGazer();
       setNeedsCalibration(false);
     };
   }, []);
@@ -262,13 +254,6 @@ const WebGazerCalibration = () => {
               }}
               onClick={() => {
                 turnOffPredictionPoints();
-
-                // NOTE:
-                // This is a temporary fix to prevent the even loop from being busy
-                // and not allowing the setTimeout to break in.
-                disableWebGazerListener();
-                pauseWebGazer();
-
                 context.incrementCurrentStage();
               }}
               style={{ zIndex: 10 }}

@@ -52,7 +52,7 @@ function App() {
                           />
                           <Route path="/user" element={<UserView />} />
                           <Route
-                            path="/user/history/:text_id"
+                            path="/user/history/:id"
                             element={<HistoricalResultsPage />}
                           />
                           <Route

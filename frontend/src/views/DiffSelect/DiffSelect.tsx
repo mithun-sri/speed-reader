@@ -50,7 +50,7 @@ const DiffSelect = () => {
           exit={{ opacity: 0 }}
         >
           <Carousel
-            title="choose text difficulty."
+            title="Choose text difficulty"
             options={options}
             returnSelectedIndex={handleValueFromCarousel}
             defaultIdx={
