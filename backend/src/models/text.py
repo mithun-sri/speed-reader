@@ -20,6 +20,9 @@ class Text(ULIDMixin, TimestampMixin, Base):
     fiction: Mapped[bool]
     word_count: Mapped[int]
     difficulty: Mapped[str]
+    author: Mapped[str]
+    image_url: Mapped[str]
+    description: Mapped[str]
 
     questions: Mapped[list["Question"]] = relationship(
         back_populates="text",
