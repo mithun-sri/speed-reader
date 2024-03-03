@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 /*
   Mode 1.3 (Word): Standard mode displaying the text one word at a time 
@@ -10,63 +11,73 @@ const PeripheralTextDisplay: React.FC<{
   wpm: number;
   size?: number;
 }> = ({ text, wpm }) => {
+  const { incrementCurrentStage } = useGameScreenContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollDuration, setScrollDuration] = useState(0);
-  const lineHeight = 30; // Line height in pixels (Used to calculate scroll speed)
+  const lineHeight = 30; // in pixels (Used to calculate scroll speed)
+  const containerWidth = 900; // in pixels
 
   useEffect(() => {
     const calculateScrollDuration = () => {
       if (containerRef.current) {
-        const wordsPerLine = 10; // Assuming 10 words per line
+        // Assuming 10 words per line. This assumption can be made due to the fixed width of the container.
+        const wordsPerLine = 10;
         const words = text.split(" ").length;
         const lines = Math.ceil(words / wordsPerLine); // Estimate number of lines
-        const containerHeight = lines * lineHeight; // Calculate container height ------- 120px
+        const textHeight = lines * lineHeight; // Calculate container height taken up by the text
 
-        const wordsPerSecond = wpm / 60; // Convert WPM to words per second
-        const scrollSpeed = containerHeight / wordsPerSecond; // Calculate scroll speed
-        console.log("container height: " + containerHeight);
+        const wordsPerSecond = wpm / 60;
+        const linesPerSecond = wordsPerSecond / 10;
+        const scrollSpeed = textHeight / linesPerSecond;
+        console.log("container height: " + textHeight);
 
-        const duration = scrollSpeed / containerHeight; // Calculate scroll duration
+        const duration = (textHeight * 20) / scrollSpeed; // Calculate scroll duration
         setScrollDuration(duration);
         console.log("duration:" + duration);
       }
     };
 
     calculateScrollDuration();
-  }, [text, wpm]);
+  }, [text, wpm, scrollDuration]);
+
+  const handleAnimationComplete = () => {
+    // Call incrementCurrentStage function when game ends
+    // incrementCurrentStage();
+  };
 
   return (
     <div
       ref={containerRef}
       style={{
-        width: "1000px", // Width is fixed to enforce ~10 words per line
-        height: "100vh", // Adjust this height as needed
+        width: `${containerWidth}px`, // Width is fixed to enforce ~10 words per line
+        height: `200px`, // Height is fixed
         position: "relative",
+        display: "flex",
+        alignItems: "center",
+        overflow: "hidden",
+        backgroundColor: "green",
       }}
     >
       <motion.p
         initial={{ translateY: "100%" }}
         animate={{ translateY: "-200%" }}
-        transition={{ duration: scrollDuration, ease: "linear" }}
+        transition={{ duration: 10, ease: "linear" }}
         style={{
-          fontSize: "20px",
+          fontSize: "22px",
           fontFamily: "JetBrains Mono, monospace",
           color: "#D1D0C5",
           fontWeight: "bolder",
           textAlign: "left",
           lineHeight: `${lineHeight}px`,
-          position: "absolute",
-          bottom: 0,
-          left: 0,
+          position: "relative",
           margin: 0, // Remove margin for accurate scrolling
         }}
+        onAnimationComplete={handleAnimationComplete}
       >
         {text}
       </motion.p>
     </div>
   );
 };
-// width: "1000px",
-// height: "100vh", // Adjust this height as needed
 
 export default PeripheralTextDisplay;
