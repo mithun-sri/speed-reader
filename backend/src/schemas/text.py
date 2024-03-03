@@ -14,6 +14,9 @@ class TextBase(BaseModel):
     fiction: bool  # TODO: Rename to `is_fiction`
     difficulty: str
     word_count: int
+    description: str
+    author: str
+    image_url: str
 
 
 class Text(TextBase):

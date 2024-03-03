@@ -1,21 +1,12 @@
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 
-import { STANDARD_MODE } from "../../common/constants";
-
 const CountdownComponent: React.FC<{
   duration: number;
-  mode?: string;
   onCountdownFinish?: () => void;
-}> = ({ duration, mode, onCountdownFinish }) => {
+}> = ({ duration, onCountdownFinish }) => {
   const [count, setCount] = useState(duration);
   const [fontSize, setFontSize] = useState(calculateFontSize());
-
-  // Change instruction text according to the mode
-  let instruction: string = "read as many words as you can.";
-  if (mode === STANDARD_MODE) {
-    instruction = "Get ready.";
-  }
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {
@@ -80,7 +71,7 @@ const CountdownComponent: React.FC<{
           fontWeight: "bolder",
         }}
       >
-        {instruction}
+        Get ready
       </Box>
       <Box
         sx={{

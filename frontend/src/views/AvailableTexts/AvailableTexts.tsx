@@ -1,56 +1,94 @@
 import Box from "@mui/material/Box";
 import Header from "../../components/Header/Header";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import StyledPagination from "../../components/Pagination/Pagination";
 import {
   ItemBoxHovered,
   ItemBox,
   SearchBar,
+  NoTexts,
 } from "../../components/TextCards/AvailableTextCards";
+import { getAvailableTexts } from "../../hooks/users";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { TextFilter } from "../../api";
 
 const AvailableTexts: React.FC = () => {
+  const { page } = useParams();
+  const [pageNum, setPageNum] = useState(Number(page) || 1);
+  const [customSearch, setCustomSearch] = useState(false);
+
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const [textFilter, setTextFilter] = useState<TextFilter>({
+    difficulty: searchParams.get("difficulty") || "",
+    include_fiction:
+      searchParams.get("fiction") === "true" || !searchParams.get("fiction"),
+    include_nonfiction:
+      searchParams.get("nonfiction") === "true" ||
+      !searchParams.get("nonfiction"),
+    only_unplayed: searchParams.get("unplayed") === "true" || false,
+    keyword: searchParams.get("search") || "",
+  });
+
   const pageSize = 10;
-  const [page, setPage] = useState(1);
-  const numPages = 10;
-  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value);
+  const { data: newData, refetch } = getAvailableTexts(
+    pageNum,
+    pageSize,
+    textFilter,
+  );
+  const [hoveredIndex, setHoveredIndex] = useState(-1);
+
+  const availableTexts = newData;
+  const numPages = Math.ceil(newData.total_texts / newData.page_size);
+
+  const handleChange = async (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    let base = `/available-texts/${value}`;
+    if (customSearch) {
+      base += `?difficulty=${textFilter.difficulty}`;
+      base += `&fiction=${textFilter.include_fiction}`;
+      base += `&nonfiction=${textFilter.include_nonfiction}`;
+      base += `&search=${textFilter.keyword}`;
+    }
+    navigate(base, { replace: true });
+    setPageNum(value);
   };
-  // const [texts, setTexts] = useState<TextProps[]>([]);
-  const texts = [
-    {
-      title: "The Great Gatsby",
-      description:
-        "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on Long Island, near New York City, the novel depicts first-person narrator Nick Carraway's interactions with mysterious millionaire Jay Gatsby and Gatsby's obsession to reunite with his former lover, Daisy Buchanan.",
-      difficulty: "Easy",
-      image:
-        "https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg",
-      author: "F. Scott Fitzgerald",
-      is_fiction: true,
-      source: "https://www.gutenberg.org/ebooks/64317",
-    },
-    {
-      title: "Pride and Prejudice",
-      description:
-        "Pride and Prejudice is a romantic novel of manners written by Jane Austen in 1813. The novel follows the character development of Elizabeth Bennet, the dynamic protagonist of the book who learns about the repercussions of hasty judgments and comes to appreciate the difference between superficial goodness and actual goodness.",
-      difficulty: "Med",
-      image:
-        "https://www.gutenberg.org/cache/epub/1342/pg1342.cover.medium.jpg",
-      author: "Jane Austen",
-      is_fiction: true,
-      source: "https://www.gutenberg.org/ebooks/1342",
-    },
-    {
-      title: "Middlemarch",
-      description:
-        "Middlemarch, A Study of Provincial Life is a novel by the English author George Eliot (Mary Anne Evans), first published in eight installments (volumes) during 1871–72. The novel is set in the fictitious Midlands town of Middlemarch during 1829–32, and it comprises several distinct (though intersecting) stories and a large cast of characters.",
-      difficulty: "Hard",
-      image: "https://www.gutenberg.org/cache/epub/145/pg145.cover.medium.jpg",
-      author: "George Eliot",
-      is_fiction: true,
-      source: "https://www.gutenberg.org/ebooks/145",
-    },
-  ];
+
+  const handleUpdatedFilters = async (newFilters: TextFilter) => {
+    setTextFilter(newFilters);
+    let base = `/available-texts/1`;
+    const queryParams = [];
+
+    queryParams.push(`difficulty=${newFilters.difficulty}`);
+    queryParams.push(`fiction=${newFilters.include_fiction}`);
+    queryParams.push(`nonfiction=${newFilters.include_nonfiction}`);
+
+    if (newFilters.only_unplayed) {
+      queryParams.push(`unplayed=${newFilters.only_unplayed}`);
+    }
+
+    if (newFilters.keyword) {
+      queryParams.push(`search=${newFilters.keyword}`);
+    }
+
+    if (queryParams.length > 0) {
+      base += `?${queryParams.join("&")}`;
+    }
+    setCustomSearch(true);
+    navigate(base, { replace: true });
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await refetch();
+    };
+
+    fetchData();
+  }, [pageNum, textFilter, refetch]);
 
   return (
     <Box
@@ -69,7 +107,10 @@ const AvailableTexts: React.FC = () => {
           transition={{ duration: 1 }}
           exit={{ opacity: 0 }}
         >
-          <SearchBar />
+          <SearchBar
+            initialFilters={textFilter}
+            onUpdateFilters={handleUpdatedFilters}
+          />
           <Box
             sx={{
               display: "flex",
@@ -79,18 +120,16 @@ const AvailableTexts: React.FC = () => {
               alignItems: "center",
             }}
           >
-            {texts
-              .slice((page - 1) * pageSize, page * pageSize)
-              .map((text, index) => {
-                const [isHovered, setIsHovered] = useState(false);
+            {availableTexts.texts.length > 0 ? (
+              availableTexts.texts.slice(0, pageSize).map((text, index) => {
                 return (
                   <Box
                     key={index}
                     onMouseEnter={() => {
-                      setIsHovered(true);
+                      setHoveredIndex(index);
                     }}
                     onMouseLeave={() => {
-                      setIsHovered(false);
+                      setHoveredIndex(-1);
                     }}
                     sx={{
                       width: "60%",
@@ -101,17 +140,20 @@ const AvailableTexts: React.FC = () => {
                     }}
                   >
                     <ItemBox
-                      key={index}
+                      id={text.id}
                       title={text.title}
+                      content={text.content}
+                      summary={text.summary}
+                      word_count={text.word_count}
                       description={text.description}
                       difficulty={text.difficulty}
-                      image={text.image}
+                      image_url={text.image_url}
                       author={text.author}
-                      is_fiction={text.is_fiction}
+                      fiction={text.fiction}
                       source={text.source}
                     />
                     <AnimatePresence mode="wait">
-                      {isHovered && (
+                      {hoveredIndex == index && (
                         <motion.div
                           key={index + "hovered"}
                           initial={{ opacity: 0 }}
@@ -130,12 +172,16 @@ const AvailableTexts: React.FC = () => {
                           }}
                         >
                           <ItemBoxHovered
+                            id={text.id}
                             title={text.title}
+                            content={text.content}
+                            summary={text.summary}
+                            word_count={text.word_count}
                             description={text.description}
                             difficulty={text.difficulty}
-                            image={text.image}
+                            image_url={text.image_url}
                             author={text.author}
-                            is_fiction={text.is_fiction}
+                            fiction={text.fiction}
                             source={text.source}
                           />
                         </motion.div>
@@ -143,9 +189,16 @@ const AvailableTexts: React.FC = () => {
                     </AnimatePresence>
                   </Box>
                 );
-              })}
+              })
+            ) : (
+              <NoTexts />
+            )}
           </Box>
-          <StyledPagination count={numPages} onChange={handleChange} />
+          <StyledPagination
+            page={pageNum}
+            count={numPages}
+            onChange={handleChange}
+          />
         </motion.div>
       </AnimatePresence>
     </Box>

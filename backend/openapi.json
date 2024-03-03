@@ -736,7 +736,7 @@
       }
     },
     "/users/current/available_texts": {
-      "get": {
+      "post": {
         "tags": [
           "user"
         ],
@@ -785,12 +785,15 @@
           "content": {
             "application/json": {
               "schema": {
-                "allOf": [
+                "anyOf": [
                   {
-                    "$ref": "#/components/schemas/Body_get_user_available_texts"
+                    "$ref": "#/components/schemas/TextFilter"
+                  },
+                  {
+                    "type": "null"
                   }
                 ],
-                "title": "Body"
+                "title": "Text Filter"
               }
             }
           }
@@ -1361,32 +1364,6 @@
         ],
         "title": "Answer"
       },
-      "Body_get_user_available_texts": {
-        "properties": {
-          "text_filter": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/TextFilter"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "text_sort": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/TextSort"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          }
-        },
-        "type": "object",
-        "title": "Body_get_user_available_texts"
-      },
       "Body_login_user": {
         "properties": {
           "username": {
@@ -1846,6 +1823,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -1860,6 +1849,9 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "id"
         ],
         "title": "Text"
@@ -1901,6 +1893,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "questions": {
             "items": {
               "$ref": "#/components/schemas/QuestionCreate"
@@ -1918,23 +1922,15 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "questions"
         ],
         "title": "TextCreateWithQuestions"
       },
       "TextFilter": {
         "properties": {
-          "game_mode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Game Mode"
-          },
           "difficulty": {
             "anyOf": [
               {
@@ -1945,28 +1941,57 @@
               }
             ],
             "title": "Difficulty"
+          },
+          "include_fiction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Include Fiction",
+            "default": true
+          },
+          "include_nonfiction": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Include Nonfiction",
+            "default": true
+          },
+          "only_unplayed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Only Unplayed",
+            "default": false
+          },
+          "keyword": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keyword"
           }
         },
         "type": "object",
         "title": "TextFilter"
-      },
-      "TextSort": {
-        "properties": {
-          "field": {
-            "type": "string",
-            "title": "Field"
-          },
-          "ascending": {
-            "type": "boolean",
-            "title": "Ascending",
-            "default": false
-          }
-        },
-        "type": "object",
-        "required": [
-          "field"
-        ],
-        "title": "TextSort"
       },
       "TextWithQuestions": {
         "properties": {
@@ -2005,6 +2030,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -2026,6 +2063,9 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "id",
           "questions"
         ],
@@ -2068,6 +2108,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -2105,6 +2157,9 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "id",
           "questions",
           "min_wpm",
@@ -2151,6 +2206,18 @@
             "type": "integer",
             "title": "Word Count"
           },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "author": {
+            "type": "string",
+            "title": "Author"
+          },
+          "image_url": {
+            "type": "string",
+            "title": "Image Url"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -2181,6 +2248,9 @@
           "fiction",
           "difficulty",
           "word_count",
+          "description",
+          "author",
+          "image_url",
           "id",
           "min_wpm",
           "max_wpm",

@@ -38,15 +38,12 @@ class UserAvailableTexts(BaseModel):
     total_texts: int
 
 
-# TODO: Move the schemas below to where appropriate.
-class TextSort(BaseModel):
-    field: str
-    ascending: bool = False
-
-
 class TextFilter(BaseModel):
-    game_mode: Optional[str] = None
     difficulty: Optional[str] = None
+    include_fiction: Optional[bool] = True
+    include_nonfiction: Optional[bool] = True
+    only_unplayed: Optional[bool] = False
+    keyword: Optional[str] = None
 
 
 class HistoryBase(BaseModel):

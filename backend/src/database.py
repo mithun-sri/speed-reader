@@ -71,7 +71,7 @@ def seed_database():
             session.add(user)
 
         texts = []
-        for _ in track(range(10)):
+        for _ in track(range(23)):
             text = TextFactory.build()
             questions = QuestionFactory.build_batch(100, text=text)
             texts.append(text)
