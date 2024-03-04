@@ -177,7 +177,7 @@ const AdaptiveCard: React.FC<{ size?: number }> = ({ size }) => {
     <ModeCard
       size={size}
       mode={ADAPTIVE_MODE}
-      description="Experience reading that adjusts to your pace in real-time with our Adaptive Mode. Powered by WebGazer's eye tracking technology."
+      description="Experience reading that adapts to your pace in real-time. Powered by WebGazer's eye tracking technology."
       icon={faEye}
       onClick={() => {}}
     />

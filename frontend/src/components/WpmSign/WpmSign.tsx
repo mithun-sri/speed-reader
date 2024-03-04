@@ -17,7 +17,7 @@ const WpmSign: React.FC<{
         borderRadius: "5px",
         fontSize: size || "16px",
         fontWeight: "bold",
-        zIndex: 9999,
+        zIndex: 10,
         fontFamily: "JetBrains Mono, monospace",
       }}
     >
