@@ -84,7 +84,13 @@ const UserData1: React.FC<{
           textAlign: "right",
         }}
       >
-        {title === "score" ? `${value}%` : value}
+        {title === "score"
+          ? value === 0
+            ? "-"
+            : `${value}%`
+          : value === 0
+            ? "-"
+            : `${value}`}
       </Box>
     </Box>
   );
@@ -120,7 +126,7 @@ const MinMax: React.FC<{
         fontWeight: "bolder",
       }}
     >
-      {val}
+      {val !== 0 ? val : "-"}
     </Box>
   );
 
