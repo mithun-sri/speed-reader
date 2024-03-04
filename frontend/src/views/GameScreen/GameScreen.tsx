@@ -12,6 +12,8 @@ import TextSelect from "../TextSelect/TextSelect";
 import WebGazerCalibration from "../WebGazerCalibration/WebGazerCalibration";
 import WebGazerRecalibrationChoice from "../WebGazerCalibration/WebGazerRecalibrationChoice";
 import WpmView from "../WpmView/WpmView";
+import AvailableTexts from "../AvailableTexts/AvailableTexts";
+import { useNavigate } from "react-router-dom";
 
 export const GameScreenContext = React.createContext<{
   currentStage: number;

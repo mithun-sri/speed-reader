@@ -39,6 +39,7 @@ const Error = ({
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          height: "80vh"
         }}
       >
         <Box>
