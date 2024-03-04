@@ -11,7 +11,7 @@ import {
   getHistories,
   getUserStatistics,
 } from "../../hooks/users";
-import { History } from "../../api";
+import { HistoryWithText } from "../../api";
 
 const UserView = () => {
   const { data: userData } = getCurrentUser();
@@ -71,7 +71,9 @@ const UserView = () => {
   );
 };
 
-const StatisticsBox: React.FC<{ histories: History[] }> = ({ histories }) => {
+const StatisticsBox: React.FC<{ histories: HistoryWithText[] }> = ({
+  histories,
+}) => {
   const [mode, setMode] = useState("standard");
   const { data: newData } = getUserStatistics(mode);
   const userStatisticsData = newData;
@@ -81,7 +83,11 @@ const StatisticsBox: React.FC<{ histories: History[] }> = ({ histories }) => {
       {histories.length !== 0 ? (
         <>
           <UserStats userData={userStatisticsData}></UserStats>
-          <UserGraph mode={mode} setMode={setMode}></UserGraph>
+          <UserGraph
+            data={userStatisticsData.average_wpm_per_day}
+            mode={mode}
+            setMode={setMode}
+          ></UserGraph>
         </>
       ) : (
         <Box
@@ -89,7 +95,7 @@ const StatisticsBox: React.FC<{ histories: History[] }> = ({ histories }) => {
             fontFamily: "JetBrains Mono, monospace",
             color: "#fff",
             fontSize: "3vh",
-            margin: "8vh 26vw",
+            margin: "9vh 27vw",
           }}
         >
           No Statistics Available.

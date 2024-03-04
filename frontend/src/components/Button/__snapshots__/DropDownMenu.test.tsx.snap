@@ -8,13 +8,13 @@ exports[`Matches snapshots 1`] = `
 
 exports[`Matches snapshots 2`] = `
 <label
-  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-mtg34o-MuiFormLabel-root-MuiInputLabel-root"
+  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-animated MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-animated css-1cwep4a-MuiFormLabel-root-MuiInputLabel-root"
 />
 `;
 
 exports[`Matches snapshots 3`] = `
 <div
-  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary css-1x9ivlu-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
+  className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary css-1xetp59-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
   onClick={[Function]}
 >
   <div

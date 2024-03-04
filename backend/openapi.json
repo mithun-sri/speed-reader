@@ -856,7 +856,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/History"
+                    "$ref": "#/components/schemas/HistoryWithText"
                   },
                   "title": "Response Get Histories"
                 }
@@ -1462,70 +1462,6 @@
         "type": "object",
         "title": "HTTPValidationError"
       },
-      "History": {
-        "properties": {
-          "text_id": {
-            "type": "string",
-            "title": "Text Id"
-          },
-          "game_mode": {
-            "type": "string",
-            "title": "Game Mode"
-          },
-          "game_submode": {
-            "type": "string",
-            "title": "Game Submode"
-          },
-          "difficulty": {
-            "type": "string",
-            "title": "Difficulty"
-          },
-          "summary": {
-            "type": "boolean",
-            "title": "Summary"
-          },
-          "average_wpm": {
-            "type": "integer",
-            "title": "Average Wpm"
-          },
-          "interval_wpms": {
-            "items": {
-              "type": "integer"
-            },
-            "type": "array",
-            "title": "Interval Wpms"
-          },
-          "score": {
-            "type": "integer",
-            "title": "Score"
-          },
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "results": {
-            "items": {
-              "$ref": "#/components/schemas/Result"
-            },
-            "type": "array",
-            "title": "Results"
-          }
-        },
-        "type": "object",
-        "required": [
-          "text_id",
-          "game_mode",
-          "game_submode",
-          "difficulty",
-          "summary",
-          "average_wpm",
-          "interval_wpms",
-          "score",
-          "id",
-          "results"
-        ],
-        "title": "History"
-      },
       "HistoryWithQuestions": {
         "properties": {
           "text_id": {
@@ -1589,6 +1525,75 @@
           "results"
         ],
         "title": "HistoryWithQuestions"
+      },
+      "HistoryWithText": {
+        "properties": {
+          "text_id": {
+            "type": "string",
+            "title": "Text Id"
+          },
+          "game_mode": {
+            "type": "string",
+            "title": "Game Mode"
+          },
+          "game_submode": {
+            "type": "string",
+            "title": "Game Submode"
+          },
+          "difficulty": {
+            "type": "string",
+            "title": "Difficulty"
+          },
+          "summary": {
+            "type": "boolean",
+            "title": "Summary"
+          },
+          "average_wpm": {
+            "type": "integer",
+            "title": "Average Wpm"
+          },
+          "interval_wpms": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Interval Wpms"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "text_title": {
+            "type": "string",
+            "title": "Text Title"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/Result"
+            },
+            "type": "array",
+            "title": "Results"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text_id",
+          "game_mode",
+          "game_submode",
+          "difficulty",
+          "summary",
+          "average_wpm",
+          "interval_wpms",
+          "score",
+          "text_title",
+          "id",
+          "results"
+        ],
+        "title": "HistoryWithText"
       },
       "Question": {
         "properties": {

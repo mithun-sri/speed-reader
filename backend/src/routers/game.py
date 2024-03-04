@@ -95,9 +95,9 @@ async def get_next_questions(
         .limit(NUM_QUESTIONS_PER_GAME)
     )
 
-    if questions := session.scalars(query_unseen).all():
-        return questions
     if questions := session.scalars(query_random).all():
+        return questions
+    if questions := session.scalars(query_unseen).all():
         return questions
 
     raise NotEnoughQuestionsException(text_id=text_id)

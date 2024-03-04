@@ -39,17 +39,17 @@ const UserStats: React.FC<UserStatsProps> = ({ userData }) => {
       <UserData1
         title="score"
         value={userData.average_score}
-        size={fontSize / 2}
+        size={fontSize / 2.5}
       />
       <UserData1
         title="average wpm"
         value={userData.average_wpm}
-        size={fontSize / 2.1}
+        size={fontSize / 2.5}
       />
       <MinMax
         minVal={userData.min_wpm}
         maxVal={userData.max_wpm}
-        size={fontSize / 3}
+        size={fontSize / 2.5}
       />
     </Box>
   );
@@ -86,10 +86,10 @@ const UserData1: React.FC<{
       >
         {title === "score"
           ? value === 0
-            ? "-"
+            ? "n/a"
             : `${value}%`
           : value === 0
-            ? "-"
+            ? "n/a"
             : `${value}`}
       </Box>
     </Box>

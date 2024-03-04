@@ -190,73 +190,6 @@ export interface HTTPValidationError {
 /**
  * 
  * @export
- * @interface History
- */
-export interface History {
-    /**
-     * 
-     * @type {string}
-     * @memberof History
-     */
-    'text_id': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof History
-     */
-    'game_mode': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof History
-     */
-    'game_submode': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof History
-     */
-    'difficulty': string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof History
-     */
-    'summary': boolean;
-    /**
-     * 
-     * @type {number}
-     * @memberof History
-     */
-    'average_wpm': number;
-    /**
-     * 
-     * @type {Array<number>}
-     * @memberof History
-     */
-    'interval_wpms': Array<number>;
-    /**
-     * 
-     * @type {number}
-     * @memberof History
-     */
-    'score': number;
-    /**
-     * 
-     * @type {string}
-     * @memberof History
-     */
-    'id': string;
-    /**
-     * 
-     * @type {Array<Result>}
-     * @memberof History
-     */
-    'results': Array<Result>;
-}
-/**
- * 
- * @export
  * @interface HistoryWithQuestions
  */
 export interface HistoryWithQuestions {
@@ -320,6 +253,79 @@ export interface HistoryWithQuestions {
      * @memberof HistoryWithQuestions
      */
     'results': Array<ResultWithQuestion>;
+}
+/**
+ * 
+ * @export
+ * @interface HistoryWithText
+ */
+export interface HistoryWithText {
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithText
+     */
+    'text_id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithText
+     */
+    'game_mode': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithText
+     */
+    'game_submode': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithText
+     */
+    'difficulty': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof HistoryWithText
+     */
+    'summary': boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof HistoryWithText
+     */
+    'average_wpm': number;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof HistoryWithText
+     */
+    'interval_wpms': Array<number>;
+    /**
+     * 
+     * @type {number}
+     * @memberof HistoryWithText
+     */
+    'score': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithText
+     */
+    'text_title': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithText
+     */
+    'id': string;
+    /**
+     * 
+     * @type {Array<Result>}
+     * @memberof HistoryWithText
+     */
+    'results': Array<Result>;
 }
 /**
  * 
@@ -2730,7 +2736,7 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getHistories(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<History>>> {
+        async getHistories(accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<HistoryWithText>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getHistories(accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getHistories']?.[localVarOperationServerIndex]?.url;
@@ -2848,7 +2854,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getHistories(accessToken?: AccessToken, options?: any): AxiosPromise<Array<History>> {
+        getHistories(accessToken?: AccessToken, options?: any): AxiosPromise<Array<HistoryWithText>> {
             return localVarFp.getHistories(accessToken, options).then((request) => request(axios, basePath));
         },
         /**
