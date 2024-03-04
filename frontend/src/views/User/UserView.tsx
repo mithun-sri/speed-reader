@@ -92,13 +92,13 @@ const StatisticsBox: React.FC<{ histories: HistoryWithText[] }> = ({
       ) : (
         <Box
           sx={{
-            color: "#FFFFFF",
-            fontSize: "20px",
-            fontWeight: "bold",
-            marginLeft: "50px",
+            fontFamily: "JetBrains Mono, monospace",
+            color: "#fff",
+            fontSize: "3vh",
+            margin: "9vh 27vw",
           }}
         >
-          No statistics available
+          No Statistics Available.
         </Box>
       )}
     </>
