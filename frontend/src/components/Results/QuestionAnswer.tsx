@@ -40,7 +40,7 @@ const QuestionAnswer: React.FC<{
       <Box
         sx={{
           color: "#D1D0C5",
-          fontSize: fontSize,
+          fontSize: "1.5vw",
           textAlign: "center",
           margin: "40px 70px",
         }}
