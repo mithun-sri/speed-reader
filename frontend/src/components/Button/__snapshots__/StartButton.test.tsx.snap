@@ -23,7 +23,7 @@ exports[`Matches snapshot before/after click 1`] = `
   <div
     className="MuiBox-root css-93ovt4"
   >
-    Start.
+    Start
   </div>
 </button>
 `;
@@ -51,7 +51,7 @@ exports[`Matches snapshot before/after click 2`] = `
   <div
     className="MuiBox-root css-93ovt4"
   >
-    Start.
+    Start
   </div>
 </button>
 `;

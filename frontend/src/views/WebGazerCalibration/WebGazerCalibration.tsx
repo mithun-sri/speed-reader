@@ -230,7 +230,7 @@ const WebGazerCalibration = () => {
                   cursor: "pointer",
                 }}
               >
-                Start.
+                Start
               </Box>
             </IconButton>
           </div>
