@@ -32,7 +32,7 @@ const DifficultyBox: React.FC<DifficultyBoxProps> = ({ difficulty }) => {
         justifyContent: "center",
         alignContent: "center",
         // marginLeft: "0.65vw",
-        width: "30%",
+        width: "35%",
         padding: "0.25vw 0.45vw",
         borderRadius: "0.8vw",
         backgroundColor: color,

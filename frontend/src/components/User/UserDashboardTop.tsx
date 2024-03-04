@@ -77,7 +77,7 @@ const UserDashboardTop: React.FC<{
             fontFamily: "JetBrains Mono, monospace",
           }}
         >
-          User {user_id}
+          {user_id}
         </Box>
         <LogOut fontSize={fontSize / 4} onClick={handleLogoutClick} />
       </Box>

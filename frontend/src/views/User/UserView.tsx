@@ -77,23 +77,12 @@ const StatisticsBox: React.FC = () => {
 
   return (
     <>
-      {userStatisticsData.average_wpm !== 0 ? (
+      {
         <>
           <UserStats userData={userStatisticsData}></UserStats>
-          <UserGraph mode={mode} setMode={setMode}></UserGraph>
+          <UserGraph data={userStatisticsData.average_wpm_per_day} mode={mode} setMode={setMode}></UserGraph>
         </>
-      ) : (
-        <Box
-          sx={{
-            fontFamily: "JetBrains Mono, monospace",
-            color: "#fff",
-            fontSize: "3vh",
-            margin: "8vh 26vw",
-          }}
-        >
-          No Statistics Available.
-        </Box>
-      )}
+        }
     </>
   );
 };

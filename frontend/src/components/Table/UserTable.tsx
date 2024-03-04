@@ -11,7 +11,6 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   TableSortLabel,
 } from "@mui/material";
@@ -22,6 +21,7 @@ import {
   StyledFormControl,
   StyledInputLabel,
   StyledSelect,
+  StyledTablePagination,
 } from "../Button/DropDownMenu";
 import { History } from "../../api";
 import DifficultyBox from "../Difficulty/DifficultyBox";
@@ -158,10 +158,24 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
           <StyledFormControl>
             <StyledInputLabel>Mode Filter</StyledInputLabel>
             <StyledSelect value={modeFilter} onChange={handleModeFilterChange}>
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="standard">Standard</MenuItem>
-              <MenuItem value="adaptive">Adaptive</MenuItem>
-              <MenuItem value="summarised">Summarised</MenuItem>
+              <MenuItem value=""
+                sx={{
+                  fontFamily: "JetBrains Mono, monospace",
+                }}
+              >All</MenuItem>
+              <MenuItem value="standard" sx={{
+                fontFamily: "JetBrains Mono, monospace",
+              }}>Standard</MenuItem>
+              <MenuItem value="adaptive"
+                sx={{
+                  fontFamily: "JetBrains Mono, monospace",
+                }}
+              >Adaptive</MenuItem>
+              <MenuItem value="summarised"
+                sx={{
+                  fontFamily: "JetBrains Mono, monospace",
+                }}
+              >Summarised</MenuItem>
             </StyledSelect>
           </StyledFormControl>
           <StyledFormControl>
@@ -170,10 +184,26 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
               value={difficultyFilter}
               onChange={handleDifficultyFilterChange}
             >
-              <MenuItem value="">All</MenuItem>
-              <MenuItem value="easy">Easy</MenuItem>
-              <MenuItem value="med">Medium</MenuItem>
-              <MenuItem value="hard">Hard</MenuItem>
+              <MenuItem value=""
+                sx={{
+                  fontFamily: "JetBrains Mono, monospace",
+                }}
+              >All</MenuItem>
+              <MenuItem value="easy"
+                sx={{
+                  fontFamily: "JetBrains Mono, monospace",
+                }}
+              >Easy</MenuItem>
+              <MenuItem value="med"
+                sx={{
+                  fontFamily: "JetBrains Mono, monospace",
+                }}
+              >Medium</MenuItem>
+              <MenuItem value="hard"
+                sx={{
+                  fontFamily: "JetBrains Mono, monospace",
+                }}
+              >Hard</MenuItem>
             </StyledSelect>
           </StyledFormControl>
           <TableContainer>
@@ -221,6 +251,7 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
                             <IconButton
                               component={Link}
                               to={row.page}
+                              target="_blank"
                               sx={{
                                 color: "#FFFFFF",
                                 "& :hover": {
@@ -259,32 +290,5 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
     </Box>
   );
 };
-
-const StyledTablePagination = styled(TablePagination)`
-  display: flex;
-  justify-content: flex-end; /* Align toolbar to the right */
-  border-color: #646669;
-
-  .MuiTablePagination-toolbar {
-    background-color: #323437; /* Background color */
-    color: white; /* Text color */
-  }
-
-  .MuiSelect-icon {
-    color: white; /* Drop down Arrow color */
-  }
-
-  .MuiTablePagination-input,
-  .MuiTablePagination-displayedRows {
-    color: white; /* Text colour */
-    font-family: "JetBrains Mono";
-    font-size: 0.9vw;
-  }
-
-  /* 'Rows per page' text */
-  .MuiTablePagination-selectLabel {
-    font-size: 0.9vw;
-  }
-`;
 
 export default UserTable;
