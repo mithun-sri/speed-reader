@@ -1,6 +1,7 @@
 import {
   faArrowsToEye,
-  faBook,
+  faFileLines,
+  faLock,
   faStopwatch,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +13,7 @@ import { styled } from "@mui/system";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useWebGazerContext } from "../../context/WebGazerContext";
+import { useAuth } from "../../hooks/users";
 
 const HeaderContainer = styled(Box)({
   backgroundColor: "#2C2E31",
@@ -26,6 +28,7 @@ const HeaderContainer = styled(Box)({
 const Header = () => {
   const [iconSize, setIconSize] = useState(calculateIconSize());
   const { webGazerInitialised, setManualRecalibration } = useWebGazerContext();
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     function handleResize() {
@@ -103,32 +106,48 @@ const Header = () => {
         )}
 
         <Tooltip title="Available texts">
-          <IconButton
-            style={{
-              fontSize: iconSize / 1.8,
-              marginRight: "20px",
-              marginLeft: "15px",
-            }}
-            component={Link}
-            to="/available-texts"
-          >
-            <FontAwesomeIcon icon={faBook} color="#D1D0C5" />
-          </IconButton>
+          <Link to={"/available-texts"}>
+            <IconButton
+              style={{
+                fontSize: iconSize / 1.8,
+                marginRight: "20px",
+                marginLeft: "15px",
+              }}
+            >
+              <FontAwesomeIcon icon={faFileLines} color="#D1D0C5" />
+            </IconButton>
+          </Link>
         </Tooltip>
         <Tooltip title="User dashboard">
-          <IconButton
-            style={{
-              fontSize: iconSize / 1.8,
-              marginRight: iconSize / 1.2,
-              marginLeft: "15px",
-              color: "#D1D0C5",
-            }}
-            component={Link}
-            to="/user"
-          >
-            <FontAwesomeIcon icon={faUser} color="#E2B714" />
-          </IconButton>
+          <Link to={"/user"}>
+            <IconButton
+              style={{
+                fontSize: iconSize / 1.8,
+                marginRight: isAdmin ? "20px" : iconSize / 1.2,
+                marginLeft: "15px",
+                color: "#D1D0C5",
+              }}
+            >
+              <FontAwesomeIcon icon={faUser} color="#E2B714" />
+            </IconButton>
+          </Link>
         </Tooltip>
+        {isAdmin && (
+          <Tooltip title="Admin dashboard">
+            <IconButton
+              style={{
+                fontSize: iconSize / 1.8,
+                marginRight: iconSize / 1.2,
+                marginLeft: "15px",
+                color: "#D1D0C5",
+              }}
+              component={Link}
+              to="/admin"
+            >
+              <FontAwesomeIcon icon={faLock} color="#E2B714" />
+            </IconButton>
+          </Tooltip>
+        )}
       </Box>
     </HeaderContainer>
   );

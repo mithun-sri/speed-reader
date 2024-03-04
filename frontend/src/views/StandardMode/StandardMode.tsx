@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { GameDifficulty, STANDARD_MODE } from "../../common/constants";
+import { GameDifficulty } from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import "./StandardMode.css";
@@ -9,8 +9,8 @@ import React, { useEffect, useState } from "react";
 import { useGameContext } from "../../context/GameContext";
 import { useNextText } from "../../hooks/game";
 import HighlightedTextDisplay from "./HighlightedTextDisplay";
-import WordTextDisplay from "./WordTextDisplay";
 import PeripheralTextDisplay from "./PeripheralTextDisplay";
+import WordTextDisplay from "./WordTextDisplay";
 
 export enum StandardView {
   Word = 0,
@@ -43,7 +43,6 @@ const StandardModeGameView: React.FC<{
     >
       <CountdownComponent
         duration={3}
-        mode={STANDARD_MODE}
         onCountdownFinish={startStandardModeGame}
       />
     </Box>
@@ -70,7 +69,10 @@ const StandardModeGameView: React.FC<{
         {showGameScreen ? (
           <StandardModeGameComponent
             wpm={wpm || 200} // Handle undefined wpm
-            text={text.content}
+            // TODO:
+            // OpenAPI generator fails to interpret Python's `Optional` type
+            // and assigns `interface{}` to `summary`.
+            text={summarised ? (text.summary as string) : text.content}
             view={mode || StandardView.Word} // Handle undefined mode
           />
         ) : (

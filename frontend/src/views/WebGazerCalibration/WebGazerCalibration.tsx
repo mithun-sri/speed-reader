@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
@@ -10,13 +10,12 @@ const WebGazerCalibration = () => {
   const {
     initialiseWebGazer,
     turnOffWebGazerCam,
-    pauseWebGazer,
     setNeedsCalibration,
     turnOffPredictionPoints,
-    disableWebGazerListener,
     webGazerInitialised,
     manualRecalibration,
     setManualRecalibration,
+    setCalibratedBefore,
   } = useWebGazerContext();
   const canvasRef = useRef(null);
   const navigate = useNavigate();
@@ -32,11 +31,6 @@ const WebGazerCalibration = () => {
     Pt8: 0,
     Pt9: 0,
   });
-
-  // // TODO: Remove after debugging.
-  // turnOffPredictionPoints();
-  // const { incrementCurrentStage } = useGameScreenContext();
-  // incrementCurrentStage();
 
   useEffect(() => {
     const handleLoad = () => {
@@ -54,7 +48,7 @@ const WebGazerCalibration = () => {
     return () => {
       window.removeEventListener("load", handleLoad);
       turnOffWebGazerCam();
-      pauseWebGazer();
+      turnOffPredictionPoints();
       setNeedsCalibration(false);
     };
   }, []);
@@ -109,6 +103,8 @@ const WebGazerCalibration = () => {
       document.getElementById("Pt5")?.style.removeProperty("display");
       turnOffWebGazerCam();
     } else if (pointCalibrate >= 9) {
+      setCalibratedBefore(true);
+
       if (manualRecalibration) {
         setManualRecalibration(false);
         navigate("/");
@@ -132,46 +128,6 @@ const WebGazerCalibration = () => {
       return { ...prevState, [nodeId]: prevState[nodeId] + 1 };
     });
   };
-
-  /*const handleRestart = async () => {
-    await restartWebGazer();
-    document.querySelectorAll(".CalibrationButton").forEach((i) => {
-      if (i instanceof HTMLElement) {
-        i.style.setProperty("background-color", "#D1D0C5");
-        i.style.setProperty("opacity", "0.2");
-        i.removeAttribute("disabled");
-      }
-    });
-
-    setClickCounts({
-      Pt1: 0,
-      Pt2: 0,
-      Pt3: 0,
-      Pt4: 0,
-      Pt5: 0,
-      Pt6: 0,
-      Pt7: 0,
-      Pt8: 0,
-      Pt9: 0,
-    });
-
-    setPointCalibrate(0);
-    clearCanvas();
-
-    document.querySelectorAll(".CalibrationButton").forEach((i) => {
-      if (i instanceof HTMLElement) {
-        i.style.removeProperty("display");
-      }
-    });
-    document.getElementById("Pt5")?.style.setProperty("display", "none");
-
-    document
-      .getElementById("calibration_done")
-      ?.style.setProperty("display", "none");
-    document
-      .getElementById("calibration_in_progress")
-      ?.style.setProperty("display", "block");
-  };*/
 
   return (
     <GameScreenContext.Consumer>
@@ -229,7 +185,7 @@ const WebGazerCalibration = () => {
               id="calibration_in_progress"
               className="calibration-in-progress"
             >
-              <div className="in_progress_text">
+              <div>
                 <JetBrainsMonoText
                   text={"Calibration in progress."}
                   size={35}
@@ -249,32 +205,34 @@ const WebGazerCalibration = () => {
           <div id="calibration_done" className="calibration-done">
             <JetBrainsMonoText
               text={"Calibration done!"}
-              size={35}
+              size={45}
               color="#D1D0C5"
             />
-            <Box
-              sx={{
-                fontFamily: "JetBrains Mono, monospace",
-                fontWeight: "bold",
-                fontSize: 25,
-                color: "#E2B714",
-                cursor: "pointer",
-              }}
+            <IconButton
               onClick={() => {
                 turnOffPredictionPoints();
-
-                // NOTE:
-                // This is a temporary fix to prevent the even loop from being busy
-                // and not allowing the setTimeout to break in.
-                disableWebGazerListener();
-                pauseWebGazer();
-
                 context.incrementCurrentStage();
+              }}
+              sx={{
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#FFFFFF",
               }}
               style={{ zIndex: 10 }}
             >
-              Start
-            </Box>
+              <Box
+                sx={{
+                  border: "10px solid #646669",
+                  borderRadius: "30px",
+                  background: "#E2B714",
+                  padding: "7px 40px 7px 40px",
+                  fontWeight: "bolder",
+                  fontSize: 35,
+                  cursor: "pointer",
+                }}
+              >
+                Start.
+              </Box>
+            </IconButton>
           </div>
         </div>
       )}

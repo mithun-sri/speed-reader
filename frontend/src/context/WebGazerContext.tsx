@@ -1,10 +1,14 @@
 import React, { createContext, useContext, useState } from "react";
 
+type WebGazerListener = (gazeData: any, elapsedTime: number) => void;
+
 interface WebGazerContextType {
   webGazerInitialised: boolean;
   setwebGazerInitialised: (webGazerInitialised: boolean) => void;
   needsCalibration: boolean;
   setNeedsCalibration: (needsCalibration: boolean) => void;
+  calibratedBefore: boolean;
+  setCalibratedBefore: (calibratedBefore: boolean) => void;
   manualRecalibration: boolean;
   setManualRecalibration: (manualRecalibration: boolean) => void;
   initialiseWebGazer: () => void;
@@ -12,14 +16,11 @@ interface WebGazerContextType {
   restartWebGazer: () => void;
   turnOffWebGazerCam: () => void;
   turnOffPredictionPoints: () => void;
-  enableWebGazerListener: () => void;
-  disableWebGazerListener: () => void;
+  turnOnPredictionPoints: () => void;
   pauseWebGazer: () => void;
   resumeWebGazer: () => void;
-  gazeX: number;
-  setGazeX: (x: number) => void;
-  gazeY: number;
-  setGazeY: (y: number) => void;
+  setWebGazerListener: (listener: WebGazerListener) => void;
+  clearWebGazerListener: () => void;
 }
 
 const WebGazerContext = createContext<WebGazerContextType>({
@@ -28,6 +29,8 @@ const WebGazerContext = createContext<WebGazerContextType>({
   setwebGazerInitialised: () => {},
   needsCalibration: false,
   setNeedsCalibration: () => {},
+  calibratedBefore: false,
+  setCalibratedBefore: () => {},
   manualRecalibration: false,
   setManualRecalibration: () => {},
   initialiseWebGazer: () => {},
@@ -35,16 +38,11 @@ const WebGazerContext = createContext<WebGazerContextType>({
   restartWebGazer: () => {},
   turnOffWebGazerCam: () => {},
   turnOffPredictionPoints: () => {},
-  enableWebGazerListener: () => {},
-  disableWebGazerListener: () => {},
+  turnOnPredictionPoints: () => {},
   pauseWebGazer: () => {},
   resumeWebGazer: () => {},
-
-  // gaze_x and gaze_y are only for ADAPTIVE_MODE
-  gazeX: 0,
-  setGazeX: () => {},
-  gazeY: 0,
-  setGazeY: () => {},
+  setWebGazerListener: (_listener) => {},
+  clearWebGazerListener: () => {},
 });
 
 export const useWebGazerContext = () => {
@@ -65,10 +63,9 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
   const [webGazerInitialised, setwebGazerInitialised] =
     useState<boolean>(false);
   const [needsCalibration, setNeedsCalibration] = useState<boolean>(false);
+  const [calibratedBefore, setCalibratedBefore] = useState<boolean>(false);
   const [manualRecalibration, setManualRecalibration] =
     useState<boolean>(false);
-  const [gazeX, setGazeX] = useState<number>(0);
-  const [gazeY, setGazeY] = useState<number>(0);
 
   const initialiseWebGazer = async () => {
     if (
@@ -79,9 +76,11 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
     ) {
       const webgazer = (window as any).webgazer;
       if (webgazer !== undefined) {
+        setCalibratedBefore(false);
         await restartWebGazer();
         await resumeWebGazer();
         await turnOnWebGazerCam();
+        await turnOnPredictionPoints();
       }
       return;
     }
@@ -99,11 +98,6 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
 
       await webgazer
         .setRegression("ridge")
-        .setGazeListener((data: any, _: any) => {
-          if (data == null) return;
-          setGazeX(data.x);
-          setGazeY(data.y);
-        })
         .saveDataAcrossSessions(true)
         .begin();
 
@@ -150,12 +144,9 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
   const turnOffWebGazerCam = async () => {
     const webgazer = (window as any).webgazer;
     if (webgazer !== undefined) {
-      await webgazer.showVideoPreview(false);
-
       const videoContainer = document.getElementById("webgazerVideoContainer");
       if (videoContainer) {
-        videoContainer.style.display = "none";
-        videoContainer.style.pointerEvents = "none";
+        videoContainer.style.opacity = "0";
       }
     }
   };
@@ -163,12 +154,9 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
   const turnOnWebGazerCam = async () => {
     const webgazer = (window as any).webgazer;
     if (webgazer !== undefined) {
-      await webgazer.showVideoPreview(true);
-
       const videoContainer = document.getElementById("webgazerVideoContainer");
       if (videoContainer) {
-        videoContainer.style.display = "block";
-        videoContainer.style.pointerEvents = "auto";
+        videoContainer.style.opacity = "1";
       }
     }
   };
@@ -180,18 +168,21 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const enableWebGazerListener = async () => {
+  const turnOnPredictionPoints = async () => {
     const webgazer = (window as any).webgazer;
     if (webgazer !== undefined) {
-      await webgazer.setGazeListener((data: any, _: any) => {
-        if (data == null) return;
-        setGazeX(data.x);
-        setGazeY(data.y);
-      });
+      await webgazer.showPredictionPoints(true);
     }
   };
 
-  const disableWebGazerListener = async () => {
+  const setWebGazerListner = async (listener: WebGazerListener) => {
+    const webgazer = (window as any).webgazer;
+    if (webgazer !== undefined) {
+      await webgazer.setGazeListener(listener);
+    }
+  };
+
+  const clearWebGazerListner = async () => {
     const webgazer = (window as any).webgazer;
     if (webgazer !== undefined) {
       await webgazer.clearGazeListener();
@@ -205,6 +196,8 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
         setwebGazerInitialised,
         needsCalibration,
         setNeedsCalibration,
+        calibratedBefore,
+        setCalibratedBefore,
         manualRecalibration,
         setManualRecalibration,
         initialiseWebGazer,
@@ -212,14 +205,11 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
         restartWebGazer,
         turnOffWebGazerCam,
         turnOffPredictionPoints,
-        enableWebGazerListener,
-        disableWebGazerListener,
+        turnOnPredictionPoints,
         pauseWebGazer,
         resumeWebGazer,
-        gazeX,
-        setGazeX,
-        gazeY,
-        setGazeY,
+        setWebGazerListener: setWebGazerListner,
+        clearWebGazerListener: clearWebGazerListner,
       }}
     >
       {children}

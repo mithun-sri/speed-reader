@@ -9,7 +9,11 @@ import { useGameScreenContext } from "../GameScreen/GameScreen";
 const WebGazerRecalibrationChoice: React.FC = () => {
   const { incrementCurrentStage, decrementCurrentStage } =
     useGameScreenContext();
-  const { setNeedsCalibration } = useWebGazerContext();
+  const {
+    setNeedsCalibration,
+    turnOnPredictionPoints,
+    turnOffPredictionPoints,
+  } = useWebGazerContext();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   const handleBackButton = () => {
@@ -17,6 +21,9 @@ const WebGazerRecalibrationChoice: React.FC = () => {
   };
 
   useEffect(() => {
+    // Allows users to test if their WebGazer calibration is accurate
+    turnOnPredictionPoints();
+
     function handleResize() {
       setFontSize(calculateFontSize());
     }
@@ -24,6 +31,7 @@ const WebGazerRecalibrationChoice: React.FC = () => {
     window.addEventListener("resize", handleResize);
 
     return () => {
+      turnOffPredictionPoints();
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -58,7 +66,6 @@ const WebGazerRecalibrationChoice: React.FC = () => {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          textAlign: "center",
         }}
       >
         <Box
@@ -94,7 +101,7 @@ const WebGazerRecalibrationChoice: React.FC = () => {
                 fontFamily: "JetBrains Mono, monospace",
                 color: "#646669",
                 fontSize: "3.6vw",
-                padding: "0px 5vw",
+                padding: "0px 8vw",
                 "&:hover": { color: "#E2B714" },
               }}
               disableFocusRipple
@@ -112,7 +119,7 @@ const WebGazerRecalibrationChoice: React.FC = () => {
                 fontFamily: "JetBrains Mono, monospace",
                 color: "#646669",
                 fontSize: "3.6vw",
-                padding: "0px 5vw",
+                padding: "0px 8vw",
                 "&:hover": { color: "#E2B714" },
               }}
               disableFocusRipple
@@ -123,6 +130,17 @@ const WebGazerRecalibrationChoice: React.FC = () => {
             >
               <Box>No</Box>
             </IconButton>
+          </Box>
+          <Box
+            sx={{
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: "light",
+              fontSize: 20,
+              color: "white",
+              textAlign: "center",
+            }}
+          >
+            Tip: Is the red dot is following your eyes accurately?
           </Box>
         </motion.div>
       </Box>

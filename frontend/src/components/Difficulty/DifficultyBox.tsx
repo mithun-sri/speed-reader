@@ -13,7 +13,7 @@ const DifficultyBox: React.FC<DifficultyBoxProps> = ({ difficulty }) => {
       switch (difficulty.toUpperCase()) {
         case "HARD":
           return "#FC1D1D";
-        case "MED":
+        case "MEDIUM":
           return "#E2B714";
         case "EASY":
           return "#379F3B";

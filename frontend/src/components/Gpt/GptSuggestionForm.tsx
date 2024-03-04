@@ -57,6 +57,9 @@ const GptSuggestionForm: React.FC<{
       fiction: generatedText.fiction,
       difficulty: generatedText.difficulty,
       word_count: data.content.length,
+      image_url: "", // TODO
+      author: "", // TODO
+      description: "", // TODO
       questions: questions,
     };
     // Send data to server

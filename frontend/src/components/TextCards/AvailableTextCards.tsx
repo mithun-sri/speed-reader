@@ -1,8 +1,13 @@
 import Box from "@mui/material/Box";
 import JetBrainsMonoText from "../Text/TextComponent";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
-import { Link, MenuItem, OutlinedInput, Tooltip } from "@mui/material";
-import StyledMultiSelect from "../MultiSelect/MultiSelect";
+import {
+  Link,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Tooltip,
+} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import StyledTextField from "../Textbox/StyledTextField";
 import DifficultyBox from "../Difficulty/DifficultyBox";
@@ -13,19 +18,50 @@ import {
   faGamepad,
 } from "@fortawesome/free-solid-svg-icons";
 import FictionBox from "../Fiction/Fiction";
+import { Text, TextFilter } from "../../api";
+import { useState } from "react";
 
-interface TextProps {
-  title: string;
-  description: string;
-  difficulty: string;
-  image?: string;
-  author?: string;
-  is_fiction?: boolean;
-  source: string;
-}
+export const SearchBar: React.FC<{
+  initialFilters: TextFilter;
+  onUpdateFilters: (textFilter: TextFilter) => void;
+}> = ({ initialFilters, onUpdateFilters }) => {
+  const difficulty_options = ["any", "easy", "medium", "hard"];
 
-export const SearchBar: React.FC = () => {
-  const difficulty = ["easy", "medium", "hard"];
+  const [formData, setFormData] = useState({
+    keyword: initialFilters.keyword,
+    only_unplayed: initialFilters.only_unplayed,
+    include_fiction: initialFilters.include_fiction,
+    include_nonfiction: initialFilters.include_nonfiction,
+    difficulty:
+      initialFilters.difficulty === "" ? "any" : initialFilters.difficulty,
+  });
+
+  const handleCheckOnlyUnplayed = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFormData({ ...formData, only_unplayed: event.target.checked });
+  };
+
+  const handleCheckIncludeFiction = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFormData({ ...formData, include_fiction: event.target.checked });
+  };
+
+  const handleCheckIncludeNonFiction = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setFormData({ ...formData, include_nonfiction: event.target.checked });
+  };
+
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    setFormData({ ...formData, difficulty: event.target.value });
+  };
+
+  const handleUpdateFilters = () => {
+    onUpdateFilters(formData);
+  };
+
   return (
     <Box
       sx={{
@@ -50,13 +86,18 @@ export const SearchBar: React.FC = () => {
             display: "flex",
             width: "80%",
           }}
-          placeholder="Search for a text..."
+          placeholder="Search for a text or author..."
+          value={formData.keyword}
+          onChange={(e) =>
+            setFormData({ ...formData, keyword: e.target.value })
+          }
         />
         <IconButton
           sx={{
             fontFamily: "JetBrains Mono, monospace",
             color: "#FFFFFF",
           }}
+          onMouseDown={handleUpdateFilters}
         >
           <Box
             sx={{
@@ -87,56 +128,116 @@ export const SearchBar: React.FC = () => {
           width: "70%",
         }}
       >
-        <JetBrainsMonoText text={"Only unplayed"} size={16} color={"#D9D9D9"} />
-        <StyledCheckbox />
-        <JetBrainsMonoText text={"Fiction"} size={16} color={"#D9D9D9"} />
-        <StyledCheckbox />
-        <JetBrainsMonoText text={"Non-fiction"} size={16} color={"#D9D9D9"} />
-        <StyledCheckbox />
-        <JetBrainsMonoText text={"Difficulty"} size={16} color={"#D9D9D9"} />
-        <StyledMultiSelect
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
-          multiple
-          input={<OutlinedInput label="Name" />}
-          value={[difficulty[0]]}
+        <Box
+          sx={{
+            paddingLeft: "5px",
+            paddingRight: "5px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          {difficulty.map((diff) => (
-            <MenuItem key={diff} value={diff}>
-              {diff}
-            </MenuItem>
-          ))}
-        </StyledMultiSelect>
-        {/* Sort by */}
-        <JetBrainsMonoText text={"Sort by"} size={16} color={"#D9D9D9"} />
-        <StyledMultiSelect
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
-          multiple
-          input={<OutlinedInput label="Name" />}
-          value={[difficulty[0]]}
+          <JetBrainsMonoText
+            text={"Only unplayed"}
+            size={16}
+            color={"#D9D9D9"}
+          />
+          <StyledCheckbox
+            checked={!!formData.only_unplayed}
+            onChange={handleCheckOnlyUnplayed}
+          />
+        </Box>
+        <Box
+          sx={{
+            paddingLeft: "5px",
+            paddingRight: "5px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          {difficulty.map((diff) => (
-            <MenuItem key={diff} value={diff}>
-              {diff}
-            </MenuItem>
-          ))}
-        </StyledMultiSelect>
-        {/* Clear all filters */}
-        {/* Update styling */}
+          <JetBrainsMonoText text={"Fiction"} size={16} color={"#D9D9D9"} />
+          <StyledCheckbox
+            checked={!!formData.include_fiction}
+            onChange={handleCheckIncludeFiction}
+          />
+        </Box>
+        <Box
+          sx={{
+            paddingLeft: "5px",
+            paddingRight: "5px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <JetBrainsMonoText text={"Non-fiction"} size={16} color={"#D9D9D9"} />
+          <StyledCheckbox
+            checked={!!formData.include_nonfiction}
+            onChange={handleCheckIncludeNonFiction}
+          />
+        </Box>
+        <Box
+          sx={{
+            paddingLeft: "5px",
+            paddingRight: "5px",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <JetBrainsMonoText text={"Difficulty"} size={16} color={"#D9D9D9"} />
+          <Select
+            value={formData.difficulty as string}
+            label="Difficulty"
+            onChange={handleSelectChange}
+            sx={{
+              borderRadius: 5,
+              border: "3px solid #D9D9D9",
+              height: "39px",
+              backgroundColor: "#2C2E31",
+              color: "#D9D9D9",
+              fontFamily: "JetBrains Mono, monospace",
+              paddingLeft: "3px",
+              paddingRight: "3px",
+              marginLeft: "10px",
+              marginRight: "10px",
+              fontWeight: "bold",
+              "&:hover": {
+                borderColor: "#E2B714",
+              },
+              "&:hover .MuiSelect-icon": {
+                color: "#E2B714",
+              },
+              ".MuiSelect-icon": {
+                color: "#D9D9D9",
+              },
+            }}
+          >
+            {difficulty_options.map((diff) => (
+              <MenuItem key={diff} value={diff}>
+                {diff}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
       </Box>
     </Box>
   );
 };
 
-export const ItemBoxHovered: React.FC<TextProps> = ({
+export const ItemBoxHovered: React.FC<Text> = ({
   title,
   description,
   difficulty,
-  image,
-  author,
-  is_fiction,
+  fiction,
   source,
+  author,
+  image_url,
 }) => {
   return (
     <Box
@@ -159,7 +260,7 @@ export const ItemBoxHovered: React.FC<TextProps> = ({
             justifyContent: "center",
             width: "20%",
           }}
-          src={image}
+          src={image_url}
         />
         <Box
           sx={{
@@ -176,6 +277,7 @@ export const ItemBoxHovered: React.FC<TextProps> = ({
               width: "100%",
               display: "flex",
               flexDirection: "row",
+              overflowWrap: "break-word",
             }}
           >
             <JetBrainsMonoText text={title} size={24} color={"#D9D9D9"} />
@@ -188,7 +290,7 @@ export const ItemBoxHovered: React.FC<TextProps> = ({
               }}
             >
               <DifficultyBox difficulty={difficulty} />
-              <FictionBox is_fiction={is_fiction} />
+              <FictionBox is_fiction={fiction} />
             </Box>
             <Box
               sx={{
@@ -335,13 +437,13 @@ export const ItemBoxHovered: React.FC<TextProps> = ({
   );
 };
 
-export const ItemBox: React.FC<TextProps> = ({
+export const ItemBox: React.FC<Text> = ({
   title,
   description,
   difficulty,
-  image,
+  image_url,
   author,
-  is_fiction,
+  fiction,
 }) => {
   const truncatedDescription =
     description.length > 200
@@ -365,7 +467,7 @@ export const ItemBox: React.FC<TextProps> = ({
           justifyContent: "center",
           width: "15%",
         }}
-        src={image}
+        src={image_url}
       />
       <Box
         sx={{
@@ -393,7 +495,7 @@ export const ItemBox: React.FC<TextProps> = ({
             }}
           >
             <DifficultyBox difficulty={difficulty} />
-            <FictionBox is_fiction={is_fiction} />
+            <FictionBox is_fiction={fiction} />
           </Box>
         </Box>
         <JetBrainsMonoText text={"By " + author} size={16} color={"#c7c7c7"} />
@@ -413,6 +515,26 @@ export const ItemBox: React.FC<TextProps> = ({
           {/* <JetBrainsMonoText text={"Difficulty: " + difficulty} size={16} color={"#D9D9D9"} /> */}
         </Box>
       </Box>
+    </Box>
+  );
+};
+
+export const NoTexts: React.FC = () => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "30vh",
+      }}
+    >
+      <JetBrainsMonoText
+        text={"No results found"}
+        size={20}
+        color={"#D9D9D9"}
+      />
     </Box>
   );
 };
