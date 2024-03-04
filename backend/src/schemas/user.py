@@ -61,10 +61,12 @@ class History(HistoryBase):
     id: str
     results: list[Result]
 
+
 class HistoryWithText(HistoryBase):
     text_title: str
     id: str
     results: list[Result]
+
 
 class HistoryWithQuestions(HistoryBase):
     id: str

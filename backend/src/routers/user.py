@@ -200,7 +200,11 @@ async def get_histories(
     return [
         schemas.HistoryWithText(
             id=history.id,
-            text_title = session.scalars(select(models.Text).where(models.Text.id == history.text_id).limit(1)).one().title,
+            text_title=session.scalars(
+                select(models.Text).where(models.Text.id == history.text_id).limit(1)
+            )
+            .one()
+            .title,
             text_id=history.text_id,
             game_mode=history.game_mode,
             game_submode=history.game_submode,
@@ -221,7 +225,6 @@ async def get_histories(
         )
         for history in histories
     ]
-
 
 
 @router.get(

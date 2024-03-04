@@ -61,7 +61,7 @@ export const SearchBar: React.FC<{
   const handleUpdateFilters = () => {
     onUpdateFilters(formData);
   };
-  
+
   return (
     <Box
       sx={{
@@ -239,7 +239,6 @@ export const ItemBoxHovered: React.FC<Text> = ({
   author,
   image_url,
 }) => {
-
   return (
     <Box
       sx={{

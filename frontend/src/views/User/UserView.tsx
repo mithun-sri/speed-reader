@@ -71,7 +71,9 @@ const UserView = () => {
   );
 };
 
-const StatisticsBox: React.FC<{ histories: HistoryWithText[] }> = ({ histories }) => {
+const StatisticsBox: React.FC<{ histories: HistoryWithText[] }> = ({
+  histories,
+}) => {
   const [mode, setMode] = useState("standard");
   const { data: newData } = getUserStatistics(mode);
   const userStatisticsData = newData;
@@ -81,12 +83,24 @@ const StatisticsBox: React.FC<{ histories: HistoryWithText[] }> = ({ histories }
       {histories.length !== 0 ? (
         <>
           <UserStats userData={userStatisticsData}></UserStats>
-          <UserGraph data={userStatisticsData.average_wpm_per_day} mode={mode} setMode={setMode}></UserGraph>
+          <UserGraph
+            data={userStatisticsData.average_wpm_per_day}
+            mode={mode}
+            setMode={setMode}
+          ></UserGraph>
         </>
-      ): 
-      <Box sx={{color: "#FFFFFF", fontSize: "20px", fontWeight: "bold", marginLeft: "50px"}}>
-        No statistics available
-      </Box>}
+      ) : (
+        <Box
+          sx={{
+            color: "#FFFFFF",
+            fontSize: "20px",
+            fontWeight: "bold",
+            marginLeft: "50px",
+          }}
+        >
+          No statistics available
+        </Box>
+      )}
     </>
   );
 };

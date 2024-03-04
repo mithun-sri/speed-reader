@@ -43,7 +43,6 @@ const AvailableTexts: React.FC = () => {
   const availableTexts = newData;
   const numPages = Math.ceil(newData.total_texts / newData.page_size);
 
-
   const handleChange = async (
     event: React.ChangeEvent<unknown>,
     value: number,
@@ -90,7 +89,7 @@ const AvailableTexts: React.FC = () => {
 
     fetchData();
   }, [pageNum, textFilter, refetch]);
-  
+
   return (
     <Box
       sx={{

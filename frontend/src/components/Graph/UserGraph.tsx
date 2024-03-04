@@ -49,8 +49,8 @@ const UserGraph: React.FC<UserGraphProps> = ({ data, mode, setMode }) => {
     return {
       date: new Date(entry.date).toLocaleDateString(),
       wpm: entry.wpm,
-    }});
-
+    };
+  });
 
   useEffect(() => {
     function handleResize() {
@@ -96,10 +96,20 @@ const UserGraph: React.FC<UserGraphProps> = ({ data, mode, setMode }) => {
           {/* Change format of date to shorter */}
           <XAxis dataKey="date" />
 
-          <YAxis domain={[0, Math.max(600, Math.max(...formattedData.map(row => row.wpm)))]} />
+          <YAxis
+            domain={[
+              0,
+              Math.max(600, Math.max(...formattedData.map((row) => row.wpm))),
+            ]}
+          />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="wpm" stroke="#E2B714" strokeWidth={3}/>
+          <Line
+            type="monotone"
+            dataKey="wpm"
+            stroke="#E2B714"
+            strokeWidth={3}
+          />
         </LineChart>
       </ResponsiveContainer>
     </Box>

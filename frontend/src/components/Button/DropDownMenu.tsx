@@ -1,4 +1,10 @@
-import { FormControl, InputLabel, Select, TablePagination, styled } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  TablePagination,
+  styled,
+} from "@mui/material";
 
 export const StyledFormControl = styled(FormControl)({
   margin: "10px",
@@ -30,21 +36,21 @@ export const StyledInputLabel = styled(InputLabel)({
 
 export const StyledTablePagination = styled(TablePagination)({
   display: "flex",
-  justifyContent: "flex-end", /* Align toolbar to the right */
+  justifyContent: "flex-end" /* Align toolbar to the right */,
   borderColor: "#646669",
   fontFamily: "JetBrains Mono, monospace",
 
   ".MuiTablePagination-toolbar": {
-    backgroundColor: "#323437", /* Background color */
-    color: "white", /* Text color */
+    backgroundColor: "#323437" /* Background color */,
+    color: "white" /* Text color */,
   },
 
   ".MuiSelect-icon": {
-    color: "white", /* Drop down Arrow color */
+    color: "white" /* Drop down Arrow color */,
   },
 
   ".MuiTablePagination-input, .MuiTablePagination-displayedRows": {
-    color: "white", /* Text colour */
+    color: "white" /* Text colour */,
     fontFamily: "JetBrains Mono, monospace",
     fontSize: "0.9vw",
   },

@@ -159,24 +159,38 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
           <StyledFormControl>
             <StyledInputLabel>Mode</StyledInputLabel>
             <StyledSelect value={modeFilter} onChange={handleModeFilterChange}>
-              <MenuItem value=""
+              <MenuItem
+                value=""
                 sx={{
                   fontFamily: "JetBrains Mono, monospace",
                 }}
-              >All</MenuItem>
-              <MenuItem value="standard" sx={{
-                fontFamily: "JetBrains Mono, monospace",
-              }}>Standard</MenuItem>
-              <MenuItem value="adaptive"
+              >
+                All
+              </MenuItem>
+              <MenuItem
+                value="standard"
                 sx={{
                   fontFamily: "JetBrains Mono, monospace",
                 }}
-              >Adaptive</MenuItem>
-              <MenuItem value="summarised"
+              >
+                Standard
+              </MenuItem>
+              <MenuItem
+                value="adaptive"
                 sx={{
                   fontFamily: "JetBrains Mono, monospace",
                 }}
-              >Summarised</MenuItem>
+              >
+                Adaptive
+              </MenuItem>
+              <MenuItem
+                value="summarised"
+                sx={{
+                  fontFamily: "JetBrains Mono, monospace",
+                }}
+              >
+                Summarised
+              </MenuItem>
             </StyledSelect>
           </StyledFormControl>
           <StyledFormControl>
@@ -185,26 +199,38 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
               value={difficultyFilter}
               onChange={handleDifficultyFilterChange}
             >
-              <MenuItem value=""
+              <MenuItem
+                value=""
                 sx={{
                   fontFamily: "JetBrains Mono, monospace",
                 }}
-              >All</MenuItem>
-              <MenuItem value="easy"
+              >
+                All
+              </MenuItem>
+              <MenuItem
+                value="easy"
                 sx={{
                   fontFamily: "JetBrains Mono, monospace",
                 }}
-              >Easy</MenuItem>
-              <MenuItem value="med"
+              >
+                Easy
+              </MenuItem>
+              <MenuItem
+                value="med"
                 sx={{
                   fontFamily: "JetBrains Mono, monospace",
                 }}
-              >Medium</MenuItem>
-              <MenuItem value="hard"
+              >
+                Medium
+              </MenuItem>
+              <MenuItem
+                value="hard"
                 sx={{
                   fontFamily: "JetBrains Mono, monospace",
                 }}
-              >Hard</MenuItem>
+              >
+                Hard
+              </MenuItem>
             </StyledSelect>
           </StyledFormControl>
           <TableContainer>
