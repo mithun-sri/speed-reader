@@ -38,56 +38,55 @@
     height: 240px !important;
     justify-content: center;
     align-items: center;
-    top: 7vh;
-    left: 0;
-    right: 0;
-    bottom: 0; 
-    margin: auto;
-    z-index: 1;
-}
-
-.calibration-done {
-    text-align: center;
-    padding: 10px;
-    position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    padding-top: 33vh;
-    margin: auto;
-    display: none;
-}
-
-.calibration-done > * {
-    margin-bottom: 15vh;
-}
-
-.loading-text {
-    text-align: center;
-    padding-top: 20%;
-}
-
-.calibration-in-progress {
-    text-align: center;
-    margin-bottom: 14vh;
-    justify-content: center;
-    align-items: center;
-    top: 7vh;
-    left: 0;
-    right: 0;
     bottom: 0; 
     margin: auto;
     z-index: 1;
+    pointer-events: none;
 }
 
-.in_progress_text {
-    padding-top: 20%;
+.loading-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 340px;
+}
+
+.calibration-in-progress {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
 }
 
 .instructions_text {
-    padding-top: 290px;
+    padding-top: 300px;
     padding-bottom: 10px;
+}
+
+.calibration-done {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.calibration-done > * {
+    margin-bottom: 8vh;
 }
 
 /* Calibration button styling */

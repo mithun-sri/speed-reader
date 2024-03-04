@@ -62,7 +62,7 @@ const GameView = () => {
 
 const GameScreen = () => {
   const { mode } = useGameContext();
-  const { needsCalibration, webGazerInitialised } = useWebGazerContext();
+  const { needsCalibration, calibratedBefore } = useWebGazerContext();
   const [currentStage, setCurrentStage] = useState(0);
 
   const stages = [
@@ -89,10 +89,9 @@ const GameScreen = () => {
     const _mode = modeArg === undefined ? mode : modeArg;
     console.log("mode is: " + _mode);
     console.log("needsCalibration is: " + needsCalibration);
-    console.log("webGazerInitialised is: " + webGazerInitialised);
 
     if (_mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
-      if (webGazerInitialised) {
+      if (calibratedBefore) {
         setCurrentStage(RECALIBRATION_CHOICE_STAGE);
       } else {
         setCurrentStage(CALIBRATION_STAGE);
