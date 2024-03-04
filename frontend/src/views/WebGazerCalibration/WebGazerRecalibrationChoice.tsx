@@ -13,8 +13,11 @@ const WebGazerRecalibrationChoice: React.FC = () => {
     setNeedsCalibration,
     turnOnPredictionPoints,
     turnOffPredictionPoints,
+    resumeWebGazer,
+    pauseWebGazer,
   } = useWebGazerContext();
   const [fontSize, setFontSize] = useState(calculateFontSize());
+  const [buttonPressed, setButtonPressed] = useState(false);
 
   const handleBackButton = () => {
     decrementCurrentStage();
@@ -22,6 +25,7 @@ const WebGazerRecalibrationChoice: React.FC = () => {
 
   useEffect(() => {
     // Allows users to test if their WebGazer calibration is accurate
+    resumeWebGazer();
     turnOnPredictionPoints();
 
     function handleResize() {
@@ -32,6 +36,7 @@ const WebGazerRecalibrationChoice: React.FC = () => {
 
     return () => {
       turnOffPredictionPoints();
+      pauseWebGazer();
       window.removeEventListener("resize", handleResize);
     };
   }, []);
@@ -53,6 +58,12 @@ const WebGazerRecalibrationChoice: React.FC = () => {
     hidden: { opacity: 0 },
     visible: { opacity: 1 },
   };
+
+  useEffect(() => {
+    if (buttonPressed) {
+      incrementCurrentStage();
+    }
+  }, [buttonPressed]);
 
   return (
     <>
@@ -108,7 +119,7 @@ const WebGazerRecalibrationChoice: React.FC = () => {
               disableRipple
               onClick={() => {
                 setNeedsCalibration(true);
-                incrementCurrentStage();
+                setButtonPressed(true);
               }}
             >
               <Box>Yes</Box>
@@ -125,7 +136,8 @@ const WebGazerRecalibrationChoice: React.FC = () => {
               disableFocusRipple
               disableRipple
               onClick={() => {
-                incrementCurrentStage();
+                setNeedsCalibration(false);
+                setButtonPressed(true);
               }}
             >
               <Box>No</Box>
