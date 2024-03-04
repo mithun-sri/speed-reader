@@ -7,6 +7,7 @@ interface DifficultyBoxProps {
 
 const DifficultyBox: React.FC<DifficultyBoxProps> = ({ difficulty }) => {
   const [color, setColor] = useState<string>("black");
+  const diff = difficulty.toUpperCase();
 
   useEffect(() => {
     const getDifficultyColor = () => {
@@ -32,8 +33,8 @@ const DifficultyBox: React.FC<DifficultyBoxProps> = ({ difficulty }) => {
         justifyContent: "center",
         alignContent: "center",
         // marginLeft: "0.65vw",
-        width: "35%",
-        padding: "0.25vw 0.45vw",
+        width: "30%",
+        padding: "0.5vh 0.4vw 0.25vh",
         borderRadius: "0.8vw",
         backgroundColor: color,
         fontWeight: "bolder",
@@ -43,7 +44,7 @@ const DifficultyBox: React.FC<DifficultyBoxProps> = ({ difficulty }) => {
         color: "white",
       }}
     >
-      {difficulty.toUpperCase()}
+      {diff === "MEDIUM" ? "MED" : diff}
     </Box>
   );
 };

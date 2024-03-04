@@ -14,6 +14,10 @@ import { visuallyHidden } from "@mui/utils";
 import DifficultyBox from "../Difficulty/DifficultyBox";
 import { getTexts } from "../../hooks/admin";
 import { TextWithStatistics } from "../../api";
+import { Link } from "react-router-dom";
+import { IconButton } from "@mui/material";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
 
 interface Data {
   id: number;
@@ -25,6 +29,7 @@ interface Data {
   min: number;
   max: number;
   accuracy: number;
+  questions: string;
 }
 
 function transformTextWithStatistics(
@@ -41,6 +46,7 @@ function transformTextWithStatistics(
       min: text.min_wpm,
       max: text.max_wpm,
       accuracy: text.average_score,
+      questions: `questions/${text.id}`,
     };
   });
 }
@@ -110,6 +116,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: "accuracy (%)",
   },
+  {
+    id: "questions",
+    numeric: false,
+    disablePadding: false,
+    label: "questions",
+  },
 ];
 
 interface EnhancedTableProps {
@@ -146,9 +158,17 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           backgroundColor: "transparent",
         }}
       >
-        <TableCell padding="checkbox">
+        <TableCell padding="checkbox" sx={{}}>
           <Checkbox
-            color="primary"
+            sx={{
+              color: "grey",
+              "&.Mui-checked, &.MuiCheckbox-indeterminate": {
+                color: "#E2B714",
+              },
+              "&:hover": {
+                color: "#E2B714",
+              },
+            }}
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
@@ -218,6 +238,15 @@ export default function EnhancedTable() {
   };
 
   const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    if (!(event.target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    const checkboxClicked = event.target.type === "checkbox";
+    if (!checkboxClicked) {
+      return;
+    }
+
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly number[] = [];
 
@@ -262,7 +291,7 @@ export default function EnhancedTable() {
   );
 
   return (
-    <Box sx={{ width: "70vw" }}>
+    <Box sx={{ width: "75vw" }}>
       <Paper
         sx={{
           backgroundColor: "transparent",
@@ -286,7 +315,6 @@ export default function EnhancedTable() {
 
                 return (
                   <TableRow
-                    hover
                     onClick={(event) => handleClick(event, row.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
@@ -301,7 +329,16 @@ export default function EnhancedTable() {
                     <TableCell padding="checkbox">
                       <Checkbox
                         color="warning"
-                        sx={{ marginRight: "2vw" }}
+                        sx={{
+                          marginRight: "2vw",
+                          color: "grey",
+                          "&.Mui-checked": {
+                            color: "#E2B714",
+                          },
+                          "&:hover": {
+                            color: "grey",
+                          },
+                        }}
                         checked={isItemSelected}
                         inputProps={{
                           "aria-labelledby": labelId,
@@ -315,7 +352,9 @@ export default function EnhancedTable() {
                       padding="none"
                       sx={{ color: "#fff" }}
                     >
-                      {row.text_id}
+                      {row.text_id.length > 10
+                        ? `${row.text_id.slice(0, 10)}...`
+                        : row.text_id}
                     </TableCell>
                     <TableCell
                       sx={{
@@ -382,6 +421,32 @@ export default function EnhancedTable() {
                     >
                       {row.accuracy}
                     </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#fff",
+                        fontFamily: "JetBrains Mono, monospace",
+                        fontSize: "1.2vw",
+                      }}
+                    >
+                      {
+                        <IconButton
+                          component={Link}
+                          to={row.questions}
+                          sx={{
+                            color: "#FFFFFF",
+                            "& :hover": {
+                              color: "#E2B714",
+                            },
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faSquareArrowUpRight}
+                            className="fa-table-page-icon"
+                          />
+                        </IconButton>
+                      }
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -405,18 +470,21 @@ export default function EnhancedTable() {
             justifyContent: "space-between",
           }}
         >
-          <Box
-            sx={{
-              backgroundColor: "#E2B714",
-              margin: "1vh",
-              padding: "1vh",
-              borderRadius: "0.5vh",
-              fontFamily: "JetBrains Mono, monospace",
-              color: "#fff",
-            }}
-          >
-            + Add
-          </Box>
+          <Link to="/gpt" style={{ textDecoration: "none" }}>
+            <Box
+              sx={{
+                backgroundColor: "#E2B714",
+                margin: "1vh",
+                padding: "1vh",
+                borderRadius: "0.5vh",
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              + Add
+            </Box>
+          </Link>
           <TablePagination
             sx={{ color: "#fff" }}
             rowsPerPageOptions={[5, 10, 25]}

@@ -35,6 +35,16 @@ export function getQuestion(textId: string, questionId: string) {
   });
 }
 
+export function getQuestions(textId: string) {
+  const { adminApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["questions-statistics", textId],
+    queryFn: () => adminApi.getQuestions(textId).then((res) => res.data),
+    gcTime: 0,
+  });
+}
+
 // Define the hook function
 export function useGenerateText(difficulty: string, isFiction: boolean) {
   const { adminApi } = useApiClient();
