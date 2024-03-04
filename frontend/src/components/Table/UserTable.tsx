@@ -23,7 +23,7 @@ import {
   StyledSelect,
   StyledTablePagination,
 } from "../Button/DropDownMenu";
-import { History } from "../../api";
+import { HistoryWithText } from "../../api";
 import DifficultyBox from "../Difficulty/DifficultyBox";
 
 interface Row {
@@ -36,9 +36,10 @@ interface Row {
   page: string;
 }
 
-function convertHistoryToRows(histories: History[]): Row[] {
+function convertHistoryToRows(histories: HistoryWithText[]): Row[] {
   return histories.map((history, index) => ({
     id: index + 1,
+    text_title: history.text_title,
     text_id: history.text_id,
     mode: history.game_mode,
     difficulty: history.difficulty,
@@ -49,7 +50,7 @@ function convertHistoryToRows(histories: History[]): Row[] {
 }
 
 const columns = [
-  { id: "text_id", label: "text", type: "number" },
+  { id: "text_title", label: "text", type: "string" },
   { id: "mode", label: "mode", type: "string" },
   { id: "difficulty", label: "diff.", type: "string" },
   { id: "average", label: "avg.", type: "number" },
@@ -66,7 +67,7 @@ const StyledTableCell = styled(TableCell)({
 });
 
 interface UserTableProps {
-  results: Array<History>;
+  results: Array<HistoryWithText>;
 }
 
 const UserTable: React.FC<UserTableProps> = ({ results }) => {
@@ -156,7 +157,7 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
           }}
         >
           <StyledFormControl>
-            <StyledInputLabel>Mode Filter</StyledInputLabel>
+            <StyledInputLabel>Mode</StyledInputLabel>
             <StyledSelect value={modeFilter} onChange={handleModeFilterChange}>
               <MenuItem value=""
                 sx={{
@@ -179,7 +180,7 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
             </StyledSelect>
           </StyledFormControl>
           <StyledFormControl>
-            <StyledInputLabel>Diff Filter</StyledInputLabel>
+            <StyledInputLabel>Difficulty</StyledInputLabel>
             <StyledSelect
               value={difficultyFilter}
               onChange={handleDifficultyFilterChange}

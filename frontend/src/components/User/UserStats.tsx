@@ -38,18 +38,18 @@ const UserStats: React.FC<UserStatsProps> = ({ userData }) => {
     >
       <UserData1
         title="score"
-        value={userData.average_score !== 0 ? `${userData.average_score}%`: 'n/a'}
+        value={userData.average_score}
         size={fontSize / 2.5}
       />
       <UserData1
         title="average wpm"
-        value={userData.average_wpm !== 0 ? `${userData.average_wpm}`: 'n/a'}
+        value={userData.average_wpm}
         size={fontSize / 2.5}
       />
       <MinMax
         minVal={userData.min_wpm}
         maxVal={userData.max_wpm}
-        size={fontSize / 3}
+        size={fontSize / 2.5}
       />
     </Box>
   );
@@ -57,7 +57,7 @@ const UserStats: React.FC<UserStatsProps> = ({ userData }) => {
 
 const UserData1: React.FC<{
   title: string;
-  value: string | number;
+  value: number;
   size: number;
 }> = ({ title, value, size }) => {
   return (
@@ -84,7 +84,13 @@ const UserData1: React.FC<{
           textAlign: "right",
         }}
       >
-        {title === "score" ? `${value}` : value}
+        {title === "score"
+          ? value === 0
+            ? "n/a"
+            : `${value}%`
+          : value === 0
+            ? "n/a"
+            : `${value}`}
       </Box>
     </Box>
   );
@@ -120,7 +126,7 @@ const MinMax: React.FC<{
         fontWeight: "bolder",
       }}
     >
-      {val === 0 ? "-" : val}
+      {val !== 0 ? val : "-"}
     </Box>
   );
 

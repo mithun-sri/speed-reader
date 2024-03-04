@@ -15,6 +15,7 @@ const BlurBox = () => {
         justifyContent: "center",
         alignItems: "center",
         backdropFilter: "blur(30px)",
+        zIndex: 5,
       }}
     >
       <JetBrainsMonoText text={"Game Paused"} size={25} color={"white"} />

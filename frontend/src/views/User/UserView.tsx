@@ -11,6 +11,7 @@ import {
   getHistories,
   getUserStatistics,
 } from "../../hooks/users";
+import { HistoryWithText } from "../../api";
 
 const UserView = () => {
   const { data: userData } = getCurrentUser();
@@ -57,7 +58,7 @@ const UserView = () => {
               flexDirection: "row",
             }}
           >
-            <StatisticsBox />
+            <StatisticsBox histories={userHistory} />
           </Box>
         </PageContainer>
         <PageContainer size={fontSize} title="History">
@@ -70,19 +71,22 @@ const UserView = () => {
   );
 };
 
-const StatisticsBox: React.FC = () => {
+const StatisticsBox: React.FC<{ histories: HistoryWithText[] }> = ({ histories }) => {
   const [mode, setMode] = useState("standard");
   const { data: newData } = getUserStatistics(mode);
   const userStatisticsData = newData;
 
   return (
     <>
-      {
+      {histories.length !== 0 ? (
         <>
           <UserStats userData={userStatisticsData}></UserStats>
           <UserGraph data={userStatisticsData.average_wpm_per_day} mode={mode} setMode={setMode}></UserGraph>
         </>
-        }
+      ): 
+      <Box sx={{color: "#FFFFFF", fontSize: "20px", fontWeight: "bold", marginLeft: "50px"}}>
+        No statistics available
+      </Box>}
     </>
   );
 };

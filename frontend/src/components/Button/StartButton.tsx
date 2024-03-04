@@ -47,7 +47,7 @@ const StartButton = () => {
           fontSize: fontSize * 1,
         }}
       >
-        Start.
+        Start
       </Box>
     </IconButton>
   );

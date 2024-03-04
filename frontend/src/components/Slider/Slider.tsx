@@ -96,7 +96,7 @@ function SpeedSlider() {
             fontWeight: "bolder",
           }}
         >
-          Standard Mode.
+          Standard Mode
         </Box>
         <Box
           sx={{
@@ -107,7 +107,7 @@ function SpeedSlider() {
             fontWeight: "bolder",
           }}
         >
-          Choose your reading speed.
+          Choose your reading speed
         </Box>
         <PrettoSlider
           valueLabelDisplay="auto"

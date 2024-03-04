@@ -82,7 +82,7 @@ const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
           sx={{
             backgroundColor: "#323437",
             borderRadius: "50px",
-            margin: "20px 100px",
+            margin: "20px 10vw",
             padding: "10px 100px",
           }}
         >

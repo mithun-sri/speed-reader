@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import QuestionAnswer from "../../components/Results/QuestionAnswer";
 import Score from "../../components/Results/Score";
 import Header from "../../components/Header/Header";
@@ -11,7 +11,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getHistory } from "../../hooks/users";
 import NotFound from "../../components/Error/NotFound";
 
@@ -53,6 +53,20 @@ const HistoricalResultsPage: React.FC = () => {
   return (
     <>
       <Header />
+      <Box sx={{ marginLeft: "8vw" }}>
+        <Link to="/user">
+          <IconButton>
+            <Box
+              sx={{
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#D1D0C5",
+                fontWeight: "bolder",
+                fontSize: "1.5vw",
+              }}
+            >{`< back`}</Box>
+          </IconButton>
+        </Link>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -74,7 +88,7 @@ const HistoricalResultsPage: React.FC = () => {
           sx={{
             backgroundColor: "#323437",
             borderRadius: "50px",
-            margin: "20px 100px",
+            margin: "20px 10vw",
             padding: "10px 100px",
           }}
         >

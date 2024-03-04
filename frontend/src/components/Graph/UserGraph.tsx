@@ -95,7 +95,8 @@ const UserGraph: React.FC<UserGraphProps> = ({ data, mode, setMode }) => {
           <CartesianGrid strokeDasharray="3 3" />
           {/* Change format of date to shorter */}
           <XAxis dataKey="date" />
-          <YAxis domain={[0, 600]}/>
+
+          <YAxis domain={[0, Math.max(600, Math.max(...formattedData.map(row => row.wpm)))]} />
           <Tooltip />
           <Legend />
           <Line type="monotone" dataKey="wpm" stroke="#E2B714" strokeWidth={3}/>
@@ -104,36 +105,5 @@ const UserGraph: React.FC<UserGraphProps> = ({ data, mode, setMode }) => {
     </Box>
   );
 };
-
-// const dummyData = [
-//   {
-//     date: "12 Jan 2024 12:01",
-//     wpm: 240,
-//   },
-//   {
-//     date: "12 Jan 2024 12:01",
-//     wpm: 139,
-//   },
-//   {
-//     date: "12 Jan 2024 12:01",
-//     wpm: 280,
-//   },
-//   {
-//     date: "12 Jan 2024 12:01",
-//     wpm: 390,
-//   },
-//   {
-//     date: "12 Jan 2024 12:01",
-//     wpm: 480,
-//   },
-//   {
-//     date: "12 Jan 2024 12:01",
-//     wpm: 380,
-//   },
-//   {
-//     date: "12 Jan 2024 12:01",
-//     wpm: 430,
-//   },
-// ];
 
 export default UserGraph;

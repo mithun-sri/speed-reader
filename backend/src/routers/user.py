@@ -184,11 +184,12 @@ async def get_user_available_texts(
 # TODO: Move the endpoints below to where appropriate.
 @router.get(
     "/current/histories",
-    response_model=list[schemas.History],
+    response_model=list[schemas.HistoryWithText],
     dependencies=[Security(verify_auth)],
 )
 async def get_histories(
     user: Annotated[models.User, Depends(get_current_user)],
+    session: Annotated[Session, Depends(get_session)],
 ):
     """
     Gets the history of games played by the user.
@@ -197,8 +198,9 @@ async def get_histories(
     histories = list(histories)
 
     return [
-        schemas.History(
+        schemas.HistoryWithText(
             id=history.id,
+            text_title = session.scalars(select(models.Text).where(models.Text.id == history.text_id).limit(1)).one().title,
             text_id=history.text_id,
             game_mode=history.game_mode,
             game_submode=history.game_submode,
@@ -219,6 +221,7 @@ async def get_histories(
         )
         for history in histories
     ]
+
 
 
 @router.get(

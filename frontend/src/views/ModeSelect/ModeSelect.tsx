@@ -76,7 +76,7 @@ const ModeSelectView = () => {
                 marginBottom: "6vh",
               }}
             >
-              {"choose game mode"}
+              {"Choose game mode"}
             </Box>
             <Box
               style={{
