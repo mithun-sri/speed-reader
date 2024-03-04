@@ -12,6 +12,7 @@ import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const AdaptiveModeView = () => {
   const { setTextId, summarised } = useGameContext();
+  const { resumeWebGazer } = useWebGazerContext();
   const { data: text } = useNextText(summarised);
 
   const [showGameScreen, setShowGameScreen] = useState(false);
@@ -57,7 +58,10 @@ const AdaptiveModeView = () => {
           >
             <CountdownComponent
               duration={3}
-              onCountdownFinish={() => setShowGameScreen(true)}
+              onCountdownFinish={() => {
+                resumeWebGazer();
+                setShowGameScreen(true);
+              }}
             />
           </Box>
         )}
