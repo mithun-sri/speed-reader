@@ -24,7 +24,13 @@ const PeripheralTextDisplay: React.FC<{
   const [curr_wpm, setWpm] = useState(wpm);
   const [isPaused, setPaused] = useState(false);
   const [scrollDuration, setScrollDuration] = useState(100);
-  const [progress, setProgress] = useState(0);
+
+  const controls = useAnimation();
+  const initialTranslateY = 100;
+  const finalTranslateY = -150;
+  const totalTranslateY = initialTranslateY - finalTranslateY;
+  const [currentTranslateY, setCurrentTranslateY] =
+    useState<number>(initialTranslateY);
 
   // Assuming 10 words per line. This assumption can be made due to the fixed width of the container.
   const containerWidth = 900; // in pixels
@@ -36,6 +42,17 @@ const PeripheralTextDisplay: React.FC<{
   useEffect(() => {
     setIntervalWpms([wpm]);
   }, []);
+
+  // record WPM every 2.5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isPaused) {
+        setIntervalWpms([...intervalWpms, curr_wpm]);
+      }
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [curr_wpm, intervalWpms, isPaused]);
 
   const calculateScrollDuration = () => {
     if (words > 0 && containerRef.current) {
@@ -69,35 +86,23 @@ const PeripheralTextDisplay: React.FC<{
   }, [curr_wpm, isPaused]);
 
   useEffect(() => {
-    const startTime = Date.now();
-    const interval = setInterval(() => {
-      if (!isPaused) {
-        const elapsedTime = Date.now() - startTime;
-        const progressPercentage =
-          (elapsedTime / (scrollDuration * 1000)) * 100;
+    const updateTranslateY = () => {
+      const textScroll = document.getElementById("textScroll");
+      if (!textScroll) return;
 
-        setProgress(progressPercentage);
+      // Get the translateY value from controls
+      const transform = textScroll.style.transform;
+      const translateYMatch = transform.match(/translateY\((-?\d+\.?\d*)%\)/);
 
-        if (progressPercentage >= 100) {
-          clearInterval(interval);
-          handleAnimationComplete();
-        }
-      }
-    }, 50); // Update every 50 milliseconds
+      // Extract the percentage value from the match
+      const translateY = translateYMatch ? parseFloat(translateYMatch[1]) : 0;
+      setCurrentTranslateY(translateY);
+    };
 
-    return () => clearInterval(interval);
-  }, [scrollDuration, isPaused]);
+    const updateInterval = setInterval(updateTranslateY, 10);
 
-  // record WPM every 2.5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isPaused) {
-        setIntervalWpms([...intervalWpms, curr_wpm]);
-      }
-    }, 2500);
-
-    return () => clearInterval(interval);
-  }, [curr_wpm, intervalWpms, isPaused]);
+    return () => clearInterval(updateInterval);
+  }, [controls]);
 
   const handleAnimationComplete = () => {
     const avg_wpm = calculateAverageWpm(intervalWpms);
@@ -107,6 +112,29 @@ const PeripheralTextDisplay: React.FC<{
     console.log("intervalWpms: ");
     console.log(intervalWpms);
   };
+
+  useEffect(() => {
+    if (currentTranslateY === finalTranslateY) {
+      handleAnimationComplete();
+    }
+  }, [currentTranslateY]);
+
+  useEffect(() => {
+    if (isPaused) {
+      controls.stop(); // Pause the animation
+    } else {
+      controls.start({
+        translateY: [`${currentTranslateY}%`, `${finalTranslateY}%`],
+        transition: {
+          duration:
+            scrollDuration *
+            ((currentTranslateY - finalTranslateY) / totalTranslateY),
+          ease: "linear",
+          from: "end",
+        },
+      });
+    }
+  }, [isPaused, scrollDuration, controls]);
 
   return (
     <Box
@@ -133,11 +161,23 @@ const PeripheralTextDisplay: React.FC<{
           borderRadius: "10px",
         }}
       >
-        <ScrollingText
-          text={text}
-          duration={scrollDuration}
-          isPaused={isPaused}
-        />
+        <motion.p
+          id="textScroll"
+          initial={{ translateY: `${currentTranslateY}%` }}
+          animate={controls}
+          style={{
+            fontSize: "22px",
+            fontFamily: "JetBrains Mono, monospace",
+            color: "#D1D0C5",
+            fontWeight: "bolder",
+            textAlign: "left",
+            lineHeight: "30px",
+            position: "relative",
+            margin: 0,
+          }}
+        >
+          {text}
+        </motion.p>
       </Box>
       <Box
         sx={{
@@ -146,57 +186,13 @@ const PeripheralTextDisplay: React.FC<{
           paddingBottom: "10px",
         }}
       >
-        <GameProgressBar gameProgress={progress} />
+        <GameProgressBar
+          gameProgress={
+            ((initialTranslateY - currentTranslateY) / totalTranslateY) * 100
+          }
+        />
       </Box>
     </Box>
-  );
-};
-
-interface ScrollingTextProps {
-  text: string;
-  duration: number;
-  isPaused?: boolean;
-}
-
-const ScrollingText: React.FC<ScrollingTextProps> = ({
-  text,
-  duration,
-  isPaused,
-}) => {
-  const controls = useAnimation();
-
-  useEffect(() => {
-    if (isPaused) {
-      controls.stop(); // Pause the animation
-    } else {
-      controls.start({
-        translateY: ["100%", "-200%"],
-        transition: {
-          duration: duration,
-          ease: "linear",
-          from: "end",
-        },
-      });
-    }
-  }, [isPaused, duration, controls]);
-
-  return (
-    <motion.p
-      initial={{ translateY: "100%" }}
-      animate={controls}
-      style={{
-        fontSize: "22px",
-        fontFamily: "JetBrains Mono, monospace",
-        color: "#D1D0C5",
-        fontWeight: "bolder",
-        textAlign: "left",
-        lineHeight: "30px",
-        position: "relative",
-        margin: 0,
-      }}
-    >
-      {text}
-    </motion.p>
   );
 };
 
