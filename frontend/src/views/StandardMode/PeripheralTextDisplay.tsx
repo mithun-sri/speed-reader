@@ -32,9 +32,10 @@ const PeripheralTextDisplay: React.FC<{
   const [currentTranslateY, setCurrentTranslateY] =
     useState<number>(initialTranslateY);
 
-  // Assuming 10 words per line. This assumption can be made due to the fixed width of the container.
+  // Assuming 7 words per line.
+  // This assumption can be made due to the fixed width of the container, fixed font size and line height.
   const containerWidth = 900; // in pixels
-  const wordsPerLine = 10;
+  const wordsPerLine = 7;
   const words = text.split(" ").length;
   const lines = Math.ceil(words / wordsPerLine); // Estimate number of lines
 
@@ -157,8 +158,6 @@ const PeripheralTextDisplay: React.FC<{
           flexWrap: "wrap",
           alignItems: "center",
           overflow: "hidden",
-          backgroundColor: "#595d64",
-          borderRadius: "10px",
         }}
       >
         <motion.p
@@ -166,14 +165,15 @@ const PeripheralTextDisplay: React.FC<{
           initial={{ translateY: `${currentTranslateY}%` }}
           animate={controls}
           style={{
-            fontSize: "22px",
+            fontSize: "30px", // Affects speed scroll calculation
             fontFamily: "JetBrains Mono, monospace",
             color: "#D1D0C5",
             fontWeight: "bolder",
             textAlign: "left",
-            lineHeight: "30px",
+            lineHeight: "55px", // Affects speed scroll calculation
             position: "relative",
             margin: 0,
+            zIndex: 0,
           }}
         >
           {text}
