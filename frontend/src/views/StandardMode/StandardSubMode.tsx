@@ -2,12 +2,13 @@ import Box from "@mui/material/Box";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import BackButton from "../../components/Button/BackButton";
+import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import HighlightWordsPreview from "../../components/Preview/HighlightWords";
 import PeripheralPreview from "../../components/Preview/Peripheral";
 import WordByWordPreview from "../../components/Preview/WordByWord";
-import { useGameScreenContext } from "../GameScreen/GameScreen";
 import { useWebGazerContext } from "../../context/WebGazerContext";
+import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const StandardSubModeView = () => {
   const { decrementCurrentStage } = useGameScreenContext();
@@ -43,7 +44,7 @@ const StandardSubModeView = () => {
   const { textId } = useWebGazerContext();
 
   return (
-    <Box>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
       {textId === null ? (
         <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
@@ -71,7 +72,25 @@ const StandardSubModeView = () => {
         animate={"visible"}
         variants={fadeInVariants}
         transition={{ duration: 1.5 }}
+        style={{
+          flex: 1,
+        }}
       >
+        <Box
+          sx={{
+            marginTop: "30px",
+            color: "#D1D0C5",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: fontSize / 1.5,
+            fontWeight: "bold",
+            marginBottom: fontSize / 8,
+          }}
+        >
+          Choose your view
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -86,6 +105,7 @@ const StandardSubModeView = () => {
           <PeripheralPreview text={previewText} />
         </Box>
       </motion.div>
+      <Footer />
     </Box>
   );
 };

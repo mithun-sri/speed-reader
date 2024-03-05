@@ -49,11 +49,7 @@ const GptForm = () => {
 };
 
 const GptView = () => {
-  return (
-    // <GptProvider>
-    <GptForm />
-    // </GptProvider>
-  );
+  return <GptForm />;
 };
 
 export default GptView;

@@ -153,7 +153,7 @@ const AdminLogin: React.FC = () => {
                 fontSize: fontSize,
               }}
             >
-              log in.
+              log in
             </Button>
           </Box>
         </Box>

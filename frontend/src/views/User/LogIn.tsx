@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { UserLogin } from "../../api";
+import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import StyledTextField from "../../components/Textbox/StyledTextField";
 import { useSnack } from "../../context/SnackContext";
@@ -53,7 +54,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Box>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
       <Box
         sx={{
@@ -61,7 +62,8 @@ const Login: React.FC = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          height: "80vh",
+          height: "70vh",
+          flex: 1,
         }}
       >
         <Box sx={{ width: "60%" }}>
@@ -108,7 +110,7 @@ const Login: React.FC = () => {
                 fontSize: fontSize,
               }}
             >
-              log in.
+              Log in
             </Button>
             <Link
               to="/signup"
@@ -116,7 +118,7 @@ const Login: React.FC = () => {
             >
               <Box
                 sx={{
-                  color: "#fff",
+                  color: "#D1D0C5",
                   fontSize: fontSize * 0.6,
                   fontFamily: "JetBrains Mono, monospace",
                   fontWeight: "bolder",
@@ -132,6 +134,7 @@ const Login: React.FC = () => {
           </Box>
         </Box>
       </Box>
+      <Footer />
     </Box>
   );
 };

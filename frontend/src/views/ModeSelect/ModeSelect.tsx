@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import clickAudio from "../../common/audio";
 import { ADAPTIVE_MODE, GameMode, STANDARD_MODE } from "../../common/constants";
+import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import { useGameContext } from "../../context/GameContext";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
@@ -43,13 +44,14 @@ const ModeSelectView = () => {
   }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          flex: 1, // Ensures Footer is never floating
         }}
       >
         <AnimatePresence>
@@ -96,6 +98,7 @@ const ModeSelectView = () => {
           </motion.div>
         </AnimatePresence>
       </Box>
+      <Footer />
     </Box>
   );
 };

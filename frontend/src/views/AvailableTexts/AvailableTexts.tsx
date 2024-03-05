@@ -1,17 +1,18 @@
 import Box from "@mui/material/Box";
-import Header from "../../components/Header/Header";
-import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { TextFilter } from "../../api";
+import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
 import StyledPagination from "../../components/Pagination/Pagination";
 import {
-  ItemBoxHovered,
   ItemBox,
-  SearchBar,
+  ItemBoxHovered,
   NoTexts,
+  SearchBar,
 } from "../../components/TextCards/AvailableTextCards";
 import { getAvailableTexts } from "../../hooks/users";
-import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { TextFilter } from "../../api";
 
 const AvailableTexts: React.FC = () => {
   const { page } = useParams();
@@ -106,6 +107,9 @@ const AvailableTexts: React.FC = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
           exit={{ opacity: 0 }}
+          style={{
+            flex: 1,
+          }}
         >
           <SearchBar
             initialFilters={textFilter}
@@ -201,6 +205,7 @@ const AvailableTexts: React.FC = () => {
           />
         </motion.div>
       </AnimatePresence>
+      <Footer />
     </Box>
   );
 };

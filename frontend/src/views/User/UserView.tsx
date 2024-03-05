@@ -1,17 +1,17 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { HistoryWithText } from "../../api";
+import Footer from "../../components/Footer/Footer";
 import UserGraph from "../../components/Graph/UserGraph";
 import Header from "../../components/Header/Header";
 import UserTable from "../../components/Table/UserTable";
 import UserDashboardTop from "../../components/User/UserDashboardTop";
 import UserStats from "../../components/User/UserStats";
-import React from "react";
 import {
   getCurrentUser,
   getHistories,
   getUserStatistics,
 } from "../../hooks/users";
-import { HistoryWithText } from "../../api";
 
 const UserView = () => {
   const { data: userData } = getCurrentUser();
@@ -41,13 +41,20 @@ const UserView = () => {
   }, []);
 
   return (
-    <Box sx={{ marginBottom: "40px" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <Header />
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          flex: 1,
         }}
       >
         <UserDashboardTop user_id={userId} />
@@ -67,6 +74,7 @@ const UserView = () => {
           </Box>
         </PageContainer>
       </Box>
+      <Footer />
     </Box>
   );
 };
