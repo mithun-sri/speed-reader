@@ -83,25 +83,6 @@ export interface Answer {
 /**
  * 
  * @export
- * @interface BodyLoginUser
- */
-export interface BodyLoginUser {
-    /**
-     * 
-     * @type {string}
-     * @memberof BodyLoginUser
-     */
-    'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BodyLoginUser
-     */
-    'password': string;
-}
-/**
- * 
- * @export
  * @interface BodyPostAnswers
  */
 export interface BodyPostAnswers {
@@ -145,31 +126,6 @@ export interface BodyPostAnswers {
 /**
  * 
  * @export
- * @interface BodyRegisterUser
- */
-export interface BodyRegisterUser {
-    /**
-     * 
-     * @type {string}
-     * @memberof BodyRegisterUser
-     */
-    'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BodyRegisterUser
-     */
-    'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof BodyRegisterUser
-     */
-    'password': string;
-}
-/**
- * 
- * @export
  * @interface Difficulty
  */
 export interface Difficulty {
@@ -199,6 +155,12 @@ export interface HistoryWithQuestions {
      * @memberof HistoryWithQuestions
      */
     'text_id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithQuestions
+     */
+    'date': string;
     /**
      * 
      * @type {string}
@@ -266,6 +228,12 @@ export interface HistoryWithText {
      * @memberof HistoryWithText
      */
     'text_id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof HistoryWithText
+     */
+    'date': string;
     /**
      * 
      * @type {string}
@@ -1090,6 +1058,50 @@ export interface UserAvailableTexts {
      * @memberof UserAvailableTexts
      */
     'total_texts': number;
+}
+/**
+ * 
+ * @export
+ * @interface UserLogin
+ */
+export interface UserLogin {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserLogin
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserLogin
+     */
+    'password': string;
+}
+/**
+ * 
+ * @export
+ * @interface UserRegister
+ */
+export interface UserRegister {
+    /**
+     * 
+     * @type {string}
+     * @memberof UserRegister
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserRegister
+     */
+    'email': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof UserRegister
+     */
+    'password': string;
 }
 /**
  * 
@@ -2190,11 +2202,12 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
          * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
          * @param {boolean} isSummary 
+         * @param {Difficulty} [difficulty] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText: async (isSummary: boolean, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getNextText: async (isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'isSummary' is not null or undefined
             assertParamExists('getNextText', 'isSummary', isSummary)
             const localVarPath = `/game/texts/next`;
@@ -2209,9 +2222,50 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
+            if (difficulty !== undefined) {
+                for (const [key, value] of Object.entries(difficulty)) {
+                    localVarQueryParameter[key] = value;
+                }
+            }
+
             if (isSummary !== undefined) {
                 localVarQueryParameter['is_summary'] = isSummary;
             }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets the text with the given id.
+         * @summary Get Text By Id
+         * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTextById: async (textId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textId' is not null or undefined
+            assertParamExists('getTextById', 'textId', textId)
+            const localVarPath = `/game/texts/{text_id}`
+                .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
 
 
     
@@ -2293,14 +2347,29 @@ export const GameApiFp = function(configuration?: Configuration) {
          * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
          * @param {boolean} isSummary 
+         * @param {Difficulty} [difficulty] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNextText(isSummary: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(isSummary, accessToken, options);
+        async getNextText(isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(isSummary, difficulty, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.getNextText']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * Gets the text with the given id.
+         * @summary Get Text By Id
+         * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getTextById(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestions>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getTextById(textId, accessToken, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['GameApi.getTextById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
@@ -2343,12 +2412,24 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
          * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
          * @param {boolean} isSummary 
+         * @param {Difficulty} [difficulty] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText(isSummary: boolean, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
-            return localVarFp.getNextText(isSummary, accessToken, options).then((request) => request(axios, basePath));
+        getNextText(isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
+            return localVarFp.getNextText(isSummary, difficulty, accessToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Gets the text with the given id.
+         * @summary Get Text By Id
+         * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getTextById(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<TextWithQuestions> {
+            return localVarFp.getTextById(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Accepts the question answers and other statistics. Returns the results to the answers.
@@ -2389,13 +2470,27 @@ export class GameApi extends BaseAPI {
      * Gets the next text that the user has not attempted before.
      * @summary Get Next Text
      * @param {boolean} isSummary 
+     * @param {Difficulty} [difficulty] 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GameApi
      */
-    public getNextText(isSummary: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
-        return GameApiFp(this.configuration).getNextText(isSummary, accessToken, options).then((request) => request(this.axios, this.basePath));
+    public getNextText(isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return GameApiFp(this.configuration).getNextText(isSummary, difficulty, accessToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Gets the text with the given id.
+     * @summary Get Text By Id
+     * @param {string} textId 
+     * @param {AccessToken} [accessToken] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof GameApi
+     */
+    public getTextById(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return GameApiFp(this.configuration).getTextById(textId, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2604,14 +2699,14 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Logs in a user. Returns access token and refresh token.
          * @summary Login User
-         * @param {BodyLoginUser} bodyLoginUser 
+         * @param {UserLogin} userLogin 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        loginUser: async (bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'bodyLoginUser' is not null or undefined
-            assertParamExists('loginUser', 'bodyLoginUser', bodyLoginUser)
+        loginUser: async (userLogin: UserLogin, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userLogin' is not null or undefined
+            assertParamExists('loginUser', 'userLogin', userLogin)
             const localVarPath = `/users/login`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2631,7 +2726,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(bodyLoginUser, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(userLogin, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2672,14 +2767,14 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Registers a new user.
          * @summary Register User
-         * @param {BodyRegisterUser} bodyRegisterUser 
+         * @param {UserRegister} userRegister 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        registerUser: async (bodyRegisterUser: BodyRegisterUser, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'bodyRegisterUser' is not null or undefined
-            assertParamExists('registerUser', 'bodyRegisterUser', bodyRegisterUser)
+        registerUser: async (userRegister: UserRegister, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'userRegister' is not null or undefined
+            assertParamExists('registerUser', 'userRegister', userRegister)
             const localVarPath = `/users/register`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2699,7 +2794,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(bodyRegisterUser, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(userRegister, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2789,13 +2884,13 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Logs in a user. Returns access token and refresh token.
          * @summary Login User
-         * @param {BodyLoginUser} bodyLoginUser 
+         * @param {UserLogin} userLogin 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.loginUser(bodyLoginUser, accessToken, options);
+        async loginUser(userLogin: UserLogin, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.loginUser(userLogin, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.loginUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2816,13 +2911,13 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * Registers a new user.
          * @summary Register User
-         * @param {BodyRegisterUser} bodyRegisterUser 
+         * @param {UserRegister} userRegister 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async registerUser(bodyRegisterUser: BodyRegisterUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.registerUser(bodyRegisterUser, accessToken, options);
+        async registerUser(userRegister: UserRegister, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.registerUser(userRegister, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.registerUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2895,13 +2990,13 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Logs in a user. Returns access token and refresh token.
          * @summary Login User
-         * @param {BodyLoginUser} bodyLoginUser 
+         * @param {UserLogin} userLogin 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
-            return localVarFp.loginUser(bodyLoginUser, accessToken, options).then((request) => request(axios, basePath));
+        loginUser(userLogin: UserLogin, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
+            return localVarFp.loginUser(userLogin, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Logs out a user. Invalidates the refresh token. TODO: Blacklist the refresh token.
@@ -2916,13 +3011,13 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Registers a new user.
          * @summary Register User
-         * @param {BodyRegisterUser} bodyRegisterUser 
+         * @param {UserRegister} userRegister 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        registerUser(bodyRegisterUser: BodyRegisterUser, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
-            return localVarFp.registerUser(bodyRegisterUser, accessToken, options).then((request) => request(axios, basePath));
+        registerUser(userRegister: UserRegister, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
+            return localVarFp.registerUser(userRegister, accessToken, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -3002,14 +3097,14 @@ export class UserApi extends BaseAPI {
     /**
      * Logs in a user. Returns access token and refresh token.
      * @summary Login User
-     * @param {BodyLoginUser} bodyLoginUser 
+     * @param {UserLogin} userLogin 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public loginUser(bodyLoginUser: BodyLoginUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).loginUser(bodyLoginUser, accessToken, options).then((request) => request(this.axios, this.basePath));
+    public loginUser(userLogin: UserLogin, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).loginUser(userLogin, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3027,14 +3122,14 @@ export class UserApi extends BaseAPI {
     /**
      * Registers a new user.
      * @summary Register User
-     * @param {BodyRegisterUser} bodyRegisterUser 
+     * @param {UserRegister} userRegister 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public registerUser(bodyRegisterUser: BodyRegisterUser, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).registerUser(bodyRegisterUser, accessToken, options).then((request) => request(this.axios, this.basePath));
+    public registerUser(userRegister: UserRegister, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).registerUser(userRegister, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

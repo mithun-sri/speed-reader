@@ -1,12 +1,11 @@
 import { Box, IconButton } from "@mui/material";
+import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { useGameContext } from "../../context/GameContext";
+import clickAudio from "../../common/audio";
+import { GameViewType, useGameContext } from "../../context/GameContext";
 import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
-import { StandardView } from "../../views/StandardMode/StandardMode";
 import GameProgressBar from "../ProgressBar/GameProgressBar";
 import ModeDescriptionComponent from "./ModeDescription";
-import clickAudio from "../../common/audio";
-import { motion } from "framer-motion";
 
 const PeripheralPreview: React.FC<{
   text: string;
@@ -56,7 +55,7 @@ const PeripheralPreview: React.FC<{
     <IconButton
       onClick={() => {
         clickAudio.play();
-        setView(StandardView.Peripheral);
+        setView(GameViewType.StandardPeripheral);
         incrementCurrentStage();
       }}
     >

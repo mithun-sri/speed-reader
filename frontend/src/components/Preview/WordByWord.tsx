@@ -1,11 +1,10 @@
 import { Box, IconButton } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useGameContext } from "../../context/GameContext";
+import clickAudio from "../../common/audio";
+import { GameViewType, useGameContext } from "../../context/GameContext";
 import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
-import { StandardView } from "../../views/StandardMode/StandardMode";
 import GameProgressBar from "../ProgressBar/GameProgressBar";
 import ModeDescriptionComponent from "./ModeDescription";
-import clickAudio from "../../common/audio";
 
 const WordByWordPreview: React.FC<{
   text: string;
@@ -57,7 +56,7 @@ const WordByWordPreview: React.FC<{
     <IconButton
       onClick={() => {
         clickAudio.play();
-        setView(StandardView.Word);
+        setView(GameViewType.StandardWord);
         incrementCurrentStage();
       }}
     >

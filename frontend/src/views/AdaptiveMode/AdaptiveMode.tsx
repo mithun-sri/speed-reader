@@ -5,15 +5,15 @@ import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
-import { useGameContext } from "../../context/GameContext";
+import { GameViewType, useGameContext } from "../../context/GameContext";
 import { useWebGazerContext } from "../../context/WebGazerContext";
 import { useNextText } from "../../hooks/game";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const AdaptiveModeView = () => {
-  const { setTextId, summarised } = useGameContext();
+  const { setTextId, summarised, difficulty } = useGameContext();
   const { resumeWebGazer } = useWebGazerContext();
-  const { data: text } = useNextText(summarised);
+  const { data: text } = useNextText(summarised, difficulty || undefined);
 
   const [showGameScreen, setShowGameScreen] = useState(false);
 
@@ -83,11 +83,15 @@ const AdaptiveModeTextDisplay: React.FC<{
   };
 
   const [fontSize, setFontSize] = useState(calculateFontSize());
+  const { intervalWpms, setIntervalWpms, setAverageWpm, setView } =
+    useGameContext();
 
   useEffect(() => {
     function handleResize() {
       setFontSize(calculateFontSize());
     }
+
+    setView(GameViewType.AdaptiveHighlighted);
 
     window.addEventListener("resize", handleResize);
 
@@ -220,7 +224,6 @@ const AdaptiveModeTextDisplay: React.FC<{
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [nextLineIndex, setNextLineIndex] = useState(calculateNextLineIndex(0));
   const [lastLineChangeTime, setLastLineChangeTime] = useState(Date.now());
-  const { intervalWpms, setIntervalWpms, setAverageWpm } = useGameContext();
   const { incrementCurrentStage } = useGameScreenContext();
 
   useEffect(() => {
@@ -233,6 +236,7 @@ const AdaptiveModeTextDisplay: React.FC<{
       setLastLineChangeTime(timeNow);
 
       if (nextLineIndex === wordsArray.length) {
+        console.log("intervalWpms: ", intervalWpms);
         setAverageWpm(calculateAverageWpm(intervalWpms));
         incrementCurrentStage();
         return;
@@ -248,11 +252,11 @@ const AdaptiveModeTextDisplay: React.FC<{
   useEffect(() => {
     // Record the wpm every 2.5 seconds.
     const recordIntervalWpms = setInterval(() => {
-      setIntervalWpms(intervalWpms ? [...intervalWpms, wpm] : []);
-    }, 2500 * 10);
+      setIntervalWpms(intervalWpms ? [...intervalWpms, Math.floor(wpm)] : []);
+    }, 2500);
 
     return () => clearInterval(recordIntervalWpms);
-  }, [wpm]);
+  }, [wpm, intervalWpms]);
 
   return (
     <AdaptiveModeTextDisplayInner
@@ -302,7 +306,7 @@ const AdaptiveModeTextDisplayInner = ({
     }, 60000 / wpm);
 
     return () => clearInterval(updateHighlightedIndex);
-  }, [wpm]);
+  }, [wpm, nextLineIndex]);
 
   return (
     <Box>

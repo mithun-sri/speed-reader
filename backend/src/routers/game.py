@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import APIRouter, Body, Depends, Query, Security
 from sqlalchemy import func, select
@@ -31,6 +31,8 @@ router = APIRouter(
     response_model=schemas.Text,
 )
 async def get_next_text(
+    *,
+    difficulty: Annotated[Optional[str], Query()] = None,
     is_summary: Annotated[bool, Query()],
     user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
@@ -42,6 +44,10 @@ async def get_next_text(
 
     query_unseen = select(models.Text).where(models.Text.id.notin_(text_ids)).limit(1)
     query_random = query_unseen.order_by(func.random()).limit(1)
+    if difficulty:
+        query_unseen = query_unseen.where(models.Text.difficulty == difficulty)
+        query_random = query_random.where(models.Text.difficulty == difficulty)
+
     if is_summary:
         query_unseen = query_unseen.where(models.Text.summary.isnot(None))
         query_random = query_random.where(models.Text.summary.isnot(None))
@@ -52,6 +58,29 @@ async def get_next_text(
         return text
 
     raise NoTextAvailableException()
+
+
+# NOTE:
+# This endpoint cannot be named as `get_text`
+# because of the conflict with the endpoint in the admin router.
+# We generate OpenAPI operation ID from the function name so it must be unique.
+# A real fix for this would be to handle this in the OpenAPI client generation.
+@router.get(
+    "/texts/{text_id}",
+    response_model=schemas.TextWithQuestions,
+)
+async def get_text_by_id(
+    text_id: str,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Gets the text with the given id.
+    """
+    text = session.get(models.Text, text_id)
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
+
+    return text
 
 
 # TODO:
