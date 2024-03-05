@@ -5,10 +5,9 @@ import "./Quiz.css";
 
 import { useEffect } from "react";
 import { ADAPTIVE_MODE, STANDARD_MODE } from "../../common/constants";
-import { useGameContext } from "../../context/GameContext";
+import { GameViewType, useGameContext } from "../../context/GameContext";
 import { useNextQuestions, usePostAnswers } from "../../hooks/game";
 import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
-import { StandardView } from "../StandardMode/StandardMode";
 
 const QuizView = () => {
   const { incrementCurrentStage } = useGameScreenContext();
@@ -72,9 +71,10 @@ const QuizView = () => {
           [ADAPTIVE_MODE]: "adaptive",
         }[mode];
         const gameSubmode = {
-          [StandardView.Word]: "word-by-word",
-          [StandardView.Highlighted]: "highlight",
-          [StandardView.Peripheral]: "peripheral",
+          [GameViewType.StandardWord]: "word-by-word",
+          [GameViewType.StandardHighlighted]: "highlight",
+          [GameViewType.StandardPeripheral]: "peripheral",
+          [GameViewType.AdaptiveHighlighted]: "single-line-highlight",
         }[view];
         postAnswers.mutate(
           {
