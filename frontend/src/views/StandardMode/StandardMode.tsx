@@ -7,18 +7,34 @@ import "./StandardMode.css";
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 import { GameViewType, useGameContext } from "../../context/GameContext";
-import { useNextText } from "../../hooks/game";
+import { useNextText, useNextTextById } from "../../hooks/game";
 import HighlightedTextDisplay from "./HighlightedTextDisplay";
 import PeripheralTextDisplay from "./PeripheralTextDisplay";
 import WordTextDisplay from "./WordTextDisplay";
+import { useWebGazerContext } from "../../context/WebGazerContext";
+
+export enum StandardView {
+  Word = 0,
+  Highlighted = 1,
+  Peripheral = 2,
+}
 
 const StandardModeGameView: React.FC<{
   wpm?: number;
   mode?: GameViewType;
   difficulty?: GameDifficulty;
-}> = ({ wpm, mode }) => {
-  const { setTextId, summarised, difficulty } = useGameContext();
-  const { data: text } = useNextText(summarised, difficulty || undefined);
+}> = ({ wpm, mode, difficulty }) => {
+  const { textId, setTextId_ } = useWebGazerContext();
+  const { setTextId, summarised } = useGameContext();
+  const getText = () => {
+    if (textId === null) {
+      return useNextText(summarised, difficulty);
+    } else {
+      setTextId_(null);
+      return useNextTextById(textId);
+    }
+  };
+  const { data: text } = getText();
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   useEffect(() => {

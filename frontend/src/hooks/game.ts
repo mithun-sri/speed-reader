@@ -26,6 +26,16 @@ export function useNextText(
   });
 }
 
+export function useNextTextById(textId: string) {
+  const { gameApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["next-text"],
+    queryFn: () => gameApi.getTextById(textId).then((res) => res.data),
+    gcTime: 0,
+  });
+}
+
 export function useNextQuestions(textId: string) {
   const { gameApi } = useApiClient();
 

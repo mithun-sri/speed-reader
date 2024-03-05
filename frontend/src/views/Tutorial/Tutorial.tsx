@@ -38,7 +38,7 @@ function Tutorial() {
   useEffect(() => {
     if (cookies.hasConsentedToCookies) {
       if (cookies.visited) {
-        navigate("/signup");
+        navigate("/game");
         return;
       }
       setCookie(VISITED_COOKIE, true, { path: "/" });

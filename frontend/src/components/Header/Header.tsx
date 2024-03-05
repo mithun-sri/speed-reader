@@ -29,6 +29,7 @@ const Header = () => {
   const [iconSize, setIconSize] = useState(calculateIconSize());
   const { webGazerInitialised, setManualRecalibration } = useWebGazerContext();
   const { isAdmin } = useAuth();
+  const { setTextId_ } = useWebGazerContext();
 
   useEffect(() => {
     function handleResize() {
@@ -59,7 +60,7 @@ const Header = () => {
   return (
     <HeaderContainer>
       <Link to={"/"} style={{ textDecoration: "" }}>
-        <IconButton>
+        <IconButton onClick={() => setTextId_(null)}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box
               sx={{
