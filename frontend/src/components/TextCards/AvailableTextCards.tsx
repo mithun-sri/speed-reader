@@ -14,7 +14,6 @@ import DifficultyBox from "../Difficulty/DifficultyBox";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSquareArrowUpRight,
-  faEye,
   faGamepad,
 } from "@fortawesome/free-solid-svg-icons";
 import FictionBox from "../Fiction/Fiction";
@@ -242,11 +241,11 @@ export const ItemBoxHovered: React.FC<Text> = ({
   author,
   image_url,
 }) => {
-  const {textId, setTextId} = useWebGazerContext();
+  const {setTextId_} = useWebGazerContext();
   const navigate = useNavigate();
 
   const handleStandardClick = () => {
-    setTextId(id);
+    setTextId_(id);
     navigate("/game");
   };
   return (

@@ -11,6 +11,7 @@ import { useNextText } from "../../hooks/game";
 import HighlightedTextDisplay from "./HighlightedTextDisplay";
 import PeripheralTextDisplay from "./PeripheralTextDisplay";
 import WordTextDisplay from "./WordTextDisplay";
+import { useWebGazerContext } from "../../context/WebGazerContext";
 
 export enum StandardView {
   Word = 0,
@@ -23,8 +24,18 @@ const StandardModeGameView: React.FC<{
   mode?: StandardView;
   difficulty?: GameDifficulty;
 }> = ({ wpm, mode }) => {
+  const { textId, setTextId_ } = useWebGazerContext();
   const { setTextId, summarised } = useGameContext();
-  const { data: text } = useNextText(summarised);
+  const getText = () => {
+    if (textId === null) {
+      return useNextText(summarised);
+    } else {
+      /* TODO: Fix this */
+      setTextId_(null);
+      return useNextTextById(summarised, textId);
+    }
+  }
+  const { data: text } = getText();
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   useEffect(() => {
