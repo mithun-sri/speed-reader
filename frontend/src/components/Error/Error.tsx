@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import React, { useEffect } from "react";
-import Header from "../Header/Header";
 import JetBrainsMonoText from "../Text/TextComponent";
 
 const Error = ({
@@ -32,7 +31,6 @@ const Error = ({
         height: "100vh",
       }}
     >
-      <Header />
       <Box
         sx={{
           display: "flex",
