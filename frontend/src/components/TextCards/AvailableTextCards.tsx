@@ -20,6 +20,8 @@ import {
 import FictionBox from "../Fiction/Fiction";
 import { Text, TextFilter } from "../../api";
 import { useState } from "react";
+import { useWebGazerContext } from "../../context/WebGazerContext";
+import { useNavigate } from "react-router-dom";
 
 export const SearchBar: React.FC<{
   initialFilters: TextFilter;
@@ -231,6 +233,7 @@ export const SearchBar: React.FC<{
 };
 
 export const ItemBoxHovered: React.FC<Text> = ({
+  id,
   title,
   description,
   difficulty,
@@ -239,6 +242,13 @@ export const ItemBoxHovered: React.FC<Text> = ({
   author,
   image_url,
 }) => {
+  const {textId, setTextId} = useWebGazerContext();
+  const navigate = useNavigate();
+
+  const handleStandardClick = () => {
+    setTextId(id);
+    navigate("/game");
+  };
   return (
     <Box
       sx={{
@@ -369,39 +379,7 @@ export const ItemBoxHovered: React.FC<Text> = ({
                 fontFamily: "JetBrains Mono, monospace",
                 color: "#FFFFFF",
               }}
-            >
-              <Box
-                sx={{
-                  border: "none",
-                  borderRadius: "5px",
-                  background: "#E2B714",
-                  padding: "10px 20px 10px 20px",
-                  fontWeight: "bolder",
-                  fontSize: "16px",
-                  wordWrap: "break-word",
-                  textAlign: "center",
-                  display: "flex",
-                  flexDirection: "row",
-                  alignItems: "center",
-                  "&:hover": {
-                    backgroundColor: "#cba412",
-                  },
-                  transition: "0.1s ease-out",
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={faEye}
-                  className="fa-table-page-icon"
-                  style={{ marginRight: "10px" }}
-                />
-                <Box>Play Adaptive</Box>
-              </Box>
-            </IconButton>
-            <IconButton
-              sx={{
-                fontFamily: "JetBrains Mono, monospace",
-                color: "#FFFFFF",
-              }}
+              onClick={handleStandardClick}
             >
               <Box
                 sx={{
@@ -427,7 +405,7 @@ export const ItemBoxHovered: React.FC<Text> = ({
                   className="fa-table-page-icon"
                   style={{ marginRight: "10px" }}
                 />
-                <Box>Play Standard</Box>
+                <Box>Play Text</Box>
               </Box>
             </IconButton>
           </Box>

@@ -4,14 +4,20 @@ import StartButton from "../../components/Button/StartButton";
 import Header from "../../components/Header/Header";
 import SpeedSlider from "../../components/Slider/Slider";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
+import { useWebGazerContext } from "../../context/WebGazerContext";
 
 const WpmView = () => {
   const { decrementCurrentStage } = useGameScreenContext();
+  const {textId} = useWebGazerContext();
   return (
     <>
       <Header />
       <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
-        <BackButton label="view" handleClick={decrementCurrentStage} />
+        {
+          textId === null ?
+            <BackButton label="view" handleClick={decrementCurrentStage} />
+            : null
+        }
       </Box>
       <Box
         sx={{
