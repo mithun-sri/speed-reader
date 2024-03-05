@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import BackButton from "../../components/Button/BackButton";
+import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import OriginalSelect from "../../components/Summarised/OriginalSelect";
 import SummarisedSelect from "../../components/Summarised/Summarised";
@@ -46,7 +47,7 @@ const TextSelect = () => {
   }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
       <Box sx={{ marginLeft: "7vw", marginTop: "35px", marginBottom: "0px" }}>
         <BackButton label="mode" handleClick={handleBackButton} />
@@ -56,6 +57,7 @@ const TextSelect = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          flex: 1,
         }}
       >
         <AnimatePresence>
@@ -70,7 +72,7 @@ const TextSelect = () => {
               alignItems: "center",
               justifyContent: "center",
               width: "100%",
-              height: "70vh",
+              height: "59vh",
               paddingBottom: "20px",
             }}
           >
@@ -95,6 +97,7 @@ const TextSelect = () => {
           </motion.div>
         </AnimatePresence>
       </Box>
+      <Footer />
     </Box>
   );
 };

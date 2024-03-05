@@ -99,7 +99,7 @@ const GptPrompt: React.FC<{
           <GptButton
             onButtonClick={handleGenerateTextButton}
             color="#E2B714"
-            label="generate"
+            label="Generate"
           ></GptButton>
         </Box>
       </StyledBox>
