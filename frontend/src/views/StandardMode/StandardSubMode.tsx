@@ -40,16 +40,16 @@ const StandardSubModeView = () => {
     visible: { opacity: 1 },
   };
 
-  const {textId} = useWebGazerContext();
+  const { textId } = useWebGazerContext();
 
   return (
     <Box>
       <Header />
-      {
-        textId === null ?       <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
-        <BackButton label="difficulty" handleClick={decrementCurrentStage} />
-      </Box> : null
-      }
+      {textId === null ? (
+        <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
+          <BackButton label="difficulty" handleClick={decrementCurrentStage} />
+        </Box>
+      ) : null}
 
       <Box
         sx={{
