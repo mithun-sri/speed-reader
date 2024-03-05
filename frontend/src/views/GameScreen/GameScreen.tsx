@@ -92,11 +92,9 @@ const GameScreen = () => {
 
     if (textId && currentStage === 0 && _mode == STANDARD_MODE) {
       setCurrentStage(STANDARD_SELECT_STAGE);
-    }
-    else if (textId && currentStage === 0 && _mode == ADAPTIVE_MODE) {
+    } else if (textId && currentStage === 0 && _mode == ADAPTIVE_MODE) {
       setCurrentStage(CALIBRATION_STAGE);
-    }
-    else if (_mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
+    } else if (_mode !== STANDARD_MODE && newStage === STANDARD_SELECT_STAGE) {
       if (calibratedBefore) {
         setCurrentStage(RECALIBRATION_CHOICE_STAGE);
       } else {

@@ -14,6 +14,16 @@ export function getAdminStatistics(gameMode: string) {
   });
 }
 
+export function getText(text_id: string) {
+  const { adminApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["text-statistics"],
+    queryFn: () => adminApi.getText(text_id).then((res) => res.data),
+    gcTime: 0,
+  });
+}
+
 export function getTexts(page?: number, pageSize?: number) {
   const { adminApi } = useApiClient();
 

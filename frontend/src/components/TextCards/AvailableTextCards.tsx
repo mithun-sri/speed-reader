@@ -241,7 +241,7 @@ export const ItemBoxHovered: React.FC<Text> = ({
   author,
   image_url,
 }) => {
-  const {setTextId_} = useWebGazerContext();
+  const { setTextId_ } = useWebGazerContext();
   const navigate = useNavigate();
 
   const handleStandardClick = () => {

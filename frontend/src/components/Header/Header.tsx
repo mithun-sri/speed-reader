@@ -1,6 +1,6 @@
 import {
   faArrowsToEye,
-  faFileLines,
+  faBook,
   faLock,
   faStopwatch,
   faUser,
@@ -22,14 +22,14 @@ const HeaderContainer = styled(Box)({
   justifyContent: "space-between",
   alignItems: "center",
   color: "white",
-  zIndex: 9999,
+  zIndex: 10,
 });
 
 const Header = () => {
   const [iconSize, setIconSize] = useState(calculateIconSize());
   const { webGazerInitialised, setManualRecalibration } = useWebGazerContext();
   const { isAdmin } = useAuth();
-  const {setTextId} = useWebGazerContext();
+  const { setTextId_ } = useWebGazerContext();
 
   useEffect(() => {
     function handleResize() {
@@ -60,7 +60,7 @@ const Header = () => {
   return (
     <HeaderContainer>
       <Link to={"/"} style={{ textDecoration: "" }}>
-        <IconButton onClick={() => setTextId(null)}>
+        <IconButton onClick={() => setTextId_(null)}>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Box
               sx={{
@@ -91,19 +91,21 @@ const Header = () => {
       </Link>
       <Box sx={{ display: "flex", alignItems: "center" }}>
         {webGazerInitialised && (
-          <IconButton
-            style={{
-              fontSize: iconSize / 1.8,
-              marginRight: "20px",
-            }}
-            component={Link}
-            onClick={() => {
-              setManualRecalibration(true);
-            }}
-            to="/calibrate"
-          >
-            <FontAwesomeIcon icon={faArrowsToEye} color="#EE4B2B" />
-          </IconButton>
+          <Tooltip title="Recalibrate">
+            <IconButton
+              style={{
+                fontSize: iconSize / 1.8,
+                marginRight: "20px",
+              }}
+              component={Link}
+              onClick={() => {
+                setManualRecalibration(true);
+              }}
+              to="/calibrate"
+            >
+              <FontAwesomeIcon icon={faArrowsToEye} color="#EE4B2B" />
+            </IconButton>
+          </Tooltip>
         )}
 
         <Tooltip title="Available texts">
@@ -115,7 +117,7 @@ const Header = () => {
                 marginLeft: "15px",
               }}
             >
-              <FontAwesomeIcon icon={faFileLines} color="#D1D0C5" />
+              <FontAwesomeIcon icon={faBook} color="#D1D0C5" />
             </IconButton>
           </Link>
         </Tooltip>

@@ -106,6 +106,8 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
         .saveDataAcrossSessions(true)
         .begin();
 
+      await restartWebGazer();
+
       await webgazer
         .showPredictionPoints(true)
         .showVideoPreview(true)

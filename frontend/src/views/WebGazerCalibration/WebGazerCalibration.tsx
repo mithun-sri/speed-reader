@@ -10,12 +10,12 @@ const WebGazerCalibration = () => {
   const {
     initialiseWebGazer,
     turnOffWebGazerCam,
-    setNeedsCalibration,
     turnOffPredictionPoints,
     webGazerInitialised,
     manualRecalibration,
     setManualRecalibration,
     setCalibratedBefore,
+    pauseWebGazer,
   } = useWebGazerContext();
   const canvasRef = useRef(null);
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const WebGazerCalibration = () => {
       window.removeEventListener("load", handleLoad);
       turnOffWebGazerCam();
       turnOffPredictionPoints();
-      setNeedsCalibration(false);
+      pauseWebGazer();
     };
   }, []);
 
@@ -210,7 +210,6 @@ const WebGazerCalibration = () => {
             />
             <IconButton
               onClick={() => {
-                turnOffPredictionPoints();
                 context.incrementCurrentStage();
               }}
               sx={{

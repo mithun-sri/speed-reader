@@ -2,14 +2,14 @@ import { Box, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { BodyLoginUser } from "../../api";
+import { UserLogin } from "../../api";
 import Header from "../../components/Header/Header";
 import StyledTextField from "../../components/Textbox/StyledTextField";
 import { useSnack } from "../../context/SnackContext";
 import { useLoginUser } from "../../hooks/users";
 
 const Login: React.FC = () => {
-  const { register, handleSubmit } = useForm<BodyLoginUser>();
+  const { register, handleSubmit } = useForm<UserLogin>();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const { showSnack } = useSnack();
 
-  const onSubmit = (data: BodyLoginUser) => {
+  const onSubmit = (data: UserLogin) => {
     loginUser.mutate(data, {
       onSuccess: () => {
         navigate("/game");

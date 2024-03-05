@@ -8,16 +8,14 @@ import { useWebGazerContext } from "../../context/WebGazerContext";
 
 const WpmView = () => {
   const { decrementCurrentStage } = useGameScreenContext();
-  const {textId} = useWebGazerContext();
+  const { textId } = useWebGazerContext();
   return (
     <>
       <Header />
       <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
-        {
-          textId === null ?
-            <BackButton label="view" handleClick={decrementCurrentStage} />
-            : null
-        }
+        {textId === null ? (
+          <BackButton label="view" handleClick={decrementCurrentStage} />
+        ) : null}
       </Box>
       <Box
         sx={{

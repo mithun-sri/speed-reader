@@ -120,7 +120,7 @@ const MinMax: React.FC<{
   }> = ({ val }) => (
     <Box
       sx={{
-        fontSize: size * 1.9,
+        fontSize: size * 1.6,
         color: "#E2B714",
         fontFamily: "JetBrains Mono, monospace",
         fontWeight: "bolder",
