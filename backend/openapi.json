@@ -1099,6 +1099,81 @@
         }
       }
     },
+    "/game/texts/next": {
+      "get": {
+        "tags": [
+          "game"
+        ],
+        "summary": "Get Next Text",
+        "description": "Gets the next text that the user has not attempted before.",
+        "operationId": "get_next_text",
+        "parameters": [
+          {
+            "name": "difficulty",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Difficulty"
+            }
+          },
+          {
+            "name": "is_summary",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean",
+              "title": "Is Summary"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Text"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/game/texts/{text_id}": {
       "get": {
         "tags": [
@@ -1158,75 +1233,7 @@
         }
       }
     },
-    "/game/next-text": {
-      "get": {
-        "tags": [
-          "game"
-        ],
-        "summary": "Get Next Text",
-        "description": "Gets the next text that the user has not attempted before.",
-        "operationId": "get_next_text",
-        "parameters": [
-          {
-            "name": "difficulty",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Difficulty"
-            }
-          },
-          {
-            "name": "is_summary",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "boolean",
-              "title": "Is Summary"
-            }
-          },
-          {
-            "name": "access_token",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Access Token"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Text"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/game/texts/{text_id}/next-questions": {
+    "/game/texts/{text_id}/questions/next": {
       "get": {
         "tags": [
           "game"

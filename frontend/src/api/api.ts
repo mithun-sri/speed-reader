@@ -2174,7 +2174,7 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
         getNextQuestions: async (textId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'textId' is not null or undefined
             assertParamExists('getNextQuestions', 'textId', textId)
-            const localVarPath = `/game/texts/{text_id}/next-questions`
+            const localVarPath = `/game/texts/{text_id}/questions/next`
                 .replace(`{${"text_id"}}`, encodeURIComponent(String(textId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2201,18 +2201,16 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
-         * @param {string} difficulty 
          * @param {boolean} isSummary 
+         * @param {Difficulty} [difficulty] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText: async (difficulty: string, isSummary: boolean, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'difficulty' is not null or undefined
-            assertParamExists('getNextText', 'difficulty', difficulty)
+        getNextText: async (isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'isSummary' is not null or undefined
             assertParamExists('getNextText', 'isSummary', isSummary)
-            const localVarPath = `/game/next-text`;
+            const localVarPath = `/game/texts/next`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2225,7 +2223,9 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarQueryParameter = {} as any;
 
             if (difficulty !== undefined) {
-                localVarQueryParameter['difficulty'] = difficulty;
+                for (const [key, value] of Object.entries(difficulty)) {
+                    localVarQueryParameter[key] = value;
+                }
             }
 
             if (isSummary !== undefined) {
@@ -2346,14 +2346,14 @@ export const GameApiFp = function(configuration?: Configuration) {
         /**
          * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
-         * @param {string} difficulty 
          * @param {boolean} isSummary 
+         * @param {Difficulty} [difficulty] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNextText(difficulty: string, isSummary: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(difficulty, isSummary, accessToken, options);
+        async getNextText(isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(isSummary, difficulty, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.getNextText']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2411,14 +2411,14 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
-         * @param {string} difficulty 
          * @param {boolean} isSummary 
+         * @param {Difficulty} [difficulty] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText(difficulty: string, isSummary: boolean, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
-            return localVarFp.getNextText(difficulty, isSummary, accessToken, options).then((request) => request(axios, basePath));
+        getNextText(isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
+            return localVarFp.getNextText(isSummary, difficulty, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the text with the given id.
@@ -2469,15 +2469,15 @@ export class GameApi extends BaseAPI {
     /**
      * Gets the next text that the user has not attempted before.
      * @summary Get Next Text
-     * @param {string} difficulty 
      * @param {boolean} isSummary 
+     * @param {Difficulty} [difficulty] 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GameApi
      */
-    public getNextText(difficulty: string, isSummary: boolean, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
-        return GameApiFp(this.configuration).getNextText(difficulty, isSummary, accessToken, options).then((request) => request(this.axios, this.basePath));
+    public getNextText(isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return GameApiFp(this.configuration).getNextText(isSummary, difficulty, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

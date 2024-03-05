@@ -4,7 +4,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { BodyLoginUser, BodyRegisterUser, TextFilter } from "../api";
+import { TextFilter, UserLogin, UserRegister } from "../api";
 import { useApiClient } from "../context/ApiContext";
 
 export function useAuth() {
@@ -56,7 +56,7 @@ export function useRegisterUser() {
   const { userApi } = useApiClient();
 
   return useMutation({
-    mutationFn: (data: BodyRegisterUser) => userApi.registerUser(data),
+    mutationFn: (data: UserRegister) => userApi.registerUser(data),
   });
 }
 
@@ -65,7 +65,7 @@ export function useLoginUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: BodyLoginUser) => userApi.loginUser(data),
+    mutationFn: (data: UserLogin) => userApi.loginUser(data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["users", "current"],

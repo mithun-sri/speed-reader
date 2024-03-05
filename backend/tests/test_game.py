@@ -18,7 +18,10 @@ class TestGetNextText:
     ):
         response = user_client.get(
             "/game/texts/next",
-            params={"is_summary": random.choice([True, False])},
+            params={
+                "difficulty": random.choice(["easy", "medium", "hard"]),
+                "is_summary": random.choice([True, False]),
+            },
         )
         assert response.status_code == 404
 
@@ -33,7 +36,10 @@ class TestGetNextText:
 
         response = user_client.get(
             "/game/texts/next",
-            params={"is_summary": random.choice([True, False])},
+            params={
+                "difficulty": text.difficulty,
+                "is_summary": random.choice([True, False]),
+            },
         )
         assert response.status_code == 200
 

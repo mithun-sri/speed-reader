@@ -23,8 +23,8 @@ const StandardModeGameView: React.FC<{
   mode?: StandardView;
   difficulty?: GameDifficulty;
 }> = ({ wpm, mode }) => {
-  const { setTextId, summarised } = useGameContext();
-  const { data: text } = useNextText(summarised);
+  const { setTextId, summarised, difficulty } = useGameContext();
+  const { data: text } = useNextText(summarised, difficulty || undefined);
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   useEffect(() => {

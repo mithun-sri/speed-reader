@@ -11,9 +11,9 @@ import { useNextText } from "../../hooks/game";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const AdaptiveModeView = () => {
-  const { setTextId, summarised } = useGameContext();
+  const { setTextId, summarised, difficulty } = useGameContext();
   const { resumeWebGazer } = useWebGazerContext();
-  const { data: text } = useNextText(summarised);
+  const { data: text } = useNextText(summarised, difficulty || undefined);
 
   const [showGameScreen, setShowGameScreen] = useState(false);
 

@@ -2,14 +2,14 @@ import { Box, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { BodyRegisterUser } from "../../api";
+import { UserRegister } from "../../api";
 import Header from "../../components/Header/Header";
 import StyledTextField from "../../components/Textbox/StyledTextField";
 import { useSnack } from "../../context/SnackContext";
 import { useRegisterUser } from "../../hooks/users";
 
 const SignUp: React.FC = () => {
-  const { register, handleSubmit } = useForm<BodyRegisterUser>();
+  const { register, handleSubmit } = useForm<UserRegister>();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const { showSnack } = useSnack();
 
-  const onSubmit = (data: BodyRegisterUser) => {
+  const onSubmit = (data: UserRegister) => {
     registerUser.mutate(data, {
       onSuccess: () => {
         showSnack("Successfully registered!");
