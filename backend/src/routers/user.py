@@ -196,15 +196,17 @@ async def get_histories(
     """
     histories = models.History.objects(user_id=user.id)
     histories = list(histories)
+    histories.sort(key=lambda history: history.timestamp)
+
+    def get_text(text_id):
+        query = select(models.Text).where(models.Text.id == text_id).limit(1)
+        return session.scalars(query).one()
 
     return [
         schemas.HistoryWithText(
             id=history.id,
-            text_title=session.scalars(
-                select(models.Text).where(models.Text.id == history.text_id).limit(1)
-            )
-            .one()
-            .title,
+            text_title=get_text(history.text_id).title,
+            date=history.timestamp,
             text_id=history.text_id,
             game_mode=history.game_mode,
             game_submode=history.game_submode,
@@ -258,6 +260,7 @@ async def get_history(
     return schemas.HistoryWithQuestions(
         id=history.id,
         text_id=history.text_id,
+        date=history.timestamp,
         game_mode=history.game_mode,
         game_submode=history.game_submode,
         difficulty=history.difficulty,

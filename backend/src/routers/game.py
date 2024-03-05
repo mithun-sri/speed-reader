@@ -26,11 +26,16 @@ router = APIRouter(
 )
 
 
+# NOTE:
+# This endpoint cannot be named as `get_text`
+# because of the conflict with the endpoint in the admin router.
+# We generate OpenAPI operation ID from the function name so it must be unique.
+# A real fix for this would be to handle this in the OpenAPI client generation.
 @router.get(
     "/texts/{text_id}",
     response_model=schemas.TextWithQuestions,
 )
-async def get_text(
+async def get_text_by_id(
     text_id: str,
     session: Annotated[Session, Depends(get_session)],
 ):
@@ -45,10 +50,11 @@ async def get_text(
 
 
 @router.get(
-    "/texts/next",
+    "/next-text",
     response_model=schemas.Text,
 )
 async def get_next_text(
+    difficulty: Annotated[str, Query()],
     is_summary: Annotated[bool, Query()],
     user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
@@ -58,8 +64,17 @@ async def get_next_text(
     """
     text_ids = models.History.objects(user_id=user.id).distinct("text_id")
 
-    query_unseen = select(models.Text).where(models.Text.id.notin_(text_ids)).limit(1)
-    query_random = query_unseen.order_by(func.random()).limit(1)
+    query_unseen = (
+        select(models.Text)
+        .where(models.Text.difficulty == difficulty)
+        .where(models.Text.id.notin_(text_ids))
+        .limit(1)
+    )
+    query_random = (
+        query_unseen.where(models.Text.difficulty == difficulty)
+        .order_by(func.random())
+        .limit(1)
+    )
     if is_summary:
         query_unseen = query_unseen.where(models.Text.summary.isnot(None))
         query_random = query_random.where(models.Text.summary.isnot(None))
@@ -78,7 +93,7 @@ NUM_QUESTIONS_PER_GAME = 10
 
 
 @router.get(
-    "/texts/{text_id}/questions/next",
+    "/texts/{text_id}/next-questions",
     response_model=list[schemas.QuestionMasked],
 )
 async def get_next_questions(

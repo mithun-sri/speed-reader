@@ -22,7 +22,7 @@ class UserRegister(BaseModel):
         pattern=r"[a-zA-Z0-9_]+",
     )
     email: str = Field(
-        regex=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+        pattern=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
     )
     password: str = Field(
         min_length=8,
@@ -68,6 +68,7 @@ class TextFilter(BaseModel):
 
 class HistoryBase(BaseModel):
     text_id: str
+    date: datetime
     game_mode: str
     game_submode: str
     difficulty: str
