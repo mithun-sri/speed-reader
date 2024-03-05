@@ -39,6 +39,7 @@ interface Row {
 function convertHistoryToRows(histories: HistoryWithText[]): Row[] {
   return histories.map((history, index) => ({
     id: index + 1,
+    date: new Date(history.date).toLocaleDateString(),
     text_title: history.text_title,
     text_id: history.text_id,
     mode: history.game_mode,
@@ -50,6 +51,7 @@ function convertHistoryToRows(histories: HistoryWithText[]): Row[] {
 }
 
 const columns = [
+  { id: "date", label: "date", type: "string" },
   { id: "text_title", label: "text", type: "string" },
   { id: "mode", label: "mode", type: "string" },
   { id: "difficulty", label: "diff.", type: "string" },
@@ -216,7 +218,7 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
                 Easy
               </MenuItem>
               <MenuItem
-                value="med"
+                value="medium"
                 sx={{
                   fontFamily: "JetBrains Mono, monospace",
                 }}
@@ -235,19 +237,19 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
           </StyledFormControl>
           <TableContainer>
             <Table aria-labelledby="tableTitle" size="medium">
-              <TableHead>
-                <TableRow
-                  sx={{
-                    borderBottom: "1px solid #646669",
-                    backgroundColor: "transparent",
-                  }}
-                >
+              <TableHead
+                sx={{
+                  color: "#cba412",
+                }}
+              >
+                <TableRow>
                   {columns.map((column) => (
                     <StyledTableCell
                       key={column.id}
                       sx={{
                         fontSize: "1.3vw",
                         fontWeight: "bolder",
+                        color: "#cba412",
                       }}
                     >
                       {column.type === "button" ? (
@@ -258,6 +260,21 @@ const UserTable: React.FC<UserTableProps> = ({ results }) => {
                           direction={
                             sortColumn === column.id ? sortDirection : "asc"
                           }
+                          sx={{
+                            color: "#cba412",
+                            "&.Mui-active": {
+                              color: "#E2B714",
+                            },
+                            "&.MuiTableSortLabel-root": {
+                              color: "#E2B714",
+                              "&:hover": {
+                                color: "#E2B714",
+                              },
+                            },
+                            "& .MuiTableSortLabel-icon": {
+                              color: "#E2B714 !important",
+                            },
+                          }}
                           onClick={() => handleSort(column.id)}
                         >
                           {column.label}

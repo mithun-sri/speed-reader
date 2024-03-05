@@ -7,6 +7,7 @@ import HighlightWordsPreview from "../../components/Preview/HighlightWords";
 import PeripheralPreview from "../../components/Preview/Peripheral";
 import WordByWordPreview from "../../components/Preview/WordByWord";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
+import { useWebGazerContext } from "../../context/WebGazerContext";
 
 const StandardSubModeView = () => {
   const { decrementCurrentStage } = useGameScreenContext();
@@ -39,12 +40,17 @@ const StandardSubModeView = () => {
     visible: { opacity: 1 },
   };
 
+  const { textId } = useWebGazerContext();
+
   return (
     <Box>
       <Header />
-      <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
-        <BackButton label="difficulty" handleClick={decrementCurrentStage} />
-      </Box>
+      {textId === null ? (
+        <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
+          <BackButton label="difficulty" handleClick={decrementCurrentStage} />
+        </Box>
+      ) : null}
+
       <Box
         sx={{
           marginTop: "30px",
