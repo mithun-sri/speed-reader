@@ -79,13 +79,13 @@ const HighlightedTextDisplay: React.FC<{
     }
   }, [wordIndex, wordsArray.length]);
 
-  // record WPM every 2.5 seconds
+  // record WPM every 1 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isPaused) {
         setIntervalWpms([...intervalWpms, curr_wpm]);
       }
-    }, 2500);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [curr_wpm, intervalWpms, isPaused]);

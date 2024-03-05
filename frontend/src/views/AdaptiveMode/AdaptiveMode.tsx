@@ -250,10 +250,10 @@ const AdaptiveModeTextDisplay: React.FC<{
   }, [hitLeftCheckpoint, hitRightCheckpoint]);
 
   useEffect(() => {
-    // Record the wpm every 2.5 seconds.
+    // Record wpm every 1 second.
     const recordIntervalWpms = setInterval(() => {
       setIntervalWpms(intervalWpms ? [...intervalWpms, Math.floor(wpm)] : []);
-    }, 2500);
+    }, 1000);
 
     return () => clearInterval(recordIntervalWpms);
   }, [wpm, intervalWpms]);
