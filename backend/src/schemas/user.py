@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .game import Result, ResultWithQuestion
 from .text import Text
@@ -13,6 +13,26 @@ class User(BaseModel):
     username: str
     email: str
     role: str
+
+
+class UserRegister(BaseModel):
+    username: str = Field(
+        min_length=3,
+        max_length=30,
+        pattern=r"[a-zA-Z0-9_]+",
+    )
+    email: str = Field(
+        regex=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+    )
+    password: str = Field(
+        min_length=8,
+        max_length=30,
+    )
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
 
 
 class UserStatisticsAverageWpmPerDay(BaseModel):

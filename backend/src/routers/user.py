@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query, Response, Security
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, Security
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -287,25 +287,25 @@ async def register_user(
     # TODO:
     # OAuth2 password flow recommends passing credentials
     # as form data rather than request body.
-    username: Annotated[str, Body()],
-    email: Annotated[str, Body()],
-    password: Annotated[str, Body()],
+    data: schemas.UserRegister,
     session: Annotated[Session, Depends(get_session)],
 ):
     """
     Registers a new user.
     """
-    query_check_username = select(models.User).where(models.User.username == username)
+    query_check_username = select(models.User).where(
+        models.User.username == data.username
+    )
     if session.scalars(query_check_username).one_or_none():
         raise HTTPException(status_code=409, detail="Username already used")
-    query_check_email = select(models.User).where(models.User.email == email)
+    query_check_email = select(models.User).where(models.User.email == data.email)
     if session.scalars(query_check_email).one_or_none():
         raise HTTPException(status_code=409, detail="Email already used")
 
     user = models.User(
-        username=username,
-        email=email,
-        password=get_password_hash(password),
+        username=data.username,
+        email=data.email,
+        password=get_password_hash(data.password),
     )
     session.add(user)
     session.commit()
@@ -319,17 +319,16 @@ async def login_user(
     # TODO:
     # OAuth2 password flow recommends passing credentials
     # as form data rather than request body.
-    username: Annotated[str, Body()],
-    password: Annotated[str, Body()],
+    data: schemas.UserLogin,
     response: Response,
     session: Annotated[Session, Depends(get_session)],
 ):
     """
     Logs in a user. Returns access token and refresh token.
     """
-    query = select(models.User).where(models.User.username == username)
+    query = select(models.User).where(models.User.username == data.username)
     user = session.scalars(query).one_or_none()
-    if not user or not verify_password(password, user.password):
+    if not user or not verify_password(data.password, user.password):
         raise InvalidCredentialsException()
 
     access_token = create_access_token(data={"sub": user.username})

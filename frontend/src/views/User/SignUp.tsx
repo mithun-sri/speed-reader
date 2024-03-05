@@ -82,29 +82,30 @@ const SignUp: React.FC = () => {
               type="text"
               {...register("username", {
                 required: true,
+                minLength: 3,
+                maxLength: 30,
+                pattern: /^[a-zA-Z0-9_]+$/,
               })}
               placeholder="username"
             />
-
             <StyledTextField
               fullWidth
               type="email"
               {...register("email", {
                 required: true,
-                pattern: /^\S+@\S+$/i,
+                pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
               })}
               placeholder="email"
             />
-
             <StyledTextField
               fullWidth
               type="password"
               {...register("password", {
                 required: true,
+                minLength: 8,
               })}
               placeholder="password"
             />
-
             <Button
               type="submit"
               variant="contained"
