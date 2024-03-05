@@ -27,6 +27,24 @@ router = APIRouter(
 
 
 @router.get(
+    "/texts/{text_id}",
+    response_model=schemas.TextWithQuestions,
+)
+async def get_text(
+    text_id: str,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Gets the text with the given id.
+    """
+    text = session.get(models.Text, text_id)
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
+
+    return text
+
+
+@router.get(
     "/texts/next",
     response_model=schemas.Text,
 )
