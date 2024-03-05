@@ -5,6 +5,7 @@ import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { COOKIE_CONSENT_COOKIE } from "../../common/constants";
 import BlurBox from "../../components/Blur/Blur";
+import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import WpmSign from "../../components/WpmSign/WpmSign";
@@ -64,7 +65,7 @@ function Tutorial() {
   }
 
   return (
-    <Box>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
       {stage === STAGE_QUESTION ? (
         <TutorialQuestion incrementStage={incrementStage} />
@@ -86,6 +87,7 @@ function Tutorial() {
           incrementStage={incrementStage}
         />
       )}
+      <Footer />
     </Box>
   );
 }
@@ -144,7 +146,7 @@ const TutorialWordTextDisplay: React.FC<{
   }, [wordIndex, words.length]);
 
   return (
-    <Box>
+    <Box sx={{ flex: 1 }}>
       {stage >= STAGE_UP_ARROW && <WpmSign wpm={wpm} />}
       {isPaused && <BlurBox />}
       <Box
@@ -294,6 +296,7 @@ const TutorialHighlightedTextDisplay: React.FC<{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        flex: 1,
       }}
     >
       {stage >= STAGE_UP_ARROW && <WpmSign wpm={wpm} />}
@@ -371,6 +374,7 @@ const TutorialQuestion: React.FC<{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        flex: 1,
       }}
     >
       <div id={`tutorial-question`} className="question-container">

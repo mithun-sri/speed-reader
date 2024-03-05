@@ -21,6 +21,8 @@ import AdminQuestionStat from "./views/Admin/QuestionStat";
 import QuizAnalytics from "./views/Admin/QuizAnalytics";
 import AvailableTexts from "./views/AvailableTexts/AvailableTexts";
 import { GamePage } from "./views/GameScreen/GameScreen";
+import PrivacyPolicyView from "./views/Policies/PrivacyPolicy";
+import TermsOfServiceView from "./views/Policies/TermsOfService";
 import HistoricalResultsPage from "./views/Results/HistoricalResultPage";
 import Tutorial from "./views/Tutorial/Tutorial";
 import Login from "./views/User/LogIn";
@@ -44,6 +46,14 @@ function App() {
                 <BrowserRouter>
                   <Routes>
                     <Route element={<DesktopRoute fallback="/mobile" />}>
+                      <Route
+                        path="/privacy-policy"
+                        element={<PrivacyPolicyView />}
+                      />
+                      <Route
+                        path="/terms-of-service"
+                        element={<TermsOfServiceView />}
+                      />
                       <Route element={<CookieConsentHOC />}>
                         <Route element={<AuthRoute fallback="/tutorial" />}>
                           <Route path="/" element={<Navigate to="/game" />} />
