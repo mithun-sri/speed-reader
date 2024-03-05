@@ -72,6 +72,22 @@ const TermsOfServiceContent = () => {
         domain.
       </p>
 
+      <h3>
+        <strong>WebGazer.js Citation</strong>
+      </h3>
+
+      <p>
+        Speed Reader utilizes WebGazer.js for webcam eye tracking functionality.
+        If you use WebGazer.js in your own projects, please cite the original
+        research paper:
+      </p>
+      <p>
+        Papoutsaki, A., Sangkloy, P., Laskey, J., Daskalova, N., Huang, J., &
+        Hays, J. (2016). WebGazer: Scalable Webcam Eye Tracking Using User
+        Interactions. Proceedings of the 25th International Joint Conference on
+        Artificial Intelligence (IJCAI), 3839-3845.
+      </p>
+
       <h3>Contact Us</h3>
 
       <p>
