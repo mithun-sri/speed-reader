@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import React from "react";
 import {
   Bar,
@@ -13,17 +13,17 @@ import QuizAnalyticsTop from "../../components/Admin/QuizAnalyticsTop";
 import QuizScore from "../../components/Admin/QuizScore";
 import Header from "../../components/Header/Header";
 import { getQuestion } from "../../hooks/admin";
+import { Link, useParams } from "react-router-dom";
+import NotFound from "../../components/Error/NotFound";
 
-interface QuizAnalyticsProps {
-  textId: string;
-  questionId: string;
-}
+const QuizAnalytics: React.FC = () => {
+  const { text_id, question_id } = useParams();
 
-const QuizAnalytics: React.FC<QuizAnalyticsProps> = ({
-  textId,
-  questionId,
-}) => {
-  const { data: question } = getQuestion(textId, questionId);
+  if (!text_id || !question_id) {
+    return <NotFound />;
+  }
+
+  const { data: question } = getQuestion(text_id, question_id);
 
   const formatTick = (tick: number) => {
     return `${tick}%`;
@@ -42,6 +42,20 @@ const QuizAnalytics: React.FC<QuizAnalyticsProps> = ({
   return (
     <>
       <Header />
+      <Box sx={{ marginLeft: "8vw", marginTop: "1vh", marginBottom: "1.5vh" }}>
+        <Link to={`/admin/questions/${text_id}`}>
+          <IconButton>
+            <Box
+              sx={{
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#D1D0C5",
+                fontWeight: "bolder",
+                fontSize: "1.5vw",
+              }}
+            >{`< back`}</Box>
+          </IconButton>
+        </Link>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -51,10 +65,7 @@ const QuizAnalytics: React.FC<QuizAnalyticsProps> = ({
           justifyItems: "center",
         }}
       >
-        <QuizAnalyticsTop
-          question="Why did the chicken cross the road?"
-          link="google.com"
-        />
+        <QuizAnalyticsTop question={question.content} />
         <Box
           sx={{
             backgroundColor: "#323437",
@@ -73,7 +84,7 @@ const QuizAnalytics: React.FC<QuizAnalyticsProps> = ({
             <CartesianGrid stroke="transparent" />
             <XAxis
               dataKey="question"
-              tick={{ fill: "white", fontSize: 18, fontWeight: "bold" }}
+              tick={{ fill: "white", fontSize: "0.7vw", fontWeight: "bold" }}
               tickLine={false}
               axisLine={{ stroke: "white" }}
             />

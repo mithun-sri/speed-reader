@@ -25,6 +25,8 @@ import SignUp from "./views/User/SignUp";
 import UserView from "./views/User/UserView";
 import WebGazerCalibration from "./views/WebGazerCalibration/WebGazerCalibration";
 import HistoricalResultsPage from "./views/Results/HistoricalResultPage";
+import AdminQuestionStat from "./views/Admin/QuestionStat";
+import QuizAnalytics from "./views/Admin/QuizAnalytics";
 
 function App() {
   const queryClient = new QueryClient();
@@ -62,6 +64,14 @@ function App() {
                           <Route path="/gpt" element={<GptView />} />
                           <Route element={<AdminRoute fallback="/login" />}>
                             <Route path="/admin" element={<AdminAnalytics />} />
+                            <Route
+                              path="/admin/questions/:text_id"
+                              element={<AdminQuestionStat />}
+                            />
+                            <Route
+                              path="/admin/questions/:text_id/stat/:question_id"
+                              element={<QuizAnalytics />}
+                            />
                           </Route>
                         </Route>
                         <Route element={<GuestRoute fallback="/game" />}>
