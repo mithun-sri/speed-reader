@@ -20,7 +20,7 @@ const TermsOfServiceContent = () => {
 
       <p>
         These Terms of Service outline the rules and regulations for the use of
-        Speed Reader&aposs Website.
+        Speed Reader&#39;s Website.
       </p>
 
       <p>
@@ -33,15 +33,15 @@ const TermsOfServiceContent = () => {
         The following terminology applies to these Terms of Service, Privacy
         Statement and Disclaimer Notice and all Agreements: &quot;Client&quot;,
         &quot;You&quot; and &quot;Your&quot; refers to you, the person log on
-        this website and compliant to the Company&aposs Terms of Service.
+        this website and compliant to the Company&#39;s Terms of Service.
         &quot;The Company&quot;, &quot;Ourselves&quot;, &quot;We&quot;,
         &quot;Our&quot; and &quot;Us&quot;, refers to our Company.
         &quot;Party&quot;, &quot;Parties&quot;, or &quot;Us&quot;, refers to
         both the Client and ourselves. All terms refer to the offer, acceptance
         and consideration of payment necessary to undertake the process of our
         assistance to the Client in the most appropriate manner for the express
-        purpose of meeting the Client&aposs needs in respect of provision of the
-        Company&aposs stated services, in accordance with and subject to,
+        purpose of meeting the Client&#39;s needs in respect of provision of the
+        Company&#39;s stated services, in accordance with and subject to,
         prevailing law of gb. Any use of the above terminology or other words in
         the singular, plural, capitalization and/or he/she or they, are taken as
         interchangeable and therefore as referring to same.
@@ -53,11 +53,11 @@ const TermsOfServiceContent = () => {
 
       <p>
         We employ the use of cookies. By accessing Speed Reader, you agreed to
-        use cookies in agreement with the Speed Reader&aposs Privacy Policy.{" "}
+        use cookies in agreement with the Speed Reader&#39;s Privacy Policy.{" "}
       </p>
 
       <p>
-        Most interactive websites use cookies to let us retrieve the user&aposs
+        Most interactive websites use cookies to let us retrieve the user&#39;s
         details for each visit. Cookies are used by our website to enable the
         functionality of certain areas to make it easier for people visiting our
         website.{" "}
@@ -68,7 +68,7 @@ const TermsOfServiceContent = () => {
       </h3>
 
       <p>
-        All texts used on Speed Reader&aposs website are sourced from the public
+        All texts used on Speed Reader&#39;s website are sourced from the public
         domain.
       </p>
 
