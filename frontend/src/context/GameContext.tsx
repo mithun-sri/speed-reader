@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { QuestionMasked } from "../api";
 import { GameDifficulty, GameMode } from "../common/constants";
-import { StandardView } from "../views/StandardMode/StandardMode";
 
 interface GameContextType {
   mode: GameMode | null;
@@ -12,8 +11,8 @@ interface GameContextType {
   setDifficulty: (difficulty: GameDifficulty | null) => void;
   wpm: number | null;
   setWpm: (wpm: number) => void;
-  view: StandardView | null; // TODO: change to GameView when StandardSelect is implemented
-  setView: (view: StandardView) => void;
+  view: GameViewType | null;
+  setView: (view: GameViewType) => void;
   averageWpm: number;
   setAverageWpm: (averageWpm: number) => void;
   intervalWpms: number[];
@@ -74,6 +73,13 @@ export const useGameContext = () => {
   return context;
 };
 
+export enum GameViewType {
+  StandardWord = 0,
+  StandardHighlighted = 1,
+  StandardPeripheral = 2,
+  AdaptiveHighlighted = 3,
+}
+
 // This provides the game context, which manages
 // the state related to the game mode, words per minute (WPM), and difficulty level.
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -83,7 +89,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [summarised, setSummarised] = useState<boolean>(false);
   const [difficulty, setDifficulty] = useState<GameDifficulty | null>(null);
   const [wpm, setWpm] = useState<number | null>(200);
-  const [view, setView] = useState<StandardView | null>(null);
+  const [view, setView] = useState<GameViewType | null>(null);
   const [averageWpm, setAverageWpm] = useState<number>(0);
   const [intervalWpms, setIntervalWpms] = useState<number[]>([]);
   const [textId, setTextId] = useState<string>("");
