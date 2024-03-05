@@ -67,15 +67,15 @@ const Footer = () => {
     >
       <Box>
         <IconButton
-          href="https://www.termsandconditionsgenerator.com/live.php?token=gjeHytawZEgRtNIWQDZs8t42UopAzUfz"
+          href="/terms-of-service"
           target="_blank"
           rel="noopener noreferrer"
           sx={linkButtonStyles}
         >
-          Terms Of Condition
+          Terms Of Service
         </IconButton>
         <IconButton
-          href="https://www.freeprivacypolicy.com/live/3ab76cb6-25b3-4e6c-978f-dee1539311ad"
+          href="/privacy-policy"
           target="_blank"
           rel="noopener noreferrer"
           sx={linkButtonStyles}
