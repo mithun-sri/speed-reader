@@ -120,6 +120,9 @@ const SignUp: React.FC = () => {
                 textTransform: "lowercase",
                 fontWeight: "bolder",
                 fontSize: fontSize,
+                "&:hover": {
+                  backgroundColor: "#a8880f",
+                },
               }}
             >
               Sign Up
