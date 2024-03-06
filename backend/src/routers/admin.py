@@ -335,7 +335,8 @@ The text you choose must be {'fiction' if fiction else 'non-fiction'}.
 The text you choose must have a reading difficulty of {difficulty} (you can judge this). 
 For this text, return to me in JSON format, the title, an extract from the text larger than 500 words, 
 author, a link to the Gutenberg project if it exists, 
-and a list of 20 questions to test how well someone has understood the extract after reading it. 
+and a list of 15 questions to test how well someone has understood the extract after reading it. 
+Make sure to generate 15 questions, any number of questions less than 15 is not acceptable.
 The questions must all be answerable just from reading the extract. 
 Each question should have three options with one correct option. 
 I also want a summary of the provided text if it is non-fiction.
@@ -411,7 +412,7 @@ async def generate_text(difficulty: str, fiction: bool):
             )
             for question in text["questions"]
         ],
-        summary=text["summarised"],
+        summary=text.get("summarised", None),
         source=text["gutenberg_link"],
         description=text["description"],
         author=text["author"],

@@ -52,7 +52,8 @@ const Login: React.FC = () => {
         navigate("/game");
       },
       onError: (error) => {
-        showSnack("Failed to login: " + error.message);
+        // @ts-expect-error "message" does not exist on "error" type
+        showSnack("Failed to login: " + error.response.data.message);
       },
     });
   };

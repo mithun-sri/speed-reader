@@ -7,11 +7,11 @@ import "./StandardMode.css";
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
 import { GameViewType, useGameContext } from "../../context/GameContext";
-import { useNextText, useNextTextById } from "../../hooks/game";
+import { useWebGazerContext } from "../../context/WebGazerContext";
+import { useNextText, useTextById } from "../../hooks/game";
 import HighlightedTextDisplay from "./HighlightedTextDisplay";
 import PeripheralTextDisplay from "./PeripheralTextDisplay";
 import WordTextDisplay from "./WordTextDisplay";
-import { useWebGazerContext } from "../../context/WebGazerContext";
 
 export enum StandardView {
   Word = 0,
@@ -31,7 +31,7 @@ const StandardModeGameView: React.FC<{
       return useNextText(summarised, difficulty);
     } else {
       setTextId_(null);
-      return useNextTextById(textId);
+      return useTextById(textId);
     }
   };
   const { data: text } = getText();
