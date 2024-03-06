@@ -334,8 +334,9 @@ For this text, return to me in JSON format, the title, an extract from the text 
 author, a link to the Gutenberg project if it exists, 
 and a list of 10 questions to test how well someone has understood the extract after reading it. 
 The questions must all be answerable just from reading the extract. 
-Each question should have four options with one correct option. 
+Each question should have three options with one correct option. 
 I also want a summary of the provided text if it is non-fiction.
+I also want a blurb of the provided text returned as description.
 The JSON must follow the format:
 {{
     "title": <string>,
@@ -348,14 +349,14 @@ The JSON must follow the format:
             "options": [
                 <string>,
                 <string>,
-                <string>,
                 <string>
             ],
             "correct_option": <string>
         }},
         ...
     ],
-    "summarised": <string>
+    "summarised": <string>,
+    "description": <string>
 }}
 Your response must only contain the JSON answer and nothing else.
 """
@@ -410,7 +411,7 @@ async def generate_text(difficulty: str, fiction: bool):
         ],
         summary=text["summarised"],
         source=text["gutenberg_link"],
-        description="",
+        description=text["description"],
         author=text["author"],
         image_url=text["image_url"],
     )

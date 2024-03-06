@@ -213,12 +213,12 @@ class MockChatCompletionMessage:
                         "test option 0",
                         "test option 1",
                         "test option 2",
-                        "test option 3",
                     ],
                     "correct_option": "test option 2",
                 }
             ],
             "summarised": "test summary",
+            "description": "test description",
         }
     )
 
@@ -271,8 +271,9 @@ class TestGenerateText:
             "test option 0",
             "test option 1",
             "test option 2",
-            "test option 3",
         ]
         assert data_question["correct_option"] == 2
         assert data["summary"] == "test summary"
         assert data["source"] == "test link"
+        assert data["description"] == "test description"
+        assert data["author"] == "test author"
