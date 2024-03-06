@@ -147,11 +147,11 @@ const QuizView = () => {
                         cursor: "pointer",
                         transition: "background-color 0.1s, border-color 0.1s",
                         "&:hover": {
-                          background: "#a6850f",
+                          background: "#57757c",
                           borderColor: "#646669",
                         },
                         "&.selected": {
-                          background: "#a6850f",
+                          background: "#57757c",
                           borderColor: "#646669",
                         },
                       }}

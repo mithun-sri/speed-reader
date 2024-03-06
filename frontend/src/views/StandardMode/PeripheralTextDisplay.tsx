@@ -34,7 +34,16 @@ const PeripheralTextDisplay: React.FC<{
   const words = text.split(" ").length;
   const lines = Math.ceil(words / wordsPerLine); // Estimate number of lines
 
-  const initialTranslateY = 600 / lines;
+  // These are constants that are used to calculate the initial position of the text
+  const lineHeight = 55; // in pixels
+  const visibleBoxHeight = 200; // in pixels
+
+  // Calculation of initial text translateY value broken down to consts for readability
+  const totalTextHeight = lines * lineHeight;
+  const excessTextPercentage =
+    ((totalTextHeight - visibleBoxHeight) / totalTextHeight) * 100;
+  const initialTranslateY = 100 - excessTextPercentage;
+
   const finalTranslateY = -100;
   const totalTranslateY = initialTranslateY - finalTranslateY;
   const [currentTranslateY, setCurrentTranslateY] =
@@ -128,7 +137,9 @@ const PeripheralTextDisplay: React.FC<{
       controls.start({
         translateY: [`${currentTranslateY}%`, `${finalTranslateY}%`],
         transition: {
-          duration: scrollDuration / (curr_wpm / 200),
+          duration:
+            scrollDuration *
+            ((currentTranslateY - finalTranslateY) / totalTranslateY),
           ease: "linear",
         },
       });
@@ -152,7 +163,7 @@ const PeripheralTextDisplay: React.FC<{
           width: `${containerWidth}px`,
           padding: "10px",
           display: "flex",
-          height: "200px",
+          height: `${visibleBoxHeight}px`,
           flexWrap: "wrap",
           alignItems: "center",
           overflow: "hidden",
@@ -168,7 +179,7 @@ const PeripheralTextDisplay: React.FC<{
             color: "#D1D0C5",
             fontWeight: "bolder",
             textAlign: "left",
-            lineHeight: "55px", // Affects speed scroll calculation
+            lineHeight: `${lineHeight}px`, // Affects speed scroll calculation
             position: "relative",
             margin: 0,
             zIndex: 0,

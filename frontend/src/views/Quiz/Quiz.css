@@ -46,32 +46,3 @@
   flex-direction: column;
   margin-top: 20px;
 }
-
-.results-section {
-  background-color: #2c2e31;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  border-radius: 10px;
-  margin-top: 20px;
-  margin-bottom: 15vh;
-}
-
-.results-content {
-  margin-bottom: 20px;
-}
-
-.play-again-button {
-  background-color: #e2b714;
-  color: #2c2e31;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
-}
-
-.play-again-button:hover {
-  background-color: #f1c40f;
-}
