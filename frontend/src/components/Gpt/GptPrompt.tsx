@@ -1,8 +1,9 @@
 import { Box, MenuItem, SelectChangeEvent, styled } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyledFormControl, StyledSelect } from "../Button/DropDownMenu";
 import GptButton from "../Button/GptButton";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
+import CustomSelect from "../Select/CustomSelect";
 import JetBrainsMonoText from "../Text/TextComponent";
 
 const GptPrompt: React.FC<{
@@ -10,27 +11,6 @@ const GptPrompt: React.FC<{
 }> = ({ onGenerateResponse }) => {
   const [diff, setDiff] = useState<string>("easy");
   const [isFiction, setIsFiction] = useState(false);
-
-  const calculateFontSize = () => {
-    const windowWidth = window.innerWidth;
-    const minFontSize = 15;
-    const maxFontSize = 45;
-
-    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 35));
-  };
-  const [fontSize, setFontSize] = useState(calculateFontSize());
-
-  useEffect(() => {
-    function handleResize() {
-      setFontSize(calculateFontSize());
-    }
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const handleSelectMode = (event: SelectChangeEvent<string>) => {
     setDiff(event.target.value as string);
@@ -44,6 +24,7 @@ const GptPrompt: React.FC<{
     onGenerateResponse(diff, isFiction);
   };
 
+  const difficulty_options = ["any", "easy", "medium", "hard"];
   return (
     <>
       <StyledBox sx={{ width: "100%", marginTop: "50px" }}>
@@ -61,17 +42,20 @@ const GptPrompt: React.FC<{
               flexDirection: "column",
               alignItems: "center",
               paddingTop: "30px",
+              gap: 1.5,
             }}
           >
             <JetBrainsMonoText
               text="Choose text difficulty"
-              size={fontSize * 0.6}
+              size={20}
               color="#FFFFFF"
             />
-            <DropDownDiff
-              selectValue={diff}
-              selectOnChange={handleSelectMode}
-            ></DropDownDiff>
+            <CustomSelect
+              value={diff}
+              label="Difficulty"
+              onChange={handleSelectMode}
+              options={difficulty_options}
+            />
           </Box>
           <Box
             sx={{
@@ -81,11 +65,7 @@ const GptPrompt: React.FC<{
               paddingTop: "30px",
             }}
           >
-            <JetBrainsMonoText
-              text="fiction?"
-              size={fontSize * 0.6}
-              color="#FFFFFF"
-            />
+            <JetBrainsMonoText text="fiction?" size={20} color="#FFFFFF" />
             <StyledCheckbox checked={isFiction} onChange={handleCheckFiction} />
           </Box>
         </Box>
