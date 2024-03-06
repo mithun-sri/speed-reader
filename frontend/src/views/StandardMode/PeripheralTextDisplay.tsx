@@ -26,11 +26,6 @@ const PeripheralTextDisplay: React.FC<{
   const [scrollDuration, setScrollDuration] = useState(100);
 
   const controls = useAnimation();
-  const initialTranslateY = 100;
-  const finalTranslateY = -150;
-  const totalTranslateY = initialTranslateY - finalTranslateY;
-  const [currentTranslateY, setCurrentTranslateY] =
-    useState<number>(initialTranslateY);
 
   // Assuming 7 words per line.
   // This assumption can be made due to the fixed width of the container, fixed font size and line height.
@@ -38,6 +33,12 @@ const PeripheralTextDisplay: React.FC<{
   const wordsPerLine = 7;
   const words = text.split(" ").length;
   const lines = Math.ceil(words / wordsPerLine); // Estimate number of lines
+
+  const initialTranslateY = 600 / lines;
+  const finalTranslateY = -100;
+  const totalTranslateY = initialTranslateY - finalTranslateY;
+  const [currentTranslateY, setCurrentTranslateY] =
+    useState<number>(initialTranslateY);
 
   // initialize intervalWpms list with initial wpm on component first render
   useEffect(() => {
@@ -127,11 +128,8 @@ const PeripheralTextDisplay: React.FC<{
       controls.start({
         translateY: [`${currentTranslateY}%`, `${finalTranslateY}%`],
         transition: {
-          duration:
-            scrollDuration *
-            ((currentTranslateY - finalTranslateY) / totalTranslateY),
+          duration: scrollDuration / (wpm / 200),
           ease: "linear",
-          from: "end",
         },
       });
     }
