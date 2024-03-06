@@ -10,7 +10,11 @@ import { useSnack } from "../../context/SnackContext";
 import { useLoginUser } from "../../hooks/users";
 
 const Login: React.FC = () => {
-  const { register, handleSubmit } = useForm<UserLogin>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserLogin>();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -78,24 +82,50 @@ const Login: React.FC = () => {
               gap: 5,
             }}
           >
-            <StyledTextField
-              fullWidth
-              type="text"
-              {...register("username", {
-                required: true,
-              })}
-              placeholder="username"
-            />
-
-            <StyledTextField
-              fullWidth
-              type="password"
-              {...register("password", {
-                required: true,
-              })}
-              placeholder="password"
-            />
-
+            <Box sx={{ width: "100%" }}>
+              <StyledTextField
+                fullWidth
+                type="text"
+                {...register("username", {
+                  required: true,
+                })}
+                placeholder="username"
+              />
+              {errors.username && (
+                <Box
+                  sx={{
+                    color: "#E2B714",
+                    fontSize: fontSize * 0.6,
+                    fontFamily: "JetBrains Mono, monospace",
+                    marginTop: "5px",
+                  }}
+                >
+                  Username is required
+                </Box>
+              )}
+            </Box>
+            <Box sx={{ width: "100%" }}>
+              <StyledTextField
+                fullWidth
+                type="password"
+                {...register("password", {
+                  required: true,
+                })}
+                placeholder="password"
+              />
+              {errors.password && (
+                <Box
+                  sx={{
+                    color: "#E2B714",
+                    fontSize: fontSize * 0.6,
+                    fontFamily: "JetBrains Mono, monospace",
+                    marginTop: "5px",
+                  }}
+                >
+                  Password is required
+                </Box>
+              )}
+            </Box>
             <Button
               type="submit"
               variant="contained"
