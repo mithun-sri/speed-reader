@@ -78,21 +78,6 @@ const StandardSubModeView = () => {
       >
         <Box
           sx={{
-            marginTop: "30px",
-            color: "#D1D0C5",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontFamily: "JetBrains Mono, monospace",
-            fontSize: fontSize / 1.5,
-            fontWeight: "bold",
-            marginBottom: fontSize / 8,
-          }}
-        >
-          Choose your view
-        </Box>
-        <Box
-          sx={{
             display: "flex",
             flexDirection: "row",
             justifyContent: "center",

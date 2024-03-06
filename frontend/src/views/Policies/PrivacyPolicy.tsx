@@ -119,9 +119,9 @@ const PrivacyPolicyContent = () => {
 
       <p>
         We do not store any images after the game ends. Any images used during
-        gameplay, including those captured by WebGazer&aposs eye tracking
+        gameplay, including those captured by WebGazer&#39;s eye tracking
         technology in Adaptive Mode, are processed temporarily and locally on
-        the user&aposs device for the purpose of providing real-time feedback
+        the user&#39;s device for the purpose of providing real-time feedback
         and improving the user experience. This temporary data is stored
         client-side and is not saved or transmitted to our servers. It is
         automatically cleared once the session ends.
@@ -250,7 +250,7 @@ const PrivacyPolicyContent = () => {
       <p>
         Our Service may contain links to other websites that are not operated by
         Us. If You click on a third party link, You will be directed to that
-        third party&aposs site. We strongly advise You to review the Privacy
+        third party&#39;s site. We strongly advise You to review the Privacy
         Policy of every site You visit.
       </p>
 

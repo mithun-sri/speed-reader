@@ -10,6 +10,7 @@ import GptText from "./GptText";
 
 export interface GptFormData {
   title: string;
+  author: string;
   content: string;
   summarised: string;
   questions: {
@@ -18,6 +19,9 @@ export interface GptFormData {
     correctOption: number;
     selected: boolean;
   }[];
+  source: string;
+  image_url: string;
+  description: string;
 }
 
 /**
@@ -53,13 +57,13 @@ const GptSuggestionForm: React.FC<{
       title: data.title,
       content: data.content,
       summary: data.summarised,
-      source: generatedText.source,
+      source: data.source,
       fiction: generatedText.fiction,
       difficulty: generatedText.difficulty,
       word_count: data.content.length,
-      image_url: "", // TODO
-      author: "", // TODO
-      description: "", // TODO
+      image_url: data.image_url,
+      author: generatedText.author,
+      description: data.description,
       questions: questions,
     };
     // Send data to server
@@ -85,8 +89,7 @@ const GptSuggestionForm: React.FC<{
       <form onSubmit={handleSubmit(onSubmit)}>
         <GptSourceInfo
           sourceTitle={generatedText.title}
-          author={""} // TODO
-          link={generatedText.source}
+          author={generatedText.author}
         />
         <GptText useFormReturn={useGptForm} generatedText={generatedText} />
         <GptQuestionFeed
@@ -101,7 +104,6 @@ const GptSuggestionForm: React.FC<{
             gap: 5,
           }}
         >
-          {/* <GptButton color={"#4285F4"} label={"generate 3 more questions"} /> */}
           <GptButton submit color={"#379F3B"} label={"approve"} />
         </Box>
       </form>
