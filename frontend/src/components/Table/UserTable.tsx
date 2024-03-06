@@ -42,7 +42,7 @@ function convertHistoryToRows(histories: HistoryWithText[]): Row[] {
     date: new Date(history.date).toLocaleDateString(),
     text_title: history.text_title,
     text_id: history.text_id,
-    mode: history.game_mode,
+    mode: history.summary ? "summarised" : history.game_mode,
     difficulty: history.difficulty,
     average: history.average_wpm,
     accuracy: history.score,
