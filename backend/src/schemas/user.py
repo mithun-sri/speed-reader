@@ -11,7 +11,6 @@ from .text import Text
 class User(BaseModel):
     id: str
     username: str
-    email: str
     role: str
 
 
@@ -20,9 +19,6 @@ class UserRegister(BaseModel):
         min_length=3,
         max_length=30,
         pattern=r"[a-zA-Z0-9_]+",
-    )
-    email: str = Field(
-        pattern=r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
     )
     password: str = Field(
         min_length=8,
@@ -43,7 +39,6 @@ class UserStatisticsAverageWpmPerDay(BaseModel):
 class UserStatistics(BaseModel):
     user_id: str  # TODO: Is this necessary?
     username: str  # TODO: Is this necessary?
-    email: str  # TODO: Is this necessary?
     min_wpm: int
     max_wpm: int
     average_wpm: int

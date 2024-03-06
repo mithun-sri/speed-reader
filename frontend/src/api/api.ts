@@ -1020,12 +1020,6 @@ export interface User {
      * @type {string}
      * @memberof User
      */
-    'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof User
-     */
     'role': string;
 }
 /**
@@ -1095,12 +1089,6 @@ export interface UserRegister {
      * @type {string}
      * @memberof UserRegister
      */
-    'email': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserRegister
-     */
     'password': string;
 }
 /**
@@ -1121,12 +1109,6 @@ export interface UserStatistics {
      * @memberof UserStatistics
      */
     'username': string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UserStatistics
-     */
-    'email': string;
     /**
      * 
      * @type {number}

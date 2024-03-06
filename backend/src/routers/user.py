@@ -93,7 +93,6 @@ async def get_user_statistics(
     return schemas.UserStatistics(
         user_id=user.id,
         username=user.username,
-        email=user.email,
         min_wpm=item_stats.get("minWpm", 0),
         max_wpm=item_stats.get("maxWpm", 0),
         average_wpm=int(item_stats.get("avgWpm", 0)),
@@ -301,13 +300,9 @@ async def register_user(
     )
     if session.scalars(query_check_username).one_or_none():
         raise HTTPException(status_code=409, detail="Username already used")
-    query_check_email = select(models.User).where(models.User.email == data.email)
-    if session.scalars(query_check_email).one_or_none():
-        raise HTTPException(status_code=409, detail="Email already used")
 
     user = models.User(
         username=data.username,
-        email=data.email,
         password=get_password_hash(data.password),
     )
     session.add(user)

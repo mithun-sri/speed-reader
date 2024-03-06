@@ -56,13 +56,6 @@ class UserAlreadyExistsException(Exception):
         self.username = username
 
 
-class EmailAlreadyUsedException(Exception):
-    def __init__(self, email) -> None:
-        self.status_code = status.HTTP_409_CONFLICT
-        self.detail = f"Email {email} already in use"
-        self.email = email
-
-
 class NoTextAvailableException(Exception):
     def __init__(self) -> None:
         self.status_code = status.HTTP_404_NOT_FOUND

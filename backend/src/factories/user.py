@@ -12,6 +12,5 @@ class UserFactory(factory.alchemy.SQLAlchemyModelFactory):
         raw_password = factory.Faker("password")
 
     username = factory.Faker("user_name")
-    email = factory.Faker("safe_email")
     password = factory.LazyAttribute(lambda obj: get_password_hash(obj.raw_password))
     status = factory.Faker("random_element", elements=["active", "inactive"])

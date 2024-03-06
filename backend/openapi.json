@@ -2320,10 +2320,6 @@
             "type": "string",
             "title": "Username"
           },
-          "email": {
-            "type": "string",
-            "title": "Email"
-          },
           "role": {
             "type": "string",
             "title": "Role"
@@ -2333,7 +2329,6 @@
         "required": [
           "id",
           "username",
-          "email",
           "role"
         ],
         "title": "User"
@@ -2396,11 +2391,6 @@
             "pattern": "[a-zA-Z0-9_]+",
             "title": "Username"
           },
-          "email": {
-            "type": "string",
-            "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-            "title": "Email"
-          },
           "password": {
             "type": "string",
             "maxLength": 30,
@@ -2411,7 +2401,6 @@
         "type": "object",
         "required": [
           "username",
-          "email",
           "password"
         ],
         "title": "UserRegister"
@@ -2425,10 +2414,6 @@
           "username": {
             "type": "string",
             "title": "Username"
-          },
-          "email": {
-            "type": "string",
-            "title": "Email"
           },
           "min_wpm": {
             "type": "integer",
@@ -2458,7 +2443,6 @@
         "required": [
           "user_id",
           "username",
-          "email",
           "min_wpm",
           "max_wpm",
           "average_wpm",

@@ -1,7 +1,6 @@
 beforeEach(() => {
   cy.task("seedDatabase");
   cy.registerUser({
-    email: "hpotter@example.com",
     username: "hpotter",
     password: "vingardiumleviosa",
   });
