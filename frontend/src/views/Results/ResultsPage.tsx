@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useGameContext } from "../../context/GameContext";
 import {
   CartesianGrid,
+  Label,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -158,7 +159,13 @@ const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
               <ResponsiveContainer width="70%" height={300}>
                 <LineChart data={wpmData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="index" type="number" />
+                  <XAxis dataKey="index" type="number">
+                    <Label
+                      value="Time (s)"
+                      position="insideBottom"
+                      offset={-4}
+                    />
+                  </XAxis>
                   <YAxis />
                   <Line
                     type="monotone"

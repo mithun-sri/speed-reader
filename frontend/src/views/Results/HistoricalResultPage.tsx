@@ -5,6 +5,7 @@ import Header from "../../components/Header/Header";
 import { useEffect, useState } from "react";
 import {
   CartesianGrid,
+  Label,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -164,7 +165,13 @@ const HistoricalResultsPage: React.FC = () => {
               <ResponsiveContainer width="70%" height={300}>
                 <LineChart data={wpmData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="index" type="number" />
+                  <XAxis dataKey="index" type="number">
+                    <Label
+                      value="Time (s)"
+                      position="insideBottom"
+                      offset={-4}
+                    />
+                  </XAxis>
                   <YAxis />
                   <Line
                     type="monotone"
