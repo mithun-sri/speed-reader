@@ -16,6 +16,7 @@ from ..logger import LoggerRoute
 from ..services.auth import verify_admin
 from ..services.exceptions import (
     BadResponseFromOpenAI,
+    NotEnoughQuestionsException,
     QuestionNotBelongToTextException,
     QuestionNotFoundException,
     TextNotFoundException,
@@ -334,7 +335,7 @@ The text you choose must be {'fiction' if fiction else 'non-fiction'}.
 The text you choose must have a reading difficulty of {difficulty} (you can judge this). 
 For this text, return to me in JSON format, the title, an extract from the text larger than 500 words, 
 author, a link to the Gutenberg project if it exists, 
-and a list of 10 questions to test how well someone has understood the extract after reading it. 
+and a list of 20 questions to test how well someone has understood the extract after reading it. 
 The questions must all be answerable just from reading the extract. 
 Each question should have three options with one correct option. 
 I also want a summary of the provided text if it is non-fiction.
@@ -393,7 +394,7 @@ async def generate_text(difficulty: str, fiction: bool):
     text["image_url"] = ""
     if text["gutenberg_link"]:
         image_id = text["gutenberg_link"].split("/")[-1]
-        image_url = f"https://www.gutenberg.org/cache/epub/{image_id}/pg{image_id}.cover-medium.jpg"
+        image_url = f"https://www.gutenberg.org/cache/epub/{image_id}/pg{image_id}.cover.medium.jpg"
         text["image_url"] = image_url
 
     return schemas.TextCreateWithQuestions(
@@ -431,6 +432,11 @@ async def approve_text(
     """
     Adds a text to the database.
     """
+
+    if len(text_data.questions) < 10:
+        # TODO:
+        # Make a dedicated exception for this.
+        raise NotEnoughQuestionsException(text_id="")
 
     response = requests.get(
         text_data.image_url,
