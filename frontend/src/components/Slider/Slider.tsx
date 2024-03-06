@@ -89,16 +89,20 @@ function SpeedSlider() {
   }, []); // Run effect only once on mount
 
   const customValueChange = (event: any) => {
-    let newValueString = event.target.value.slice(0, 4);
-
-    if (newValueString.trim() === "") {
-      newValueString = "200"; // Default to 200 if value is empty
-    }
-
+    const newValueString = event.target.value.replace(/\D/g, "");
     const newValue = parseInt(newValueString);
     setCustomValue(newValueString);
     setSliderValue(newValue);
     setWpm(newValue);
+  };
+
+  const customValueClickedOff = (event: any) => {
+    const newValueString = event.target.value.trim();
+    if (newValueString === "") {
+      setCustomValue("");
+      setSliderValue(200);
+      setWpm(200);
+    }
   };
 
   return (
@@ -145,10 +149,12 @@ function SpeedSlider() {
           <StyledTextField
             value={customValue}
             onChange={customValueChange}
+            onBlur={customValueClickedOff}
             sx={{
               width: `76px`,
               textAlign: "center",
             }}
+            inputProps={{ maxLength: 4 }}
             rows={1}
           />
         </Box>
