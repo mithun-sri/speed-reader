@@ -55,7 +55,7 @@ function App() {
                         element={<TermsOfServiceView />}
                       />
                       <Route element={<CookieConsentHOC />}>
-                        <Route element={<AuthRoute fallback="/tutorial" />}>
+                        <Route element={<AuthRoute fallback="/login" />}>
                           <Route path="/" element={<Navigate to="/game" />} />
                           <Route path="/game" element={<GamePage />} />
                           <Route
@@ -84,7 +84,7 @@ function App() {
                             />
                           </Route>
                         </Route>
-                        <Route element={<GuestRoute fallback="/game" />}>
+                        <Route element={<GuestRoute fallback="/" />}>
                           <Route path="/login" element={<Login />} />
                           <Route path="/signup" element={<SignUp />} />
                         </Route>
