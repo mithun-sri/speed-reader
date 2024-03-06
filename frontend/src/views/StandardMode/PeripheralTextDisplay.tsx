@@ -128,7 +128,7 @@ const PeripheralTextDisplay: React.FC<{
       controls.start({
         translateY: [`${currentTranslateY}%`, `${finalTranslateY}%`],
         transition: {
-          duration: scrollDuration / (wpm / 200),
+          duration: scrollDuration / (curr_wpm / 200),
           ease: "linear",
         },
       });
