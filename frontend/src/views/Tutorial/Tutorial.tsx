@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
-import { COOKIE_CONSENT_COOKIE } from "../../common/constants";
 import BlurBox from "../../components/Blur/Blur";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
@@ -31,31 +30,19 @@ const VISITED_COOKIE = "visited";
 
 function Tutorial() {
   const navigate = useNavigate();
-  const [cookies, setCookie] = useCookies([
-    COOKIE_CONSENT_COOKIE,
-    VISITED_COOKIE,
-  ]);
-
-  useEffect(() => {
-    if (cookies.hasConsentedToCookies) {
-      if (cookies.visited) {
-        navigate("/game");
-        return;
-      }
-      // NOTE:
-      // Cookies without expiration date are deleted when the browser is closed.
-      // https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#define_the_lifetime_of_a_cookie
-      setCookie(VISITED_COOKIE, true, { expires: new Date("2100-01-01") });
-    }
-  }, [cookies.hasConsentedToCookies]);
+  const [_, setCookie] = useCookies([VISITED_COOKIE]);
 
   const [stage, setStage] = useState(0);
   const [wpm, setWpm] = useState(200);
 
   function incrementStage() {
-    if (stage < INTRO_TEXT.length - 1) setStage(stage + 1);
-    else {
-      setStage(0);
+    if (stage < INTRO_TEXT.length - 1) {
+      setStage(stage + 1);
+    } else {
+      // NOTE:
+      // Cookies without expiration date are deleted when the browser is closed.
+      // https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#define_the_lifetime_of_a_cookie
+      setCookie(VISITED_COOKIE, true, { expires: new Date("2100-01-01") });
       navigate("/signup");
     }
   }

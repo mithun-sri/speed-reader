@@ -87,8 +87,8 @@ function App() {
                         <Route element={<GuestRoute fallback="/game" />}>
                           <Route path="/login" element={<Login />} />
                           <Route path="/signup" element={<SignUp />} />
-                          <Route path="/tutorial" element={<Tutorial />} />
                         </Route>
+                        <Route path="/tutorial" element={<Tutorial />} />
                         <Route path="*" element={<NotFound />} />
                       </Route>
                     </Route>
