@@ -235,9 +235,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Text"
-                }
+                "schema": {}
               }
             }
           },

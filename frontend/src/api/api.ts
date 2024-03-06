@@ -1627,7 +1627,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteText(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+        async deleteText(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteText(textId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.deleteText']?.[localVarOperationServerIndex]?.url;
@@ -1761,7 +1761,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteText(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
+        deleteText(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
             return localVarFp.deleteText(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**

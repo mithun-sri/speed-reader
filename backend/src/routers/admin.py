@@ -187,7 +187,6 @@ async def get_text(
 
 @router.delete(
     "/texts/{text_id}",
-    response_model=schemas.Text,
 )
 async def delete_text(
     text_id: str,
@@ -418,6 +417,7 @@ async def generate_text(difficulty: str, fiction: bool):
         author=text["author"],
         image_url=text["image_url"],
     )
+
 
 # TODO:
 # Rename this endpoint to `submit_text`.
