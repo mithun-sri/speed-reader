@@ -1,8 +1,9 @@
-import { Box } from "@mui/material";
-import { useState } from "react";
+import { Box, CircularProgress } from "@mui/material";
+import { Suspense, useEffect, useState } from "react";
 import GptPrompt from "../../components/Gpt/GptPrompt";
 import GptSuggestionForm from "../../components/Gpt/GptSuggestionForm";
 import Header from "../../components/Header/Header";
+import JetBrainsMonoText from "../../components/Text/TextComponent";
 
 const GptForm = () => {
   const [showResponse, setShowResponse] = useState<boolean>(false);
@@ -38,7 +39,11 @@ const GptForm = () => {
         <Box sx={innerContainerStyles}>
           <GptPrompt onGenerateResponse={handleGenerateResponse} />
           {showResponse ? (
-            <GptSuggestionForm difficulty={diff} isFiction={isFiction} />
+            <GptSuggestionForm
+              difficulty={diff}
+              isFiction={isFiction}
+              setShowResponse={setShowResponse}
+            />
           ) : (
             <></>
           )}
@@ -48,8 +53,56 @@ const GptForm = () => {
   );
 };
 
+const GptLoadingFallback = () => {
+  const calculateFontSize = () => {
+    const windowWidth = window.innerWidth;
+    const minFontSize = 15;
+    const maxFontSize = 45;
+
+    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 35));
+  };
+  const [fontSize, setFontSize] = useState(calculateFontSize());
+  useEffect(() => {
+    function handleResize() {
+      setFontSize(calculateFontSize());
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        height: "100vh",
+        color: "#E2B714",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+      }}
+    >
+      <CircularProgress
+        color="inherit"
+        size="100px"
+        sx={{ marginBottom: "50px" }}
+      />
+      <JetBrainsMonoText
+        text="Generating text. This may take a while..."
+        size={fontSize * 0.6}
+        color="#FFFFFF"
+      />
+    </Box>
+  );
+};
+
 const GptView = () => {
-  return <GptForm />;
+  return (
+    <Suspense fallback={<GptLoadingFallback />}>
+      <GptForm />
+    </Suspense>
+  );
 };
 
 export default GptView;

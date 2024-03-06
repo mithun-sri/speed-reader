@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import { AxiosResponse } from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { QuestionCreate, TextCreateWithQuestions } from "../../api";
+import { useSnack } from "../../context/SnackContext";
 import { useApproveText, useGenerateText } from "../../hooks/admin";
 import GptButton from "../Button/GptButton";
 import GptQuestionFeed from "./GptQuestionFeed";
@@ -34,13 +34,15 @@ export interface GptFormData {
 const GptSuggestionForm: React.FC<{
   difficulty: string;
   isFiction: boolean;
-}> = ({ difficulty, isFiction }) => {
+  setShowResponse: (showResponse: boolean) => void;
+}> = ({ difficulty, isFiction, setShowResponse }) => {
   const { data: generatedText } = useGenerateText(difficulty, isFiction);
   console.log(generatedText);
   const useGptForm = useForm<GptFormData>();
   const { handleSubmit } = useGptForm;
 
   const approveText = useApproveText();
+  const { showSnack } = useSnack();
 
   const onSubmit: SubmitHandler<GptFormData> = async (data: GptFormData) => {
     // Build Question[] data to submit to server
@@ -68,11 +70,12 @@ const GptSuggestionForm: React.FC<{
     };
     // Send data to server
     approveText.mutate(text, {
-      onSuccess: (res: AxiosResponse) => {
-        console.log(res);
+      onSuccess: () => {
+        showSnack("Text approved successfully");
+        setShowResponse(false);
       },
       onError: (error: Error) => {
-        console.log(error);
+        showSnack(`Failed to approve text: ${error}`);
       },
     });
   };
