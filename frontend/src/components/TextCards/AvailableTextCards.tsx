@@ -399,12 +399,12 @@ export const ItemBoxHovered: React.FC<Text> = ({
                   transition: "0.1s ease-out",
                 }}
               >
+                <Box>Play Text</Box>
                 <FontAwesomeIcon
                   icon={faGamepad}
                   className="fa-table-page-icon"
-                  style={{ marginRight: "10px" }}
+                  style={{ marginLeft: "10px" }}
                 />
-                <Box>Play Text</Box>
               </Box>
             </IconButton>
           </Box>
