@@ -1,3 +1,4 @@
+import base64
 from typing import Annotated, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, Security
@@ -107,8 +108,8 @@ async def get_user_statistics(
     )
 
 
-@router.post(
-    "/current/available_texts",
+@router.get(
+    "/current/available-texts",
     response_model=schemas.UserAvailableTexts,
     dependencies=[Security(verify_auth)],
 )
@@ -170,10 +171,16 @@ async def get_user_available_texts(
     query = filter_query(select(models.Text))
     query = query.offset((page - 1) * page_size).limit(page_size)
     texts = session.scalars(query).all()
-    texts = [schemas.Text(**text.__dict__) for text in texts]  # type: ignore
+    texts = [
+        schemas.Text(
+            **text.__dict__,
+            image_base64=base64.b64encode(text.image_bytes).decode("utf-8"),
+        )
+        for text in texts
+    ]
 
     return schemas.UserAvailableTexts(
-        texts=texts,  # type: ignore
+        texts=texts,
         page=page,
         page_size=page_size,
         total_texts=total_texts,
@@ -204,9 +211,11 @@ async def get_histories(
     return [
         schemas.HistoryWithText(
             id=history.id,
-            text_title=get_text(history.text_id).title,
             date=history.timestamp,
             text_id=history.text_id,
+            # TODO:
+            # We should ideally add `Text` field here instead of `text_title`.
+            text_title=get_text(history.text_id).title,
             game_mode=history.game_mode,
             game_submode=history.game_submode,
             difficulty=history.difficulty,
@@ -258,8 +267,8 @@ async def get_history(
 
     return schemas.HistoryWithQuestions(
         id=history.id,
-        text_id=history.text_id,
         date=history.timestamp,
+        text_id=history.text_id,
         game_mode=history.game_mode,
         game_submode=history.game_submode,
         difficulty=history.difficulty,

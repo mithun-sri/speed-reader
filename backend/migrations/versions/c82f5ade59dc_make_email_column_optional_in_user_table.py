@@ -28,9 +28,6 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
-    op.alter_column(
-        "user",
-        "email",
-        existing_type=sa.VARCHAR(length=255),
-        nullable=False,
-    )
+    # NOTE:
+    # Once a column is made nullable, it cannot be made non-nullable.
+    pass

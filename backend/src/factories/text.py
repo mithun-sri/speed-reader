@@ -1,6 +1,10 @@
 import factory
 
 from .. import models
+from ..config import config
+
+with open(f"{config.app_dir}/assets/default.jpg", "rb") as file:
+    default_image = file.read()
 
 
 class TextFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -18,5 +22,7 @@ class TextFactory(factory.alchemy.SQLAlchemyModelFactory):
         elements=["easy", "medium", "hard"],
     )
     author = factory.Faker("name")
-    image_url = "https://www.gutenberg.org/cache/epub/64317/pg64317.cover.medium.jpg"
     description = factory.Faker("text")
+
+    image_bytes = default_image
+    image_type = "image/jpeg"

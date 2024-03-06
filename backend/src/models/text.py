@@ -21,8 +21,9 @@ class Text(ULIDMixin, TimestampMixin, Base):
     word_count: Mapped[int]
     difficulty: Mapped[str]
     author: Mapped[str]
-    image_url: Mapped[str]
     description: Mapped[str]
+    image_type: Mapped[str]
+    image_bytes: Mapped[bytes]
 
     questions: Mapped[list["Question"]] = relationship(
         back_populates="text",

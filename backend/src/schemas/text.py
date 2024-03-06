@@ -11,16 +11,22 @@ class TextBase(BaseModel):
     content: str
     summary: Optional[str]
     source: str
-    fiction: bool  # TODO: Rename to `is_fiction`
+    # TODO: Rename to `is_fiction`
+    fiction: bool
     difficulty: str
     word_count: int
     description: str
     author: str
-    image_url: str
 
 
 class Text(TextBase):
     id: str
+
+    # NOTE:
+    # These fields are optional because some endpoints do not require image data.
+    # In the future we should create a separate Pydantic schema for this.
+    image_type: Optional[str] = None
+    image_base64: Optional[str] = None
 
 
 class TextWithQuestions(Text):
@@ -43,7 +49,7 @@ class TextWithQuestionsAndStatistics(TextWithQuestions):
 
 
 class TextCreate(TextBase):
-    pass
+    image_url: str
 
 
 class TextCreateWithQuestions(TextCreate):
