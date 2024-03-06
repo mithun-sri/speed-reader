@@ -15,7 +15,6 @@ from .services.exception_handlers import (
     already_authenticated_exception_handler,
     bad_response_from_openai_exception_handler,
     duplicate_answers_exception_handler,
-    email_already_used_exception_handler,
     history_not_found_exception_handler,
     invalid_credentials_exception_handler,
     invalid_role_exception_handler,
@@ -36,7 +35,6 @@ from .services.exceptions import (
     AlreadyAuthenticatedException,
     BadResponseFromOpenAI,
     DuplicateAnswersException,
-    EmailAlreadyUsedException,
     HistoryNotFoundException,
     InvalidCredentialsException,
     InvalidRoleException,
@@ -84,7 +82,6 @@ app.add_exception_handler(AlreadyAuthenticatedException, already_authenticated_e
 app.add_exception_handler(InvalidRoleException, invalid_role_exception_handler)  # type: ignore
 app.add_exception_handler(UserNotFoundException, user_not_found_exception_handler)  # type: ignore
 app.add_exception_handler(UserAlreadyExistsException, user_already_exists_exception_handler)  # type: ignore
-app.add_exception_handler(EmailAlreadyUsedException, email_already_used_exception_handler)  # type: ignore
 app.add_exception_handler(NoTextAvailableException, no_text_available_exception_handler)  # type: ignore
 app.add_exception_handler(TextNotFoundException, text_not_found_exception_handler)  # type: ignore
 app.add_exception_handler(QuestionNotFoundException, question_not_found_exception_handler)  # type: ignore

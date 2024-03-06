@@ -2,15 +2,20 @@ import { Box, Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { UserRegister } from "../../api";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import StyledTextField from "../../components/Textbox/StyledTextField";
 import { useSnack } from "../../context/SnackContext";
 import { useRegisterUser } from "../../hooks/users";
 
+interface SignUpFormData {
+  username: string;
+  password: string;
+  confirmPassword: string;
+}
+
 const SignUp: React.FC = () => {
-  const { register, handleSubmit } = useForm<UserRegister>();
+  const { register, watch, handleSubmit } = useForm<SignUpFormData>();
   const [fontSize, setFontSize] = useState(calculateFontSize());
 
   useEffect(() => {
@@ -42,16 +47,22 @@ const SignUp: React.FC = () => {
   const navigate = useNavigate();
   const { showSnack } = useSnack();
 
-  const onSubmit = (data: UserRegister) => {
-    registerUser.mutate(data, {
-      onSuccess: () => {
-        showSnack("Successfully registered!");
-        navigate("/login");
+  const onSubmit = (data: SignUpFormData) => {
+    registerUser.mutate(
+      {
+        username: data.username,
+        password: data.password,
       },
-      onError: (error) => {
-        showSnack("Failed to register: " + error.message);
+      {
+        onSuccess: () => {
+          showSnack("Successfully registered!");
+          navigate("/login");
+        },
+        onError: (error) => {
+          showSnack("Failed to register: " + error.message);
+        },
       },
-    });
+    );
   };
 
   return (
@@ -92,21 +103,22 @@ const SignUp: React.FC = () => {
             />
             <StyledTextField
               fullWidth
-              type="email"
-              {...register("email", {
-                required: true,
-                pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-              })}
-              placeholder="email"
-            />
-            <StyledTextField
-              fullWidth
               type="password"
               {...register("password", {
                 required: true,
                 minLength: 8,
               })}
               placeholder="password"
+            />
+            <StyledTextField
+              fullWidth
+              type="password"
+              {...register("confirmPassword", {
+                required: true,
+                validate: (value) =>
+                  watch("password") === value || "Passwords do not match",
+              })}
+              placeholder="confirm password"
             />
             <Button
               type="submit"

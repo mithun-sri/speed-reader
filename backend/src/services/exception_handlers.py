@@ -7,7 +7,6 @@ from fastapi.responses import JSONResponse
 from .exceptions import (
     BadResponseFromOpenAI,
     DuplicateAnswersException,
-    EmailAlreadyUsedException,
     HistoryNotFoundException,
     InvalidCredentialsException,
     InvalidRoleException,
@@ -120,16 +119,6 @@ async def user_already_exists_exception_handler(
     return JSONResponse(
         status_code=exc.status_code,
         content={"message": f"Oops! {exc.username} is already in use by another user."},
-    )
-
-
-async def email_already_used_exception_handler(
-    _request: Request,
-    exc: EmailAlreadyUsedException,
-):
-    return JSONResponse(
-        status_code=exc.status_code,
-        content={"message": f"Oops! {exc.email} is already in use by another user."},
     )
 
 

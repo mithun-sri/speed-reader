@@ -35,6 +35,7 @@ def set_response_tokens(
         secure=True,
         httponly=True,
         samesite="strict",
+        max_age=60 * 60 * 24 * 30,  # 30 days
         path=TOKEN_URL,
     )
     response.set_cookie(
@@ -43,6 +44,7 @@ def set_response_tokens(
         secure=True,
         httponly=True,
         samesite="strict",
+        max_age=60 * 15,  # 15 minutes
     )
 
 

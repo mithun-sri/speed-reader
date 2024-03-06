@@ -42,7 +42,10 @@ function Tutorial() {
         navigate("/game");
         return;
       }
-      setCookie(VISITED_COOKIE, true, { path: "/" });
+      // NOTE:
+      // Cookies without expiration date are deleted when the browser is closed.
+      // https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#define_the_lifetime_of_a_cookie
+      setCookie(VISITED_COOKIE, true, { expires: new Date("2100-01-01") });
     }
   }, [cookies.hasConsentedToCookies]);
 

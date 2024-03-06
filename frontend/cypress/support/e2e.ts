@@ -28,7 +28,6 @@ declare global {
        * @example cy.dataCy('greeting')
        */
       registerUser(data: {
-        email: string;
         username: string;
         password: string;
       }): Chainable<undefined>;
