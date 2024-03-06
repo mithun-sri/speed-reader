@@ -243,7 +243,8 @@ export const ItemBoxHovered: React.FC<Text> = ({
 }) => {
   const { setTextId_ } = useWebGazerContext();
   const navigate = useNavigate();
-  const image_url_ = image_url === "" ? "/static/images/placeholder.png" : image_url;
+  const image_url_ =
+    image_url === "" ? "/static/images/placeholder.png" : image_url;
 
   const handleStandardClick = () => {
     setTextId_(id);
@@ -427,8 +428,9 @@ export const ItemBox: React.FC<Text> = ({
     description.length > 200
       ? description.substring(0, 200) + "..."
       : description;
-  
-  const image_url_ = image_url === "" ? "/static/images/placeholder.png" : image_url;
+
+  const image_url_ =
+    image_url === "" ? "/static/images/placeholder.png" : image_url;
   return (
     <Box
       sx={{
