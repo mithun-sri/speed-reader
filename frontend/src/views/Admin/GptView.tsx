@@ -10,6 +10,25 @@ import JetBrainsMonoText from "../../components/Text/TextComponent";
 import { useSnack } from "../../context/SnackContext";
 import { useApproveText, useGenerateText } from "../../hooks/admin";
 
+// Default object for TextCreateWithQuestions
+const emptyTextCreateWithQuestions: TextCreateWithQuestions = {
+  title: "",
+  content: "",
+  summary: "",
+  source: "",
+  fiction: false,
+  difficulty: "",
+  word_count: 0,
+  description: "",
+  author: "",
+  image_url: "",
+  questions: Array.from({ length: 10 }, (_) => ({
+    content: "",
+    options: ["", "", "", ""],
+    correct_option: 0,
+  })),
+};
+
 const GptLoading = () => {
   const calculateFontSize = () => {
     const windowWidth = window.innerWidth;
@@ -55,13 +74,15 @@ const GptLoading = () => {
 };
 
 const GptForm = () => {
-  const [generatedText, setGeneratedText] = useState<
-    TextCreateWithQuestions | undefined
-  >(undefined);
+  const [generatedText, setGeneratedText] = useState<TextCreateWithQuestions>(
+    emptyTextCreateWithQuestions,
+  );
+  const [formKey, setFormKey] = useState<number>(0); // Key to force GptSuggestionForm remounting
   const [loading, setLoading] = useState(false);
   const generateText = useGenerateText();
 
   const handleGenerateResponse = (difficulty: string, fiction: boolean) => {
+    setFormKey((prevKey: number) => prevKey + 1); // Increment key to force GptSuggestionForm remounting
     setLoading(true);
     generateText.mutate(
       { difficulty, isFiction: fiction },
@@ -116,7 +137,7 @@ const GptForm = () => {
     approveText.mutate(text, {
       onSuccess: () => {
         showSnack("Text approved successfully");
-        setGeneratedText(undefined);
+        setGeneratedText(emptyTextCreateWithQuestions);
       },
       onError: (error: Error) => {
         // @ts-expect-error "message" does not exist on "error" type
@@ -149,6 +170,7 @@ const GptForm = () => {
           {loading && <GptLoading />}
           {generatedText && (
             <GptSuggestionForm
+              key={formKey} // Key to force remounting
               generatedText={generatedText}
               onApproveText={handleApproveText}
             />
@@ -158,6 +180,7 @@ const GptForm = () => {
     </>
   );
 };
+
 const GptView = () => {
   return <GptForm />;
 };
