@@ -64,7 +64,8 @@ const SignUp: React.FC = () => {
           navigate("/login");
         },
         onError: (error) => {
-          showSnack("Failed to register: " + error.message);
+          // @ts-expect-error "message" does not exist on "error" type
+          showSnack("Failed to register: " + error.response.data.message);
         },
       },
     );

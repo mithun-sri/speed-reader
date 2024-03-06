@@ -23,14 +23,15 @@ export function useNextText(
     // This disables caching mechanism of react-query temporarily.
     // Comment it out when we have data-fetching logic working.
     gcTime: 0,
+    staleTime: Infinity,
   });
 }
 
-export function useNextTextById(textId: string) {
+export function useTextById(textId: string) {
   const { gameApi } = useApiClient();
 
   return useSuspenseQuery({
-    queryKey: ["next-text"],
+    queryKey: ["text", textId],
     queryFn: () => gameApi.getTextById(textId).then((res) => res.data),
     gcTime: 0,
   });
@@ -43,6 +44,7 @@ export function useNextQuestions(textId: string) {
     queryKey: ["next-questions"],
     queryFn: () => gameApi.getNextQuestions(textId).then((res) => res.data),
     gcTime: 0,
+    staleTime: Infinity,
   });
 }
 

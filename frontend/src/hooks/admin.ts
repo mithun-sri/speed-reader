@@ -1,5 +1,4 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { AxiosResponse } from "axios";
 import { TextCreateWithQuestions } from "../api";
 import { useApiClient } from "../context/ApiContext";
 
@@ -56,19 +55,17 @@ export function getQuestions(textId: string) {
 }
 
 // Define the hook function
-export function useGenerateText(difficulty: string, isFiction: boolean) {
+export function useGenerateText() {
   const { adminApi } = useApiClient();
 
-  return useSuspenseQuery({
-    queryKey: ["generate-text"],
-    queryFn: () =>
-      adminApi
-        .generateText(difficulty, isFiction)
-        .then((res: AxiosResponse) => res.data),
-    // NOTE:
-    // This disables caching mechanism of react-query temporarily.
-    // Comment it out when we have data-fetching logic working.
-    gcTime: 0,
+  return useMutation({
+    mutationFn: ({
+      difficulty,
+      isFiction,
+    }: {
+      difficulty: string;
+      isFiction: boolean;
+    }) => adminApi.generateText(difficulty, isFiction).then((res) => res.data),
   });
 }
 
