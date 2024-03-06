@@ -3,6 +3,7 @@ import Slider from "@mui/material/Slider";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { useGameContext } from "../../context/GameContext";
+import StyledTextField from "../Textbox/StyledTextField";
 import SliderLevelText from "./SliderLevelText";
 import SliderRateText from "./SliderRateText";
 
@@ -61,6 +62,8 @@ function SpeedSlider() {
   const { setWpm } = useGameContext();
 
   const [fontSize, setFontSize] = useState(calculateFontSize());
+  const [customValue, setCustomValue] = useState("");
+  const [sliderValue, setSliderValue] = useState(200);
 
   const onSliderChange = (
     _event: Event,
@@ -69,6 +72,8 @@ function SpeedSlider() {
   ) => {
     const newNumber = newValue as number;
     setWpm(newNumber);
+    setSliderValue(newNumber);
+    setCustomValue(newNumber.toString());
   };
 
   useEffect(() => {
@@ -83,9 +88,29 @@ function SpeedSlider() {
     };
   }, []); // Run effect only once on mount
 
+  const customValueChange = (event: any) => {
+    let newValueString = event.target.value.slice(0, 4);
+
+    if (newValueString.trim() === "") {
+      newValueString = "200"; // Default to 200 if value is empty
+    }
+
+    const newValue = parseInt(newValueString);
+    setCustomValue(newValueString);
+    setSliderValue(newValue);
+    setWpm(newValue);
+  };
+
   return (
     <Box>
-      <Box sx={{ width: "55%", margin: "0 auto" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          width: "55%",
+          margin: "0 auto",
+        }}
+      >
         <Box
           sx={{
             paddingBottom: "5px",
@@ -100,18 +125,36 @@ function SpeedSlider() {
         </Box>
         <Box
           sx={{
-            margin: "20px",
-            fontSize: fontSize / 2.1,
-            color: "#fff",
-            fontFamily: "JetBrains Mono, monospace",
-            fontWeight: "bolder",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          Choose your reading speed
+          <Box
+            sx={{
+              margin: "20px",
+              fontSize: fontSize / 2.1,
+              color: "#fff",
+              fontFamily: "JetBrains Mono, monospace",
+              fontWeight: "bolder",
+            }}
+          >
+            Choose your reading speed:
+          </Box>
+          <StyledTextField
+            value={customValue}
+            onChange={customValueChange}
+            sx={{
+              width: `76px`,
+              textAlign: "center",
+            }}
+            rows={1}
+          />
         </Box>
         <PrettoSlider
+          value={sliderValue}
           valueLabelDisplay="auto"
-          defaultValue={200}
           onChange={onSliderChange}
           marks={false}
           min={100}
