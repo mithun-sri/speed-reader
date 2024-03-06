@@ -52,10 +52,13 @@ async def get_next_text(
         query_unseen = query_unseen.where(models.Text.summary.isnot(None))
         query_random = query_random.where(models.Text.summary.isnot(None))
 
+    # NOTE:
+    # We're having to convert `models.Text` to `schemas.Text` temporarily
+    # because the `models.Text` object contains `bytes` field which FastAPI fails to serialise.
     if text := session.scalars(query_unseen).one_or_none():
-        return text
+        return schemas.Text(**text.__dict__)
     if text := session.scalars(query_random).one_or_none():
-        return text
+        return schemas.Text(**text.__dict__)
 
     raise NoTextAvailableException()
 
@@ -67,7 +70,7 @@ async def get_next_text(
 # A real fix for this would be to handle this in the OpenAPI client generation.
 @router.get(
     "/texts/{text_id}",
-    response_model=schemas.TextWithQuestions,
+    response_model=schemas.Text,
 )
 async def get_text_by_id(
     text_id: str,
@@ -80,7 +83,7 @@ async def get_text_by_id(
     if not text:
         raise TextNotFoundException(text_id=text_id)
 
-    return text
+    return schemas.Text(**text.__dict__)
 
 
 # TODO:

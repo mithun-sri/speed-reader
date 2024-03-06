@@ -298,6 +298,20 @@ export interface HistoryWithText {
 /**
  * 
  * @export
+ * @interface ImageBase64
+ */
+export interface ImageBase64 {
+}
+/**
+ * 
+ * @export
+ * @interface ImageType
+ */
+export interface ImageType {
+}
+/**
+ * 
+ * @export
  * @interface IncludeFiction
  */
 export interface IncludeFiction {
@@ -600,13 +614,19 @@ export interface Text {
      * @type {string}
      * @memberof Text
      */
-    'image_url': string;
+    'id': string;
     /**
      * 
-     * @type {string}
+     * @type {ImageType}
      * @memberof Text
      */
-    'id': string;
+    'image_type'?: ImageType;
+    /**
+     * 
+     * @type {ImageBase64}
+     * @memberof Text
+     */
+    'image_base64'?: ImageBase64;
 }
 /**
  * 
@@ -783,13 +803,19 @@ export interface TextWithQuestions {
      * @type {string}
      * @memberof TextWithQuestions
      */
-    'image_url': string;
+    'id': string;
     /**
      * 
-     * @type {string}
+     * @type {ImageType}
      * @memberof TextWithQuestions
      */
-    'id': string;
+    'image_type'?: ImageType;
+    /**
+     * 
+     * @type {ImageBase64}
+     * @memberof TextWithQuestions
+     */
+    'image_base64'?: ImageBase64;
     /**
      * 
      * @type {Array<Question>}
@@ -862,13 +888,19 @@ export interface TextWithQuestionsAndStatistics {
      * @type {string}
      * @memberof TextWithQuestionsAndStatistics
      */
-    'image_url': string;
+    'id': string;
     /**
      * 
-     * @type {string}
+     * @type {ImageType}
      * @memberof TextWithQuestionsAndStatistics
      */
-    'id': string;
+    'image_type'?: ImageType;
+    /**
+     * 
+     * @type {ImageBase64}
+     * @memberof TextWithQuestionsAndStatistics
+     */
+    'image_base64'?: ImageBase64;
     /**
      * 
      * @type {Array<Question>}
@@ -965,13 +997,19 @@ export interface TextWithStatistics {
      * @type {string}
      * @memberof TextWithStatistics
      */
-    'image_url': string;
+    'id': string;
     /**
      * 
-     * @type {string}
+     * @type {ImageType}
      * @memberof TextWithStatistics
      */
-    'id': string;
+    'image_type'?: ImageType;
+    /**
+     * 
+     * @type {ImageBase64}
+     * @memberof TextWithStatistics
+     */
+    'image_base64'?: ImageBase64;
     /**
      * 
      * @type {number}
@@ -1589,7 +1627,7 @@ export const AdminApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteText(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+        async deleteText(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deleteText(textId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AdminApi.deleteText']?.[localVarOperationServerIndex]?.url;
@@ -1723,7 +1761,7 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteText(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
+        deleteText(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<any> {
             return localVarFp.deleteText(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2348,7 +2386,7 @@ export const GameApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTextById(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TextWithQuestions>> {
+        async getTextById(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getTextById(textId, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.getTextById']?.[localVarOperationServerIndex]?.url;
@@ -2410,7 +2448,7 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTextById(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<TextWithQuestions> {
+        getTextById(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
             return localVarFp.getTextById(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2606,7 +2644,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @throws {RequiredError}
          */
         getUserAvailableTexts: async (page?: number, pageSize?: number, accessToken?: AccessToken, textFilter?: TextFilter, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/users/current/available_texts`;
+            const localVarPath = `/users/current/available-texts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -2614,7 +2652,7 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
                 baseOptions = configuration.baseOptions;
             }
 
-            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 

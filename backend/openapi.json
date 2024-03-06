@@ -235,9 +235,7 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Text"
-                }
+                "schema": {}
               }
             }
           },
@@ -735,8 +733,8 @@
         }
       }
     },
-    "/users/current/available_texts": {
-      "post": {
+    "/users/current/available-texts": {
+      "get": {
         "tags": [
           "user"
         ],
@@ -1215,7 +1213,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TextWithQuestions"
+                  "$ref": "#/components/schemas/Text"
                 }
               }
             }
@@ -1882,13 +1880,31 @@
             "type": "string",
             "title": "Author"
           },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
-          },
           "id": {
             "type": "string",
             "title": "Id"
+          },
+          "image_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Type"
+          },
+          "image_base64": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Base64"
           }
         },
         "type": "object",
@@ -1902,7 +1918,6 @@
           "word_count",
           "description",
           "author",
-          "image_url",
           "id"
         ],
         "title": "Text"
@@ -2089,13 +2104,31 @@
             "type": "string",
             "title": "Author"
           },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
-          },
           "id": {
             "type": "string",
             "title": "Id"
+          },
+          "image_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Type"
+          },
+          "image_base64": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Base64"
           },
           "questions": {
             "items": {
@@ -2116,7 +2149,6 @@
           "word_count",
           "description",
           "author",
-          "image_url",
           "id",
           "questions"
         ],
@@ -2167,13 +2199,31 @@
             "type": "string",
             "title": "Author"
           },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
-          },
           "id": {
             "type": "string",
             "title": "Id"
+          },
+          "image_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Type"
+          },
+          "image_base64": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Base64"
           },
           "questions": {
             "items": {
@@ -2210,7 +2260,6 @@
           "word_count",
           "description",
           "author",
-          "image_url",
           "id",
           "questions",
           "min_wpm",
@@ -2265,13 +2314,31 @@
             "type": "string",
             "title": "Author"
           },
-          "image_url": {
-            "type": "string",
-            "title": "Image Url"
-          },
           "id": {
             "type": "string",
             "title": "Id"
+          },
+          "image_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Type"
+          },
+          "image_base64": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Base64"
           },
           "min_wpm": {
             "type": "integer",
@@ -2301,7 +2368,6 @@
           "word_count",
           "description",
           "author",
-          "image_url",
           "id",
           "min_wpm",
           "max_wpm",

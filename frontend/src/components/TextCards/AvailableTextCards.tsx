@@ -1,6 +1,8 @@
-import Box from "@mui/material/Box";
-import JetBrainsMonoText from "../Text/TextComponent";
-import { StyledCheckbox } from "../Checkbox/Checkbox";
+import {
+  faGamepad,
+  faSquareArrowUpRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Link,
   MenuItem,
@@ -8,19 +10,17 @@ import {
   SelectChangeEvent,
   Tooltip,
 } from "@mui/material";
+import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
-import StyledTextField from "../Textbox/StyledTextField";
-import DifficultyBox from "../Difficulty/DifficultyBox";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faSquareArrowUpRight,
-  faGamepad,
-} from "@fortawesome/free-solid-svg-icons";
-import FictionBox from "../Fiction/Fiction";
-import { Text, TextFilter } from "../../api";
 import { useState } from "react";
-import { useWebGazerContext } from "../../context/WebGazerContext";
 import { useNavigate } from "react-router-dom";
+import { Text, TextFilter } from "../../api";
+import { useWebGazerContext } from "../../context/WebGazerContext";
+import { StyledCheckbox } from "../Checkbox/Checkbox";
+import DifficultyBox from "../Difficulty/DifficultyBox";
+import FictionBox from "../Fiction/Fiction";
+import JetBrainsMonoText from "../Text/TextComponent";
+import StyledTextField from "../Textbox/StyledTextField";
 
 export const SearchBar: React.FC<{
   initialFilters: TextFilter;
@@ -239,12 +239,11 @@ export const ItemBoxHovered: React.FC<Text> = ({
   fiction,
   source,
   author,
-  image_url,
+  image_base64,
+  image_type,
 }) => {
   const { setTextId_ } = useWebGazerContext();
   const navigate = useNavigate();
-  const image_url_ =
-    image_url === "" ? "/static/images/placeholder.png" : image_url;
 
   const handleStandardClick = () => {
     setTextId_(id);
@@ -271,7 +270,7 @@ export const ItemBoxHovered: React.FC<Text> = ({
             justifyContent: "center",
             width: "20%",
           }}
-          src={image_url_}
+          src={`data:${image_type};base64, ${image_base64}`}
         />
         <Box
           sx={{
@@ -420,7 +419,8 @@ export const ItemBox: React.FC<Text> = ({
   title,
   description,
   difficulty,
-  image_url,
+  image_base64,
+  image_type,
   author,
   fiction,
 }) => {
@@ -429,8 +429,6 @@ export const ItemBox: React.FC<Text> = ({
       ? description.substring(0, 200) + "..."
       : description;
 
-  const image_url_ =
-    image_url === "" ? "/static/images/placeholder.png" : image_url;
   return (
     <Box
       sx={{
@@ -449,7 +447,7 @@ export const ItemBox: React.FC<Text> = ({
           justifyContent: "center",
           width: "15%",
         }}
-        src={image_url_}
+        src={`data:${image_type};base64, ${image_base64}`}
       />
       <Box
         sx={{

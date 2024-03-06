@@ -9,6 +9,7 @@ import ServerError from "./components/Error/ServerError";
 import LinearProgressFallback from "./components/LoadingBar/LinearProgressFallback";
 import { ApiClientProvider } from "./context/ApiContext";
 import { SnackContextProvider } from "./context/SnackContext";
+import { TutorialContextProvider } from "./context/TutorialContext";
 import { WebGazerProvider } from "./context/WebGazerContext";
 import AdminRoute from "./routes/AdminRoute";
 import AuthRoute from "./routes/AuthRoute";
@@ -42,62 +43,67 @@ function App() {
         <ApiClientProvider>
           <QueryClientProvider client={queryClient}>
             <SnackContextProvider>
-              <WebGazerProvider>
-                <BrowserRouter>
-                  <Routes>
-                    <Route element={<DesktopRoute fallback="/mobile" />}>
-                      <Route
-                        path="/privacy-policy"
-                        element={<PrivacyPolicyView />}
-                      />
-                      <Route
-                        path="/terms-of-service"
-                        element={<TermsOfServiceView />}
-                      />
-                      <Route element={<CookieConsentHOC />}>
-                        <Route element={<AuthRoute fallback="/tutorial" />}>
-                          <Route path="/" element={<Navigate to="/game" />} />
-                          <Route path="/game" element={<GamePage />} />
-                          <Route
-                            path="/calibrate"
-                            element={<WebGazerCalibration />}
-                          />
-                          <Route path="/user" element={<UserView />} />
-                          <Route
-                            path="/user/history/:id"
-                            element={<HistoricalResultsPage />}
-                          />
-                          <Route
-                            path="/available-texts/:page?"
-                            element={<AvailableTexts />}
-                          />
-                          <Route element={<AdminRoute fallback="/login" />}>
-                            <Route path="/gpt" element={<GptView />} />
-                            <Route path="/admin" element={<AdminAnalytics />} />
+              <TutorialContextProvider>
+                <WebGazerProvider>
+                  <BrowserRouter>
+                    <Routes>
+                      <Route element={<DesktopRoute fallback="/mobile" />}>
+                        <Route
+                          path="/privacy-policy"
+                          element={<PrivacyPolicyView />}
+                        />
+                        <Route
+                          path="/terms-of-service"
+                          element={<TermsOfServiceView />}
+                        />
+                        <Route element={<CookieConsentHOC />}>
+                          <Route element={<AuthRoute fallback="/login" />}>
+                            <Route path="/" element={<Navigate to="/game" />} />
+                            <Route path="/game" element={<GamePage />} />
                             <Route
-                              path="/admin/questions/:text_id"
-                              element={<AdminQuestionStat />}
+                              path="/calibrate"
+                              element={<WebGazerCalibration />}
+                            />
+                            <Route path="/user" element={<UserView />} />
+                            <Route
+                              path="/user/history/:id"
+                              element={<HistoricalResultsPage />}
                             />
                             <Route
-                              path="/admin/questions/:text_id/stat/:question_id"
-                              element={<QuizAnalytics />}
+                              path="/available-texts/:page?"
+                              element={<AvailableTexts />}
                             />
+                            <Route element={<AdminRoute fallback="/login" />}>
+                              <Route path="/gpt" element={<GptView />} />
+                              <Route
+                                path="/admin"
+                                element={<AdminAnalytics />}
+                              />
+                              <Route
+                                path="/admin/questions/:text_id"
+                                element={<AdminQuestionStat />}
+                              />
+                              <Route
+                                path="/admin/questions/:text_id/stat/:question_id"
+                                element={<QuizAnalytics />}
+                              />
+                            </Route>
                           </Route>
+                          <Route element={<GuestRoute fallback="/" />}>
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/signup" element={<SignUp />} />
+                          </Route>
+                          <Route path="/tutorial" element={<Tutorial />} />
+                          <Route path="*" element={<NotFound />} />
                         </Route>
-                        <Route element={<GuestRoute fallback="/game" />}>
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/signup" element={<SignUp />} />
-                        </Route>
-                        <Route path="/tutorial" element={<Tutorial />} />
-                        <Route path="*" element={<NotFound />} />
                       </Route>
-                    </Route>
-                    <Route element={<MobileRoute fallback="/" />}>
-                      <Route path="/mobile" element={<NoMobile />} />
-                    </Route>
-                  </Routes>
-                </BrowserRouter>
-              </WebGazerProvider>
+                      <Route element={<MobileRoute fallback="/" />}>
+                        <Route path="/mobile" element={<NoMobile />} />
+                      </Route>
+                    </Routes>
+                  </BrowserRouter>
+                </WebGazerProvider>
+              </TutorialContextProvider>
             </SnackContextProvider>
           </QueryClientProvider>
         </ApiClientProvider>

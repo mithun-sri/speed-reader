@@ -8,6 +8,7 @@ import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import WpmSign from "../../components/WpmSign/WpmSign";
+import { useTutorial } from "../../context/TutorialContext";
 import "./Tutorial.css";
 
 const INTRO_TEXT = [
@@ -30,9 +31,8 @@ const VISITED_COOKIE = "visited";
 
 function Tutorial() {
   const navigate = useNavigate();
+  const { stage, setStage } = useTutorial();
   const [_, setCookie] = useCookies([VISITED_COOKIE]);
-
-  const [stage, setStage] = useState(0);
   const [wpm, setWpm] = useState(200);
 
   function incrementStage() {

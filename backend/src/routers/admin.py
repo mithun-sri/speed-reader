@@ -1,13 +1,16 @@
+import base64
 import json
 import os
 from typing import Annotated
 
 import openai
+import requests
 from fastapi import APIRouter, Depends, Query, Security
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .. import models, schemas
+from ..config import config
 from ..database import get_session
 from ..logger import LoggerRoute
 from ..services.auth import verify_admin
@@ -110,7 +113,7 @@ async def get_texts(
             word_count=text.word_count,
             description=text.description,
             author=text.author,
-            image_url=text.image_url,
+            image_base64=base64.b64encode(text.image_bytes).decode("utf-8"),
             min_wpm=item.get("minWpm", 0),
             max_wpm=item.get("maxWpm", 0),
             average_wpm=int(item.get("avgWpm", 0)),
@@ -164,7 +167,8 @@ async def get_text(
         word_count=text.word_count,
         description=text.description,
         author=text.author,
-        image_url=text.image_url,
+        image_type=text.image_type,
+        image_base64=base64.b64encode(text.image_bytes).decode("utf-8"),
         min_wpm=item.get("minWpm", 0),
         max_wpm=item.get("maxWpm", 0),
         average_wpm=int(item.get("avgWpm", 0)),
@@ -183,7 +187,6 @@ async def get_text(
 
 @router.delete(
     "/texts/{text_id}",
-    response_model=schemas.Text,
 )
 async def delete_text(
     text_id: str,
@@ -198,7 +201,6 @@ async def delete_text(
 
     session.delete(text)
     session.commit()
-    return text
 
 
 @router.get(
@@ -390,10 +392,9 @@ async def generate_text(difficulty: str, fiction: bool):
     text = json.loads(response)
     text["image_url"] = ""
     if text["gutenberg_link"]:
-        image = text["gutenberg_link"].split("/")[-1]
-        text[
-            "image_url"
-        ] = f"https://www.gutenberg.org/cache/epub/{image}/pg{image}.cover-medium.jpg"
+        image_id = text["gutenberg_link"].split("/")[-1]
+        image_url = f"https://www.gutenberg.org/cache/epub/{image_id}/pg{image_id}.cover-medium.jpg"
+        text["image_url"] = image_url
 
     return schemas.TextCreateWithQuestions(
         title=text["title"],
@@ -417,6 +418,8 @@ async def generate_text(difficulty: str, fiction: bool):
     )
 
 
+# TODO:
+# Rename this endpoint to `submit_text`.
 @router.post(
     "/approve-text",
     response_model=schemas.TextWithQuestions,
@@ -429,6 +432,19 @@ async def approve_text(
     Adds a text to the database.
     """
 
+    response = requests.get(
+        text_data.image_url,
+        stream=True,
+        timeout=10,
+    )
+    if response.ok:
+        image_bytes = response.raw.read()
+        image_type = response.headers["Content-Type"]
+    else:
+        with open(f"{config.app_dir}/assets/default.jpg", "rb") as file:
+            image_bytes = file.read()
+            image_type = "image/jpeg"
+
     text = models.Text(
         title=text_data.title,
         content=text_data.content,
@@ -439,7 +455,8 @@ async def approve_text(
         word_count=text_data.word_count,
         description=text_data.description,
         author=text_data.author,
-        image_url=text_data.image_url,
+        image_type=image_type,
+        image_bytes=image_bytes,
     )
     questions = [
         models.Question(
@@ -454,4 +471,27 @@ async def approve_text(
     session.add_all(questions)
     session.commit()
 
-    return text
+    # TODO: Avoid duplicate code.
+    return schemas.TextWithQuestions(
+        id=text.id,
+        title=text.title,
+        content=text.content,
+        summary=text.summary,
+        source=text.source,
+        fiction=text.fiction,
+        difficulty=text.difficulty,
+        word_count=text.word_count,
+        description=text.description,
+        author=text.author,
+        image_type=text.image_type,
+        image_base64=base64.b64encode(text.image_bytes).decode("utf-8"),
+        questions=[
+            schemas.Question(
+                id=question.id,
+                content=question.content,
+                options=question.options,
+                correct_option=question.correct_option,
+            )
+            for question in text.questions
+        ],
+    )
