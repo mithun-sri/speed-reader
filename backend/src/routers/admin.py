@@ -392,10 +392,9 @@ async def generate_text(difficulty: str, fiction: bool):
     text = json.loads(response)
     text["image_url"] = ""
     if text["gutenberg_link"]:
-        image = text["gutenberg_link"].split("/")[-1]
-        text["image_url"] = (
-            f"https://www.gutenberg.org/cache/epub/{image}/pg{image}.cover-medium.jpg"
-        )
+        image_id = text["gutenberg_link"].split("/")[-1]
+        image_url = f"https://www.gutenberg.org/cache/epub/{image_id}/pg{image_id}.cover-medium.jpg"
+        text["image_url"] = image_url
 
     return schemas.TextCreateWithQuestions(
         title=text["title"],
