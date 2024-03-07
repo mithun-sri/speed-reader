@@ -4,9 +4,9 @@ import { Box, IconButton } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { TextCreateWithQuestions } from "../../api";
+import { GptFormData } from "../../views/Admin/GptView";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
-import { GptFormData } from "./GptSuggestionForm";
 
 const GptText: React.FC<{
   useFormReturn: UseFormReturn<GptFormData>;
@@ -40,7 +40,7 @@ const GptText: React.FC<{
         <TextLabel text={"Author"} />
         <StyledTextField
           defaultValue={generatedText.author}
-          {...register("source")}
+          {...register("author")}
         />
       </Box>
       <Box sx={textFieldContainerStyles}>
@@ -89,7 +89,7 @@ const GptText: React.FC<{
           multiline
           rows={3}
           defaultValue={generatedText.summary}
-          {...register("summarised")}
+          {...register("summary")}
         />
       </Box>
     </Box>

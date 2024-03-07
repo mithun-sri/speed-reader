@@ -5,7 +5,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import React, { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { GptFormData } from "./GptSuggestionForm";
+import { GptFormData } from "../../views/Admin/GptView";
 
 const CheckboxGroup: React.FC<{
   defaultValue: number;

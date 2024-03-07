@@ -1,10 +1,9 @@
 import { Box, CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { QuestionCreate, TextCreateWithQuestions } from "../../api";
 import GptPrompt from "../../components/Gpt/GptPrompt";
-import GptSuggestionForm, {
-  GptFormData,
-} from "../../components/Gpt/GptSuggestionForm";
+import GptSuggestionForm from "../../components/Gpt/GptSuggestionForm";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import { useSnack } from "../../context/SnackContext";
@@ -56,13 +55,14 @@ const GptLoading = () => {
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "column",
-        marginTop: "50px",
+        marginTop: "40px",
+        marginBottom: "40px",
       }}
     >
       <CircularProgress
         color="inherit"
         size="100px"
-        sx={{ marginBottom: "50px" }}
+        sx={{ marginBottom: "40px" }}
       />
       <JetBrainsMonoText
         text="Generating text. This may take a while..."
@@ -73,16 +73,54 @@ const GptLoading = () => {
   );
 };
 
+export interface QuestionFeedData {
+  content: string;
+  options: string[];
+  correctOption: number;
+  selected: boolean;
+}
+
+export interface GptFormData {
+  title: string;
+  author: string;
+  content: string;
+  summary: string;
+  questions: QuestionFeedData[];
+  source: string;
+  image_url: string;
+  description: string;
+}
+
 const GptForm = () => {
   const [generatedText, setGeneratedText] = useState<TextCreateWithQuestions>(
     emptyTextCreateWithQuestions,
   );
-  const [formKey, setFormKey] = useState<number>(0); // Key to force GptSuggestionForm remounting
   const [loading, setLoading] = useState(false);
   const generateText = useGenerateText();
 
+  const useGptForm = useForm<GptFormData>();
+  const { setValue } = useGptForm;
+
+  useEffect(() => {
+    setValue("title", generatedText.title);
+    setValue("author", generatedText.author);
+    setValue("description", generatedText.description);
+    setValue("source", generatedText.source);
+    setValue("image_url", generatedText.image_url);
+    setValue("content", generatedText.content);
+    setValue("summary", generatedText.summary as string);
+    setValue(
+      "questions",
+      generatedText.questions.map((question) => ({
+        content: question.content,
+        options: question.options,
+        correctOption: question.correct_option,
+        selected: false,
+      })),
+    );
+  }, [generatedText]);
+
   const handleGenerateResponse = (difficulty: string, fiction: boolean) => {
-    setFormKey((prevKey: number) => prevKey + 1); // Increment key to force GptSuggestionForm remounting
     setLoading(true);
     generateText.mutate(
       { difficulty, isFiction: fiction },
@@ -107,8 +145,8 @@ const GptForm = () => {
   const handleApproveText = (data: GptFormData) => {
     // Build Question[] data to submit to server
     const questions: QuestionCreate[] = data.questions
-      .filter((question) => question.selected)
-      .map((question, _) => ({
+      .filter((question: QuestionFeedData) => question.selected)
+      .map((question: QuestionFeedData) => ({
         content: question.content,
         options: question.options,
         correct_option: question.correctOption,
@@ -117,7 +155,7 @@ const GptForm = () => {
     const text: TextCreateWithQuestions = {
       title: generatedText!.title,
       content: data.content,
-      summary: data.summarised,
+      summary: data.summary,
       source: data.source,
       fiction: generatedText!.fiction,
       difficulty: generatedText!.difficulty,
@@ -166,11 +204,11 @@ const GptForm = () => {
       <Header />
       <Box sx={containerStyles}>
         <Box sx={innerContainerStyles}>
-          <GptPrompt onGenerateResponse={handleGenerateResponse} />
           {loading && <GptLoading />}
+          <GptPrompt onGenerateResponse={handleGenerateResponse} />
           {generatedText && (
             <GptSuggestionForm
-              key={formKey} // Key to force remounting
+              useFormReturn={useGptForm}
               generatedText={generatedText}
               onApproveText={handleApproveText}
             />

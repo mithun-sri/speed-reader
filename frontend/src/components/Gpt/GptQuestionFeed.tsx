@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
 import { QuestionCreate, TextCreateWithQuestions } from "../../api";
+import { GptFormData } from "../../views/Admin/GptView";
 import GptQuestion from "./GptQuestion";
-import { GptFormData } from "./GptSuggestionForm";
 
 const GptQuestionFeed: React.FC<{
   useFormReturn: UseFormReturn<GptFormData>;
