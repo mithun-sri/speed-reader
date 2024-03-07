@@ -43,7 +43,7 @@ async def get_next_text(
     text_ids = models.History.objects(user_id=user.id).distinct("text_id")
 
     query_unseen = select(models.Text).where(models.Text.id.notin_(text_ids)).limit(1)
-    query_random = query_unseen.order_by(func.random()).limit(1)
+    query_random = select(models.Text).order_by(func.random()).limit(1)
     if difficulty:
         query_unseen = query_unseen.where(models.Text.difficulty == difficulty)
         query_random = query_random.where(models.Text.difficulty == difficulty)
@@ -118,18 +118,20 @@ async def get_next_questions(
 
     query_unseen = (
         select(models.Question)
+        .where(models.Question.text_id == text_id)
         .where(models.Question.id.notin_(question_ids))
         .limit(NUM_QUESTIONS_PER_GAME)
     )
     query_random = (
-        query_unseen.where(models.Question.text_id == text_id)
+        select(models.Question)
+        .where(models.Question.text_id == text_id)
         .order_by(func.random())
         .limit(NUM_QUESTIONS_PER_GAME)
     )
 
-    if questions := session.scalars(query_random).all():
-        return questions
     if questions := session.scalars(query_unseen).all():
+        return questions
+    if questions := session.scalars(query_random).all():
         return questions
 
     raise NotEnoughQuestionsException(text_id=text_id)
