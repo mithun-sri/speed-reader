@@ -763,6 +763,54 @@
             }
           },
           {
+            "name": "difficulty",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Difficulty"
+            }
+          },
+          {
+            "name": "include_fiction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Include Fiction"
+            }
+          },
+          {
+            "name": "include_nonfiction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Include Nonfiction"
+            }
+          },
+          {
+            "name": "only_unplayed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Only Unplayed"
+            }
+          },
+          {
+            "name": "keyword",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Keyword"
+            }
+          },
+          {
             "name": "access_token",
             "in": "cookie",
             "required": false,
@@ -779,23 +827,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/TextFilter"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ],
-                "title": "Text Filter"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -1111,14 +1142,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
+              "type": "string",
               "title": "Difficulty"
             }
           },
@@ -1994,70 +2018,6 @@
           "questions"
         ],
         "title": "TextCreateWithQuestions"
-      },
-      "TextFilter": {
-        "properties": {
-          "difficulty": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Difficulty"
-          },
-          "include_fiction": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Include Fiction",
-            "default": true
-          },
-          "include_nonfiction": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Include Nonfiction",
-            "default": true
-          },
-          "only_unplayed": {
-            "anyOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Only Unplayed",
-            "default": false
-          },
-          "keyword": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Keyword"
-          }
-        },
-        "type": "object",
-        "title": "TextFilter"
       },
       "TextWithQuestions": {
         "properties": {

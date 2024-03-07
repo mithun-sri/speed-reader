@@ -126,13 +126,6 @@ export interface BodyPostAnswers {
 /**
  * 
  * @export
- * @interface Difficulty
- */
-export interface Difficulty {
-}
-/**
- * 
- * @export
  * @interface HTTPValidationError
  */
 export interface HTTPValidationError {
@@ -308,34 +301,6 @@ export interface ImageBase64 {
  * @interface ImageType
  */
 export interface ImageType {
-}
-/**
- * 
- * @export
- * @interface IncludeFiction
- */
-export interface IncludeFiction {
-}
-/**
- * 
- * @export
- * @interface IncludeNonfiction
- */
-export interface IncludeNonfiction {
-}
-/**
- * 
- * @export
- * @interface Keyword
- */
-export interface Keyword {
-}
-/**
- * 
- * @export
- * @interface OnlyUnplayed
- */
-export interface OnlyUnplayed {
 }
 /**
  * 
@@ -700,43 +665,6 @@ export interface TextCreateWithQuestions {
      * @memberof TextCreateWithQuestions
      */
     'questions': Array<QuestionCreate>;
-}
-/**
- * 
- * @export
- * @interface TextFilter
- */
-export interface TextFilter {
-    /**
-     * 
-     * @type {Difficulty}
-     * @memberof TextFilter
-     */
-    'difficulty'?: Difficulty;
-    /**
-     * 
-     * @type {IncludeFiction}
-     * @memberof TextFilter
-     */
-    'include_fiction'?: IncludeFiction;
-    /**
-     * 
-     * @type {IncludeNonfiction}
-     * @memberof TextFilter
-     */
-    'include_nonfiction'?: IncludeNonfiction;
-    /**
-     * 
-     * @type {OnlyUnplayed}
-     * @memberof TextFilter
-     */
-    'only_unplayed'?: OnlyUnplayed;
-    /**
-     * 
-     * @type {Keyword}
-     * @memberof TextFilter
-     */
-    'keyword'?: Keyword;
 }
 /**
  * 
@@ -2222,12 +2150,12 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
          * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
          * @param {boolean} isSummary 
-         * @param {Difficulty} [difficulty] 
+         * @param {string} [difficulty] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText: async (isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getNextText: async (isSummary: boolean, difficulty?: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'isSummary' is not null or undefined
             assertParamExists('getNextText', 'isSummary', isSummary)
             const localVarPath = `/game/texts/next`;
@@ -2243,9 +2171,7 @@ export const GameApiAxiosParamCreator = function (configuration?: Configuration)
             const localVarQueryParameter = {} as any;
 
             if (difficulty !== undefined) {
-                for (const [key, value] of Object.entries(difficulty)) {
-                    localVarQueryParameter[key] = value;
-                }
+                localVarQueryParameter['difficulty'] = difficulty;
             }
 
             if (isSummary !== undefined) {
@@ -2367,12 +2293,12 @@ export const GameApiFp = function(configuration?: Configuration) {
          * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
          * @param {boolean} isSummary 
-         * @param {Difficulty} [difficulty] 
+         * @param {string} [difficulty] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getNextText(isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
+        async getNextText(isSummary: boolean, difficulty?: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Text>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getNextText(isSummary, difficulty, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['GameApi.getNextText']?.[localVarOperationServerIndex]?.url;
@@ -2432,12 +2358,12 @@ export const GameApiFactory = function (configuration?: Configuration, basePath?
          * Gets the next text that the user has not attempted before.
          * @summary Get Next Text
          * @param {boolean} isSummary 
-         * @param {Difficulty} [difficulty] 
+         * @param {string} [difficulty] 
          * @param {AccessToken} [accessToken] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getNextText(isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
+        getNextText(isSummary: boolean, difficulty?: string, accessToken?: AccessToken, options?: any): AxiosPromise<Text> {
             return localVarFp.getNextText(isSummary, difficulty, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2490,13 +2416,13 @@ export class GameApi extends BaseAPI {
      * Gets the next text that the user has not attempted before.
      * @summary Get Next Text
      * @param {boolean} isSummary 
-     * @param {Difficulty} [difficulty] 
+     * @param {string} [difficulty] 
      * @param {AccessToken} [accessToken] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof GameApi
      */
-    public getNextText(isSummary: boolean, difficulty?: Difficulty, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+    public getNextText(isSummary: boolean, difficulty?: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
         return GameApiFp(this.configuration).getNextText(isSummary, difficulty, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2638,12 +2564,16 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
          * @summary Get User Available Texts
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {string} [difficulty] 
+         * @param {boolean} [includeFiction] 
+         * @param {boolean} [includeNonfiction] 
+         * @param {boolean} [onlyUnplayed] 
+         * @param {string} [keyword] 
          * @param {AccessToken} [accessToken] 
-         * @param {TextFilter} [textFilter] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserAvailableTexts: async (page?: number, pageSize?: number, accessToken?: AccessToken, textFilter?: TextFilter, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getUserAvailableTexts: async (page?: number, pageSize?: number, difficulty?: string, includeFiction?: boolean, includeNonfiction?: boolean, onlyUnplayed?: boolean, keyword?: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/users/current/available-texts`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2664,14 +2594,31 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
                 localVarQueryParameter['page_size'] = pageSize;
             }
 
+            if (difficulty !== undefined) {
+                localVarQueryParameter['difficulty'] = difficulty;
+            }
+
+            if (includeFiction !== undefined) {
+                localVarQueryParameter['include_fiction'] = includeFiction;
+            }
+
+            if (includeNonfiction !== undefined) {
+                localVarQueryParameter['include_nonfiction'] = includeNonfiction;
+            }
+
+            if (onlyUnplayed !== undefined) {
+                localVarQueryParameter['only_unplayed'] = onlyUnplayed;
+            }
+
+            if (keyword !== undefined) {
+                localVarQueryParameter['keyword'] = keyword;
+            }
+
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(textFilter, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -2876,13 +2823,17 @@ export const UserApiFp = function(configuration?: Configuration) {
          * @summary Get User Available Texts
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {string} [difficulty] 
+         * @param {boolean} [includeFiction] 
+         * @param {boolean} [includeNonfiction] 
+         * @param {boolean} [onlyUnplayed] 
+         * @param {string} [keyword] 
          * @param {AccessToken} [accessToken] 
-         * @param {TextFilter} [textFilter] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, textFilter?: TextFilter, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserAvailableTexts>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserAvailableTexts(page, pageSize, accessToken, textFilter, options);
+        async getUserAvailableTexts(page?: number, pageSize?: number, difficulty?: string, includeFiction?: boolean, includeNonfiction?: boolean, onlyUnplayed?: boolean, keyword?: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserAvailableTexts>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUserAvailableTexts(page, pageSize, difficulty, includeFiction, includeNonfiction, onlyUnplayed, keyword, accessToken, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getUserAvailableTexts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2988,13 +2939,17 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @summary Get User Available Texts
          * @param {number} [page] 
          * @param {number} [pageSize] 
+         * @param {string} [difficulty] 
+         * @param {boolean} [includeFiction] 
+         * @param {boolean} [includeNonfiction] 
+         * @param {boolean} [onlyUnplayed] 
+         * @param {string} [keyword] 
          * @param {AccessToken} [accessToken] 
-         * @param {TextFilter} [textFilter] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, textFilter?: TextFilter, options?: any): AxiosPromise<UserAvailableTexts> {
-            return localVarFp.getUserAvailableTexts(page, pageSize, accessToken, textFilter, options).then((request) => request(axios, basePath));
+        getUserAvailableTexts(page?: number, pageSize?: number, difficulty?: string, includeFiction?: boolean, includeNonfiction?: boolean, onlyUnplayed?: boolean, keyword?: string, accessToken?: AccessToken, options?: any): AxiosPromise<UserAvailableTexts> {
+            return localVarFp.getUserAvailableTexts(page, pageSize, difficulty, includeFiction, includeNonfiction, onlyUnplayed, keyword, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets the statistics based on the user\'s game history.
@@ -3091,14 +3046,18 @@ export class UserApi extends BaseAPI {
      * @summary Get User Available Texts
      * @param {number} [page] 
      * @param {number} [pageSize] 
+     * @param {string} [difficulty] 
+     * @param {boolean} [includeFiction] 
+     * @param {boolean} [includeNonfiction] 
+     * @param {boolean} [onlyUnplayed] 
+     * @param {string} [keyword] 
      * @param {AccessToken} [accessToken] 
-     * @param {TextFilter} [textFilter] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUserAvailableTexts(page?: number, pageSize?: number, accessToken?: AccessToken, textFilter?: TextFilter, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getUserAvailableTexts(page, pageSize, accessToken, textFilter, options).then((request) => request(this.axios, this.basePath));
+    public getUserAvailableTexts(page?: number, pageSize?: number, difficulty?: string, includeFiction?: boolean, includeNonfiction?: boolean, onlyUnplayed?: boolean, keyword?: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUserAvailableTexts(page, pageSize, difficulty, includeFiction, includeNonfiction, onlyUnplayed, keyword, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

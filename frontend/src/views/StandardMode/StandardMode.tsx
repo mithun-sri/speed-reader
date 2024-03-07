@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { GameDifficulty } from "../../common/constants";
 import CountdownComponent from "../../components/Counter/Counter";
 import Header from "../../components/Header/Header";
 import "./StandardMode.css";
@@ -22,13 +21,12 @@ export enum StandardView {
 const StandardModeGameView: React.FC<{
   wpm?: number;
   mode?: GameViewType;
-  difficulty?: GameDifficulty;
-}> = ({ wpm, mode, difficulty }) => {
+}> = ({ wpm, mode }) => {
   const { textId, setTextId_ } = useWebGazerContext();
-  const { setTextId, summarised } = useGameContext();
+  const { setTextId, summarised, difficulty } = useGameContext();
   const getText = () => {
     if (textId === null) {
-      return useNextText(summarised, difficulty);
+      return useNextText(summarised, difficulty?.toLowerCase() || undefined);
     } else {
       setTextId_(null);
       return useTextById(textId);

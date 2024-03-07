@@ -1,6 +1,5 @@
 # TODO: Organise schemas into appropriate modules.
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel, Field
 
@@ -51,14 +50,6 @@ class UserAvailableTexts(BaseModel):
     page: int
     page_size: int
     total_texts: int
-
-
-class TextFilter(BaseModel):
-    difficulty: Optional[str] = None
-    include_fiction: Optional[bool] = True
-    include_nonfiction: Optional[bool] = True
-    only_unplayed: Optional[bool] = False
-    keyword: Optional[str] = None
 
 
 class HistoryBase(BaseModel):

@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { TextFilter } from "../../api";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import StyledPagination from "../../components/Pagination/Pagination";
@@ -12,7 +11,7 @@ import {
   NoTexts,
   SearchBar,
 } from "../../components/TextCards/AvailableTextCards";
-import { getAvailableTexts } from "../../hooks/users";
+import { TextFilter, getAvailableTexts } from "../../hooks/users";
 
 const AvailableTexts: React.FC = () => {
   const { page } = useParams();
