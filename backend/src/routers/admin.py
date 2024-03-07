@@ -452,10 +452,12 @@ async def approve_text(
             image_bytes = file.read()
             image_type = "image/jpeg"
 
+    # fmt: off
+    summary = text_data.summary if text_data.summary and text_data.summary != "" else None
     text = models.Text(
         title=text_data.title,
         content=text_data.content,
-        summary=text_data.summary,
+        summary=summary,
         source=text_data.source,
         fiction=text_data.fiction,
         difficulty=text_data.difficulty,
