@@ -1,5 +1,5 @@
 import base64
-from typing import Annotated, Optional
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Response, Security
 from sqlalchemy import func, select
@@ -117,7 +117,11 @@ async def get_user_available_texts(
     *,
     page: Annotated[int, Query()] = 1,
     page_size: Annotated[int, Query()] = 10,
-    text_filter: Optional[schemas.TextFilter] = None,
+    difficulty: str = None,  # type: ignore
+    include_fiction: bool = True,  # type: ignore
+    include_nonfiction: bool = True,  # type: ignore
+    only_unplayed: bool = False,  # type: ignore
+    keyword: str = None,  # type: ignore
     user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],
 ):
@@ -127,39 +131,25 @@ async def get_user_available_texts(
     """
 
     def filter_query(query):
-        if text_filter:
-            if text_filter.difficulty and text_filter.difficulty != "any":
-                query = query.where(models.Text.difficulty == text_filter.difficulty)
-            if (
-                text_filter.include_fiction is False
-                and text_filter.include_nonfiction is False
-            ):
-                # Return no texts if both fiction and nonfiction are excluded
-                query = query.where(
-                    models.Text.fiction == False  # pylint: disable=singleton-comparison
-                )
-                query = query.where(
-                    models.Text.fiction == True  # pylint: disable=singleton-comparison
-                )
-            elif text_filter.include_fiction is False:
-                query = query.where(
-                    models.Text.fiction == False  # pylint: disable=singleton-comparison
-                )
-            elif text_filter.include_nonfiction is False:
-                query = query.where(
-                    models.Text.fiction == True  # pylint: disable=singleton-comparison
-                )
-            if text_filter.only_unplayed:
-                read_text_ids = models.History.objects(user_id=user.id).distinct(
-                    "text_id"
-                )
-                query = query.where(models.Text.id.not_in(read_text_ids))
-            if text_filter.keyword:
-                # find texts with the keyword in the title or author
-                query = query.where(
-                    models.Text.title.ilike(f"%{text_filter.keyword}%")
-                    | models.Text.author.ilike(f"%{text_filter.keyword}%")
-                )
+        if difficulty and difficulty != "any":
+            query = query.where(models.Text.difficulty == difficulty)
+        if include_fiction is False and include_nonfiction is False:
+            # Return no texts if both fiction and nonfiction are excluded
+            query = query.where(models.Text.fiction.is_(False))
+            query = query.where(models.Text.fiction.is_(True))
+        elif include_fiction is False:
+            query = query.where(models.Text.fiction.is_(False))
+        elif include_nonfiction is False:
+            query = query.where(models.Text.fiction.is_(True))
+        if only_unplayed:
+            read_text_ids = models.History.objects(user_id=user.id).distinct("text_id")
+            query = query.where(models.Text.id.not_in(read_text_ids))
+        if keyword:
+            # find texts with the keyword in the title or author
+            query = query.where(
+                models.Text.title.ilike(f"%{keyword}%")
+                | models.Text.author.ilike(f"%{keyword}%")
+            )
 
         return query
 

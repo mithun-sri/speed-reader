@@ -4,7 +4,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { TextFilter, UserLogin, UserRegister } from "../api";
+import { UserLogin, UserRegister } from "../api";
 import { useApiClient } from "../context/ApiContext";
 
 export function useAuth() {
@@ -108,19 +108,37 @@ export function getUserStatistics(mode: string) {
   });
 }
 
+export interface TextFilter {
+  difficulty: string;
+  include_fiction: boolean;
+  include_nonfiction: boolean;
+  only_unplayed: boolean;
+  keyword: string;
+}
+
 export function getAvailableTexts(
   page: number,
   pageSize: number,
-  text_filter: TextFilter,
+  textFilter: TextFilter,
 ) {
   const { userApi } = useApiClient();
+
   return useSuspenseQuery({
-    queryKey: ["users", "available_texts"],
+    queryKey: ["users", "available_texts", page, pageSize, textFilter],
     queryFn: () =>
       userApi
-        .getUserAvailableTexts(page, pageSize, undefined, text_filter)
+        .getUserAvailableTexts(
+          page,
+          pageSize,
+          textFilter.difficulty,
+          textFilter.include_fiction,
+          textFilter.include_nonfiction,
+          textFilter.only_unplayed,
+          textFilter.keyword,
+        )
         .then((res) => res.data),
     gcTime: 0,
+    staleTime: 0,
   });
 }
 

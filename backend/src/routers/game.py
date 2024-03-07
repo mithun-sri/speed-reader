@@ -1,4 +1,4 @@
-from typing import Annotated, Optional
+from typing import Annotated
 
 from fastapi import APIRouter, Body, Depends, Query, Security
 from sqlalchemy import func, select
@@ -32,7 +32,12 @@ router = APIRouter(
 )
 async def get_next_text(
     *,
-    difficulty: Annotated[Optional[str], Query()] = None,
+    # NOTE:
+    # We cannot set `Optional[str]` as the type for `difficulty`
+    # because FastAPI will not be able to generate the OpenAPI schema correctly.
+    # It will generate `difficulty` as a compound type of `str` and `None`,
+    # rather than `nullable` set to `true`.
+    difficulty: Annotated[str, Query()] = None,  # type: ignore
     is_summary: Annotated[bool, Query()],
     user: Annotated[models.User, Depends(get_current_user)],
     session: Annotated[Session, Depends(get_session)],

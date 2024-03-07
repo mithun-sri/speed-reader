@@ -13,7 +13,10 @@ import { useGameScreenContext } from "../GameScreen/GameScreen";
 const AdaptiveModeView = () => {
   const { setTextId, summarised, difficulty } = useGameContext();
   const { resumeWebGazer } = useWebGazerContext();
-  const { data: text } = useNextText(summarised, difficulty || undefined);
+  const { data: text } = useNextText(
+    summarised,
+    difficulty?.toLowerCase() || undefined,
+  );
 
   const [showGameScreen, setShowGameScreen] = useState(false);
 
