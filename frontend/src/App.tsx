@@ -73,7 +73,7 @@ function App() {
                               path="/available-texts/:page?"
                               element={<AvailableTexts />}
                             />
-                            <Route element={<AdminRoute fallback="/login" />}>
+                            <Route element={<AdminRoute fallback="/" />}>
                               <Route path="/gpt" element={<GptView />} />
                               <Route
                                 path="/admin"
