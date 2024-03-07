@@ -93,7 +93,7 @@ const Footer = () => {
         }}
       >
         <a
-          href="https://www.facebook.com"
+          href="https://www.facebook.com/profile.php?id=61557372982088"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -102,7 +102,7 @@ const Footer = () => {
           </IconButton>
         </a>
         <a
-          href="https://www.discord.com"
+          href="https://discord.gg/5AraHjkw"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -110,7 +110,11 @@ const Footer = () => {
             <FontAwesomeIcon icon={faDiscord} />
           </IconButton>
         </a>
-        <a href="https://www.x.com" target="_blank" rel="noopener noreferrer">
+        <a
+          href="https://twitter.com/speedreaderdoc"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <IconButton style={iconButtonStyles}>
             <FontAwesomeIcon icon={faXTwitter} />
           </IconButton>
