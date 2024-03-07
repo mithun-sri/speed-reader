@@ -23,6 +23,7 @@ const INTRO_TEXT = [
   "Adaptive Mode uses eye tracking to automatically adjust to your personal reading speed. Give it a try!",
 ];
 
+const STAGE_START = -1;
 const STAGE_UP_ARROW = 2;
 const STAGE_DOWN_ARROW = 3;
 const STAGE_SPACE = 4;
@@ -35,16 +36,17 @@ function Tutorial() {
   const [_, setCookie] = useCookies([VISITED_COOKIE]);
   const [wpm, setWpm] = useState(200);
 
+  function endTutorial() {
+    // NOTE:
+    // Cookies without expiration date are deleted when the browser is closed.
+    // https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#define_the_lifetime_of_a_cookie
+    setCookie(VISITED_COOKIE, true, { expires: new Date("2100-01-01") });
+    navigate("/signup");
+  }
+
   function incrementStage() {
-    if (stage < INTRO_TEXT.length - 1) {
-      setStage(stage + 1);
-    } else {
-      // NOTE:
-      // Cookies without expiration date are deleted when the browser is closed.
-      // https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#define_the_lifetime_of_a_cookie
-      setCookie(VISITED_COOKIE, true, { expires: new Date("2100-01-01") });
-      navigate("/signup");
-    }
+    if (stage < INTRO_TEXT.length - 1) setStage(stage + 1);
+    else endTutorial();
   }
 
   function onTextFinish() {
@@ -57,7 +59,19 @@ function Tutorial() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
-      {stage === STAGE_QUESTION ? (
+      {stage === STAGE_START ? (
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: "30vh",
+          }}
+        >
+          <StartButton handleClick={incrementStage} />
+        </Box>
+      ) : stage === STAGE_QUESTION ? (
         <TutorialQuestion incrementStage={incrementStage} />
       ) : stage < STAGE_UP_ARROW || stage > STAGE_SPACE ? (
         <TutorialHighlightedTextDisplay
@@ -77,6 +91,7 @@ function Tutorial() {
           incrementStage={incrementStage}
         />
       )}
+      <SkipButton handleClick={endTutorial} />
       <Footer />
     </Box>
   );
@@ -425,6 +440,94 @@ const TutorialQuestion: React.FC<{
 
 TutorialQuestion.propTypes = {
   incrementStage: PropTypes.func.isRequired,
+};
+
+const SkipButton: React.FC<{
+  handleClick?: () => void;
+}> = ({ handleClick }) => {
+  const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  useEffect(() => {
+    function handleResize() {
+      setFontSize(calculateFontSize());
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  function calculateFontSize() {
+    const windowWidth = window.innerWidth;
+    const minSize = 40;
+    const maxSize = 180;
+    const calculatedSize = Math.min(
+      maxSize,
+      Math.max(minSize, windowWidth / 6),
+    );
+    return calculatedSize;
+  }
+
+  return (
+    <IconButton
+      onClick={() => {
+        handleClick ? handleClick() : () => {};
+      }}
+      sx={{
+        height: fontSize / 3.6,
+        fontFamily: "JetBrains Mono, monospace",
+        color: "#D1D0C5",
+        fontWeight: "bolder",
+        fontSize: fontSize / 6.8,
+      }}
+    >
+      {`skip tutorial >`}
+    </IconButton>
+  );
+};
+
+const StartButton: React.FC<{
+  handleClick?: () => void;
+}> = ({ handleClick }) => {
+  const [fontSize, setFontSize] = useState(calculateFontSize());
+
+  useEffect(() => {
+    function handleResize() {
+      setFontSize(calculateFontSize());
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  function calculateFontSize() {
+    const windowWidth = window.innerWidth;
+    const minSize = 40;
+    const maxSize = 180;
+    const calculatedSize = Math.min(
+      maxSize,
+      Math.max(minSize, windowWidth / 6),
+    );
+    return calculatedSize;
+  }
+
+  return (
+    <IconButton
+      onClick={() => {
+        handleClick ? handleClick() : () => {};
+      }}
+      sx={{
+        height: fontSize / 3.6,
+        fontFamily: "JetBrains Mono, monospace",
+        color: "#E2B714",
+        fontWeight: "bolder",
+        fontSize: fontSize / 6.8,
+      }}
+    >
+      {`Click here to start!`}
+    </IconButton>
+  );
 };
 
 export default Tutorial;

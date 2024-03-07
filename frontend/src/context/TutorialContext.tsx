@@ -6,7 +6,7 @@ interface TutorialContextType {
 }
 
 const TutorialContext = createContext<TutorialContextType>({
-  stage: 0,
+  stage: -1,
   setStage: () => {},
 });
 
@@ -25,7 +25,7 @@ export function TutorialContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [stage, setStage] = useState(0);
+  const [stage, setStage] = useState(-1);
 
   return (
     <TutorialContext.Provider value={{ stage, setStage }}>
