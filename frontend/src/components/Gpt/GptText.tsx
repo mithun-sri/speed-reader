@@ -4,9 +4,9 @@ import { Box, IconButton } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { TextCreateWithQuestions } from "../../api";
+import { GptFormData } from "../../views/Admin/GptView";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
-import { GptFormData } from "./GptSuggestionForm";
 
 const GptText: React.FC<{
   useFormReturn: UseFormReturn<GptFormData>;
@@ -27,16 +27,24 @@ const GptText: React.FC<{
     gap: 1,
   };
 
-  const textLabelStyles = {
-    paddingLeft: "10px",
-  };
-
   return (
     <Box sx={containerStyles}>
       <Box sx={textFieldContainerStyles}>
-        <Box sx={textLabelStyles}>
-          <JetBrainsMonoText text={"Source URL"} size={25} color={"white"} />
-        </Box>
+        <TextLabel text={"Text Title"} />
+        <StyledTextField
+          defaultValue={generatedText.title}
+          {...register("title")}
+        />
+      </Box>
+      <Box sx={textFieldContainerStyles}>
+        <TextLabel text={"Author"} />
+        <StyledTextField
+          defaultValue={generatedText.author}
+          {...register("author")}
+        />
+      </Box>
+      <Box sx={textFieldContainerStyles}>
+        <TextLabel text={"Source URL"} />
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <StyledTextField
             sx={{ width: "100%" }}
@@ -47,9 +55,7 @@ const GptText: React.FC<{
         </Box>
       </Box>
       <Box sx={textFieldContainerStyles}>
-        <Box sx={textLabelStyles}>
-          <JetBrainsMonoText text={"Image URL"} size={25} color={"white"} />
-        </Box>
+        <TextLabel text={"Image URL"} />
         <Box sx={{ display: "flex", flexDirection: "row" }}>
           <StyledTextField
             sx={{ width: "100%" }}
@@ -60,18 +66,7 @@ const GptText: React.FC<{
         </Box>
       </Box>
       <Box sx={textFieldContainerStyles}>
-        <Box sx={textLabelStyles}>
-          <JetBrainsMonoText text={"Text Title"} size={25} color={"white"} />
-        </Box>
-        <StyledTextField
-          defaultValue={generatedText.title}
-          {...register("title")}
-        />
-      </Box>
-      <Box sx={textFieldContainerStyles}>
-        <Box sx={textLabelStyles}>
-          <JetBrainsMonoText text={"Text Content"} size={25} color={"white"} />
-        </Box>
+        <TextLabel text={"Text Content"} />
         <StyledTextField
           multiline
           rows={5}
@@ -80,13 +75,7 @@ const GptText: React.FC<{
         />
       </Box>
       <Box sx={textFieldContainerStyles}>
-        <Box sx={textLabelStyles}>
-          <JetBrainsMonoText
-            text={"Text Description"}
-            size={25}
-            color={"white"}
-          />
-        </Box>
+        <TextLabel text={"Text Description"} />
         <StyledTextField
           multiline
           rows={3}
@@ -95,14 +84,12 @@ const GptText: React.FC<{
         />
       </Box>
       <Box sx={textFieldContainerStyles}>
-        <Box sx={textLabelStyles}>
-          <JetBrainsMonoText text={"Text Summary"} size={25} color={"white"} />
-        </Box>
+        <TextLabel text={"Text Summary"} />
         <StyledTextField
           multiline
           rows={3}
           defaultValue={generatedText.summary}
-          {...register("summarised")}
+          {...register("summary")}
         />
       </Box>
     </Box>
@@ -132,6 +119,18 @@ const LinkButton: React.FC<{
         className="fa-table-page-icon"
       />
     </IconButton>
+  );
+};
+
+const textLabelStyles = {
+  paddingLeft: "10px",
+};
+
+const TextLabel: React.FC<{ text: string }> = ({ text }) => {
+  return (
+    <Box sx={textLabelStyles}>
+      <JetBrainsMonoText text={text} size={25} color="white" />
+    </Box>
   );
 };
 

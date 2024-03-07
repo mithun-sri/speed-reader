@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import { UseFormReturn } from "react-hook-form";
 import { QuestionCreate } from "../../api";
+import { GptFormData } from "../../views/Admin/GptView";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
 import CheckboxGroup from "./CheckboxGroup";
-import { GptFormData } from "./GptSuggestionForm";
 
 const containerStyles = {
   width: "100%",

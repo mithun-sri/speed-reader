@@ -1,26 +1,10 @@
 import { Box } from "@mui/material";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, UseFormReturn } from "react-hook-form";
 import { TextCreateWithQuestions } from "../../api";
+import { GptFormData } from "../../views/Admin/GptView";
 import GptButton from "../Button/GptButton";
 import GptQuestionFeed from "./GptQuestionFeed";
-import GptSourceInfo from "./GptSourceInfo";
 import GptText from "./GptText";
-
-export interface GptFormData {
-  title: string;
-  author: string;
-  content: string;
-  summarised: string;
-  questions: {
-    content: string;
-    options: string[];
-    correctOption: number;
-    selected: boolean;
-  }[];
-  source: string;
-  image_url: string;
-  description: string;
-}
 
 /**
  * SOURCE, AUTHOR LINK
@@ -30,11 +14,11 @@ export interface GptFormData {
  * GENERATE 5 MORE QUESTIONS, APPROVE BUTTONS
  */
 const GptSuggestionForm: React.FC<{
+  useFormReturn: UseFormReturn<GptFormData>;
   generatedText: TextCreateWithQuestions;
   onApproveText: SubmitHandler<GptFormData>;
-}> = ({ generatedText, onApproveText }) => {
-  const useGptForm = useForm<GptFormData>();
-  const { handleSubmit } = useGptForm;
+}> = ({ useFormReturn, generatedText, onApproveText }) => {
+  const { handleSubmit } = useFormReturn;
 
   return (
     <Box
@@ -46,13 +30,9 @@ const GptSuggestionForm: React.FC<{
       }}
     >
       <form onSubmit={handleSubmit(onApproveText)}>
-        <GptSourceInfo
-          sourceTitle={generatedText.title}
-          author={generatedText.author}
-        />
-        <GptText useFormReturn={useGptForm} generatedText={generatedText} />
+        <GptText useFormReturn={useFormReturn} generatedText={generatedText} />
         <GptQuestionFeed
-          useFormReturn={useGptForm}
+          useFormReturn={useFormReturn}
           generatedText={generatedText}
         />
         <Box

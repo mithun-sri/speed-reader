@@ -1,8 +1,8 @@
-import { Box, MenuItem, SelectChangeEvent, styled } from "@mui/material";
-import { useEffect, useState } from "react";
-import { StyledFormControl, StyledSelect } from "../Button/DropDownMenu";
+import { Box, SelectChangeEvent, styled } from "@mui/material";
+import { useState } from "react";
 import GptButton from "../Button/GptButton";
 import { StyledCheckbox } from "../Checkbox/Checkbox";
+import CustomSelect from "../Select/CustomSelect";
 import JetBrainsMonoText from "../Text/TextComponent";
 
 const GptPrompt: React.FC<{
@@ -10,27 +10,6 @@ const GptPrompt: React.FC<{
 }> = ({ onGenerateResponse }) => {
   const [diff, setDiff] = useState<string>("easy");
   const [isFiction, setIsFiction] = useState(false);
-
-  const calculateFontSize = () => {
-    const windowWidth = window.innerWidth;
-    const minFontSize = 15;
-    const maxFontSize = 45;
-
-    return Math.min(maxFontSize, Math.max(minFontSize, windowWidth / 35));
-  };
-  const [fontSize, setFontSize] = useState(calculateFontSize());
-
-  useEffect(() => {
-    function handleResize() {
-      setFontSize(calculateFontSize());
-    }
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   const handleSelectMode = (event: SelectChangeEvent<string>) => {
     setDiff(event.target.value as string);
@@ -44,6 +23,7 @@ const GptPrompt: React.FC<{
     onGenerateResponse(diff, isFiction);
   };
 
+  const difficulty_options = ["any", "easy", "medium", "hard"];
   return (
     <>
       <StyledBox sx={{ width: "100%", marginTop: "50px" }}>
@@ -51,43 +31,27 @@ const GptPrompt: React.FC<{
           sx={{
             display: "flex",
             flexDirection: "row",
-            justifyContent: "space-around",
-            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 1.5,
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              paddingTop: "30px",
-            }}
-          >
-            <JetBrainsMonoText
-              text="Choose text difficulty"
-              size={fontSize * 0.6}
-              color="#FFFFFF"
-            />
-            <DropDownDiff
-              selectValue={diff}
-              selectOnChange={handleSelectMode}
-            ></DropDownDiff>
-          </Box>
-          <Box
-            sx={{
-              display: "inherit",
-              flexDirection: "column",
-              alignItems: "center",
-              paddingTop: "30px",
-            }}
-          >
-            <JetBrainsMonoText
-              text="fiction?"
-              size={fontSize * 0.6}
-              color="#FFFFFF"
-            />
-            <StyledCheckbox checked={isFiction} onChange={handleCheckFiction} />
-          </Box>
+          <JetBrainsMonoText text="Text Difficulty" size={20} color="#FFFFFF" />
+          <CustomSelect
+            value={diff}
+            label="Difficulty"
+            onChange={handleSelectMode}
+            options={difficulty_options}
+          />
+        </Box>
+        <Box
+          sx={{
+            display: "inherit",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <JetBrainsMonoText text="Fiction" size={20} color="#FFFFFF" />
+          <StyledCheckbox checked={isFiction} onChange={handleCheckFiction} />
         </Box>
         <Box
           sx={{
@@ -114,27 +78,11 @@ const StyledBox = styled(Box)({
   marginBottom: "30px",
   padding: "10px",
   border: "2px solid #646669",
-  minHeight: "250px",
   boxSizing: "border-box",
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-evenly",
+  alignItems: "center",
 });
-
-const DropDownDiff: React.FC<{
-  selectValue: string;
-  selectOnChange: (event: SelectChangeEvent<string>) => void;
-}> = ({ selectValue, selectOnChange }) => {
-  return (
-    <StyledFormControl>
-      <StyledSelect
-        value={selectValue}
-        onChange={selectOnChange}
-        sx={{ fontSize: "23px" }}
-      >
-        <MenuItem value="easy">easy</MenuItem>
-        <MenuItem value="medium">medium</MenuItem>
-        <MenuItem value="hard">hard</MenuItem>
-      </StyledSelect>
-    </StyledFormControl>
-  );
-};
 
 export default GptPrompt;
