@@ -159,9 +159,7 @@ const ResultsPage: React.FC<{ notPlayAgain?: boolean }> = ({
               <ResponsiveContainer width="70%" height={300}>
                 <LineChart data={wpmData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="index" type="number"
-                    domain={[0, 'dataMax']}
-                  >
+                  <XAxis dataKey="index" type="number" domain={[0, "dataMax"]}>
                     <Label
                       value="Time (s)"
                       position="insideBottom"

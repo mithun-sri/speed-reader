@@ -4,14 +4,13 @@ import Header from "../../components/Header/Header";
 import "./StandardMode.css";
 
 import Box from "@mui/material/Box";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GameViewType, useGameContext } from "../../context/GameContext";
 import { useWebGazerContext } from "../../context/WebGazerContext";
 import { useNextText, useTextById } from "../../hooks/game";
 import HighlightedTextDisplay from "./HighlightedTextDisplay";
 import PeripheralTextDisplay from "./PeripheralTextDisplay";
 import WordTextDisplay from "./WordTextDisplay";
-import { lowerCase, sum } from "cypress/types/lodash";
 
 export enum StandardView {
   Word = 0,
@@ -23,8 +22,8 @@ const StandardModeGameView: React.FC<{
   wpm?: number;
   mode?: GameViewType;
 }> = ({ wpm, mode }) => {
-  const { textId_, setTextId_ } = useWebGazerContext();
-  const { textId, setTextId, summarised, difficulty } = useGameContext();
+  const { textId_ } = useWebGazerContext();
+  const { setTextId, summarised, difficulty } = useGameContext();
   const [showGameScreen, setShowGameScreen] = useState(false);
 
   const getText = () => {
@@ -32,13 +31,16 @@ const StandardModeGameView: React.FC<{
       setTextId(textId_);
       return useTextById(textId_);
     } else {
-      const text = useNextText(summarised, difficulty?.toLowerCase() || "easy");
+      const text = useNextText(
+        summarised,
+        difficulty?.toLowerCase() || undefined,
+      );
       setTextId(text.data.id);
       return text;
     }
-  }
+  };
 
-  const {data: text} = getText();
+  const { data: text } = getText();
 
   const startStandardModeGame = () => {
     setShowGameScreen(true);

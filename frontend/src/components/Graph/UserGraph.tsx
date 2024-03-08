@@ -99,7 +99,10 @@ const UserGraph: React.FC<UserGraphProps> = ({ data, mode, setMode }) => {
           <YAxis
             domain={[
               0,
-              Math.max(580, Math.max(...formattedData.map((row) => row.wpm)) + 20),
+              Math.max(
+                580,
+                Math.max(...formattedData.map((row) => row.wpm)) + 20,
+              ),
             ]}
           />
           <Tooltip />

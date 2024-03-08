@@ -63,7 +63,7 @@ const QuizView = () => {
     window.scrollTo(0, 0);
   };
 
-  const {setTextId_} = useWebGazerContext();
+  const { setTextId_ } = useWebGazerContext();
 
   const postAnswers = usePostAnswers(textId);
   const moveToResults = () => {

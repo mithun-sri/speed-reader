@@ -7,25 +7,29 @@ import GameProgressBar from "../../components/ProgressBar/GameProgressBar";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
 import { GameViewType, useGameContext } from "../../context/GameContext";
 import { useWebGazerContext } from "../../context/WebGazerContext";
-import { useNextText } from "../../hooks/game";
+import { useNextText, useTextById } from "../../hooks/game";
 import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const AdaptiveModeView = () => {
   const { setTextId, summarised, difficulty } = useGameContext();
-  const { resumeWebGazer } = useWebGazerContext();
-  const { data: text } = useNextText(
-    summarised,
-    difficulty?.toLowerCase() || undefined,
-  );
+  const { textId_, resumeWebGazer } = useWebGazerContext();
+
+  const getText = () => {
+    if (textId_ !== null) {
+      setTextId(textId_);
+      return useTextById(textId_);
+    } else {
+      const text = useNextText(
+        summarised,
+        difficulty?.toLowerCase() || undefined,
+      );
+      setTextId(text.data.id);
+      return text;
+    }
+  };
+  const { data: text } = getText();
 
   const [showGameScreen, setShowGameScreen] = useState(false);
-
-  // TODO:
-  // This is a temporary fix to prevent the infinite loop while rendering this component.
-  // There may be a better way to do this if we restructure `GameContext`.
-  useEffect(() => {
-    setTextId(text.id);
-  }, [text]);
 
   return (
     <Box
