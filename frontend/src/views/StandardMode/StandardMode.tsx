@@ -4,7 +4,7 @@ import Header from "../../components/Header/Header";
 import "./StandardMode.css";
 
 import Box from "@mui/material/Box";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GameViewType, useGameContext } from "../../context/GameContext";
 import { useWebGazerContext } from "../../context/WebGazerContext";
 import { useNextText, useTextById } from "../../hooks/game";
@@ -22,22 +22,25 @@ const StandardModeGameView: React.FC<{
   wpm?: number;
   mode?: GameViewType;
 }> = ({ wpm, mode }) => {
-  const { textId, setTextId_ } = useWebGazerContext();
+  const { textId_ } = useWebGazerContext();
   const { setTextId, summarised, difficulty } = useGameContext();
-  const getText = () => {
-    if (textId === null) {
-      return useNextText(summarised, difficulty?.toLowerCase() || undefined);
-    } else {
-      setTextId_(null);
-      return useTextById(textId);
-    }
-  };
-  const { data: text } = getText();
   const [showGameScreen, setShowGameScreen] = useState(false);
 
-  useEffect(() => {
-    setTextId(text.id);
-  }, [text]);
+  const getText = () => {
+    if (textId_ !== null) {
+      setTextId(textId_);
+      return useTextById(textId_);
+    } else {
+      const text = useNextText(
+        summarised,
+        difficulty?.toLowerCase() || undefined,
+      );
+      setTextId(text.data.id);
+      return text;
+    }
+  };
+
+  const { data: text } = getText();
 
   const startStandardModeGame = () => {
     setShowGameScreen(true);

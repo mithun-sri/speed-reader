@@ -9,12 +9,12 @@ import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const WpmView = () => {
   const { decrementCurrentStage } = useGameScreenContext();
-  const { textId } = useWebGazerContext();
+  const { textId_ } = useWebGazerContext();
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
       <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
-        {textId === null ? (
+        {textId_ === null ? (
           <BackButton label="view" handleClick={decrementCurrentStage} />
         ) : null}
       </Box>

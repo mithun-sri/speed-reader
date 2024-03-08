@@ -21,7 +21,7 @@ interface WebGazerContextType {
   resumeWebGazer: () => void;
   setWebGazerListener: (listener: WebGazerListener) => void;
   clearWebGazerListener: () => void;
-  textId: string | null;
+  textId_: string | null;
   setTextId_: (textId: string | null) => void;
 }
 
@@ -45,7 +45,7 @@ const WebGazerContext = createContext<WebGazerContextType>({
   resumeWebGazer: () => {},
   setWebGazerListener: (_listener) => {},
   clearWebGazerListener: () => {},
-  textId: null,
+  textId_: null,
   setTextId_: () => {},
 });
 
@@ -68,7 +68,7 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
     useState<boolean>(false);
   const [needsCalibration, setNeedsCalibration] = useState<boolean>(false);
   const [calibratedBefore, setCalibratedBefore] = useState<boolean>(false);
-  const [textId, setTextId_] = useState<string | null>(null);
+  const [textId_, setTextId_] = useState<string | null>(null);
   const [manualRecalibration, setManualRecalibration] =
     useState<boolean>(false);
 
@@ -217,7 +217,7 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
         resumeWebGazer,
         setWebGazerListener: setWebGazerListner,
         clearWebGazerListener: clearWebGazerListner,
-        textId: textId,
+        textId_: textId_,
         setTextId_: setTextId_,
       }}
     >

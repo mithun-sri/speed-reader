@@ -41,12 +41,12 @@ const StandardSubModeView = () => {
     visible: { opacity: 1 },
   };
 
-  const { textId } = useWebGazerContext();
+  const { textId_ } = useWebGazerContext();
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Header />
-      {textId === null ? (
+      {textId_ === null ? (
         <Box sx={{ marginLeft: "7vw", marginTop: "35px" }}>
           <BackButton label="difficulty" handleClick={decrementCurrentStage} />
         </Box>

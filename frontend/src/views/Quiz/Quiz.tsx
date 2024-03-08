@@ -8,6 +8,7 @@ import { ADAPTIVE_MODE, STANDARD_MODE } from "../../common/constants";
 import { GameViewType, useGameContext } from "../../context/GameContext";
 import { useNextQuestions, usePostAnswers } from "../../hooks/game";
 import { useGameScreenContext } from "../../views/GameScreen/GameScreen";
+import { useWebGazerContext } from "../../context/WebGazerContext";
 
 const QuizView = () => {
   const { incrementCurrentStage } = useGameScreenContext();
@@ -62,6 +63,8 @@ const QuizView = () => {
     window.scrollTo(0, 0);
   };
 
+  const { setTextId_ } = useWebGazerContext();
+
   const postAnswers = usePostAnswers(textId);
   const moveToResults = () => {
     setTimeout(() => {
@@ -93,6 +96,7 @@ const QuizView = () => {
               console.log("Answers posted successfully: ", res?.data);
               setQuizResults(res?.data);
               scrollToTop();
+              setTextId_(null);
               incrementCurrentStage();
             },
             onError: (err: any) => {
