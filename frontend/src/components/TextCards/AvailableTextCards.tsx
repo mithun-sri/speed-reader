@@ -247,6 +247,8 @@ export const ItemBoxHovered: React.FC<Text> = ({
   const navigate = useNavigate();
 
   const handleStandardClick = () => {
+    console.log("selected text id is " + id);
+    console.log("name is " + title);
     setTextId_(id);
     navigate("/game");
   };

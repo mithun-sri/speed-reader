@@ -11,6 +11,7 @@ import { useNextText, useTextById } from "../../hooks/game";
 import HighlightedTextDisplay from "./HighlightedTextDisplay";
 import PeripheralTextDisplay from "./PeripheralTextDisplay";
 import WordTextDisplay from "./WordTextDisplay";
+import { lowerCase, sum } from "cypress/types/lodash";
 
 export enum StandardView {
   Word = 0,
@@ -22,22 +23,22 @@ const StandardModeGameView: React.FC<{
   wpm?: number;
   mode?: GameViewType;
 }> = ({ wpm, mode }) => {
-  const { textId, setTextId_ } = useWebGazerContext();
-  const { setTextId, summarised, difficulty } = useGameContext();
-  const getText = () => {
-    if (textId === null) {
-      return useNextText(summarised, difficulty?.toLowerCase() || undefined);
-    } else {
-      setTextId_(null);
-      return useTextById(textId);
-    }
-  };
-  const { data: text } = getText();
+  const { textId_, setTextId_ } = useWebGazerContext();
+  const { textId, setTextId, summarised, difficulty } = useGameContext();
   const [showGameScreen, setShowGameScreen] = useState(false);
 
-  useEffect(() => {
-    setTextId(text.id);
-  }, [text]);
+  const getText = () => {
+    if (textId_ !== null) {
+      setTextId(textId_);
+      return useTextById(textId_);
+    } else {
+      const text = useNextText(summarised, difficulty?.toLowerCase() || "easy");
+      setTextId(text.data.id);
+      return text;
+    }
+  }
+
+  const {data: text} = getText();
 
   const startStandardModeGame = () => {
     setShowGameScreen(true);
