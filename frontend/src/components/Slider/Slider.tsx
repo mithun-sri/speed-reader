@@ -62,8 +62,11 @@ function SpeedSlider() {
   const { setWpm } = useGameContext();
 
   const [fontSize, setFontSize] = useState(calculateFontSize());
-  const [customValue, setCustomValue] = useState("");
-  const [sliderValue, setSliderValue] = useState(200);
+  const defaultWpm = 200;
+  const minWpm = 1;
+  const maxWpm = 3000;
+  const [customValue, setCustomValue] = useState(defaultWpm.toString());
+  const [sliderValue, setSliderValue] = useState(defaultWpm);
 
   const onSliderChange = (
     _event: Event,
@@ -90,8 +93,18 @@ function SpeedSlider() {
 
   const customValueChange = (event: any) => {
     const newValueString = event.target.value.replace(/\D/g, "");
-    const newValue = parseInt(newValueString);
-    setCustomValue(newValueString);
+    let newValue = Math.min(
+      maxWpm,
+      Math.max(minWpm, parseInt(newValueString) || minWpm),
+    );
+
+    if (newValueString === "") {
+      setCustomValue("");
+      newValue = defaultWpm;
+    } else {
+      setCustomValue(newValue.toString());
+    }
+
     setSliderValue(newValue);
     setWpm(newValue);
   };
@@ -99,9 +112,9 @@ function SpeedSlider() {
   const customValueClickedOff = (event: any) => {
     const newValueString = event.target.value.trim();
     if (newValueString === "") {
-      setCustomValue("");
-      setSliderValue(200);
-      setWpm(200);
+      setCustomValue(defaultWpm.toString());
+      setSliderValue(defaultWpm);
+      setWpm(defaultWpm);
     }
   };
 
