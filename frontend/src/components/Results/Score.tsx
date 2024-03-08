@@ -70,6 +70,7 @@ const Score: React.FC<{
             component="div"
             color="#E2B714"
             fontWeight="bolder"
+            fontFamily={"JetBrains Mono, monospace"}
             fontSize={circleWidth / 4}
           >{`${Math.round(score)}%`}</Typography>
         </Box>

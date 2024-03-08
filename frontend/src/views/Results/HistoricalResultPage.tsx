@@ -165,7 +165,7 @@ const HistoricalResultsPage: React.FC = () => {
               <ResponsiveContainer width="70%" height={300}>
                 <LineChart data={wpmData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="index" type="number">
+                  <XAxis dataKey="index" type="number" domain={[0, 'dataMax']}>
                     <Label
                       value="Time (s)"
                       position="insideBottom"
@@ -177,7 +177,8 @@ const HistoricalResultsPage: React.FC = () => {
                     type="monotone"
                     dataKey="wpm"
                     stroke="#E2B714"
-                    activeDot={{ r: 8 }}
+                    // activeDot={{ r: 8 }}
+                    strokeWidth={3}
                   />
                 </LineChart>
               </ResponsiveContainer>
