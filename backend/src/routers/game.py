@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends, Query, Security, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, Security
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
@@ -179,7 +179,7 @@ async def post_answers(
         raise HTTPException(status_code=400, detail="Invalid selected option.")
     if average_wpm > 3000 or any(wpm > 3000 for wpm in interval_wpms):
         raise HTTPException(status_code=400, detail="Invalid WPM data")
-    
+
     results = []
     for answer in answers:
         question = session.get(models.Question, answer.question_id)
