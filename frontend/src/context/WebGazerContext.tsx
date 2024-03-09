@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 type WebGazerListener = (gazeData: any, elapsedTime: number) => void;
 
@@ -195,6 +195,13 @@ export const WebGazerProvider: React.FC<{ children: React.ReactNode }> = ({
       await webgazer.clearGazeListener();
     }
   };
+
+  useEffect(() => {
+    return () => {
+      // Call endWebGazer when the provider is unmounted
+      endWebGazer();
+    };
+  }, []);
 
   return (
     <WebGazerContext.Provider
