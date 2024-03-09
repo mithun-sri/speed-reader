@@ -1,5 +1,7 @@
 import Box from "@mui/material/Box";
 import React, { useEffect, useState } from "react";
+import { ADAPTIVE_MODE } from "../../common/constants";
+import { useGameContext } from "../../context/GameContext";
 
 const CountdownComponent: React.FC<{
   duration: number;
@@ -7,6 +9,7 @@ const CountdownComponent: React.FC<{
 }> = ({ duration, onCountdownFinish }) => {
   const [count, setCount] = useState(duration);
   const [fontSize, setFontSize] = useState(calculateFontSize());
+  const { mode } = useGameContext();
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {
@@ -60,6 +63,10 @@ const CountdownComponent: React.FC<{
         fontSize: fontSize,
         fontFamily: "JetBrains Mono, monospace",
         fontWeight: "bolder",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Box
@@ -75,20 +82,15 @@ const CountdownComponent: React.FC<{
       </Box>
       <Box
         sx={{
+          fontSize: fontSize,
+          fontFamily: "JetBrains Mono, monospace",
+          fontWeight: "bolder",
+          color: "#D1D0C5",
           width: "400px", // 40% of the viewport width
           height: "400px", // 40% of the viewport height
         }}
       >
-        <Box
-          sx={{
-            fontSize: fontSize,
-            fontFamily: "JetBrains Mono, monospace",
-            fontWeight: "bolder",
-            color: "#D1D0C5",
-          }}
-        >
-          {count}
-        </Box>
+        {count}
       </Box>
       <Box
         sx={{
@@ -98,7 +100,9 @@ const CountdownComponent: React.FC<{
           color: "#D1D0C5",
         }}
       >
-        Tip: Tap ↑ ↓ to control wpm.
+        {mode === ADAPTIVE_MODE
+          ? "Tip: Use the SPACE key to pause the game."
+          : "Tip: Tap ↑ ↓ to control wpm."}
       </Box>
     </Box>
   );
