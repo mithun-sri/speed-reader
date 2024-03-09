@@ -12,7 +12,13 @@ import { useGameScreenContext } from "../GameScreen/GameScreen";
 
 const AdaptiveModeView = () => {
   const { setTextId, summarised, difficulty } = useGameContext();
-  const { textId_, resumeWebGazer } = useWebGazerContext();
+  const { textId_, pauseWebGazer, resumeWebGazer } = useWebGazerContext();
+
+  useEffect(() => {
+    return () => {
+      pauseWebGazer();
+    };
+  }, []);
 
   const getText = () => {
     if (textId_ !== null) {
@@ -109,8 +115,8 @@ const AdaptiveModeTextDisplay: React.FC<{
 
   const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
   const [hitRightCheckpoint, setHitRightCheckpoint] = useState(false);
-  const [leftCheckpointRatioSum, setLeftCheckpointRatioSum] = useState(0.2);
-  const [rightCheckpointRatioSum, setRightCheckpointRatioSum] = useState(0.9);
+  const [leftCheckpointRatioSum, setLeftCheckpointRatioSum] = useState(0.3);
+  const [rightCheckpointRatioSum, setRightCheckpointRatioSum] = useState(0.8);
   const [leftCheckpointRatioEntries, setLeftCheckpointRatioEntries] =
     useState(1);
   const [rightCheckpointRatioEntries, setRightCheckpointRatioEntries] =
@@ -122,6 +128,7 @@ const AdaptiveModeTextDisplay: React.FC<{
   const [lineContainerWidth, setLineContainerWidth] = useState(
     window.innerWidth,
   );
+  const pageCenter = window.innerWidth / 2;
   const { setWebGazerListener, clearWebGazerListener } = useWebGazerContext();
 
   const updateLineContainerWidth = (width: number) => {
@@ -131,7 +138,6 @@ const AdaptiveModeTextDisplay: React.FC<{
   useEffect(() => {
     setWebGazerListener((data: any, _: any) => {
       if (data === null) return;
-      const pageCenter = window.innerWidth / 2;
 
       const deltaX = data.x - prevGazePosition.current.x;
       let newleftCheckpointRatioSum = leftCheckpointRatioSum;
@@ -307,21 +313,33 @@ const AdaptiveModeTextDisplayInner = ({
       // NOTE:
       // Take `prevHighlightedIndex` as an argument
       // to avoid capturing the stale value of `highlightedIndex` in the callback closure.
-      setHighlightedIndex((prevHighlightedIndex) =>
-        Math.min(prevHighlightedIndex + 1, nextLineIndex - 1),
-      );
+      if (highlightedIndex < wordsArray.length - 1) {
+        setHighlightedIndex((prevHighlightedIndex) =>
+          Math.min(prevHighlightedIndex + 1, nextLineIndex - 1),
+        );
+      }
     }, 60000 / wpm);
 
     return () => clearInterval(updateHighlightedIndex);
   }, [wpm, nextLineIndex]);
 
+  useEffect(() => {
+    setHighlightedIndex(currentLineIndex);
+  }, [currentLineIndex]);
+
   return (
-    <Box>
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
       <Box
         ref={lineContainer}
         sx={{
           marginTop: "160px",
-          width: "auto",
           justifyContent: "center",
           alignItems: "center",
           padding: "10px",
@@ -329,6 +347,7 @@ const AdaptiveModeTextDisplayInner = ({
           height: "200px",
           flexWrap: "wrap",
           fontSize: fontSize,
+          maxWidth: "100%",
         }}
       >
         {wordsArray
@@ -356,7 +375,6 @@ const AdaptiveModeTextDisplayInner = ({
       <Box
         sx={{
           width: "50%",
-          paddingLeft: "25%",
           paddingTop: "200px",
         }}
       >
