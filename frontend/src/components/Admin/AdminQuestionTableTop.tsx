@@ -11,7 +11,7 @@ const AdminQuestionTableTop: React.FC<AdminQuestionTableTopProps> = ({
   return (
     <>
       <Box sx={{ marginLeft: "8vw", marginTop: "1vh", marginBottom: "1.5vh" }}>
-        <Link to="/admin">
+        <Link to="/admin" state={{ selectedValue: "text" }}>
           <IconButton>
             <Box
               sx={{

@@ -33,6 +33,28 @@ export function getTexts(page?: number, pageSize?: number) {
   });
 }
 
+export function removeText() {
+  const { adminApi } = useApiClient();
+
+  return useMutation({
+    mutationFn: (text_id: string) => adminApi.deleteText(text_id),
+  });
+}
+
+export function removeQuestion() {
+  const { adminApi } = useApiClient();
+
+  return useMutation({
+    mutationFn: ({
+      text_id,
+      question_id,
+    }: {
+      text_id: string;
+      question_id: string;
+    }) => adminApi.deleteQuestion(text_id, question_id),
+  });
+}
+
 export function getQuestion(textId: string, questionId: string) {
   const { adminApi } = useApiClient();
 

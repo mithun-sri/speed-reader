@@ -1,5 +1,12 @@
-import * as React from "react";
+import {
+  faSquareArrowUpRight,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,16 +15,13 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
-import DifficultyBox from "../Difficulty/DifficultyBox";
-import { getTexts } from "../../hooks/admin";
-import { TextWithStatistics } from "../../api";
+import * as React from "react";
 import { Link } from "react-router-dom";
-import { IconButton } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
+import { TextWithStatistics } from "../../api";
+import { useSnack } from "../../context/SnackContext";
+import { getTexts, removeText } from "../../hooks/admin";
+import DifficultyBox from "../Difficulty/DifficultyBox";
 
 interface Data {
   id: number;
@@ -217,7 +221,9 @@ export default function EnhancedTable() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const { data: texts } = getTexts();
-  const rows = transformTextWithStatistics(texts);
+  const [rows, setRows] = React.useState<Data[]>(
+    transformTextWithStatistics(texts),
+  );
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -277,6 +283,7 @@ export default function EnhancedTable() {
   };
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
+  const isCheckboxTicked = () => selected.length > 0;
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -287,8 +294,25 @@ export default function EnhancedTable() {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       ),
-    [order, orderBy, page, rowsPerPage],
+    [order, orderBy, page, rowsPerPage, rows],
   );
+
+  const deleteText = removeText();
+  const { showSnack } = useSnack();
+
+  const handleDeleteText = (text_id: string) => {
+    deleteText.mutate(text_id, {
+      onSuccess: () => {
+        setRows((prevRows) =>
+          prevRows.filter((row) => row.text_id !== text_id),
+        );
+        showSnack("Text deleted successfully");
+      },
+      onError: (error: Error) => {
+        showSnack("Failed to delete text: " + error.message);
+      },
+    });
+  };
 
   return (
     <Box sx={{ width: "75vw" }}>
@@ -447,6 +471,23 @@ export default function EnhancedTable() {
                         </IconButton>
                       }
                     </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        fontFamily: "JetBrains Mono, monospace",
+                        fontSize: "1.2vw",
+                        "&:hover": {
+                          background: "#5B6066",
+                        },
+                      }}
+                      onClick={() => handleDeleteText(row.text_id)}
+                    >
+                      <FontAwesomeIcon
+                        icon={faTrash}
+                        color="#BA1515"
+                        className="fa-table-page-icon"
+                      />
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -497,6 +538,29 @@ export default function EnhancedTable() {
           />
         </Box>
       </Paper>
+      {isCheckboxTicked() && (
+        <Box mt={2} textAlign="right">
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<FontAwesomeIcon icon={faTrash} color="#FFFFFF" />}
+            onClick={() => {
+              selected.forEach((id) => {
+                handleDeleteText(rows[id].text_id);
+              });
+              setSelected([]);
+            }}
+            sx={{
+              color: "#fff",
+              fontFamily: "JetBrains Mono, monospace",
+              fontSize: "1.2vw",
+              background: "#BA1515",
+            }}
+          >
+            Delete All
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 }
