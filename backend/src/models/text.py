@@ -28,4 +28,5 @@ class Text(ULIDMixin, TimestampMixin, Base):
     questions: Mapped[list["Question"]] = relationship(
         back_populates="text",
         default_factory=list,
+        cascade="all, delete",
     )

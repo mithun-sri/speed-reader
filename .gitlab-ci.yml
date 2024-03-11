@@ -83,11 +83,6 @@ variables:
   after_script:
     - dokku-unlock
 
-print_info:
-  stage: deploy
-  script:
-    - echo "Starting deploy..."
-
 type_check_frontend:
   extends: .frontend
   stage: type_check

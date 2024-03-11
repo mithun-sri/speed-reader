@@ -29,6 +29,8 @@ router = APIRouter(
     dependencies=[Security(verify_admin)],
 )
 
+NUM_QUESTIONS_PER_GAME = 10
+
 
 @router.get(
     "/statistics",
@@ -200,6 +202,9 @@ async def delete_text(
     if not text:
         raise TextNotFoundException(text_id=text_id)
 
+    # Delete the related questions and histories.
+    models.History.objects(text_id=text_id).delete()
+
     session.delete(text)
     session.commit()
 
@@ -305,6 +310,33 @@ async def get_question(
     )
 
 
+@router.post(
+    "/texts/{text_id}/questions",
+    response_model=schemas.Question,
+)
+async def create_question(
+    text_id: str,
+    question_data: schemas.QuestionCreate,
+    session: Annotated[Session, Depends(get_session)],
+):
+    """
+    Adds a question to the database.
+    """
+    text = session.get(models.Text, text_id)
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
+
+    question = models.Question(
+        text=text,
+        content=question_data.content,
+        options=question_data.options,
+        correct_option=question_data.correct_option,
+    )
+    session.add(question)
+    session.commit()
+    return question
+
+
 @router.delete(
     "/texts/{text_id}/questions/{question_id}",
     response_model=schemas.Question,
@@ -322,6 +354,15 @@ async def delete_question(
         raise QuestionNotFoundException(question_id=question_id)
     if question.text_id != text_id:
         raise QuestionNotBelongToTextException(question_id=question_id, text_id=text_id)
+
+    text = session.get(models.Text, text_id)
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
+    if len(text.questions) < NUM_QUESTIONS_PER_GAME:
+        raise NotEnoughQuestionsException(text_id=text_id)
+
+    # Delete the related histories.
+    models.History.objects(results__question_id=question_id).delete()
 
     session.delete(question)
     session.commit()
