@@ -129,7 +129,6 @@ const AdaptiveModeTextDisplay: React.FC<{
   }, [isPaused]);
 
   const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
-  const [hitRightCheckpoint, setHitRightCheckpoint] = useState(false);
   const leftCheckpointRatio = 0.3;
   const [rightCheckpointRatioSum, setRightCheckpointRatioSum] = useState(0.8);
   const [rightCheckpointRatioEntries, setRightCheckpointRatioEntries] =
@@ -225,20 +224,9 @@ const AdaptiveModeTextDisplay: React.FC<{
 
       const leftCheckpoint =
         pageCenter - (0.5 - leftCheckpointRatio) * lineContainerWidth;
-      const rightCheckpoint =
-        pageCenter +
-        (newRightCheckpointRatioSum / newRightCheckpointRatioEntries - 0.5) *
-          lineContainerWidth;
 
       if (!hitLeftCheckpoint && data.x < leftCheckpoint) {
         setHitLeftCheckpoint(true);
-      }
-      if (
-        !hitRightCheckpoint &&
-        hitLeftCheckpoint &&
-        data.x > rightCheckpoint
-      ) {
-        setHitRightCheckpoint(true);
       }
 
       setRightCheckpointRatioSum(newRightCheckpointRatioSum);
@@ -249,7 +237,6 @@ const AdaptiveModeTextDisplay: React.FC<{
     return () => clearWebGazerListener();
   }, [
     hitLeftCheckpoint,
-    hitRightCheckpoint,
     lineContainerWidth,
     leftCheckpointRatio,
     rightCheckpointRatioSum,
@@ -288,10 +275,7 @@ const AdaptiveModeTextDisplay: React.FC<{
       (rightCheckpointRatioSum / rightCheckpointRatioEntries) * noWords,
     );
 
-    if (
-      (hitLeftCheckpoint && hitRightCheckpoint) ||
-      currLineHighlightedWords >= minHighlightedWords
-    ) {
+    if (hitLeftCheckpoint && currLineHighlightedWords >= minHighlightedWords) {
       const timeNow = Date.now();
       setWpm(
         (nextLineIndex - currentLineIndex) /
@@ -312,9 +296,8 @@ const AdaptiveModeTextDisplay: React.FC<{
       setCurrentLineIndex(nextLineIndex);
       setNextLineIndex(calculateNextLineIndex(nextLineIndex));
       setHitLeftCheckpoint(false);
-      setHitRightCheckpoint(false);
     }
-  }, [hitLeftCheckpoint, hitRightCheckpoint, highlightedIndex, isPaused]);
+  }, [hitLeftCheckpoint, highlightedIndex, isPaused]);
 
   useEffect(() => {
     // Record wpm every 1 second.
