@@ -1,5 +1,9 @@
-import * as React from "react";
+import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,16 +12,12 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
-import DifficultyBox from "../Difficulty/DifficultyBox";
-import { getTexts } from "../../hooks/admin";
-import { TextWithStatistics } from "../../api";
+import * as React from "react";
 import { Link } from "react-router-dom";
-import { IconButton } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
+import { TextWithStatistics } from "../../api";
+import { getTexts } from "../../hooks/admin";
+import DifficultyBox from "../Difficulty/DifficultyBox";
 
 interface Data {
   id: number;

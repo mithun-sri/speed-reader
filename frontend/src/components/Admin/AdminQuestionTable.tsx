@@ -1,5 +1,9 @@
-import * as React from "react";
+import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,14 +12,10 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
-import { QuestionWithStatistics } from "../../api";
+import * as React from "react";
 import { Link } from "react-router-dom";
-import { IconButton } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
+import { QuestionWithStatistics } from "../../api";
 
 interface Data {
   id: number;
@@ -194,9 +194,13 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface AdminQuestionTableProps {
   data: QuestionWithStatistics[];
+  text_id: string;
 }
 
-const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({ data }) => {
+const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({
+  data,
+  text_id,
+}) => {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
@@ -401,16 +405,43 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({ data }) => {
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          sx={{ color: "#fff" }}
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Link
+            to={`/add-question/${text_id}`}
+            style={{ textDecoration: "none" }}
+          >
+            <Box
+              sx={{
+                backgroundColor: "#E2B714",
+                margin: "1vh",
+                padding: "1vh",
+                borderRadius: "0.5vh",
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              + Add
+            </Box>
+          </Link>
+          <TablePagination
+            sx={{ color: "#fff" }}
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Box>
       </Paper>
     </Box>
   );

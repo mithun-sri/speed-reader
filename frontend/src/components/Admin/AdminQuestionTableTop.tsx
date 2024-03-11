@@ -41,7 +41,9 @@ const AdminQuestionTableTop: React.FC<AdminQuestionTableTopProps> = ({
         >
           Questions for
         </Box>
-        <Box sx={{ fontSize: "2.1vw", margin: "1vh 0" }}>{text_title}</Box>
+        <Box
+          sx={{ fontSize: "2.1vw", margin: "1vh 0", color: "#E2B714" }}
+        >{`"${text_title}"`}</Box>
       </Box>
     </>
   );
