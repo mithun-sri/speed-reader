@@ -130,7 +130,7 @@ const AdaptiveModeTextDisplay: React.FC<{
 
   const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
   const [hitRightCheckpoint, setHitRightCheckpoint] = useState(false);
-  const [leftCheckpointRatio, setLeftCheckpointRatio] = useState(0.3);
+  const leftCheckpointRatio = 0.3;
   const [rightCheckpointRatioSum, setRightCheckpointRatioSum] = useState(0.8);
   const [rightCheckpointRatioEntries, setRightCheckpointRatioEntries] =
     useState(1);
@@ -285,8 +285,16 @@ const AdaptiveModeTextDisplay: React.FC<{
   useEffect(() => {
     if (isPaused) return;
 
+    const noWords = nextLineIndex - currentLineIndex;
+    const currLineHighlightedWords = highlightedIndex - currentLineIndex;
+    const minHighlightedWords = Math.floor(
+      (rightCheckpointRatioSum / rightCheckpointRatioEntries) * noWords,
+    );
+
     if (
-      (hitLeftCheckpoint && hitRightCheckpoint) ||
+      (hitLeftCheckpoint &&
+        hitRightCheckpoint &&
+        currLineHighlightedWords >= minHighlightedWords) ||
       highlightedIndex === nextLineIndex - 1
     ) {
       const timeNow = Date.now();
