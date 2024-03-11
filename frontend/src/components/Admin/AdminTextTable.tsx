@@ -443,7 +443,20 @@ export default function EnhancedTable() {
                         fontSize: "1.2vw",
                       }}
                     >
-                      {row.accuracy}
+                      <Box
+                        sx={{
+                          backgroundColor:
+                            row.accuracy < 50
+                              ? "#BA1515"
+                              : row.accuracy < 75
+                                ? "#C7A113"
+                                : "#4CAF50",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        {row.accuracy}
+                      </Box>
                     </TableCell>
                     <TableCell
                       align="center"
