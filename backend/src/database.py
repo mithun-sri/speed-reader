@@ -65,20 +65,20 @@ def reset_database():
 def seed_database():
     with Session(engine) as session:
         users = []
-        for _ in track(range(10)):
+        for _ in track(range(10), "Seeding users..."):
             user = UserFactory.build()
             users.append(user)
             session.add(user)
 
         texts = []
-        for _ in track(range(23)):
+        for _ in track(range(23), "Seeding texts..."):
             text = TextFactory.build()
             questions = QuestionFactory.build_batch(100, text=text)
             texts.append(text)
             session.add(text)
             session.add_all(questions)
 
-        for _ in track(range(1000)):
+        for _ in track(range(1000), "Seeding histories..."):
             user = random.choice(users)
             text = random.choice(texts)
             questions = random.sample(text.questions, 10)
