@@ -129,27 +129,28 @@ const AdaptiveModeTextDisplay: React.FC<{
   }, [isPaused]);
 
   const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
-  const [hitRightCheckpoint, setHitRightCheckpoint] = useState(false);
-  const [leftCheckpointRatioSum, setLeftCheckpointRatioSum] = useState(0.3);
-  const [rightCheckpointRatioSum, setRightCheckpointRatioSum] = useState(0.8);
-  const [leftCheckpointRatioEntries, setLeftCheckpointRatioEntries] =
-    useState(1);
+  const leftCheckpointRatio = 0.3;
+  const [rightCheckpointRatioSum, setRightCheckpointRatioSum] = useState(1.0);
   const [rightCheckpointRatioEntries, setRightCheckpointRatioEntries] =
     useState(1);
 
-  const prevGazePosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const prevDirection = useRef<string | null>("left");
-  const directionChangeThreshold = 100;
-  const pageCenter = window.innerWidth / 2;
   const { setWebGazerListener, clearWebGazerListener } = useWebGazerContext();
 
   const [currentLineIndex, setCurrentLineIndex] = useState(0);
   const [nextLineIndex, setNextLineIndex] = useState(calculateNextLineIndex(0));
   const [highlightedIndex, setHighlightedIndex] = useState(0);
+
   const lineContainer = useRef<HTMLDivElement>(null);
   const [lineContainerWidth, updateLineContainerWidth] = useState(
     window.innerWidth,
   );
+  const prevPivotPosition = useRef<number>(lineContainerWidth * 0.8);
+  const prevGazePosition = useRef<{ x: number; y: number }>({
+    x: lineContainerWidth * 0.8,
+    y: 0,
+  });
+  const prevDirection = useRef<string | null>("left");
+  const pageCenter = window.innerWidth / 2;
 
   useEffect(() => {
     if (lineContainer.current) {
@@ -165,8 +166,10 @@ const AdaptiveModeTextDisplay: React.FC<{
     setWebGazerListener((data: any, _: any) => {
       if (data === null || isPaused) return;
 
-      const deltaX = data.x - prevGazePosition.current.x;
-      const newDirection = deltaX > 0 ? "right" : "left";
+      const deltaX = data.x - prevPivotPosition.current;
+      const newDirection =
+        data.x - prevGazePosition.current.x > 0 ? "right" : "left";
+      const directionChangeThreshold = lineContainerWidth / 3;
 
       const wordToHighlightIndex = highlightedIndex - currentLineIndex + 1;
       if (
@@ -178,70 +181,58 @@ const AdaptiveModeTextDisplay: React.FC<{
           wordToHighlightIndex - 1
         ] as HTMLElement;
 
-        if (wordContainer && data.x >= wordContainer.offsetLeft) {
+        if (
+          wordContainer &&
+          data.x >= wordContainer.offsetLeft + wordContainer.offsetWidth / 2
+        ) {
           setHighlightedIndex(highlightedIndex + 1);
         }
       }
 
-      let newleftCheckpointRatioSum = leftCheckpointRatioSum;
       let newRightCheckpointRatioSum = rightCheckpointRatioSum;
-      let newLeftCheckpointRatioEntries = leftCheckpointRatioEntries;
       let newRightCheckpointRatioEntries = rightCheckpointRatioEntries;
 
       if (prevDirection.current !== newDirection) {
-        if (deltaX > directionChangeThreshold) {
+        if (deltaX < -directionChangeThreshold) {
           const newLeftCheckpointRatio =
-            0.5 -
-            (pageCenter - prevGazePosition.current.x) / lineContainerWidth;
+            0.5 - (pageCenter - data.x) / lineContainerWidth;
           if (
             newLeftCheckpointRatio > 0 &&
+            newLeftCheckpointRatio < 1 / 3 &&
             newLeftCheckpointRatio <
               newRightCheckpointRatioSum / newRightCheckpointRatioEntries
           ) {
-            newleftCheckpointRatioSum =
-              leftCheckpointRatioSum + newLeftCheckpointRatio;
-            newLeftCheckpointRatioEntries++;
+            prevDirection.current = newDirection;
+            prevPivotPosition.current = data.x;
           }
-        } else if (deltaX < -directionChangeThreshold) {
+        } else if (deltaX > directionChangeThreshold) {
           const newRightCheckpointRatio =
-            0.5 +
-            (prevGazePosition.current.x - pageCenter) / lineContainerWidth;
+            0.5 + (data.x - pageCenter) / lineContainerWidth;
           if (
             newRightCheckpointRatio < 1 &&
-            newRightCheckpointRatio >
-              newleftCheckpointRatioSum / newLeftCheckpointRatioEntries
+            newRightCheckpointRatio > 2 / 3 &&
+            newRightCheckpointRatio > leftCheckpointRatio
           ) {
             newRightCheckpointRatioSum =
               rightCheckpointRatioSum + newRightCheckpointRatio;
             newRightCheckpointRatioEntries++;
+
+            prevDirection.current = newDirection;
+            prevPivotPosition.current =
+              (lineContainerWidth * newRightCheckpointRatioSum) /
+              newRightCheckpointRatioEntries;
           }
         }
-        prevDirection.current = newDirection;
       }
 
       const leftCheckpoint =
-        pageCenter -
-        (0.5 - newleftCheckpointRatioSum / newLeftCheckpointRatioEntries) *
-          lineContainerWidth;
-      const rightCheckpoint =
-        pageCenter +
-        (newRightCheckpointRatioSum / newRightCheckpointRatioEntries - 0.5) *
-          lineContainerWidth;
+        pageCenter - (0.5 - leftCheckpointRatio) * lineContainerWidth;
 
       if (!hitLeftCheckpoint && data.x < leftCheckpoint) {
         setHitLeftCheckpoint(true);
       }
-      if (
-        !hitRightCheckpoint &&
-        hitLeftCheckpoint &&
-        data.x > rightCheckpoint
-      ) {
-        setHitRightCheckpoint(true);
-      }
 
-      setLeftCheckpointRatioSum(newleftCheckpointRatioSum);
       setRightCheckpointRatioSum(newRightCheckpointRatioSum);
-      setLeftCheckpointRatioEntries(newLeftCheckpointRatioEntries);
       setRightCheckpointRatioEntries(newRightCheckpointRatioEntries);
       prevGazePosition.current = { x: data.x, y: data.y };
     });
@@ -249,11 +240,9 @@ const AdaptiveModeTextDisplay: React.FC<{
     return () => clearWebGazerListener();
   }, [
     hitLeftCheckpoint,
-    hitRightCheckpoint,
     lineContainerWidth,
-    leftCheckpointRatioSum,
+    leftCheckpointRatio,
     rightCheckpointRatioSum,
-    leftCheckpointRatioEntries,
     rightCheckpointRatioEntries,
     prevGazePosition.current,
     prevDirection.current,
@@ -283,10 +272,13 @@ const AdaptiveModeTextDisplay: React.FC<{
   useEffect(() => {
     if (isPaused) return;
 
-    if (
-      (hitLeftCheckpoint && hitRightCheckpoint) ||
-      highlightedIndex === nextLineIndex - 1
-    ) {
+    const noWords = nextLineIndex - currentLineIndex;
+    const currLineHighlightedWords = highlightedIndex - currentLineIndex + 1;
+    const minHighlightedWords = Math.ceil(
+      (rightCheckpointRatioSum / rightCheckpointRatioEntries) * noWords,
+    );
+
+    if (currLineHighlightedWords >= minHighlightedWords) {
       const timeNow = Date.now();
       setWpm(
         (nextLineIndex - currentLineIndex) /
@@ -307,9 +299,16 @@ const AdaptiveModeTextDisplay: React.FC<{
       setCurrentLineIndex(nextLineIndex);
       setNextLineIndex(calculateNextLineIndex(nextLineIndex));
       setHitLeftCheckpoint(false);
-      setHitRightCheckpoint(false);
     }
-  }, [hitLeftCheckpoint, hitRightCheckpoint, highlightedIndex, isPaused]);
+  }, [
+    hitLeftCheckpoint,
+    highlightedIndex,
+    isPaused,
+    nextLineIndex,
+    currentLineIndex,
+    rightCheckpointRatioSum,
+    rightCheckpointRatioEntries,
+  ]);
 
   useEffect(() => {
     // Record wpm every 1 second.

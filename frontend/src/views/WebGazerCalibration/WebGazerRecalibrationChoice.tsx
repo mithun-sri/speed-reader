@@ -152,7 +152,8 @@ const WebGazerRecalibrationChoice: React.FC = () => {
               textAlign: "center",
             }}
           >
-            Tip: Is the red dot is following your eyes accurately?
+            Tip: Recalibrate if the red dot is not following your eyes
+            accurately.
           </Box>
         </motion.div>
       </Box>
