@@ -196,6 +196,7 @@ const AdaptiveModeTextDisplay: React.FC<{
             0.5 - (pageCenter - data.x) / lineContainerWidth;
           if (
             newLeftCheckpointRatio > 0 &&
+            newLeftCheckpointRatio < 1 / 3 &&
             newLeftCheckpointRatio <
               newRightCheckpointRatioSum / newRightCheckpointRatioEntries
           ) {
@@ -207,6 +208,7 @@ const AdaptiveModeTextDisplay: React.FC<{
             0.5 + (data.x - pageCenter) / lineContainerWidth;
           if (
             newRightCheckpointRatio < 1 &&
+            newRightCheckpointRatio > 2 / 3 &&
             newRightCheckpointRatio > leftCheckpointRatio
           ) {
             newRightCheckpointRatioSum =
@@ -238,11 +240,6 @@ const AdaptiveModeTextDisplay: React.FC<{
       ) {
         setHitRightCheckpoint(true);
       }
-
-      console.log(
-        "right ratio: ",
-        newRightCheckpointRatioSum / newRightCheckpointRatioEntries,
-      );
 
       setRightCheckpointRatioSum(newRightCheckpointRatioSum);
       setRightCheckpointRatioEntries(newRightCheckpointRatioEntries);
@@ -292,10 +289,8 @@ const AdaptiveModeTextDisplay: React.FC<{
     );
 
     if (
-      (hitLeftCheckpoint &&
-        hitRightCheckpoint &&
-        currLineHighlightedWords >= minHighlightedWords) ||
-      highlightedIndex === nextLineIndex - 1
+      (hitLeftCheckpoint && hitRightCheckpoint) ||
+      currLineHighlightedWords >= minHighlightedWords
     ) {
       const timeNow = Date.now();
       setWpm(
