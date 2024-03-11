@@ -130,7 +130,7 @@ const AdaptiveModeTextDisplay: React.FC<{
 
   const [hitLeftCheckpoint, setHitLeftCheckpoint] = useState(false);
   const leftCheckpointRatio = 0.3;
-  const [rightCheckpointRatioSum, setRightCheckpointRatioSum] = useState(0.8);
+  const [rightCheckpointRatioSum, setRightCheckpointRatioSum] = useState(1.0);
   const [rightCheckpointRatioEntries, setRightCheckpointRatioEntries] =
     useState(1);
 
@@ -181,7 +181,10 @@ const AdaptiveModeTextDisplay: React.FC<{
           wordToHighlightIndex - 1
         ] as HTMLElement;
 
-        if (wordContainer && data.x >= wordContainer.offsetLeft) {
+        if (
+          wordContainer &&
+          data.x >= wordContainer.offsetLeft + wordContainer.offsetWidth / 2
+        ) {
           setHighlightedIndex(highlightedIndex + 1);
         }
       }
@@ -270,12 +273,12 @@ const AdaptiveModeTextDisplay: React.FC<{
     if (isPaused) return;
 
     const noWords = nextLineIndex - currentLineIndex;
-    const currLineHighlightedWords = highlightedIndex - currentLineIndex;
-    const minHighlightedWords = Math.floor(
+    const currLineHighlightedWords = highlightedIndex - currentLineIndex + 1;
+    const minHighlightedWords = Math.ceil(
       (rightCheckpointRatioSum / rightCheckpointRatioEntries) * noWords,
     );
 
-    if (hitLeftCheckpoint && currLineHighlightedWords >= minHighlightedWords) {
+    if (currLineHighlightedWords >= minHighlightedWords) {
       const timeNow = Date.now();
       setWpm(
         (nextLineIndex - currentLineIndex) /
@@ -297,7 +300,15 @@ const AdaptiveModeTextDisplay: React.FC<{
       setNextLineIndex(calculateNextLineIndex(nextLineIndex));
       setHitLeftCheckpoint(false);
     }
-  }, [hitLeftCheckpoint, highlightedIndex, isPaused]);
+  }, [
+    hitLeftCheckpoint,
+    highlightedIndex,
+    isPaused,
+    nextLineIndex,
+    currentLineIndex,
+    rightCheckpointRatioSum,
+    rightCheckpointRatioEntries,
+  ]);
 
   useEffect(() => {
     // Record wpm every 1 second.
