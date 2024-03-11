@@ -30,7 +30,7 @@ const AdminQuestionStat = () => {
           borderRadius: "30px",
         }}
       >
-        <AdminQuestionTable text_id={text_id} data={questionStats} />
+        <AdminQuestionTable data={questionStats} text_id={text_id} />
       </Box>
     </>
   );
