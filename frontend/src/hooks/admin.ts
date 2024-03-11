@@ -76,3 +76,13 @@ export function useApproveText() {
     mutationFn: (text: TextCreateWithQuestions) => adminApi.approveText(text),
   });
 }
+
+export function getTextStatistics(text_id: string) {
+  const { adminApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["text-statistics"],
+    queryFn: () => adminApi.getSummaryStatistics(text_id).then((res) => res.data),
+    gcTime: 0,
+  });
+}

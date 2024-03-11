@@ -30,6 +30,7 @@ import Login from "./views/User/LogIn";
 import SignUp from "./views/User/SignUp";
 import UserView from "./views/User/UserView";
 import WebGazerCalibration from "./views/WebGazerCalibration/WebGazerCalibration";
+import SummarisedAnalytics from "./views/Admin/SummarisedAnalytics";
 
 function App() {
   const queryClient = new QueryClient();
@@ -86,6 +87,14 @@ function App() {
                               <Route
                                 path="/admin/questions/:text_id/stat/:question_id"
                                 element={<QuizAnalytics />}
+                              />
+                              <Route
+                                path="/admin/summarised/:text_id"
+                                element={<SummarisedAnalytics />}
+                              />
+                              <Route
+                                path="/admin/text/:text_id/edit"
+                                element={<GptView />}
                               />
                             </Route>
                           </Route>
