@@ -292,14 +292,11 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({
   const deleteQuestion = removeQuestion();
   const { showSnack } = useSnack();
 
-  const handleDeleteQuestion = (text_id: string, question_id: string) => {
+  const handleDeleteQuestion = (question_id: string) => {
     deleteQuestion.mutate(
       { text_id, question_id },
       {
         onSuccess: () => {
-          setRows((prevRows) =>
-            prevRows.filter((row) => row.question_id !== question_id),
-          );
           showSnack("Question deleted successfully");
         },
         onError: (error: Error) => {
@@ -442,9 +439,10 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({
                             background: "#5B6066",
                           },
                         }}
-                        onClick={() =>
-                          handleDeleteQuestion(text_id, row.question_id)
-                        }
+                        onClick={() => {
+                          handleDeleteQuestion(row.question_id);
+                          setRows(rows.filter((prevRow) => prevRow !== row));
+                        }}
                       >
                         <FontAwesomeIcon
                           icon={faTrash}
@@ -487,8 +485,9 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({
             startIcon={<FontAwesomeIcon icon={faTrash} color="#FFFFFF" />}
             onClick={() => {
               selected.forEach((id) => {
-                handleDeleteQuestion(text_id, rows[id].question_id);
+                handleDeleteQuestion(rows[id].question_id);
               });
+              setRows(rows.filter((_, index) => !selected.includes(index)));
               setSelected([]);
             }}
             sx={{

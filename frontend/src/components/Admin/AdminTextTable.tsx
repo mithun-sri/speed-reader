@@ -303,9 +303,6 @@ export default function EnhancedTable() {
   const handleDeleteText = (text_id: string) => {
     deleteText.mutate(text_id, {
       onSuccess: () => {
-        setRows((prevRows) =>
-          prevRows.filter((row) => row.text_id !== text_id),
-        );
         showSnack("Text deleted successfully");
       },
       onError: (error: Error) => {
@@ -493,7 +490,10 @@ export default function EnhancedTable() {
                           background: "#5B6066",
                         },
                       }}
-                      onClick={() => handleDeleteText(row.text_id)}
+                      onClick={() => {
+                        handleDeleteText(row.text_id);
+                        setRows(rows.filter((prevRow) => prevRow !== row));
+                      }}
                     >
                       <FontAwesomeIcon
                         icon={faTrash}
@@ -561,6 +561,7 @@ export default function EnhancedTable() {
               selected.forEach((id) => {
                 handleDeleteText(rows[id].text_id);
               });
+              setRows(rows.filter((_, index) => !selected.includes(index)));
               setSelected([]);
             }}
             sx={{
