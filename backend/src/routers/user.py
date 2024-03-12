@@ -192,7 +192,7 @@ async def get_histories(
     """
     histories = models.History.objects(user_id=user.id)
     histories = list(histories)
-    histories.sort(key=lambda history: history.timestamp)
+    histories.sort(key=lambda history: history.timestamp, reverse=True)
 
     def get_text(text_id):
         query = select(models.Text).where(models.Text.id == text_id).limit(1)

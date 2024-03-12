@@ -10,7 +10,7 @@ import { getAdminStatistics } from "../../hooks/admin";
 const AdminAnalytics: React.FC = () => {
   const location = useLocation();
   const [selectedValue, setSelectedValue] = useState(
-    location.state?.selectedValue || "mode",
+    location.state?.selectedValue || "text",
   );
   const [selectedOption, setSelectedOption] = useState("standard");
 
