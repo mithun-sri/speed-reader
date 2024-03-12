@@ -474,16 +474,43 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({
             </TableBody>
           </Table>
         </TableContainer>
-        <TablePagination
-          sx={{ color: "#fff" }}
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Link
+            to={`/add-question/${text_id}`}
+            style={{ textDecoration: "none" }}
+          >
+            <Box
+              sx={{
+                backgroundColor: "#E2B714",
+                margin: "1vh",
+                padding: "1vh",
+                borderRadius: "0.5vh",
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#fff",
+                cursor: "pointer",
+              }}
+            >
+              + Add
+            </Box>
+          </Link>
+          <TablePagination
+            sx={{ color: "#fff" }}
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Box>
       </Paper>
       {isCheckboxTicked() && hasAtLeastTenQuestions() && (
         <Box mt={2} textAlign="right">
