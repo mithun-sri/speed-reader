@@ -11,16 +11,18 @@ const AdminQuestionTableTop: React.FC<AdminQuestionTableTopProps> = ({
   return (
     <>
       <Box sx={{ marginLeft: "8vw", marginTop: "1vh", marginBottom: "1.5vh" }}>
-        <IconButton onClick={() => window.history.back()}>
-          <Box
-            sx={{
-              fontFamily: "JetBrains Mono, monospace",
-              color: "#D1D0C5",
-              fontWeight: "bolder",
-              fontSize: "1.5vw",
-            }}
-          >{`< back`}</Box>
-        </IconButton>
+        <Link to="/admin" state={{ selectedValue: "text" }}>
+          <IconButton>
+            <Box
+              sx={{
+                fontFamily: "JetBrains Mono, monospace",
+                color: "#D1D0C5",
+                fontWeight: "bolder",
+                fontSize: "1.5vw",
+              }}
+            >{`< back`}</Box>
+          </IconButton>
+        </Link>
       </Box>
       <Box
         sx={{
@@ -39,7 +41,9 @@ const AdminQuestionTableTop: React.FC<AdminQuestionTableTopProps> = ({
         >
           Questions for
         </Box>
-        <Box sx={{ fontSize: "2.1vw", margin: "1vh 0" }}>{text_title}</Box>
+        <Box
+          sx={{ fontSize: "2.1vw", margin: "1vh 0", color: "#E2B714" }}
+        >{`"${text_title}"`}</Box>
       </Box>
     </>
   );

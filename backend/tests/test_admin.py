@@ -119,6 +119,7 @@ class TestDeleteText:
         session: Session,
     ):
         self.text = TextFactory.build()
+        self.questions = QuestionFactory.build_batch(15, text=self.text)
         session.add(self.text)
         session.commit()
 
@@ -127,6 +128,10 @@ class TestDeleteText:
         assert response.status_code == 200
 
         assert session.get(models.Text, self.text.id) is None
+
+        query = session.query(models.Question).filter_by(text_id=self.text.id)
+        questions = session.scalars(query).all()
+        assert len(questions) == 0
 
 
 class TestGetQuestions:
@@ -184,18 +189,18 @@ class TestDeleteQuestion:
         session: Session,
     ):
         self.text = TextFactory.build()
-        self.question = QuestionFactory.build(text=self.text)
+        self.questions = QuestionFactory.build_batch(15, text=self.text)
         session.add(self.text)
-        session.add(self.question)
+        session.add_all(self.questions)
         session.commit()
 
     def test_delete_question_by_id(self, admin_client: TestClient, session: Session):
         response = admin_client.delete(
-            f"/admin/texts/{self.text.id}/questions/{self.question.id}"
+            f"/admin/texts/{self.text.id}/questions/{self.questions[0].id}"
         )
         assert response.status_code == 200
 
-        assert session.get(models.Question, self.question.id) is None
+        assert session.get(models.Question, self.questions[0].id) is None
         assert session.get(models.Text, self.text.id) is not None
 
 

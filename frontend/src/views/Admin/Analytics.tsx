@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import AdminAnalyticsBox from "../../components/Admin/AdminAnalyticsBox";
 import EnhancedTable from "../../components/Admin/AdminTextTable";
 import AdminAnalyticsTop from "../../components/Admin/AnalyticsTop";
@@ -7,7 +8,10 @@ import Header from "../../components/Header/Header";
 import { getAdminStatistics } from "../../hooks/admin";
 
 const AdminAnalytics: React.FC = () => {
-  const [selectedValue, setSelectedValue] = useState("mode");
+  const location = useLocation();
+  const [selectedValue, setSelectedValue] = useState(
+    location.state?.selectedValue || "mode",
+  );
   const [selectedOption, setSelectedOption] = useState("standard");
 
   const { data: adminStatistics } = getAdminStatistics(selectedOption);

@@ -16,6 +16,7 @@ import AuthRoute from "./routes/AuthRoute";
 import DesktopRoute from "./routes/DesktopRoute";
 import GuestRoute from "./routes/GuestRoute";
 import MobileRoute from "./routes/MobileRoute";
+import AddQuestion from "./views/Admin/AddQuestion";
 import AdminAnalytics from "./views/Admin/Analytics";
 import GptView from "./views/Admin/GptView";
 import AdminQuestionStat from "./views/Admin/QuestionStat";
@@ -77,6 +78,10 @@ function App() {
                             />
                             <Route element={<AdminRoute fallback="/" />}>
                               <Route path="/gpt" element={<GptView />} />
+                              <Route
+                                path="/add-question/:text_id"
+                                element={<AddQuestion />}
+                              />
                               <Route
                                 path="/admin"
                                 element={<AdminAnalytics />}

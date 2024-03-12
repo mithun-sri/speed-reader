@@ -1,5 +1,5 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { TextCreateWithQuestions } from "../api";
+import { QuestionCreate, TextCreateWithQuestions } from "../api";
 import { useApiClient } from "../context/ApiContext";
 
 export function getAdminStatistics(gameMode: string) {
@@ -30,6 +30,28 @@ export function getTexts(page?: number, pageSize?: number) {
     queryKey: ["texts-statistics"],
     queryFn: () => adminApi.getTexts(page, pageSize).then((res) => res.data),
     gcTime: 0,
+  });
+}
+
+export function removeText() {
+  const { adminApi } = useApiClient();
+
+  return useMutation({
+    mutationFn: (text_id: string) => adminApi.deleteText(text_id),
+  });
+}
+
+export function removeQuestion() {
+  const { adminApi } = useApiClient();
+
+  return useMutation({
+    mutationFn: ({
+      text_id,
+      question_id,
+    }: {
+      text_id: string;
+      question_id: string;
+    }) => adminApi.deleteQuestion(text_id, question_id),
   });
 }
 
@@ -85,5 +107,14 @@ export function getTextStatistics(text_id: string) {
     queryFn: () =>
       adminApi.getSummaryStatistics(text_id).then((res) => res.data),
     gcTime: 0,
+  });
+}
+
+export function useCreateQuestion(textId: string) {
+  const { adminApi } = useApiClient();
+
+  return useMutation({
+    mutationFn: (question: QuestionCreate) =>
+      adminApi.createQuestion(textId, question),
   });
 }
