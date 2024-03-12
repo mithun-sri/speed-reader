@@ -698,7 +698,7 @@ async def get_summary_statistics(
 
     results = schemas.OverallTextStatistics(
         id=text_id,
-        title=text.title
+        title=text.title,
         content=text.content,
         summary=text.summary,
         original_standard=original_standard,

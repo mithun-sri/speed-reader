@@ -55,8 +55,26 @@ const SummarisedAnalytics: React.FC = () => {
                         color="#E2B714"
                     />
                 </Box>
-                <BarChartComponent chart_data={[textStatistics.original_standard]} />
-                <Box>
+                <BarChartComponent chart_data={
+                    [
+                        textStatistics.original_standard,
+                        textStatistics.original_adaptive,
+                        textStatistics.summarised_standard,
+                        textStatistics.summarised_adaptive,
+                        textStatistics.summarised_overall
+                    ]
+                    } />
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "right",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyItems: "right",
+                        width: "100%",
+                        margin: "2vw"
+                    }}
+                >
                     <Link to={`/admin/text/${text_id}/edit`}>
                     <IconButton
                         sx={{
@@ -251,9 +269,9 @@ const BarChartComponent = ({chart_data}: {chart_data: any}) => {
                 <Legend />
                 <Bar dataKey="average_wpm" fill="#8884d8" barSize={30} name="Average WPM"/>
                 <Bar dataKey="average_score" fill="#82ca9d" barSize={30} name="Average Score" />
-                <Bar dataKey="twenty_fifth_percentile_wpm" fill="#ffc658" barSize={30} name="25th Percentile WPM" />
-                <Bar dataKey="fiftieth_percentile_wpm" fill="#2c82c9" barSize={30} name="50th Percentile WPM" />
-                <Bar dataKey="seventy_fifth_percentile_wpm" fill="#f2784b" barSize={30} name="75th Percentile WPM" />
+                <Bar dataKey="twenty_fifth_percentile" fill="#ffc658" barSize={30} name="25th Percentile WPM" />
+                <Bar dataKey="fiftieth_percentile" fill="#2c82c9" barSize={30} name="50th Percentile WPM" />
+                <Bar dataKey="seventy_fifth_percentile" fill="#f2784b" barSize={30} name="75th Percentile WPM" />
             </BarChart>
         </ResponsiveContainer>
     );

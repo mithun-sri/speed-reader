@@ -319,6 +319,12 @@ export interface OverallTextStatistics {
      * @type {string}
      * @memberof OverallTextStatistics
      */
+    'title': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OverallTextStatistics
+     */
     'content': string;
     /**
      * 

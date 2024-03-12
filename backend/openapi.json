@@ -1727,6 +1727,10 @@
             "type": "string",
             "title": "Id"
           },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
           "content": {
             "type": "string",
             "title": "Content"
@@ -1754,6 +1758,7 @@
         "type": "object",
         "required": [
           "id",
+          "title",
           "content",
           "summary",
           "original_standard",
