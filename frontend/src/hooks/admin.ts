@@ -99,6 +99,17 @@ export function useApproveText() {
   });
 }
 
+export function getTextStatistics(text_id: string) {
+  const { adminApi } = useApiClient();
+
+  return useSuspenseQuery({
+    queryKey: ["text-statistics"],
+    queryFn: () =>
+      adminApi.getSummaryStatistics(text_id).then((res) => res.data),
+    gcTime: 0,
+  });
+}
+
 export function useCreateQuestion(textId: string) {
   const { adminApi } = useApiClient();
 

@@ -1,5 +1,6 @@
 import { Box, IconButton } from "@mui/material";
 import React from "react";
+import { useParams } from "react-router-dom";
 import {
   Bar,
   BarChart,
@@ -11,10 +12,9 @@ import {
 } from "recharts";
 import QuizAnalyticsTop from "../../components/Admin/QuizAnalyticsTop";
 import QuizScore from "../../components/Admin/QuizScore";
+import NotFound from "../../components/Error/NotFound";
 import Header from "../../components/Header/Header";
 import { getQuestion } from "../../hooks/admin";
-import { Link, useParams } from "react-router-dom";
-import NotFound from "../../components/Error/NotFound";
 
 const QuizAnalytics: React.FC = () => {
   const { text_id, question_id } = useParams();
@@ -43,18 +43,16 @@ const QuizAnalytics: React.FC = () => {
     <>
       <Header />
       <Box sx={{ marginLeft: "8vw", marginTop: "1vh", marginBottom: "1.5vh" }}>
-        <Link to={`/admin/questions/${text_id}`}>
-          <IconButton>
-            <Box
-              sx={{
-                fontFamily: "JetBrains Mono, monospace",
-                color: "#D1D0C5",
-                fontWeight: "bolder",
-                fontSize: "1.5vw",
-              }}
-            >{`< back`}</Box>
-          </IconButton>
-        </Link>
+        <IconButton onClick={() => window.history.back()}>
+          <Box
+            sx={{
+              fontFamily: "JetBrains Mono, monospace",
+              color: "#D1D0C5",
+              fontWeight: "bolder",
+              fontSize: "1.5vw",
+            }}
+          >{`< back`}</Box>
+        </IconButton>
       </Box>
       <Box
         sx={{

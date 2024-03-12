@@ -65,8 +65,8 @@ const AdminAnalyticsTop: React.FC<AdminAnalyticsTopProps> = ({
           fontFamily: "JetBrains Mono, monospace",
         }}
       >
-        <MenuItem value="mode">mode</MenuItem>
         <MenuItem value="text">text</MenuItem>
+        <MenuItem value="mode">mode</MenuItem>
       </Select>
     </Box>
   );

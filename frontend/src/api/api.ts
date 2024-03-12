@@ -305,6 +305,67 @@ export interface ImageType {
 /**
  * 
  * @export
+ * @interface OverallTextStatistics
+ */
+export interface OverallTextStatistics {
+    /**
+     * 
+     * @type {string}
+     * @memberof OverallTextStatistics
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OverallTextStatistics
+     */
+    'title': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OverallTextStatistics
+     */
+    'content': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OverallTextStatistics
+     */
+    'summary': string;
+    /**
+     * 
+     * @type {TextStatistics}
+     * @memberof OverallTextStatistics
+     */
+    'original_standard': TextStatistics;
+    /**
+     * 
+     * @type {TextStatistics}
+     * @memberof OverallTextStatistics
+     */
+    'original_adaptive': TextStatistics;
+    /**
+     * 
+     * @type {TextStatistics}
+     * @memberof OverallTextStatistics
+     */
+    'summarised_standard': TextStatistics;
+    /**
+     * 
+     * @type {TextStatistics}
+     * @memberof OverallTextStatistics
+     */
+    'summarised_adaptive': TextStatistics;
+    /**
+     * 
+     * @type {TextStatistics}
+     * @memberof OverallTextStatistics
+     */
+    'summarised_overall': TextStatistics;
+}
+/**
+ * 
+ * @export
  * @interface Question
  */
 export interface Question {
@@ -665,6 +726,55 @@ export interface TextCreateWithQuestions {
      * @memberof TextCreateWithQuestions
      */
     'questions': Array<QuestionCreate>;
+}
+/**
+ * 
+ * @export
+ * @interface TextStatistics
+ */
+export interface TextStatistics {
+    /**
+     * 
+     * @type {number}
+     * @memberof TextStatistics
+     */
+    'average_score': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextStatistics
+     */
+    'average_wpm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextStatistics
+     */
+    'min_wpm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextStatistics
+     */
+    'max_wpm': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextStatistics
+     */
+    'twenty_fifth_percentile': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextStatistics
+     */
+    'fiftieth_percentile': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof TextStatistics
+     */
+    'seventy_fifth_percentile': number;
 }
 /**
  * 
@@ -1474,6 +1584,44 @@ export const AdminApiAxiosParamCreator = function (configuration?: Configuration
             };
         },
         /**
+         * 
+         * @summary Get Summary Statistics
+         * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSummaryStatistics: async (textId: string, accessToken?: AccessToken, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'textId' is not null or undefined
+            assertParamExists('getSummaryStatistics', 'textId', textId)
+            const localVarPath = `/admin/text-statistics`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (textId !== undefined) {
+                localVarQueryParameter['text_id'] = textId;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Gets a text by the given id.
          * @summary Get Text
          * @param {string} textId 
@@ -1676,6 +1824,20 @@ export const AdminApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * 
+         * @summary Get Summary Statistics
+         * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getSummaryStatistics(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<OverallTextStatistics>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getSummaryStatistics(textId, accessToken, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['AdminApi.getSummaryStatistics']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * Gets a text by the given id.
          * @summary Get Text
          * @param {string} textId 
@@ -1805,6 +1967,17 @@ export const AdminApiFactory = function (configuration?: Configuration, basePath
          */
         getQuestions(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<Array<QuestionWithStatistics>> {
             return localVarFp.getQuestions(textId, accessToken, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get Summary Statistics
+         * @param {string} textId 
+         * @param {AccessToken} [accessToken] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getSummaryStatistics(textId: string, accessToken?: AccessToken, options?: any): AxiosPromise<OverallTextStatistics> {
+            return localVarFp.getSummaryStatistics(textId, accessToken, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets a text by the given id.
@@ -1945,6 +2118,19 @@ export class AdminApi extends BaseAPI {
      */
     public getQuestions(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
         return AdminApiFp(this.configuration).getQuestions(textId, accessToken, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get Summary Statistics
+     * @param {string} textId 
+     * @param {AccessToken} [accessToken] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof AdminApi
+     */
+    public getSummaryStatistics(textId: string, accessToken?: AccessToken, options?: RawAxiosRequestConfig) {
+        return AdminApiFp(this.configuration).getSummaryStatistics(textId, accessToken, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

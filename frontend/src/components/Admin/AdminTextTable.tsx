@@ -34,6 +34,7 @@ interface Data {
   max: number;
   accuracy: number;
   questions: string;
+  summarised: string;
 }
 
 function transformTextWithStatistics(
@@ -51,6 +52,7 @@ function transformTextWithStatistics(
       max: text.max_wpm,
       accuracy: text.average_score,
       questions: `questions/${text.id}`,
+      summarised: `summarised/${text.id}`,
     };
   });
 }
@@ -125,6 +127,12 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: "questions",
+  },
+  {
+    id: "summarised",
+    numeric: false,
+    disablePadding: false,
+    label: "overview",
   },
 ];
 
@@ -314,7 +322,7 @@ export default function EnhancedTable() {
   };
 
   return (
-    <Box sx={{ width: "75vw" }}>
+    <Box sx={{ width: "80vw" }}>
       <Paper
         sx={{
           backgroundColor: "transparent",
@@ -469,6 +477,32 @@ export default function EnhancedTable() {
                         <IconButton
                           component={Link}
                           to={row.questions}
+                          sx={{
+                            color: "#FFFFFF",
+                            "& :hover": {
+                              color: "#E2B714",
+                            },
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faSquareArrowUpRight}
+                            className="fa-table-page-icon"
+                          />
+                        </IconButton>
+                      }
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#fff",
+                        fontFamily: "JetBrains Mono, monospace",
+                        fontSize: "1.2vw",
+                      }}
+                    >
+                      {
+                        <IconButton
+                          component={Link}
+                          to={row.summarised}
                           sx={{
                             color: "#FFFFFF",
                             "& :hover": {

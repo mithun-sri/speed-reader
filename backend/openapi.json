@@ -643,6 +643,64 @@
         }
       }
     },
+    "/admin/text-statistics": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Get Summary Statistics",
+        "operationId": "get_summary_statistics",
+        "parameters": [
+          {
+            "name": "text_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Text Id"
+            }
+          },
+          {
+            "name": "access_token",
+            "in": "cookie",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Access Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OverallTextStatistics"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/token": {
       "post": {
         "tags": [
@@ -1730,6 +1788,54 @@
         ],
         "title": "HistoryWithText"
       },
+      "OverallTextStatistics": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary"
+          },
+          "original_standard": {
+            "$ref": "#/components/schemas/TextStatistics"
+          },
+          "original_adaptive": {
+            "$ref": "#/components/schemas/TextStatistics"
+          },
+          "summarised_standard": {
+            "$ref": "#/components/schemas/TextStatistics"
+          },
+          "summarised_adaptive": {
+            "$ref": "#/components/schemas/TextStatistics"
+          },
+          "summarised_overall": {
+            "$ref": "#/components/schemas/TextStatistics"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "content",
+          "summary",
+          "original_standard",
+          "original_adaptive",
+          "summarised_standard",
+          "summarised_adaptive",
+          "summarised_overall"
+        ],
+        "title": "OverallTextStatistics"
+      },
       "Question": {
         "properties": {
           "content": {
@@ -2085,6 +2191,49 @@
           "questions"
         ],
         "title": "TextCreateWithQuestions"
+      },
+      "TextStatistics": {
+        "properties": {
+          "average_score": {
+            "type": "integer",
+            "title": "Average Score"
+          },
+          "average_wpm": {
+            "type": "integer",
+            "title": "Average Wpm"
+          },
+          "min_wpm": {
+            "type": "integer",
+            "title": "Min Wpm"
+          },
+          "max_wpm": {
+            "type": "integer",
+            "title": "Max Wpm"
+          },
+          "twenty_fifth_percentile": {
+            "type": "integer",
+            "title": "Twenty Fifth Percentile"
+          },
+          "fiftieth_percentile": {
+            "type": "integer",
+            "title": "Fiftieth Percentile"
+          },
+          "seventy_fifth_percentile": {
+            "type": "integer",
+            "title": "Seventy Fifth Percentile"
+          }
+        },
+        "type": "object",
+        "required": [
+          "average_score",
+          "average_wpm",
+          "min_wpm",
+          "max_wpm",
+          "twenty_fifth_percentile",
+          "fiftieth_percentile",
+          "seventy_fifth_percentile"
+        ],
+        "title": "TextStatistics"
       },
       "TextWithQuestions": {
         "properties": {
