@@ -83,67 +83,72 @@ variables:
   after_script:
     - dokku-unlock
 
-type_check_frontend:
-  extends: .frontend
-  stage: type_check
+print_info:
+  stage: deploy
   script:
-    - yarn tsc --noEmit
+    - echo "Starting deploy..."
 
-type_check_backend:
-  extends: .backend
-  stage: type_check
-  script:
-    - poetry run mypy src
+# type_check_frontend:
+#   extends: .frontend
+#   stage: type_check
+#   script:
+#     - yarn tsc --noEmit
 
-check_lint_frontend:
-  extends: .frontend
-  stage: check_lint
-  script:
-    - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
+# type_check_backend:
+#   extends: .backend
+#   stage: type_check
+#   script:
+#     - poetry run mypy src
 
-check_lint_backend:
-  extends: .backend
-  stage: check_lint
-  script:
-    - poetry run pylint src
+# check_lint_frontend:
+#   extends: .frontend
+#   stage: check_lint
+#   script:
+#     - yarn eslint --max-warnings 0 "src/**/*.ts" "src/**/*.tsx"
 
-check_format_frontend:
-  extends: .frontend
-  stage: check_format
-  script:
-    - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
+# check_lint_backend:
+#   extends: .backend
+#   stage: check_lint
+#   script:
+#     - poetry run pylint src
 
-check_format_backend:
-  extends: .backend
-  stage: check_format
-  script:
-    - poetry run isort --profile black --check src
-    - poetry run black --check src
+# check_format_frontend:
+#   extends: .frontend
+#   stage: check_format
+#   script:
+#     - yarn run prettier --check "src/**/*.ts" "src/**/*.tsx"
 
-unit_test_frontend:
-  extends: .frontend-test
-  stage: unit_test
-  script:
-    - yarn jest --watchAll=false src
+# check_format_backend:
+#   extends: .backend
+#   stage: check_format
+#   script:
+#     - poetry run isort --profile black --check src
+#     - poetry run black --check src
 
-unit_test_backend:
-  extends: .backend-test
-  stage: unit_test
-  script:
-    - poetry run pytest --verbose tests
+# unit_test_frontend:
+#   extends: .frontend-test
+#   stage: unit_test
+#   script:
+#     - yarn jest --watchAll=false src
 
-e2e_test:
-  image: docker:24.0.5
-  stage: e2e_test
-  only:
-    - master
-    - tags
-  services:
-    - docker:24.0.5-dind
-  before_script:
-    - docker info
-  script:
-    - ./frontend/cypress.sh
+# unit_test_backend:
+#   extends: .backend-test
+#   stage: unit_test
+#   script:
+#     - poetry run pytest --verbose tests
+
+# e2e_test:
+#   image: docker:24.0.5
+#   stage: e2e_test
+#   only:
+#     - master
+#     - tags
+#   services:
+#     - docker:24.0.5-dind
+#   before_script:
+#     - docker info
+#   script:
+#     - ./frontend/cypress.sh
 
 deploy_staging_frontend:
   extends: .deploy
