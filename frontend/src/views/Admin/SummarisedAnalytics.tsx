@@ -234,58 +234,6 @@ const SummarisedAnalytics: React.FC = () => {
 
 export default SummarisedAnalytics;
 
-interface ChartData {
-  type: string;
-  average_wpm: number;
-  average_score: number;
-  twenty_fifth_percentile_wpm: number;
-  fiftieth_percentile_wpm: number;
-  seventy_fifth_percentile_wpm: number;
-}
-
-const data: ChartData[] = [
-  {
-    type: "original_standard",
-    average_wpm: 438,
-    average_score: 40,
-    twenty_fifth_percentile_wpm: 231,
-    fiftieth_percentile_wpm: 472,
-    seventy_fifth_percentile_wpm: 619,
-  },
-  {
-    type: "original_adaptive",
-    average_wpm: 506,
-    average_score: 34,
-    twenty_fifth_percentile_wpm: 447,
-    fiftieth_percentile_wpm: 558,
-    seventy_fifth_percentile_wpm: 917,
-  },
-  {
-    type: "summarised_standard",
-    average_wpm: 630,
-    average_score: 23,
-    twenty_fifth_percentile_wpm: 426,
-    fiftieth_percentile_wpm: 769,
-    seventy_fifth_percentile_wpm: 910,
-  },
-  {
-    type: "summarised_adaptive",
-    average_wpm: 541,
-    average_score: 34,
-    twenty_fifth_percentile_wpm: 462,
-    fiftieth_percentile_wpm: 654,
-    seventy_fifth_percentile_wpm: 717,
-  },
-  {
-    type: "summarised_overall",
-    average_wpm: 575,
-    average_score: 30,
-    twenty_fifth_percentile_wpm: 426,
-    fiftieth_percentile_wpm: 686,
-    seventy_fifth_percentile_wpm: 814,
-  },
-];
-
 const BarChartComponent = ({ chart_data }: { chart_data: any }) => {
   return (
     <ResponsiveContainer width="100%" height={400}>

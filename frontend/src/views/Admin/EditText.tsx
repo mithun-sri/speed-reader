@@ -1,38 +1,13 @@
-import { Box, CircularProgress, IconButton } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { QuestionCreate, TextCreateWithQuestions } from "../../api";
-import GptPrompt from "../../components/Gpt/GptPrompt";
-import GptSuggestionForm from "../../components/Gpt/GptSuggestionForm";
+import { Box } from "@mui/material";
 import Header from "../../components/Header/Header";
 import JetBrainsMonoText from "../../components/Text/TextComponent";
-import { useSnack } from "../../context/SnackContext";
-import { useApproveText, useGenerateText } from "../../hooks/admin";
 import { useTextById } from "../../hooks/game";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import NotFound from "../../components/Error/NotFound";
-import GptText from "../../components/Gpt/GptText";
 import StyledTextField from "../../components/Textbox/StyledTextField";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import IconButton from "@mui/material/IconButton";
 
-// Default object for TextCreateWithQuestions
-const emptyTextCreateWithQuestions: TextCreateWithQuestions = {
-  title: "",
-  content: "",
-  summary: "",
-  source: "",
-  fiction: false,
-  difficulty: "",
-  word_count: 0,
-  description: "",
-  author: "",
-  image_url: "",
-  questions: Array.from({ length: 10 }, (_) => ({
-    content: "",
-    options: ["", "", "", ""],
-    correct_option: 0,
-  })),
-};
 
 export interface QuestionFeedData {
   content: string;
@@ -73,15 +48,6 @@ const TextForm = () => {
 
   const { data: text } = useTextById(text_id);
 
-  const innerContainerStyles = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    alignSelf: "center",
-    width: "80%",
-    minWidth: "450px",
-    maxWidth: "1050px",
-  };
 
   const containerStyles = {
     display: "flex",

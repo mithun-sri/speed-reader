@@ -13,7 +13,7 @@ import QuizAnalyticsTop from "../../components/Admin/QuizAnalyticsTop";
 import QuizScore from "../../components/Admin/QuizScore";
 import Header from "../../components/Header/Header";
 import { getQuestion } from "../../hooks/admin";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import NotFound from "../../components/Error/NotFound";
 
 const QuizAnalytics: React.FC = () => {
