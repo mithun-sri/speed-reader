@@ -322,7 +322,7 @@ export default function EnhancedTable() {
   };
 
   return (
-    <Box sx={{ width: "75vw" }}>
+    <Box sx={{ width: "80vw" }}>
       <Paper
         sx={{
           backgroundColor: "transparent",
