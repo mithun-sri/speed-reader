@@ -46,7 +46,7 @@ const AdminAnalytics: React.FC = () => {
             borderRadius: "50px",
             margin: "20px 50px",
             padding: "25px 100px",
-            width: "70vw",
+            width: "80vw",
             display: "flex",
             justifyContent: "center",
             flexDirection: "column",

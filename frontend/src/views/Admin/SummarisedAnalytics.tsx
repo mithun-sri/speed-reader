@@ -1,19 +1,19 @@
-import { Link, useParams } from "react-router-dom";
-import Header from "../../components/Header/Header";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Box, IconButton } from "@mui/material";
-import JetBrainsMonoText from "../../components/Text/TextComponent";
+import { Link, useParams } from "react-router-dom";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
+  BarChart,
   Legend,
   ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { getTextStatistics } from "../../hooks/admin";
 import NotFound from "../../components/Error/NotFound";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Header from "../../components/Header/Header";
+import JetBrainsMonoText from "../../components/Text/TextComponent";
+import { getTextStatistics } from "../../hooks/admin";
 
 const SummarisedAnalytics: React.FC = () => {
   const { text_id } = useParams();
@@ -214,7 +214,7 @@ const SummarisedAnalytics: React.FC = () => {
             }}
           >
             <JetBrainsMonoText
-              text="Summarise Text"
+              text="Summarised Text"
               size={20}
               color="#E2B714"
             />

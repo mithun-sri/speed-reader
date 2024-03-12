@@ -1,13 +1,11 @@
-import { Box } from "@mui/material";
-import Header from "../../components/Header/Header";
-import JetBrainsMonoText from "../../components/Text/TextComponent";
-import { useTextById } from "../../hooks/game";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Box, IconButton } from "@mui/material";
 import { useParams } from "react-router-dom";
 import NotFound from "../../components/Error/NotFound";
+import Header from "../../components/Header/Header";
+import JetBrainsMonoText from "../../components/Text/TextComponent";
 import StyledTextField from "../../components/Textbox/StyledTextField";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import IconButton from "@mui/material/IconButton";
-
+import { useTextById } from "../../hooks/game";
 
 export interface QuestionFeedData {
   content: string;
