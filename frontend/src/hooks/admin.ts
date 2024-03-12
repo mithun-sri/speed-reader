@@ -1,5 +1,5 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import { TextCreateWithQuestions } from "../api";
+import { QuestionCreate, TextCreateWithQuestions } from "../api";
 import { useApiClient } from "../context/ApiContext";
 
 export function getAdminStatistics(gameMode: string) {
@@ -96,5 +96,14 @@ export function useApproveText() {
 
   return useMutation({
     mutationFn: (text: TextCreateWithQuestions) => adminApi.approveText(text),
+  });
+}
+
+export function useCreateQuestion(textId: string) {
+  const { adminApi } = useApiClient();
+
+  return useMutation({
+    mutationFn: (question: QuestionCreate) =>
+      adminApi.createQuestion(textId, question),
   });
 }

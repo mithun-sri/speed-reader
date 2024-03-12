@@ -1,5 +1,9 @@
 import { Box, IconButton } from "@mui/material";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { QuestionCreate } from "../../api";
+import { useSnack } from "../../context/SnackContext";
+import { useCreateQuestion } from "../../hooks/admin";
 import JetBrainsMonoText from "../Text/TextComponent";
 import StyledTextField from "../Textbox/StyledTextField";
 import QuestionCheckbox from "./QuestionCheckbox";
@@ -26,6 +30,9 @@ const QuestionBox: React.FC<{ text_id: string }> = ({ text_id }) => {
     handleSubmit,
     formState: { errors },
   } = questionForm;
+  const createQuestion = useCreateQuestion(text_id);
+  const { showSnack } = useSnack();
+  const navigate = useNavigate();
 
   const questionContainerStyles = {
     display: "flex",
@@ -46,8 +53,24 @@ const QuestionBox: React.FC<{ text_id: string }> = ({ text_id }) => {
 
   const handleAddQuestion = (data: QuestionFormData) => {
     console.log(data);
-    console.log("Need to add question to text " + text_id);
-    // TODO: call end point to add question
+    // Build QuestionCreate from QuestionFormData
+    const question: QuestionCreate = {
+      content: data.content,
+      options: data.options,
+      correct_option: data.correctOption,
+    };
+
+    // Send data to server
+    createQuestion.mutate(question, {
+      onSuccess: () => {
+        showSnack("Question created successfully");
+        navigate(`/admin/questions/${text_id}`);
+      },
+      onError: (error: Error) => {
+        // @ts-expect-error "message" does not exist on "error" type
+        showSnack("Failed to create question: " + error.response.data.message);
+      },
+    });
   };
 
   const EmptyFormMessage: React.FC<{ text: string }> = ({ text }) => (
