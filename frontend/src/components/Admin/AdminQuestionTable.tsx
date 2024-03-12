@@ -178,7 +178,20 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
-              sx={{ color: "#fff" }}
+              sx={{
+                "&.Mui-active": {
+                  color: "#ffffff",
+                },
+                "&.MuiTableSortLabel-root": {
+                  color: "#ffffff",
+                  "&:hover": {
+                    color: "white",
+                  },
+                },
+                "& .MuiTableSortLabel-icon": {
+                  color: "#E2B714 !important",
+                },
+              }}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
@@ -423,6 +436,7 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({
                         <IconButton
                           component={Link}
                           to={row.statistics}
+                          target="_blank"
                           sx={{
                             color: "#FFFFFF",
                             "& :hover": {

@@ -202,10 +202,24 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
-              sx={{ color: "#fff" }}
+              // sx={{ color: "#fff" }}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
+              sx={{
+                "&.Mui-active": {
+                  color: "#ffffff",
+                },
+                "&.MuiTableSortLabel-root": {
+                  color: "#ffffff",
+                  "&:hover": {
+                    color: "white",
+                  },
+                },
+                "& .MuiTableSortLabel-icon": {
+                  color: "#E2B714 !important",
+                },
+              }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -476,6 +490,7 @@ export default function EnhancedTable() {
                       {
                         <IconButton
                           component={Link}
+                          target="_blank"
                           to={row.questions}
                           sx={{
                             color: "#FFFFFF",
@@ -502,6 +517,7 @@ export default function EnhancedTable() {
                       {
                         <IconButton
                           component={Link}
+                          target="_blank"
                           to={row.summarised}
                           sx={{
                             color: "#FFFFFF",

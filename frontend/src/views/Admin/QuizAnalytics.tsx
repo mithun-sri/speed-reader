@@ -12,9 +12,9 @@ import {
 } from "recharts";
 import QuizAnalyticsTop from "../../components/Admin/QuizAnalyticsTop";
 import QuizScore from "../../components/Admin/QuizScore";
-import NotFound from "../../components/Error/NotFound";
 import Header from "../../components/Header/Header";
 import { getQuestion } from "../../hooks/admin";
+import NotFound from "../../components/Error/NotFound";
 
 const QuizAnalytics: React.FC = () => {
   const { text_id, question_id } = useParams();
