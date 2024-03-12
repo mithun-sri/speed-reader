@@ -300,13 +300,15 @@ export default function EnhancedTable() {
   const deleteText = removeText();
   const { showSnack } = useSnack();
 
-  const handleDeleteText = (text_id: string) => {
+  const handleDeleteText = (text_id: string, addedS: boolean = false) => {
     deleteText.mutate(text_id, {
       onSuccess: () => {
-        showSnack("Text deleted successfully");
+        showSnack("Text" + (addedS ? "s" : "") + " deleted successfully");
       },
       onError: (error: Error) => {
-        showSnack("Failed to delete text: " + error.message);
+        showSnack(
+          "Failed to delete text" + (addedS ? "s" : "") + ": " + error.message,
+        );
       },
     });
   };
@@ -558,9 +560,15 @@ export default function EnhancedTable() {
             color="error"
             startIcon={<FontAwesomeIcon icon={faTrash} color="#FFFFFF" />}
             onClick={() => {
+              let addedS = false;
+              if (selected.length > 1) {
+                addedS = true;
+              }
+
               selected.forEach((id) => {
-                handleDeleteText(rows[id].text_id);
+                handleDeleteText(rows[id].text_id, addedS);
               });
+
               setRows(rows.filter((_, index) => !selected.includes(index)));
               setSelected([]);
             }}

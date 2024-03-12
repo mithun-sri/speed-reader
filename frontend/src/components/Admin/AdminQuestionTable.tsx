@@ -292,15 +292,23 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({
   const deleteQuestion = removeQuestion();
   const { showSnack } = useSnack();
 
-  const handleDeleteQuestion = (question_id: string) => {
+  const handleDeleteQuestion = (
+    question_id: string,
+    addedS: boolean = false,
+  ) => {
     deleteQuestion.mutate(
       { text_id, question_id },
       {
         onSuccess: () => {
-          showSnack("Question deleted successfully");
+          showSnack("Question" + (addedS ? "s" : "") + " deleted successfully");
         },
         onError: (error: Error) => {
-          showSnack("Failed to delete question: " + error.message);
+          showSnack(
+            "Failed to delete question" +
+              (addedS ? "s" : "") +
+              ": " +
+              error.message,
+          );
         },
       },
     );
@@ -484,9 +492,22 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({
             color="error"
             startIcon={<FontAwesomeIcon icon={faTrash} color="#FFFFFF" />}
             onClick={() => {
+              if (selected.length > rows.length - 10) {
+                showSnack(
+                  "Cannot delete selected questions, less than 10 questions left.",
+                );
+                return;
+              }
+
+              let addedS = false;
+              if (selected.length > 1) {
+                addedS = true;
+              }
+
               selected.forEach((id) => {
-                handleDeleteQuestion(rows[id].question_id);
+                handleDeleteQuestion(rows[id].question_id, addedS);
               });
+
               setRows(rows.filter((_, index) => !selected.includes(index)));
               setSelected([]);
             }}
