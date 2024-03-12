@@ -128,8 +128,8 @@ const headCells: readonly HeadCell[] = [
     id: "summarised",
     numeric: false,
     disablePadding: false,
-    label: "summarised statistics",
-  }
+    label: "overview",
+  },
 ];
 
 interface EnhancedTableProps {

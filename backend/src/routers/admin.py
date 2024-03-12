@@ -505,6 +505,7 @@ async def approve_text(
         ],
     )
 
+
 @router.get(
     "/text-statistics",
     response_model=schemas.OverallTextStatistics,
@@ -512,17 +513,7 @@ async def approve_text(
 async def get_summary_statistics(
     text_id: str,
     session: Annotated[Session, Depends(get_session)],
-    ):
-    group = {
-        "$group": {
-            "_id": None,
-            "minWpm": {"$min": "$average_wpm"},
-            "maxWpm": {"$max": "$average_wpm"},
-            "avgWpm": {"$avg": "$average_wpm"},
-            "avgScore": {"$avg": "$score"},
-        }
-    }
-    # create another group identical to the above but finding the 25th percentile
+):
     group_stage = {
         "$group": {
             "_id": None,
@@ -539,40 +530,38 @@ async def get_summary_statistics(
             "25thPercentile": {
                 "$arrayElemAt": [
                     "$wpmValues",
-                    {"$ceil": {"$multiply": [{"$size": "$wpmValues"}, 0.25]}}
+                    {"$ceil": {"$multiply": [{"$size": "$wpmValues"}, 0.25]}},
                 ]
             },
             "50thPercentile": {
                 "$arrayElemAt": [
                     "$wpmValues",
-                    {"$ceil": {"$multiply": [{"$size": "$wpmValues"}, 0.50]}}
+                    {"$ceil": {"$multiply": [{"$size": "$wpmValues"}, 0.50]}},
                 ]
             },
             "75thPercentile": {
                 "$arrayElemAt": [
                     "$wpmValues",
-                    {"$ceil": {"$multiply": [{"$size": "$wpmValues"}, 0.75]}}
+                    {"$ceil": {"$multiply": [{"$size": "$wpmValues"}, 0.75]}},
                 ]
-            }
+            },
         }
     }
 
     # pipeline = [group_stage, add_fields_stage]
-    
+
     # find results for standard game mode and unsummarised text
     pipeline = [
         {
-        "$match": {
-            "text_id": text_id,
-            "game_mode": "standard",
-            "summary": False,
+            "$match": {
+                "text_id": text_id,
+                "game_mode": "standard",
+                "summary": False,
+            },
         },
-        },
-        {
-            "$sort": {"average_wpm": 1}
-        },
+        {"$sort": {"average_wpm": 1}},
         group_stage,
-        add_fields_stage
+        add_fields_stage,
     ]
     original_standard = models.History.objects().aggregate(pipeline)
     original_standard = next(original_standard, {})
@@ -595,11 +584,9 @@ async def get_summary_statistics(
                 "summary": False,
             }
         },
-        {
-            "$sort": {"average_wpm": 1}
-        },
+        {"$sort": {"average_wpm": 1}},
         group_stage,
-        add_fields_stage
+        add_fields_stage,
     ]
     original_adaptive = models.History.objects().aggregate(pipeline)
     original_adaptive = next(original_adaptive, {})
@@ -616,17 +603,15 @@ async def get_summary_statistics(
     # find results for standard game mode and summarised text
     pipeline = [
         {
-        "$match": {
-            "text_id": text_id,
-            "game_mode": "standard",
-            "summary": True,
+            "$match": {
+                "text_id": text_id,
+                "game_mode": "standard",
+                "summary": True,
+            },
         },
-        },
-        {
-            "$sort": {"average_wpm": 1}
-        },
+        {"$sort": {"average_wpm": 1}},
         group_stage,
-        add_fields_stage
+        add_fields_stage,
     ]
     summarised_standard = models.History.objects().aggregate(pipeline)
     summarised_standard = next(summarised_standard, {})
@@ -643,17 +628,15 @@ async def get_summary_statistics(
     # find results for adaptive game mode and summarised text
     pipeline = [
         {
-        "$match": {
-            "text_id": text_id,
-            "game_mode": "adaptive",
-            "summary": True,
+            "$match": {
+                "text_id": text_id,
+                "game_mode": "adaptive",
+                "summary": True,
+            },
         },
-        },
-        {
-            "$sort": {"average_wpm": 1}
-        },
+        {"$sort": {"average_wpm": 1}},
         group_stage,
-        add_fields_stage
+        add_fields_stage,
     ]
     summarised_adaptive = models.History.objects().aggregate(pipeline)
     summarised_adaptive = next(summarised_adaptive, {})
@@ -666,20 +649,18 @@ async def get_summary_statistics(
         fiftieth_percentile=summarised_adaptive.get("50thPercentile", 0),
         seventy_fifth_percentile=summarised_adaptive.get("75thPercentile", 0),
     )
-    
+
     # find results for any game mode and summarised text
     pipeline = [
         {
-        "$match": {
-            "text_id": text_id,
-            "summary": True,
+            "$match": {
+                "text_id": text_id,
+                "summary": True,
+            },
         },
-        },
-        {
-            "$sort": {"average_wpm": 1}
-        },
+        {"$sort": {"average_wpm": 1}},
         group_stage,
-        add_fields_stage
+        add_fields_stage,
     ]
     summarised = models.History.objects().aggregate(pipeline)
     summarised = next(summarised, {})
@@ -695,12 +676,17 @@ async def get_summary_statistics(
 
     query = select(models.Text).where(models.Text.id == text_id)
     text = session.scalars(query).first()
+    if not text:
+        raise TextNotFoundException(text_id=text_id)
+    summary = text.summary
+    if not summary:
+        summary = ""
 
     results = schemas.OverallTextStatistics(
         id=text_id,
         title=text.title,
         content=text.content,
-        summary=text.summary,
+        summary=summary,
         original_standard=original_standard,
         original_adaptive=original_adaptive,
         summarised_standard=summarised_standard,
@@ -709,4 +695,3 @@ async def get_summary_statistics(
     )
 
     return results
-

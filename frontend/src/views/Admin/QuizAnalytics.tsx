@@ -43,18 +43,16 @@ const QuizAnalytics: React.FC = () => {
     <>
       <Header />
       <Box sx={{ marginLeft: "8vw", marginTop: "1vh", marginBottom: "1.5vh" }}>
-        <Link to={`/admin/questions/${text_id}`}>
-          <IconButton>
-            <Box
-              sx={{
-                fontFamily: "JetBrains Mono, monospace",
-                color: "#D1D0C5",
-                fontWeight: "bolder",
-                fontSize: "1.5vw",
-              }}
-            >{`< back`}</Box>
-          </IconButton>
-        </Link>
+        <IconButton onClick={() => window.history.back()}>
+          <Box
+            sx={{
+              fontFamily: "JetBrains Mono, monospace",
+              color: "#D1D0C5",
+              fontWeight: "bolder",
+              fontSize: "1.5vw",
+            }}
+          >{`< back`}</Box>
+        </IconButton>
       </Box>
       <Box
         sx={{

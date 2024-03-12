@@ -82,7 +82,8 @@ export function getTextStatistics(text_id: string) {
 
   return useSuspenseQuery({
     queryKey: ["text-statistics"],
-    queryFn: () => adminApi.getSummaryStatistics(text_id).then((res) => res.data),
+    queryFn: () =>
+      adminApi.getSummaryStatistics(text_id).then((res) => res.data),
     gcTime: 0,
   });
 }

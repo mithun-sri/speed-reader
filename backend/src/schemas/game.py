@@ -58,6 +58,7 @@ class AdminStatistics(BaseModel):
     min_wpm: int
     max_wpm: int
 
+
 class TextStatistics(BaseModel):
     average_score: int
     average_wpm: int
@@ -66,6 +67,7 @@ class TextStatistics(BaseModel):
     twenty_fifth_percentile: int
     fiftieth_percentile: int
     seventy_fifth_percentile: int
+
 
 class OverallTextStatistics(BaseModel):
     id: str
