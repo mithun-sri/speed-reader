@@ -46,7 +46,6 @@ const TextForm = () => {
 
   const { data: text } = useTextById(text_id);
 
-
   const containerStyles = {
     display: "flex",
     flexDirection: "column",
