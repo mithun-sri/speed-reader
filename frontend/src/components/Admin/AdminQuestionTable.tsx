@@ -1,5 +1,12 @@
-import * as React from "react";
+import {
+  faSquareArrowUpRight,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button, IconButton } from "@mui/material";
 import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -8,14 +15,12 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
-import { QuestionWithStatistics } from "../../api";
+import * as React from "react";
 import { Link } from "react-router-dom";
-import { IconButton } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareArrowUpRight } from "@fortawesome/free-solid-svg-icons";
+import { QuestionWithStatistics } from "../../api";
+import { useSnack } from "../../context/SnackContext";
+import { removeQuestion } from "../../hooks/admin";
 
 interface Data {
   id: number;
@@ -193,17 +198,23 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 interface AdminQuestionTableProps {
+  text_id: string;
   data: QuestionWithStatistics[];
 }
 
-const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({ data }) => {
+const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({
+  text_id,
+  data,
+}) => {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("id");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const rows = transformQuestionsWithStatistics(data);
+  const [rows, setRows] = React.useState<Data[]>(
+    transformQuestionsWithStatistics(data),
+  );
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -263,6 +274,8 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({ data }) => {
   };
 
   const isSelected = (id: number) => selected.indexOf(id) !== -1;
+  const isCheckboxTicked = () => selected.length > 0;
+  const hasAtLeastTenQuestions = () => rows.length > 10;
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -273,8 +286,33 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({ data }) => {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage,
       ),
-    [order, orderBy, page, rowsPerPage],
+    [order, orderBy, page, rowsPerPage, rows],
   );
+
+  const deleteQuestion = removeQuestion();
+  const { showSnack } = useSnack();
+
+  const handleDeleteQuestion = (
+    question_id: string,
+    addedS: boolean = false,
+  ) => {
+    deleteQuestion.mutate(
+      { text_id, question_id },
+      {
+        onSuccess: () => {
+          showSnack("Question" + (addedS ? "s" : "") + " deleted successfully");
+        },
+        onError: (error: Error) => {
+          showSnack(
+            "Failed to delete question" +
+              (addedS ? "s" : "") +
+              ": " +
+              error.message,
+          );
+        },
+      },
+    );
+  };
 
   return (
     <Box sx={{ width: "65vw" }}>
@@ -358,7 +396,20 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({ data }) => {
                         fontSize: "1.2vw",
                       }}
                     >
-                      {row.accuracy}
+                      <Box
+                        sx={{
+                          backgroundColor:
+                            row.accuracy < 50
+                              ? "#BA1515"
+                              : row.accuracy < 75
+                                ? "#C7A113"
+                                : "#4CAF50",
+                          padding: "4px 8px",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        {row.accuracy}
+                      </Box>
                     </TableCell>
                     <TableCell
                       align="center"
@@ -386,6 +437,28 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({ data }) => {
                         </IconButton>
                       }
                     </TableCell>
+                    {hasAtLeastTenQuestions() && (
+                      <TableCell
+                        align="center"
+                        sx={{
+                          fontFamily: "JetBrains Mono, monospace",
+                          fontSize: "1.2vw",
+                          "&:hover": {
+                            background: "#5B6066",
+                          },
+                        }}
+                        onClick={() => {
+                          handleDeleteQuestion(row.question_id);
+                          setRows(rows.filter((prevRow) => prevRow !== row));
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={faTrash}
+                          color="#BA1515"
+                          className="fa-table-page-icon"
+                        />
+                      </TableCell>
+                    )}
                   </TableRow>
                 );
               })}
@@ -412,6 +485,43 @@ const AdminQuestionTable: React.FC<AdminQuestionTableProps> = ({ data }) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      {isCheckboxTicked() && hasAtLeastTenQuestions() && (
+        <Box mt={2} textAlign="right">
+          <Button
+            variant="contained"
+            color="error"
+            startIcon={<FontAwesomeIcon icon={faTrash} color="#FFFFFF" />}
+            onClick={() => {
+              if (selected.length > rows.length - 10) {
+                showSnack(
+                  "Cannot delete selected questions, less than 10 questions left.",
+                );
+                return;
+              }
+
+              let addedS = false;
+              if (selected.length > 1) {
+                addedS = true;
+              }
+
+              selected.forEach((id) => {
+                handleDeleteQuestion(rows[id].question_id, addedS);
+              });
+
+              setRows(rows.filter((_, index) => !selected.includes(index)));
+              setSelected([]);
+            }}
+            sx={{
+              color: "#fff",
+              fontFamily: "JetBrains Mono, monospace",
+              fontSize: "1.2vw",
+              background: "#BA1515",
+            }}
+          >
+            Delete All
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };
